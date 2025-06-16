@@ -275,7 +275,10 @@ class ProductController extends BaseProductController
         $addCartData = $form->getData();
 
         // カート商品に同商品がないか検索
-        $cartItem = $this->cartItemRepository->findOneBy(['Cart' => $this->cartService->getCarts(),'ProductClass' => $addCartData['product_class_id']]);
+        $cartItem = $this->cartItemRepository->findOneBy([
+            'Cart' => $this->cartService->getCarts(),
+            'ProductClass' => $addCartData->getProductClass()
+        ]);
         if ($cartItem) {
             // 同商品がカートに存在したらカートに追加させない
             return;
@@ -285,21 +288,21 @@ class ProductController extends BaseProductController
             'カート追加処理開始',
             [
                 'product_id' => $Product->getId(),
-                'product_class_id' => $addCartData['product_class_id'],
-                'quantity' => $addCartData['quantity'],
-                'is_repeat' => $addCartData['is_repeat'],
-                'repeat_span' => $addCartData['repeat_span'],
-                'span_unit' => $addCartData['span_unit'],
+                'product_class_id' => $addCartData->getProductClass()?->getId(),
+                'quantity' => $addCartData->getQuantity(),
+                'is_repeat' => $addCartData->getIsRepeat(),
+                'repeat_span' => $addCartData->getRepeatSpan(),
+                'span_unit' => $addCartData->getSpanUnit(),
                 'is_favorite' => $is_favorite,
             ]
         );
 
         $this->cartService->addProduct(
-            $addCartData['product_class_id'],
-            $addCartData['quantity'],
-            $addCartData['is_repeat'],
-            $addCartData['repeat_span'],
-            $addCartData['span_unit']
+            $addCartData->getProductClass(),
+            $addCartData->getQuantity(),
+            $addCartData->getIsRepeat(),
+            $addCartData->getRepeatSpan(),
+            $addCartData->getSpanUnit()
         );
 
         // 明細の正規化
@@ -308,7 +311,7 @@ class ProductController extends BaseProductController
             $result = $this->purchaseFlow->validate($Cart, new PurchaseContext($Cart, $this->getUser()));
             // 復旧不可のエラーが発生した場合は追加した明細を削除.
             if ($result->hasError()) {
-                $this->cartService->removeProduct($addCartData['product_class_id']);
+                $this->cartService->removeProduct($addCartData->getProductClass()?->getId());
                 foreach ($result->getErrors() as $error) {
                     $errorMessages[] = $error->getMessage();
                 }
@@ -324,11 +327,11 @@ class ProductController extends BaseProductController
             'カート追加処理完了',
             [
                 'product_id' => $Product->getId(),
-                'product_class_id' => $addCartData['product_class_id'],
-                'quantity' => $addCartData['quantity'],
-                'is_repeat' => $addCartData['is_repeat'],
-                'repeat_span' => $addCartData['repeat_span'],
-                'span_unit' => $addCartData['span_unit'],
+                'product_class_id' => $addCartData->getProductClass()?->getId(),
+                'quantity' => $addCartData->getQuantity(),
+                'is_repeat' => $addCartData->getIsRepeat(),
+                'repeat_span' => $addCartData->getRepeatSpan(),
+                'span_unit' => $addCartData->getSpanUnit(),
             ]
         );
 
