@@ -347,9 +347,10 @@ file that was distributed with this source code.
 									{{ form_errors(form.classcategory_id2) }}
 								</div>
 							{% endif %}
-							{{ form_widget(form.product_class) }}
-							{{ form_errors(form.product_class) }}
-
+							<div class="ec-select">
+								{{ form_row(form.product_class) }}
+								{{ form_errors(form.product_class) }}
+							</div>
 							{{ dump(form.product_class.vars.full_name) }}
 
 							{{ form_widget(form.quantity, {
