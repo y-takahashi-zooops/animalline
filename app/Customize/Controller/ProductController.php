@@ -283,12 +283,15 @@ class ProductController extends BaseProductController
 
         // カート商品に同商品がないか検索
         $cartItem = $this->cartItemRepository->findOneBy([
-            'Cart' => $this->cartService->getCarts(),
+            'Cart' => $this->cartService->getCart(),
             'ProductClass' => $addCartData->getProductClass()
         ]);
         if ($cartItem) {
             // 同商品がカートに存在したらカートに追加させない
-            return;
+            return $this->json([
+                'done' => false,
+                'messages' => ['この商品はすでにカートに入っています。'],
+            ]);
         }
 
         $this->logger->info(
