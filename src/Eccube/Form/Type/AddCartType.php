@@ -186,7 +186,7 @@ class AddCartType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'add_cart';
+        return null;
     }
 
     /**
