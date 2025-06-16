@@ -167,6 +167,9 @@ file that was distributed with this source code.
 						$sele1.on('change', fnSetClassCategories);
                 		$sele2.on('change', fnSetClassCategories);
 
+						console.log('直前のproduct_class:', $form.find('input[name="add_cart[product_class]"]').val());
+						console.log('直前のserialize:', $form.serialize());
+
 						$form.on('submit', function (e) {
 							e.preventDefault(); // 送信を止める
 
