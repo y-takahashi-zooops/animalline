@@ -3,59 +3,24 @@
 namespace App\Security\Authenticator;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Http\Authenticator\FormLoginAuthenticator;
-use Symfony\Component\Security\Http\Util\TargetPathTrait;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge;
-use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
-use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
-use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
-use Symfony\Component\Security\Http\HttpUtils;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
-use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use Symfony\Component\Routing\RouterInterface;
 
-class CustomFormLoginAuthenticator extends FormLoginAuthenticator
+class CustomFormLoginAuthenticator extends AbstractLoginFormAuthenticator
 {
-    private HttpUtils $httpUtils;
-    private AuthenticationSuccessHandlerInterface $successHandler;
-    private AuthenticationFailureHandlerInterface $failureHandler;
+    use TargetPathTrait;
 
-    public function __construct(
-        HttpUtils $httpUtils,
-        string $loginPath,
-        string $checkPath,
-        ?CsrfTokenManagerInterface $csrfTokenManager = null,
-        string $csrfTokenId = 'authenticate',
-        string $usernameParameter = 'login_email',
-        string $passwordParameter = 'login_pass',
-        AuthenticationSuccessHandlerInterface $successHandler,
-        AuthenticationFailureHandlerInterface $failureHandler
-    ) {
-        parent::__construct(
-            $httpUtils,
-            $loginPath,
-            $checkPath,
-            $csrfTokenManager,
-            $csrfTokenId,
-            $usernameParameter,
-            $passwordParameter
-        );
-        $this->successHandler = $successHandler;
-        $this->failureHandler = $failureHandler;
-    }
+    private string $loginUrl;
 
-    public function getLoginUrl(Request $request): string
+    public function __construct(string $loginUrl)
     {
-        return $this->httpUtils->generateUri($request, 'adoption_login');
+        $this->loginUrl = $loginUrl;
     }
 
     public function authenticate(Request $request): Passport
@@ -74,13 +39,13 @@ class CustomFormLoginAuthenticator extends FormLoginAuthenticator
         );
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
+    public function onAuthenticationSuccess(Request $request, $token, string $firewallName): ?Response
     {
-        return $this->successHandler->onAuthenticationSuccess($request, $token);
+        // ログイン成功後のリダイレクト処理などを記述
     }
 
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
+    protected function getLoginUrl(Request $request): string
     {
-        return $this->failureHandler->onAuthenticationFailure($request, $exception);
+        return $this->loginUrl;
     }
 }
