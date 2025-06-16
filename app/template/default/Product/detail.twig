@@ -269,7 +269,14 @@ file that was distributed with this source code.
 							{% endfor %}
 						</div>
 					{% endif %}
-					<form action="{{ url('product_add_cart', {id:Product.id}) }}" method="post" id="form1" name="form1">
+					{{ form_start(form, {
+						action: url('product_add_cart', {id: Product.id}),
+						method: 'post',
+						attr: {
+							id: 'form1',
+							name: 'add_cart'
+						}
+					}) }}
 						{% if Product.stock_find %}
 							{# 仕様 #}
 							{% if Product.ClassName1 %}
@@ -351,7 +358,7 @@ file that was distributed with this source code.
 								</button>
 							</div>
 						{% endif %}
-					</form>
+					{{ form_end(form) }}
 					<div class="ec-modal">
 						<div class="ec-modal-overlay">
 							<div class="ec-modal-wrap">
