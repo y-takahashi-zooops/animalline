@@ -23,8 +23,10 @@ class LegacyCustomerPasswordHasher implements PasswordHasherInterface
 
     public function verify(string $hashedPassword, string $plainPassword, ?object $user = null): bool
     {
-        $this->logger->info('LegacyHasherが呼ばれた');
-        dd('試しにdd!', $user, $hashedPassword, $plainPassword);
+        // EC-CUBEの旧仕様: SHA256(secret_key + password) を前提としない
+        $expected = hash('sha256', '' . $plainPassword);
+
+        dd('試しにdd!',$hashedPassword, $plainPassword, $expected, hash_equals($hashedPassword, $expected));
         if (is_object($user)) {
             $this->logger->info('LegacyHasher: user class = ' . get_class($user));
         } else {
