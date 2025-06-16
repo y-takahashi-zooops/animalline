@@ -125,9 +125,9 @@ file that was distributed with this source code.
 						
 						// セレクト描画
 						const $form = $(formElement);
-						const product_id = $form.find('input[name=product_id]').val();
-						const $sele1 = $form.find('select[name=classcategory_id1]');
-						const $sele2 = $form.find('select[name=classcategory_id2]');
+						const product_id = $form.find('input[name="add_cart[product_id]"]').val();
+						const $sele1 = $form.find('select[name="add_cart[classcategory_id1]"]');
+						const $sele2 = $form.find('select[name="add_cart[classcategory_id2]"]');
 
 						// 翻訳キーを翻訳済みに差し替え
 						for (const key1 in eccube.classCategories) {
@@ -145,7 +145,7 @@ file that was distributed with this source code.
 
 							// 商品規格が確定したあと、ProductClass にセット
 							const selectedId1 = $sele1.val();
-							const selectedId2 = $sele2.val();
+							const selectedId2 = $sele2.length ? $sele2.val() : '';
 
 							console.log('selectedId1:', selectedId1);
 							console.log('selectedId2:', selectedId2);
