@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Security\Authenticator;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\Authenticator\FormLoginAuthenticator;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
