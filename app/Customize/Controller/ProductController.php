@@ -190,11 +190,11 @@ class ProductController extends BaseProductController
         );
         $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_PRODUCT_CART_ADD_INITIALIZE);
 
-        // $is_favorite = false;
-        // if ($this->isGranted('ROLE_USER')) {
-        //     $Customer = $this->getUser();
-        //     $is_favorite = $this->customerFavoriteProductRepository->isFavorite($Customer, $Product);
-        // }
+        $is_favorite = false;
+        if ($this->isGranted('ROLE_USER')) {
+            $Customer = $this->getUser();
+            $is_favorite = $this->customerFavoriteProductRepository->isFavorite($Customer, $Product);
+        }
 
         // // JSONの成型
         // $classCategories = [
@@ -264,7 +264,7 @@ class ProductController extends BaseProductController
                 'BaseInfo' => $this->BaseInfo,
                 'errorMessages' => ['入力内容に誤りがあります。'],
                 'is_favorite' => $is_favorite,
-                'class_categories_json' => $classCategoriesJson,
+                // 'class_categories_json' => $classCategoriesJson,
             ]);
         }
 
@@ -290,7 +290,7 @@ class ProductController extends BaseProductController
                 'is_repeat' => $addCartData['is_repeat'],
                 'repeat_span' => $addCartData['repeat_span'],
                 'span_unit' => $addCartData['span_unit'],
-                // 'is_favorite' => $is_favorite,
+                'is_favorite' => $is_favorite,
             ]
         );
 
