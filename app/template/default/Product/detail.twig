@@ -142,6 +142,14 @@ file that was distributed with this source code.
 
 						function fnSetClassCategories(classcat_id2_selected) {
 							eccube.setClassCategories($form, product_id, $sele1, $sele2, classcat_id2_selected);
+
+							// 商品規格が確定したあと、ProductClass にセット
+							const selectedId1 = $sele1.val();
+							const selectedId2 = $sele2.val();
+							const productClass = eccube.classCategories[selectedId1]?.[selectedId2];
+							if (productClass && productClass.product_class_id) {
+								$form.find('[name="add_cart[ProductClass]"]').val(productClass.product_class_id);
+							}
 						}
 
 						{% if form.classcategory_id2 is defined %}
