@@ -180,7 +180,8 @@ file that was distributed with this source code.
 								.done(function (response) {
 									try {
 										const json = typeof response === 'string' ? JSON.parse(response) : response;
-										if (json.done) {
+										if (json.done === true) {
+											console.log('trueの中')
 											$('.ec-modal').fadeIn();
 										} else if (json.messages) {
 											alert(json.messages.join('\n'));
