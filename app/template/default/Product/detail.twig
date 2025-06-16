@@ -171,9 +171,10 @@ file that was distributed with this source code.
 						});
 
 						// submit直前にProductClassを再設定（安全対策）
-						$form.on('submit', function () {
-							e.preventDefault(); // ← 送信を止める
-							fnSetClassCategories(); // ← hiddenに正しくセットする
+						$form.on('submit', function (e) {
+							console.log('submit intercepted');
+							e.preventDefault(); //
+							fnSetClassCategories();
 
 							$.post($form.attr('action'), $form.serialize())
 								.done(function (response) {
