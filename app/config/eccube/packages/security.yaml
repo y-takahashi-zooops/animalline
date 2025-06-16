@@ -12,8 +12,8 @@ security:
         #         - bcrypt
         #         - legacy
 
-        # App\Hasher\LegacyCustomerPasswordHasher:
-        #     id: App\Hasher\LegacyCustomerPasswordHasher
+        App\Hasher\LegacyCustomerPasswordHasher:
+            id: App\Hasher\LegacyCustomerPasswordHasher
 
         Eccube\Entity\Member:
             # algorithm: sodium
