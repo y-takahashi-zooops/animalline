@@ -470,5 +470,8 @@ services:
             $loginPath: '/adoption/login'
             $checkPath: '/adoption/login'
             $csrfTokenManager: '@security.csrf.token_manager'
+            $csrfTokenId: 'authenticate'
+            $usernameParameter: 'login_email'
+            $passwordParameter: 'login_pass'
             $successHandler: '@app.eccube.security.success_handler'
             $failureHandler: '@eccube.security.failure_handler'
