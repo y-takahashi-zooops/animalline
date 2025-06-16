@@ -464,6 +464,6 @@ services:
     #     arguments:
     #         $logger: '@logger'
 
-    App\Security\Authenticator\CustomFormLoginAuthenticator:
-        arguments:
-            $loginUrl: '/adoption/login'
+    # App\Security\Authenticator\CustomFormLoginAuthenticator:
+    #     arguments:
+    #         $loginUrl: '/adoption/login'
