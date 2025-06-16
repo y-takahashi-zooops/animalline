@@ -122,6 +122,8 @@ file that was distributed with this source code.
 				waitForTranslator(function () {
 					try {
 						eccube.classCategories = {{ class_categories_json|raw }};
+
+						 console.log('フォーム内のname属性:', $('input[name^="add_cart"]').toArray().map(e => e.name));
 						
 						// セレクト描画
 						const $form = $(formElement);
