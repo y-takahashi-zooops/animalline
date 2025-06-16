@@ -21,6 +21,7 @@ use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 class CustomFormLoginAuthenticator extends FormLoginAuthenticator
 {
