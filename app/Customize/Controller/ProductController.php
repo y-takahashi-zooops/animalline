@@ -253,7 +253,7 @@ class ProductController extends BaseProductController
         $form = $builder->getForm();
         $form->handleRequest($request);
 
-        if (!$form->isValid()) {
+        if (!$form->isSubmitted() || !$form->isValid()) {
             $this->logger->error('フォームバリデーションエラー', [
                 'errors' => (string) $form->getErrors(true, false),
             ]);
