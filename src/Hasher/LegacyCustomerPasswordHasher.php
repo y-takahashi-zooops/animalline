@@ -25,7 +25,8 @@ class LegacyCustomerPasswordHasher implements PasswordHasherInterface
     {
         // EC-CUBEの旧仕様: SHA256(secret_key + password) を前提としない
         // $expected = hash('sha256', 'V4waqscSDx1VYMe1lgW74KUCNO2SaZEh' . $plainPassword);
-        $expected = hash('sha256', $plainPassword);
+        $expected = hash('sha256', 'YfRgY44qtAI502VMjmOZIZF73vBQ5fP0' . $plainPassword);
+        // $expected = hash('sha256', $plainPassword);
 
         dd('試しにdd!',$hashedPassword, $plainPassword, $expected, hash_equals($hashedPassword, $expected));
         if (is_object($user)) {
