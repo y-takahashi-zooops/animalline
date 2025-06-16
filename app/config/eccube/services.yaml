@@ -463,3 +463,9 @@ services:
     #     class: App\Hasher\LegacyCustomerPasswordHasher
     #     arguments:
     #         $logger: '@logger'
+
+    App\Security\Authenticator\CustomFormLoginAuthenticator:
+        arguments:
+            $httpUtils: '@security.http_utils'
+            $successHandler: '@app.eccube.security.success_handler'
+            $failureHandler: '@eccube.security.failure_handler'
