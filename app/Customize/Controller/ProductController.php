@@ -190,99 +190,95 @@ class ProductController extends BaseProductController
         );
         $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_PRODUCT_CART_ADD_INITIALIZE);
 
-        $is_favorite = false;
-        if ($this->isGranted('ROLE_USER')) {
-            $Customer = $this->getUser();
-            $is_favorite = $this->customerFavoriteProductRepository->isFavorite($Customer, $Product);
-        }
+        // $is_favorite = false;
+        // if ($this->isGranted('ROLE_USER')) {
+        //     $Customer = $this->getUser();
+        //     $is_favorite = $this->customerFavoriteProductRepository->isFavorite($Customer, $Product);
+        // }
 
-        // JSONの成型
-        $classCategories = [
-            '__unselected' => [
-                '__unselected' => [
-                    'name' => $this->translator->trans('common.select'),
-                    'product_class_id' => '',
-                ],
-            ],
-        ];
+        // // JSONの成型
+        // $classCategories = [
+        //     '__unselected' => [
+        //         '__unselected' => [
+        //             'name' => $this->translator->trans('common.select'),
+        //             'product_class_id' => '',
+        //         ],
+        //     ],
+        // ];
 
-        foreach ($Product->getProductClasses() as $ProductClass) {
-            if (!$ProductClass->isVisible()) {
-                continue;
-            }
+        // foreach ($Product->getProductClasses() as $ProductClass) {
+        //     if (!$ProductClass->isVisible()) {
+        //         continue;
+        //     }
 
-            $ClassCategory1 = $ProductClass->getClassCategory1();
-            $ClassCategory2 = $ProductClass->getClassCategory2();
-            if ($ClassCategory2 && !$ClassCategory2->isVisible()) {
-                continue;
-            }
+        //     $ClassCategory1 = $ProductClass->getClassCategory1();
+        //     $ClassCategory2 = $ProductClass->getClassCategory2();
+        //     if ($ClassCategory2 && !$ClassCategory2->isVisible()) {
+        //         continue;
+        //     }
 
-            $id1 = $ClassCategory1 ? (string) $ClassCategory1->getId() : '__unselected2';
-            $id2 = $ClassCategory2 ? (string) $ClassCategory2->getId() : '';
+        //     $id1 = $ClassCategory1 ? (string) $ClassCategory1->getId() : '__unselected2';
+        //     $id2 = $ClassCategory2 ? (string) $ClassCategory2->getId() : '';
 
-            $name2 = $ClassCategory2
-                ? $ClassCategory2->getName() . (!$ProductClass->getStockFind() ? ' ' . $this->translator->trans('front.product.out_of_stock_label') : '')
-                : $this->translator->trans('common.select');
+        //     $name2 = $ClassCategory2
+        //         ? $ClassCategory2->getName() . (!$ProductClass->getStockFind() ? ' ' . $this->translator->trans('front.product.out_of_stock_label') : '')
+        //         : $this->translator->trans('common.select');
 
-            if (!isset($classCategories[$id1][''])) {
-                $classCategories[$id1]['#'] = [
-                    'classcategory_id2' => '',
-                    'name' => $this->translator->trans('common.select'),
-                    'product_class_id' => '',
-                ];
-            }
+        //     if (!isset($classCategories[$id1][''])) {
+        //         $classCategories[$id1]['#'] = [
+        //             'classcategory_id2' => '',
+        //             'name' => $this->translator->trans('common.select'),
+        //             'product_class_id' => '',
+        //         ];
+        //     }
 
-            $classCategories[$id1][$id2] = [
-                'classcategory_id2' => $id2,
-                'name' => $name2,
-                'stock_find' => $ProductClass->getStockFind(),
-                'price01' => $ProductClass->getPrice01() === null ? '' : number_format($ProductClass->getPrice01()),
-                'price02' => number_format($ProductClass->getPrice02()),
-                'price01_inc_tax' => $ProductClass->getPrice01() === null ? '' : number_format($ProductClass->getPrice01IncTax()),
-                'price02_inc_tax' => number_format($ProductClass->getPrice02IncTax()),
-                'product_class_id' => (string) $ProductClass->getId(),
-                'product_code' => $ProductClass->getCode() ?? '',
-                'sale_type' => $ProductClass->getSaleType() ? (string) $ProductClass->getSaleType()->getId() : '',
-                'item_cost' => method_exists($ProductClass, 'getItemCost') ? (float) $ProductClass->getItemCost() : 0.0,
-            ];
-        }
+        //     $classCategories[$id1][$id2] = [
+        //         'classcategory_id2' => $id2,
+        //         'name' => $name2,
+        //         'stock_find' => $ProductClass->getStockFind(),
+        //         'price01' => $ProductClass->getPrice01() === null ? '' : number_format($ProductClass->getPrice01()),
+        //         'price02' => number_format($ProductClass->getPrice02()),
+        //         'price01_inc_tax' => $ProductClass->getPrice01() === null ? '' : number_format($ProductClass->getPrice01IncTax()),
+        //         'price02_inc_tax' => number_format($ProductClass->getPrice02IncTax()),
+        //         'product_class_id' => (string) $ProductClass->getId(),
+        //         'product_code' => $ProductClass->getCode() ?? '',
+        //         'sale_type' => $ProductClass->getSaleType() ? (string) $ProductClass->getSaleType()->getId() : '',
+        //         'item_cost' => method_exists($ProductClass, 'getItemCost') ? (float) $ProductClass->getItemCost() : 0.0,
+        //     ];
+        // }
 
-        $classCategoriesJson = json_encode($classCategories, JSON_UNESCAPED_UNICODE);
+        // $classCategoriesJson = json_encode($classCategories, JSON_UNESCAPED_UNICODE);
 
         /* @var $form \Symfony\Component\Form\FormInterface */
         $form = $builder->getForm();
         $form->handleRequest($request);
 
-        if (!$form->isValid()) {
-            $this->logger->error('フォームバリデーションエラー', [
-                'errors' => (string) $form->getErrors(true, false),
-            ]);
+        // if (!$form->isValid()) {
+        //     $this->logger->error('フォームバリデーションエラー', [
+        //         'errors' => (string) $form->getErrors(true, false),
+        //     ]);
 
-            return $this->render('Product/detail.twig', [
-                'form' => $form->createView(),
-                'Product' => $Product,
-                'BaseInfo' => $this->BaseInfo,
-                'errorMessages' => ['入力内容に誤りがあります。'],
-                'is_favorite' => $is_favorite,
-                'class_categories_json' => $classCategoriesJson,
-            ]);
+        //     return $this->render('Product/detail.twig', [
+        //         'form' => $form->createView(),
+        //         'Product' => $Product,
+        //         'BaseInfo' => $this->BaseInfo,
+        //         'errorMessages' => ['入力内容に誤りがあります。'],
+        //         'is_favorite' => $is_favorite,
+        //         'class_categories_json' => $classCategoriesJson,
+        //     ]);
+        // }
+
+        if (!$form->isValid()) {
+            throw new NotFoundHttpException();
         }
 
         $addCartData = $form->getData();
 
         // カート商品に同商品がないか検索
-        $cartItem = $this->cartItemRepository->findOneBy([
-            'Cart' => $this->cartService->getCarts(),
-            'ProductClass' => $addCartData['product_class_id']
-        ]);
+        $cartItem = $this->cartItemRepository->findOneBy(['Cart' => $this->cartService->getCarts(),'ProductClass' => $addCartData['product_class_id']]);
         if ($cartItem) {
-            $message = 'この商品はすでにカートに追加されています。';
-            if ($request->isXmlHttpRequest()) {
-                return $this->json(['done' => false, 'messages' => [$message]]);
-            } else {
-                $this->addRequestError($message);
-                return $this->redirectToRoute('cart');
-            }
+            // 同商品がカートに存在したらカートに追加させない
+            return;
         }
 
         $this->logger->info(
@@ -294,7 +290,7 @@ class ProductController extends BaseProductController
                 'is_repeat' => $addCartData['is_repeat'],
                 'repeat_span' => $addCartData['repeat_span'],
                 'span_unit' => $addCartData['span_unit'],
-                'is_favorite' => $is_favorite,
+                // 'is_favorite' => $is_favorite,
             ]
         );
 
@@ -372,8 +368,8 @@ class ProductController extends BaseProductController
             foreach ($errorMessages as $errorMessage) {
                 $this->addRequestError($errorMessage);
             }
+
             return $this->redirectToRoute('cart');
         }
-
     }
 }
