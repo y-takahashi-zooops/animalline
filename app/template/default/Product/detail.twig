@@ -122,8 +122,6 @@ file that was distributed with this source code.
 				waitForTranslator(function () {
 					try {
 						eccube.classCategories = {{ class_categories_json|raw }};
-
-						console.log('設定したproduct_class_id:', productClass?.product_class_id);
 						
 						// セレクト描画
 						const $form = $(formElement);
@@ -149,6 +147,8 @@ file that was distributed with this source code.
 							const selectedId1 = $sele1.val();
 							const selectedId2 = $sele2.val();
 							const productClass = eccube.classCategories[selectedId1]?.[selectedId2];
+
+							console.log('設定したproduct_class_id:', productClass?.product_class_id);
 
 							if (productClass && productClass.product_class_id) {
 								$form.find('[name="add_cart[ProductClass]"]').val(productClass.product_class_id);
