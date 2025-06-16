@@ -258,6 +258,13 @@ class ProductController extends BaseProductController
                 'errors' => (string) $form->getErrors(true, false),
             ]);
 
+            if ($request->isXmlHttpRequest()) {
+                return $this->json([
+                    'done' => false,
+                    'messages' => ['入力内容に誤りがあります。'],
+                ]);
+            }
+
             return $this->render('Product/detail.twig', [
                 'form' => $form->createView(),
                 'Product' => $Product,
