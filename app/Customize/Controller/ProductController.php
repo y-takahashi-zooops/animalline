@@ -172,7 +172,7 @@ class ProductController extends BaseProductController
         }
 
         $builder = $this->formFactory->createNamedBuilder(
-            '',
+            'add_cart',
             AddCartType::class,
             null,
             [
