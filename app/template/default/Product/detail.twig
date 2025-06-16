@@ -269,7 +269,14 @@ file that was distributed with this source code.
 							{% endfor %}
 						</div>
 					{% endif %}
-					<form action="{{ url('product_add_cart', {id:Product.id}) }}" method="post" id="form1" name="form1">
+					{{ form_start(form, {
+						action: url('product_add_cart', {id: Product.id}),
+						method: 'post',
+						attr: {
+							id: 'form1',
+							name: 'add_cart'
+						}
+					}) }}
 						{% if Product.stock_find %}
 							{# 仕様 #}
 							{% if Product.ClassName1 %}
@@ -286,6 +293,17 @@ file that was distributed with this source code.
 									{{ form_errors(form.classcategory_id2) }}
 								</div>
 							{% endif %}
+							{{ form_widget(form.ProductClass) }}
+							{{ form_errors(form.ProductClass) }}
+
+							{{ form_widget(form.quantity, {
+								'attr': {
+									'value': 1,
+									'min': 1,
+									'class': 'form-control'
+								}
+							}) }}
+							{{ form_errors(form.quantity) }}
 							<div class="ec-productRole__order">
 								<ul class="order_list">
 									<li class="order_list_block normal_block" {% if Product.ClassName1 %}style="display: none"{% endif %}>
@@ -351,7 +369,7 @@ file that was distributed with this source code.
 								</button>
 							</div>
 						{% endif %}
-					</form>
+					{{ form_end(form) }}
 					<div class="ec-modal">
 						<div class="ec-modal-overlay">
 							<div class="ec-modal-wrap">
