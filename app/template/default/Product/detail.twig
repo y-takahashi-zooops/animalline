@@ -286,7 +286,8 @@ file that was distributed with this source code.
 						action: url('product_add_cart', {id: Product.id}),
 						method: 'post',
 						attr: {
-							id: 'form1'
+							id: 'form1',
+							name: 'add_cart'
 						}
 					}) }}
 						{{ dump(form.ProductClass.vars.full_name) }}
