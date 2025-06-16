@@ -360,7 +360,7 @@ class ProductController extends AbstractController
         $Product->_calc();
 
         $builder = $this->formFactory->createNamedBuilder(
-            '',
+            'add_cart',
             AddCartType::class,
             null,
             [
