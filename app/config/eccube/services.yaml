@@ -463,3 +463,10 @@ services:
     #     class: App\Hasher\LegacyCustomerPasswordHasher
     #     arguments:
     #         $logger: '@logger'
+
+    App\Security\Authenticator\CustomFormLoginAuthenticator:
+    arguments:
+        $httpUtils: '@security.http_utils'
+        $userProvider: '@customer_provider'
+        $urlGenerator: '@router.default'
+    tags: [ 'monolog.logger' ]
