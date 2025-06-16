@@ -465,10 +465,10 @@ services:
     #         $logger: '@logger'
 
     App\Security\Authenticator\CustomFormLoginAuthenticator:
-    arguments:
-        $httpUtils: '@security.http_utils'
-        $loginPath: '/adoption/login'
-        $checkPath: '/adoption/login'
-        $csrfTokenManager: '@security.csrf.token_manager'
-        $successHandler: '@app.eccube.security.success_handler'
-        $failureHandler: '@eccube.security.failure_handler'
+        arguments:
+            $httpUtils: '@security.http_utils'
+            $loginPath: '/adoption/login'
+            $checkPath: '/adoption/login'
+            $csrfTokenManager: '@security.csrf.token_manager'
+            $successHandler: '@app.eccube.security.success_handler'
+            $failureHandler: '@eccube.security.failure_handler'
