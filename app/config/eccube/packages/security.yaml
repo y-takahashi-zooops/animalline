@@ -67,18 +67,21 @@ security:
                 lifetime: 3600
                 name: eccube_remember_me
                 remember_me_parameter: 'login_memory'
-            form_login:
-                # check_path: adoption_login
-                login_path: adoption_login
-                check_path: /adoption/login
-                # login_path: /adoption/login
-                enable_csrf: true
-                default_target_path: adoption_mypage
-                username_parameter: 'login_email'
-                password_parameter: 'login_pass'
-                use_forward: false
-                success_handler: app.eccube.security.success_handler
-                failure_handler: eccube.security.failure_handler
+            entry_point: App\Security\Authenticator\CustomFormLoginAuthenticator
+            custom_authenticators:
+                - App\Security\Authenticator\CustomFormLoginAuthenticator
+            # form_login:
+            #     # check_path: adoption_login
+            #     login_path: adoption_login
+            #     check_path: /adoption/login
+            #     # login_path: /adoption/login
+            #     enable_csrf: true
+            #     default_target_path: adoption_mypage
+            #     username_parameter: 'login_email'
+            #     password_parameter: 'login_pass'
+            #     use_forward: false
+            #     success_handler: app.eccube.security.success_handler
+            #     failure_handler: eccube.security.failure_handler
             logout:
                 path: logout
                 target: adoption_top
