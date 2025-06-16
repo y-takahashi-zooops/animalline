@@ -261,7 +261,7 @@ class ProductController extends BaseProductController
             if ($request->isXmlHttpRequest()) {
                 return $this->json([
                     'done' => false,
-                    'messages' => ['入力内容に誤りがあります。'],
+                    'messages' => ['入力内容に誤りがあります！'],
                 ]);
             }
 
