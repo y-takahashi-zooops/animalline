@@ -12,8 +12,8 @@ security:
         #         - bcrypt
         #         - legacy
 
-        App\Hasher\LegacyCustomerPasswordHasher:
-            id: App\Hasher\LegacyCustomerPasswordHasher
+        # App\Hasher\LegacyCustomerPasswordHasher:
+        #     id: App\Hasher\LegacyCustomerPasswordHasher
 
         Eccube\Entity\Member:
             # algorithm: sodium
@@ -29,7 +29,7 @@ security:
         Eccube\Entity\Customer:
             algorithm: auto
             migrate_from:
-                - 'legacy_hasher'
+                - id: legacy_hasher
                 - bcrypt
 
     providers:
