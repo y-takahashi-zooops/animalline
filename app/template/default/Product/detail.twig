@@ -289,7 +289,9 @@ file that was distributed with this source code.
 							id: 'form1'
 						}
 					}) }}
-						{{ dump(form.ProductClass.vars.full_name) }}
+						{% for child in form %}
+							<p>{{ child.vars.name }} | {{ child.vars.full_name }} | {{ dump(child.vars) }}</p>
+						{% endfor %}
 						{% if Product.stock_find %}
 							{# 仕様 #}
 							{% if Product.ClassName1 %}
@@ -308,6 +310,8 @@ file that was distributed with this source code.
 							{% endif %}
 							{{ form_widget(form.ProductClass) }}
 							{{ form_errors(form.ProductClass) }}
+
+							{{ dump(form.ProductClass.vars.full_name) }}
 
 							{{ form_widget(form.quantity, {
 								'attr': {
