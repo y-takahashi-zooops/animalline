@@ -154,10 +154,10 @@ file that was distributed with this source code.
 
 							if (productClass && productClass.product_class_id) {
 								console.log('設定したproduct_class_id:', productClass?.product_class_id);
-								$form.find('[name="add_cart[ProductClass]"]').val(productClass.product_class_id);
+								$form.find('[name="add_cart[product_class]"]').val(productClass.product_class_id);
 							} else {
 								console.warn('ProductClassが見つかりません');
-								$form.find('[name="add_cart[ProductClass]"]').val('');
+								$form.find('[name="add_cart[product_class]"]').val('');
 							}
 						}
 
@@ -325,10 +325,10 @@ file that was distributed with this source code.
 									{{ form_errors(form.classcategory_id2) }}
 								</div>
 							{% endif %}
-							{{ form_widget(form.ProductClass) }}
-							{{ form_errors(form.ProductClass) }}
+							{{ form_widget(form.product_class) }}
+							{{ form_errors(form.product_class) }}
 
-							{{ dump(form.ProductClass.vars.full_name) }}
+							{{ dump(form.product_class.vars.full_name) }}
 
 							{{ form_widget(form.quantity, {
 								'attr': {

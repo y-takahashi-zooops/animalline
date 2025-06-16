@@ -83,7 +83,7 @@ class AddCartType extends AbstractType
                 ], ])
             ->add(
                 $builder
-                    ->create('ProductClass', HiddenType::class, [
+                    ->create('product_class', HiddenType::class, [
                         'data_class' => null,
                         'data' => $Product->hasProductClass() ? null : $ProductClasses->first(),
                         'constraints' => [
@@ -199,7 +199,7 @@ class AddCartType extends AbstractType
     {
         $context->getValidator()->validate($data['product_class_id'], [
             new Assert\NotBlank(),
-        ], '[product_class_id]');
+        ], '[product_class]');
         if ($this->Product->getClassName1()) {
             $context->validateValue($data['classcategory_id1'], [
                 new Assert\NotBlank(),
