@@ -293,6 +293,17 @@ file that was distributed with this source code.
 									{{ form_errors(form.classcategory_id2) }}
 								</div>
 							{% endif %}
+							{{ form_widget(form.ProductClass) }}
+							{{ form_errors(form.ProductClass) }}
+
+							{{ form_widget(form.quantity, {
+								'attr': {
+									'value': 1,
+									'min': 1,
+									'class': 'form-control'
+								}
+							}) }}
+							{{ form_errors(form.quantity) }}
 							<div class="ec-productRole__order">
 								<ul class="order_list">
 									<li class="order_list_block normal_block" {% if Product.ClassName1 %}style="display: none"{% endif %}>
