@@ -29,7 +29,7 @@ security:
         Eccube\Entity\Customer:
             algorithm: auto
             migrate_from:
-                - 'legacy_hasher'
+                - id: legacy_hasher
                 - bcrypt
 
     providers:
