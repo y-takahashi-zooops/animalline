@@ -427,6 +427,11 @@ services:
         arguments:
             $eccubeConfig: '@Eccube\Common\EccubeConfig'
 
+    Eccube\Controller\ShoppingController:
+        autowire: true
+        autoconfigure: true
+        public: true
+
     Customize\Form\Extension\ProductTypeExtension:
         autowire: true
         autoconfigure: false  # ← これを false に
