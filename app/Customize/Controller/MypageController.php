@@ -28,7 +28,8 @@ use Eccube\Repository\ProductRepository;
 use Eccube\Repository\CustomerAddressRepository;
 use Eccube\Service\CartService;
 use Eccube\Service\PurchaseFlow\PurchaseFlow;
-use Knp\Component\Pager\Paginator;
+// use Knp\Component\Pager\Paginator;
+use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -316,7 +317,7 @@ class MypageController extends BaseMypageController
      * @Route("/mypage/subscription", name="mypage_subscription")
      * @Template("Mypage/subscription.twig")
      */
-    public function subscription(Request $request, Paginator $paginator)
+    public function subscription(Request $request, PaginatorInterface $paginator)
     {
         $Customer = $this->getUser();
 
