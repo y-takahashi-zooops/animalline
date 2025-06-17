@@ -428,9 +428,8 @@ services:
             $eccubeConfig: '@Eccube\Common\EccubeConfig'
 
     Eccube\Controller\ShoppingController:
-        autowire: true
-        autoconfigure: true
-        public: true
+        arguments:
+            $authorizationChecker: '@security.authorization_checker'
 
     Customize\Form\Extension\ProductTypeExtension:
         autowire: true
