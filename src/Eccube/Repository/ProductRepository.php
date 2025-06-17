@@ -184,6 +184,7 @@ class ProductRepository extends AbstractRepository
         $config = $this->eccubeConfig;
 
         $orderby = $searchData['orderby'] ?? null;
+        dd('並び替え確認', $orderby);
 
         // $orderbyがオブジェクトなら getId()、intならそのまま
         $orderbyId = is_object($orderby) && method_exists($orderby, 'getId')
