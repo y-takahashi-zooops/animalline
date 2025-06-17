@@ -217,8 +217,8 @@ file that was distributed with this source code.
         });
 
 		// 通常注文が押されたときは、通常注文を活性に、定期便を非活性にする
-		$('#order_type_0').on('click', function (e) {
-       		 if(document.getElementById("order_type_0").checked){
+		$('#add_cart_order_type_0').on('click', function (e) {
+       		 if(document.getElementById("add_cart_order_type_0").checked){
             	$('.normal_block').removeClass('glay');
 	            $('.normal_readonly').removeAttr('readonly');
 
@@ -229,8 +229,8 @@ file that was distributed with this source code.
 		});
 
 		// 定期便が押されたときは、通常注文を非活性に、定期便を活性にする
-		$('#order_type_1').on('click', function (e) {
-			if(document.getElementById("order_type_1").checked){
+		$('#add_cart_order_type_1').on('click', function (e) {
+			if(document.getElementById("add_cart_order_type_1").checked){
 				$('.subscription_cycle_block').show();
 				$('.subscription_block').removeClass('glay');
 				$('.subscription_readonly').removeAttr('readonly');
@@ -246,8 +246,8 @@ file that was distributed with this source code.
 		});
 
 		{% if Product.ClassName1 %}
-			$('#order_type_1').prop('checked', true);
-			$('#order_type_1').click();
+			$('#add_cart_order_type_1').prop('checked', true);
+			$('#add_cart_order_type_1').click();
 		{% endif %}
 	</script>
 {% endblock %}
