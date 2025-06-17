@@ -433,8 +433,8 @@ services:
         public: true
 
     Eccube\Controller\AbstractShoppingController:
-            arguments:
-                $formFactory: '@form.factory'
+        arguments:
+            $formFactory: '@form.factory'
 
     Customize\Form\Extension\ProductTypeExtension:
         autowire: true
