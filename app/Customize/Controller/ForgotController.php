@@ -87,7 +87,8 @@ class ForgotController extends AbstractController
         FormFactoryInterface $formFactory,
         EventDispatcherInterface $eventDispatcher,
         EccubeConfig $eccubeConfig,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator
     ) {
         $this->validator = $validator;
         $this->mailService = $mailService;
@@ -98,6 +99,7 @@ class ForgotController extends AbstractController
         $this->eventDispatcher = $eventDispatcher;
         $this->eccubeConfig = $eccubeConfig;
         $this->entityManager = $entityManager;
+        $this->translator = $translator;
     }
 
     /**
@@ -306,13 +308,13 @@ class ForgotController extends AbstractController
                 $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_FORGOT_RESET_COMPLETE);
 
                 // 完了メッセージを設定
-                $this->addFlash('password_reset_complete', trans('front.forgot.reset_complete'));
+                $this->addFlash('password_reset_complete', $this->translator->trans('front.forgot.reset_complete'));
 
                 // ログインページへリダイレクト
                 return $this->redirectToRoute($return_path);
             } else {
                 // リセットキー・メールアドレスから会員データが取得できない場合
-                $error = trans('front.forgot.reset_not_found');
+                $error = $this->translator->trans('front.forgot.reset_not_found');
             }
         }
 
