@@ -109,6 +109,8 @@ file that was distributed with this source code.
             eccube.setClassCategories($form, product_id, $sele1, $sele2, classcat_id2_selected);
         }
 
+		console.log(eccube.classCategories);
+
         {% if form.classcategory_id2 is defined %}
 			fnSetClassCategories(
 				$('#form1'), {{ form.classcategory_id2.vars.value|json_encode|raw }}
