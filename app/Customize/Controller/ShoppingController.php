@@ -39,6 +39,7 @@ use Customize\Service\SubscriptionProcess;
 use Psr\Log\LoggerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 
 class ShoppingController extends BaseShoppingController
@@ -82,6 +83,7 @@ class ShoppingController extends BaseShoppingController
         LoggerInterface $logger,
         EntityManagerInterface $entityManager,
         FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->cartService = $cartService;
         $this->mailService = $mailService;
@@ -91,6 +93,7 @@ class ShoppingController extends BaseShoppingController
         $this->logger = $logger;
         $this->entityManager = $entityManager;
         $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
