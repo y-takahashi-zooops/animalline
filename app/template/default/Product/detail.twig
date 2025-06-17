@@ -214,19 +214,20 @@ file that was distributed with this source code.
 							fnSetClassCategories('');
 						{% endif %}
 
+						
+						// モーダルを閉じる
+						$('.ec-modal-overlay, .ec-modal .ec-inlineBtn--cancel, .ec-modal-close').on('click', function () {
+							$('.ec-modal').hide();
+							$('.bg-load-overlay').fadeOut();
+						});
+
 					} catch (e) {
 						console.error("Error setting classCategories:", e);
 					}
 				});
 			});
 		});
-		$(function () {
-            $('.ec-modal-overlay, .ec-modal .ec-inlineBtn--cancel, .ec-modal-close').on('click', function () {
-                $('.ec-modal').hide();
-            });
-        });
 	</script>
-
     {{ parent() }}
 {% endblock %}
 
