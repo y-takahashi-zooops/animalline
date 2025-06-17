@@ -124,7 +124,6 @@ class PasswordEncoder implements PasswordHasherInterface
         if ($this->auth_type == 'PLAIN') {
             $res = $raw;
         } else {
-            dd($this->password_hash_algos, $raw . ':' . $this->auth_magic, $salt);
             $res = hash_hmac($this->password_hash_algos, $raw.':'.$this->auth_magic, $salt);
         }
 

@@ -213,7 +213,6 @@ class AnilineEntryController extends AbstractController
      */
     public function index(Request $request)
     {
-        dd($this->password_hash_algos,$this->auth_magic);
         $returnPath = $request->get("ReturnPath");
 
         if($returnPath == ""){
