@@ -93,7 +93,29 @@ file that was distributed with this source code.
 
 {% block javascript %}
     <script>
-        eccube.classCategories = {{ class_categories_json|raw }};;
+        eccube.classCategories = {{ class_categories_json|raw }};
+
+		function waitForElement(selector, callback, retries = 10) {
+			const el = document.querySelector(selector);
+			if (el) {
+				callback(el);
+			} else if (retries > 0) {
+				setTimeout(() => waitForElement(selector, callback, retries - 1), 100);
+			} else {
+				console.warn('Element not found:', selector);
+			}
+		}
+
+		function waitForTranslator(callback, retries = 10) {
+			if (typeof Translator !== 'undefined') {
+				callback();
+			} else if (retries > 0) {
+				setTimeout(() => waitForTranslator(callback, retries - 1), 100);
+			} else {
+				console.warn("Translator is not loaded yet.");
+				callback(); // fallback 実行
+			}
+		}
 
 		document.addEventListener('DOMContentLoaded', function () {
 			waitForElement('#form1', function (formElement) {
