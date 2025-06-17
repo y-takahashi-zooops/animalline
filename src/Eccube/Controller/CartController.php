@@ -72,8 +72,12 @@ class CartController extends AbstractController
         PurchaseFlow $cartPurchaseFlow,
         BaseInfoRepository $baseInfoRepository,
         LoggerInterface $logger,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        RequestStack $requestStack,
     ) {
+        parent::__construct(
+            $requestStack,
+        );
         $this->productClassRepository = $productClassRepository;
         $this->cartService = $cartService;
         $this->purchaseFlow = $cartPurchaseFlow;
