@@ -46,7 +46,8 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Eccube\Common\EccubeConfig;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpFoundation\RequestStack; 
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class ShoppingController extends AbstractShoppingController
 {
@@ -94,7 +95,8 @@ class ShoppingController extends AbstractShoppingController
         TranslatorInterface $translator,
         SessionInterface $session,
         RequestStack $requestStack,
-        RouterInterface $router
+        RouterInterface $router,
+        AuthorizationCheckerInterface $authorizationChecker
     ) {
         parent::__construct(
             $eccubeConfig,
@@ -115,6 +117,7 @@ class ShoppingController extends AbstractShoppingController
         $this->eventDispatcher = $eventDispatcher;
         $this->entityManager = $entityManager;
         $this->security = $security;
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     /**
@@ -619,7 +622,7 @@ class ShoppingController extends AbstractShoppingController
         }
 
         $CustomerAddress = new CustomerAddress();
-        if ($this->security->isGranted('IS_AUTHENTICATED_FULLY')) {
+        if ($this->authorizationChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
             // ログイン時は会員と紐付け
             $CustomerAddress->setCustomer($this->getUser());
         } else {
@@ -647,7 +650,7 @@ class ShoppingController extends AbstractShoppingController
 
             $Shipping->setFromCustomerAddress($CustomerAddress);
 
-            if ($this->security->isGranted('IS_AUTHENTICATED_FULLY')) {
+            if ($this->authorizationChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
                 $this->entityManager->persist($CustomerAddress);
             }
 
@@ -688,14 +691,14 @@ class ShoppingController extends AbstractShoppingController
      */
     public function login(Request $request, AuthenticationUtils $authenticationUtils)
     {
-        if ($this->security->isGranted('IS_AUTHENTICATED_FULLY')) {
+        if ($this->authorizationChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
             return $this->redirectToRoute('shopping');
         }
 
         /* @var $form \Symfony\Component\Form\FormInterface */
         $builder = $this->formFactory->createNamedBuilder('', CustomerLoginType::class);
 
-        if ($this->security->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+        if ($this->authorizationChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             $Customer = $this->getUser();
             if ($Customer) {
                 $builder->get('login_email')->setData($Customer->getEmail());
