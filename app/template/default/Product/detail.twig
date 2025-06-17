@@ -149,27 +149,6 @@ file that was distributed with this source code.
 								});
 							}
 
-							// 商品規格が確定した後、ProductClass にセット
-							const selectedId1 = $sele1.val();
-							const selectedId2 = $sele2.length ? $sele2.val() : '';
-							const productClass = eccube.classCategories?.[selectedId1]?.[selectedId2];
-
-							console.log("Selected IDs: ", selectedId1, selectedId2);
-							console.log("Product Class: ", productClass);
-
-							if (productClass && productClass.product_class_id) {
-								console.log('設定したproduct_class_id:', productClass.product_class_id);
-
-								let $input = $form.find('input[name="add_cart[product_class]"]');
-								if (!$input.length) {
-									$input = $('<input>', { type: 'hidden', name: 'add_cart[product_class]' }).appendTo($form);
-								}
-								$input.val(productClass.product_class_id);
-								return true;
-							} else {
-								$form.find('input[name="add_cart[product_class]"]').val('');
-								return false;
-							}
 						}
 
 						$sele1.on('change', fnSetClassCategories);
