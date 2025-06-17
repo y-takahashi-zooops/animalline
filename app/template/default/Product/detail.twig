@@ -118,14 +118,6 @@ file that was distributed with this source code.
 		}
 
 		document.addEventListener('DOMContentLoaded', function () {
-			document.querySelector('.ec-modal-close')?.addEventListener('click', function () {
-				document.querySelector('.ec-modal')?.style.display = 'none';
-				document.querySelector('.bg-load-overlay')?.style.display = 'none';
-			});
-			document.querySelector('.ec-inlineBtn--cancel')?.addEventListener('click', function () {
-				document.querySelector('.ec-modal')?.style.display = 'none';
-				document.querySelector('.bg-load-overlay')?.style.display = 'none';
-			});
 
 			waitForElement('#form1', function (formElement) {
 				waitForTranslator(function () {
