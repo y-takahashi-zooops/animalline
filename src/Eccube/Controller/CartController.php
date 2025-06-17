@@ -29,7 +29,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\RequestStack; 
+use Symfony\Component\HttpFoundation\RequestStack;
+use Doctrine\ORM\EntityManagerInterface;
+use Eccube\Common\EccubeConfig;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 class CartController extends AbstractController
 {
@@ -73,11 +79,24 @@ class CartController extends AbstractController
         PurchaseFlow $cartPurchaseFlow,
         BaseInfoRepository $baseInfoRepository,
         LoggerInterface $logger,
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator,
+        SessionInterface $session,
+        FormFactoryInterface $formFactory,
         EventDispatcherInterface $eventDispatcher,
         RequestStack $requestStack,
+        RouterInterface $router
     ) {
         parent::__construct(
+            $eccubeConfig,
             $requestStack,
+            $entityManager,
+            $translator,
+            $session,
+            $formFactory,
+            $eventDispatcher,
+            $router
         );
         $this->productClassRepository = $productClassRepository;
         $this->cartService = $cartService;
