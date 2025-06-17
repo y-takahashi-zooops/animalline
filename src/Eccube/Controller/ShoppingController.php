@@ -78,8 +78,7 @@ class ShoppingController extends AbstractShoppingController
 
     protected FormFactoryInterface $formFactory;
 
-    protected $security;
-
+    protected AuthorizationCheckerInterface $authorizationChecker;
 
     public function __construct(
         CartService $cartService,
