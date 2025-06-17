@@ -143,12 +143,23 @@ file that was distributed with this source code.
 						function fnSetClassCategories() {
 							eccube.setClassCategories($form, product_id, $sele1, $sele2);
 
-							let $hiddenProductClass = $form.find('input[name="add_cart[product_class]"]');
-							if ($hiddenProductClass.length === 0) {
-								$hiddenProductClass = $('<input>', {
-									type: 'hidden',
-									name: 'add_cart[product_class]',
-								}).appendTo($form);
+							if (productClass && productClass.product_class_id) {
+								console.log('設定したproduct_class_id:', productClass?.product_class_id);
+
+								let $input = $form.find('input[name="add_cart[product_class]"]');
+								if (!$input.length) {
+									// inputが存在しない場合は作成
+									$input = $('<input>', {
+										type: 'hidden',
+										name: 'add_cart[product_class]',
+									}).appendTo($form);
+								}
+								$input.val(productClass.product_class_id);
+								return true;
+							} else {
+								console.warn('ProductClassが見つかりません');
+								$form.find('input[name="add_cart[product_class]"]').val('');
+								return false;
 							}
 
 							// 商品規格が確定したあと、ProductClass にセット
@@ -156,17 +167,10 @@ file that was distributed with this source code.
 							const selectedId2 = $sele2.length ? $sele2.val() : '';
 							const productClass = eccube.classCategories?.[selectedId1]?.[selectedId2];
 
-							console.log(productClass)
-							console.log('selectedId1:', selectedId1);
-							console.log('selectedId2:', selectedId2);
-							console.log('classCategories:', eccube.classCategories);
-
 							if (productClass && productClass.product_class_id) {
-								console.log('設定したproduct_class_id:', productClass?.product_class_id);
 								$form.find('input[name="add_cart[product_class]"]').val(productClass.product_class_id);
 								return true;
 							} else {
-								console.warn('ProductClassが見つかりません');
 								$form.find('input[name="add_cart[product_class]"]').val('');
 								return false;
 							}
@@ -174,9 +178,6 @@ file that was distributed with this source code.
 
 						$sele1.on('change', fnSetClassCategories);
                 		$sele2.on('change', fnSetClassCategories);
-
-						console.log('直前のproduct_class:', $form.find('input[name="add_cart[product_class]"]').val());
-						console.log('直前のserialize:', $form.serialize());
 
 						$form.on('submit', function (e) {
 							e.preventDefault(); // 送信を止める
@@ -362,8 +363,6 @@ file that was distributed with this source code.
 								{{ form_row(form.product_class) }}
 								{{ form_errors(form.product_class) }}
 							</div>
-							{{ dump(form.product_class.vars.full_name) }}
-
 							{{ form_widget(form.quantity, {
 								'attr': {
 									'value': 1,
