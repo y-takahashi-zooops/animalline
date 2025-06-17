@@ -422,19 +422,15 @@ file that was distributed with this source code.
 												{{ form_errors(form.subscription_quantity) }}
 											</div>
 										</div>
-										<ul class="subscription_cycle_block">
+										<ul class="subscription_cycle_block" style="display: none;">
 											<li style="font-weight: bold;">お届けサイクル：</li>
 											<li class="subscription_cycle">
-												<div class="mb-2">{{ form_row(form.cycle_type[0]) }}</div>
-												{{ form_label(form.month) }}
-												{{ form_widget(form.month, {'attr': {'class': 'form-control'}}) }}
-												{{ form_errors(form.month) }}
+												<div class="mb-2">{{ form_widget(form.cycle_type[0]) }}</div>
+												{{ form_row(form.month) }}
 											</li>
 											<li class="subscription_cycle">
-												<div class="mb-2">{{ form_row(form.cycle_type[1]) }}</div>
-												{{ form_label(form.day) }}
-												{{ form_widget(form.day, {'attr': {'class': 'form-control'}}) }}
-												{{ form_errors(form.day) }}
+												<div class="mb-2">{{ form_widget(form.cycle_type[1]) }}</div>
+												{{ form_row(form.day) }}
 											</li>
 										</ul>
 									</li>
