@@ -82,18 +82,18 @@ class AddCartTypeCustomizer extends AbstractTypeExtension
                     new Assert\NotBlank(),
                     new Assert\Regex(['pattern' => '/^\d+$/']),
                 ],
-            ])
-            ->add(
-                $builder
-                    ->create('ProductClass', HiddenType::class, [
-                        'data_class' => null,
-                        'data' => $Product->hasProductClass() ? null : $ProductClasses->first(),
-                        'constraints' => [
-                            new Assert\NotBlank(),
-                        ],
-                    ])
-                    ->addModelTransformer(new EntityToIdTransformer($this->doctrine->getManager(), ProductClass::class))
-            );
+            ]);
+            // ->add(
+            //     $builder
+            //         ->create('ProductClass', HiddenType::class, [
+            //             'data_class' => null,
+            //             'data' => $Product->hasProductClass() ? null : $ProductClasses->first(),
+            //             'constraints' => [
+            //                 new Assert\NotBlank(),
+            //             ],
+            //         ])
+            //         ->addModelTransformer(new EntityToIdTransformer($this->doctrine->getManager(), ProductClass::class))
+            // );
 
         if ($Product->getStockFind()) {
             $builder
