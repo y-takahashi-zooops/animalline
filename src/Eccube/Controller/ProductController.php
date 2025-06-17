@@ -185,7 +185,7 @@ class ProductController extends AbstractController
         $searchForm = $builder->getForm();
 
         $searchForm->handleRequest($request);
-dd('検索パラメータを確認', $searchForm);
+
         // paginator
         $searchData = $searchForm->getData();
         $qb = $this->productRepository->getQueryBuilderBySearchData($searchData, $this->getUser());

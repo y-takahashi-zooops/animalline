@@ -58,7 +58,7 @@ class SearchProductType extends AbstractType
             'choices' => $Categories,
             'placeholder' => 'common.select__all_products',
             'required' => false,
-            'mapped' => false,
+            'mapped' => true,
         ]);
         // $builder->add('category_id', IntegerType::class, [
         //     'required' => false,
