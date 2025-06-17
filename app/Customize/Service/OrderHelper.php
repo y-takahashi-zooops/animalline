@@ -100,6 +100,8 @@ class OrderHelper extends BaseOrderHelper
      */
     protected $logger;
 
+    protected $security;
+
     public function __construct(
         ContainerInterface $container,
         EntityManagerInterface $entityManager,
@@ -127,6 +129,7 @@ class OrderHelper extends BaseOrderHelper
         $this->mobileDetector = $mobileDetector;
         $this->session = $session;
         $this->logger = $logger;
+        $this->security = $security;
     }
 
     /**
@@ -210,17 +213,17 @@ class OrderHelper extends BaseOrderHelper
     public function isLoginRequired()
     {
         // フォームログイン済はログイン不要
-        if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
+        if ($this->security->isGranted('IS_AUTHENTICATED_FULLY')) {
             return false;
         }
 
         // Remember Meログイン済の場合はフォームからのログインが必要
-        if ($this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+        if ($this->security->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return true;
         }
 
         // 未ログインだがお客様情報を入力している場合はログイン不要
-        if (!$this->getUser() && $this->getNonMember()) {
+        if (!$this->security->getUser() && $this->getNonMember()) {
             return false;
         }
 

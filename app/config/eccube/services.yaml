@@ -427,6 +427,10 @@ services:
         arguments:
             $eccubeConfig: '@Eccube\Common\EccubeConfig'
 
+    Eccube\Controller\ShoppingController:
+        arguments:
+            $authorizationChecker: '@security.authorization_checker'
+
     Customize\Form\Extension\ProductTypeExtension:
         autowire: true
         autoconfigure: false  # ← これを false に
