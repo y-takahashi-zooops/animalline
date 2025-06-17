@@ -92,146 +92,164 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block javascript %}
-	<script src="{{ asset('assets/js/vendor/translations.js') }}"></script>
+    <script>
+        eccube.classCategories = {{ class_categories_as_json(Product)|raw }};
 
-	<script>
-		// モーダル閉じる処理
-		$(document).on('click', '.ec-modal-overlay, .ec-modal .ec-inlineBtn--cancel, .ec-modal-close', function () {
-			console.log('モーダル閉じる処理：開始');
-			$('.ec-modal').hide();
-			$('.bg-load-overlay').fadeOut();
-			console.log('モーダル閉じる処理：完了');
-		});
-	</script>
+        // 規格2に選択肢を割り当てる。
+        function fnSetClassCategories(form, classcat_id2_selected) {
+            var $form = $(form);
+            var product_id = $form.find('input[name=product_id]').val();
+            var $sele1 = $form.find('select[name=classcategory_id1]');
+            var $sele2 = $form.find('select[name=classcategory_id2]');
+            eccube.setClassCategories($form, product_id, $sele1, $sele2, classcat_id2_selected);
+        }
 
-	<script>
+        {% if form.classcategory_id2 is defined %}
+        fnSetClassCategories(
+            $('#form1'), {{ form.classcategory_id2.vars.value|json_encode|raw }}
+        );
+        {% elseif form.classcategory_id1 is defined %}
+        eccube.checkStock($('#form1'), {{ Product.id }}, {{ form.classcategory_id1.vars.value|json_encode|raw }}, null);
+        {% endif %}
+    </script>
+    <script>
+        $(function() {
+            // bfcache無効化
+            $(window).bind('pageshow', function(event) {
+                if (event.originalEvent.persisted) {
+                    location.reload(true);
+                }
+            });
 
-		function waitForElement(selector, callback, retries = 10) {
-			const el = document.querySelector(selector);
-			if (el) {
-				callback(el);
-			} else if (retries > 0) {
-				setTimeout(() => waitForElement(selector, callback, retries - 1), 100);
-			} else {
-				console.warn('Element not found:', selector);
-			}
-		}
+            $('.item_visual').slick({
+                dots: false,
+                arrows: false,
+                responsive: [{
+                    breakpoint: 768,
+                    settings: {
+                        dots: true
+                    }
+                }]
+            });
 
-		function waitForTranslator(callback, retries = 10) {
-			if (typeof Translator !== 'undefined') {
-				callback();
-			} else if (retries > 0) {
-				setTimeout(() => waitForTranslator(callback, retries - 1), 100);
-			} else {
-				console.warn("Translator is not loaded yet.");
-				callback(); // fallback 実行
-			}
-		}
+            $('.slideThumb').on('click', function() {
+                var index = $(this).attr('data-index');
+                $('.item_visual').slick('slickGoTo', index, false);
+            })
+        });
+    </script>
+    <script>
+        $(function() {
+            $('.add-cart').on('click', function(event) {
+                {% if form.classcategory_id1 is defined %}
+                // 規格1フォームの必須チェック
+                if ($('#classcategory_id1').val() == '__unselected' || $('#classcategory_id1').val() == '') {
+                    $('#classcategory_id1')[0].setCustomValidity('{{ '項目が選択されていません'|trans }}');
+                    return true;
+                } else {
+                    $('#classcategory_id1')[0].setCustomValidity('');
+                }
+                {% endif %}
 
-		document.addEventListener('DOMContentLoaded', function () {
-			waitForElement('#form1', function (formElement) {
-				waitForTranslator(function () {
-					try {
-						eccube.classCategories = {{ class_categories_json|raw }};
-						
-						// セレクト描画
-						const $form = $(formElement);
-						const product_id = $form.find('input[name="add_cart[product_id]"]').val();
-						const $sele1 = $form.find('select[name="add_cart[classcategory_id1]"]');
-						const $sele2 = $form.find('select[name="add_cart[classcategory_id2]"]');
+                {% if form.classcategory_id2 is defined %}
+                // 規格2フォームの必須チェック
+                if ($('#classcategory_id2').val() == '__unselected' || $('#classcategory_id2').val() == '') {
+                    $('#classcategory_id2')[0].setCustomValidity('{{ '項目が選択されていません'|trans }}');
+                    return true;
+                } else {
+                    $('#classcategory_id2')[0].setCustomValidity('');
+                }
+                {% endif %}
 
-						// 翻訳キーを翻訳済みに差し替え
-						for (const key1 in eccube.classCategories) {
-							for (const key2 in eccube.classCategories[key1]) {
-								let item = eccube.classCategories[key1][key2];
-								if (typeof item.name === 'string' && item.name.startsWith('trans:')) {
-									const transKey = item.name.replace(/^trans:/, '');
-									item.name = Translator.trans(transKey);
-								}
-							}
-						}
-
-						function fnSetClassCategories() {
-							eccube.setClassCategories($form, product_id, $sele1, $sele2);
-
-
-							// 商品規格が確定したあと、ProductClass にセット
-							const selectedId1 = $sele1.val();
-							const selectedId2 = $sele2.length ? $sele2.val() : '';
-							const productClass = eccube.classCategories?.[selectedId1]?.[selectedId2];
-
-							if (productClass && productClass.product_class_id) {
-								console.log('設定したproduct_class_id:', productClass?.product_class_id);
-
-								let $input = $form.find('input[name="add_cart[product_class]"]');
-								if (!$input.length) {
-									// inputが存在しない場合は作成
-									$input = $('<input>', {
-										type: 'hidden',
-										name: 'add_cart[product_class]',
-									}).appendTo($form);
-								}
-								$input.val(productClass.product_class_id);
-								return true;
-							} else {
-								console.warn('ProductClassが見つかりません');
-								$form.find('input[name="add_cart[product_class]"]').val('');
-								return false;
-							}
-						}
-
-						$sele1.on('change', fnSetClassCategories);
-                		$sele2.on('change', fnSetClassCategories);
-
-						$form.on('submit', function (e) {
-							e.preventDefault(); // 送信を止める
-
-							const success = fnSetClassCategories();
-							if (!success) {
-								alert('商品規格が選択されていません');
-								return;
-							}
-
-							$.post($form.attr('action'), $form.serialize())
-								.done(function (response) {
-									try {
-										const json = typeof response === 'string' ? JSON.parse(response) : response;
-										if (json.done === true) {
-											console.log('trueの中')
-											$('.ec-modal').fadeIn();
-										} else if (json.messages) {
-											alert(json.messages.join('\n'));
-										} else {
-											alert('カート追加に失敗しました');
-										}
-									} catch (e) {
-										console.error("パースエラー:", e);
-										alert('カート処理中にエラーが発生しました');
-									}
-								})
-								.fail(function () {
-									alert('通信エラーが発生しました');
-								});
-						});
-
-						// 初期表示時に一度実行
-						fnSetClassCategories();
-
-						{% if form.classcategory_id2 is defined %}
-							fnSetClassCategories({{ form.classcategory_id2.vars.value|json_encode|raw }});
-						{% elseif form.classcategory_id1 is defined %}
-							eccube.checkStock($form, {{ Product.id }}, {{ form.classcategory_id1.vars.value|json_encode|raw }}, null);
-						{% else %}
-							fnSetClassCategories('');
-						{% endif %}
-					} catch (e) {
-						console.error("Error setting classCategories:", e);
+                // 個数フォームのチェック(通常注文)
+					if ($('#normal_quantity').val() < 1) {
+						$('#normal_quantity')[0].setCustomValidity('{{ '1以上で入力してください。'|trans }}');
+						return true;
+					} else {
+						$('#normal_quantity')[0].setCustomValidity('');
 					}
-				});
-			});
+                // 個数フォームのチェック(定期便)
+					if ($('#subscription_quantity').val() < 1) {
+						$('#subscription_quantity')[0].setCustomValidity('{{ '1以上で入力してください。'|trans }}');
+						return true;
+					} else {
+						$('#subscription_quantity')[0].setCustomValidity('');
+					}
+
+                event.preventDefault();
+                $form = $('#form1');
+                $.ajax({
+                    url: $form.attr('action'),
+                    type: $form.attr('method'),
+                    data: $form.serialize(),
+                    dataType: 'json',
+                    beforeSend: function(xhr, settings) {
+                        // Buttonを無効にする
+                        $('.add-cart').prop('disabled', true);
+                    }
+                }).done(function(data) {
+                    // レスポンス内のメッセージをalertで表示
+                    $.each(data.messages, function() {
+                        $('#ec-modal-header').html(this);
+                    });
+
+                    $('.ec-modal').show()
+
+                    // カートブロックを更新する
+                    $.ajax({
+                        url: "{{ url('block_cart') }}",
+                        type: 'GET',
+                        dataType: 'html'
+                    }).done(function(html) {
+                        $('.ec-headerRole__cart').html(html);
+                    });
+                }).fail(function(data) {
+                    alert('{{ 'カートへの追加に失敗しました。'|trans }}');
+                }).always(function(data) {
+                    // Buttonを有効にする
+                    $('.add-cart').prop('disabled', false);
+                });
+            });
+        });
+
+        $('.ec-modal-overlay, .ec-modal .ec-inlineBtn--cancel').on('click', function() {
+            $('.ec-modal').hide()
+        });
+
+		// 通常注文が押されたときは、通常注文を活性に、定期便を非活性にする
+		$('#order_type_0').on('click', function (e) {
+       		 if(document.getElementById("order_type_0").checked){
+            	$('.normal_block').removeClass('glay');
+	            $('.normal_readonly').removeAttr('readonly');
+
+				$('.subscription_cycle_block').hide();
+				$('.subscription_block').addClass('glay');
+				$('.subscription_readonly').attr('readonly', true);
+			}
 		});
+
+		// 定期便が押されたときは、通常注文を非活性に、定期便を活性にする
+		$('#order_type_1').on('click', function (e) {
+			if(document.getElementById("order_type_1").checked){
+				$('.subscription_cycle_block').show();
+				$('.subscription_block').removeClass('glay');
+				$('.subscription_readonly').removeAttr('readonly');
+
+				$('.normal_block').addClass('glay');
+	            $('.normal_readonly').attr('readonly', true);
+			}
+		});
+		
+		// 画面ロード中はカートに入れるボタンは非活性,ロード完了後に活性にする
+		window.addEventListener("load", function() {
+			$('.add-cart').prop('disabled', false);
+		});
+
+		{% if Product.ClassName1 %}
+			$('#order_type_1').prop('checked', true);
+			$('#order_type_1').click();
+		{% endif %}
 	</script>
-    {{ parent() }}
 {% endblock %}
 
 {% block main %}
