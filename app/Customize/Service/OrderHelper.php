@@ -223,7 +223,7 @@ class OrderHelper extends BaseOrderHelper
         }
 
         // 未ログインだがお客様情報を入力している場合はログイン不要
-        if (!$this->security->getUser()() && $this->getNonMember()) {
+        if (!$this->security->getUser() && $this->getNonMember()) {
             return false;
         }
 
