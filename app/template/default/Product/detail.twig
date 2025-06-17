@@ -143,6 +143,14 @@ file that was distributed with this source code.
 						function fnSetClassCategories() {
 							eccube.setClassCategories($form, product_id, $sele1, $sele2);
 
+							let $hiddenProductClass = $form.find('input[name="add_cart[product_class]"]');
+							if ($hiddenProductClass.length === 0) {
+								$hiddenProductClass = $('<input>', {
+									type: 'hidden',
+									name: 'add_cart[product_class]',
+								}).appendTo($form);
+							}
+
 							// 商品規格が確定したあと、ProductClass にセット
 							const selectedId1 = $sele1.val();
 							const selectedId2 = $sele2.length ? $sele2.val() : '';
