@@ -30,7 +30,7 @@ class ProductListOrderByType extends AbstractType
                 '新着順' => 'id_desc',
                 '価格が安い順' => 'price_asc',
                 '価格が高い順' => 'price_desc',
-                '商品名順' => 'name_asc',
+                // '商品名順' => 'name_asc',
             ],
             'required' => false,
             'placeholder' => false,
