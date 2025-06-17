@@ -44,6 +44,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Eccube\Common\EccubeConfig;
 
 class AnilineEntryController extends AbstractController
 {
@@ -110,6 +111,21 @@ class AnilineEntryController extends AbstractController
     protected $logger;
 
     /**
+     * @var string
+     */
+    public $auth_magic;
+
+    /**
+     * @var string
+     */
+    public $auth_type;
+
+    /**
+     * @var string
+     */
+    public $password_hash_algos;
+
+    /**
      * EntryController constructor.
      *
      * @param CartService $cartService
@@ -141,7 +157,8 @@ class AnilineEntryController extends AbstractController
         FormFactoryInterface $formFactory,
         EventDispatcherInterface $eventDispatcher,
         LoggerInterface $logger,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        EccubeConfig $eccubeConfig
     ) {
         $this->customerStatusRepository = $customerStatusRepository;
         $this->mailService = $mailService;
@@ -158,6 +175,9 @@ class AnilineEntryController extends AbstractController
         $this->eventDispatcher = $eventDispatcher;
         $this->logger = $logger;
         $this->entityManager = $entityManager;
+        $this->auth_magic = $eccubeConfig->get('eccube_auth_magic');
+        $this->auth_type = $eccubeConfig->get('eccube_auth_type');
+        $this->password_hash_algos = $eccubeConfig->get('eccube_password_hash_algos');
     }
 
     /**
@@ -193,6 +213,7 @@ class AnilineEntryController extends AbstractController
      */
     public function index(Request $request)
     {
+        dd($this->password_hash_algos,$this->auth_magic);
         $returnPath = $request->get("ReturnPath");
 
         if($returnPath == ""){
