@@ -435,7 +435,6 @@ services:
     Eccube\Controller\AbstractShoppingController:
             arguments:
                 $formFactory: '@form.factory'
-                $security: '@security.authorization_checker'
 
     Customize\Form\Extension\ProductTypeExtension:
         autowire: true
