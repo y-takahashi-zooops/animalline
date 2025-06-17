@@ -216,9 +216,9 @@ file that was distributed with this source code.
 						fnSetClassCategories();
 
 						{% if form.classcategory_id2 is defined %}
-							fnSetClassCategories({{ form.classcategory_id2.vars.value|json_encode|raw }});
+							fnSetClassCategories();
 						{% elseif form.classcategory_id1 is defined %}
-							eccube.checkStock($form, {{ Product.id }}, {{ form.classcategory_id1.vars.value|json_encode|raw }}, null);
+							eccube.checkStock($form, {{ Product.id|json_encode|raw }}, {{ form.classcategory_id1.vars.value|json_encode|raw }}, null);
 						{% else %}
 							fnSetClassCategories('');
 						{% endif %}
