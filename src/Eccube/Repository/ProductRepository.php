@@ -141,7 +141,6 @@ class ProductRepository extends AbstractRepository
      */
     public function getQueryBuilderBySearchData($searchData, $loggedUser = false)
     {
-        dd('データ取得を確認', $searchData);
         $SaleType = $this->saleTypeRepository->find(SaleType::SALE_TYPE_NORMAL);
 
         $qb = $this->createQueryBuilder('p')
