@@ -118,15 +118,6 @@ file that was distributed with this source code.
 		}
 
 		document.addEventListener('DOMContentLoaded', function () {
-			document.querySelector('.ec-modal-close')?.addEventListener('click', function () {
-				document.querySelector('.ec-modal')?.style.display = 'none';
-				document.querySelector('.bg-load-overlay')?.style.display = 'none';
-			});
-			document.querySelector('.ec-inlineBtn--cancel')?.addEventListener('click', function () {
-				document.querySelector('.ec-modal')?.style.display = 'none';
-				document.querySelector('.bg-load-overlay')?.style.display = 'none';
-			});
-
 			waitForElement('#form1', function (formElement) {
 				waitForTranslator(function () {
 					try {
@@ -216,9 +207,9 @@ file that was distributed with this source code.
 						fnSetClassCategories();
 
 						{% if form.classcategory_id2 is defined %}
-							fnSetClassCategories();
+							fnSetClassCategories({{ form.classcategory_id2.vars.value|json_encode|raw }});
 						{% elseif form.classcategory_id1 is defined %}
-							eccube.checkStock($form, {{ Product.id|json_encode|raw }}, {{ form.classcategory_id1.vars.value|json_encode|raw }}, null);
+							eccube.checkStock($form, {{ Product.id }}, {{ form.classcategory_id1.vars.value|json_encode|raw }}, null);
 						{% else %}
 							fnSetClassCategories('');
 						{% endif %}
