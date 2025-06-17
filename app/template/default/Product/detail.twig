@@ -101,12 +101,13 @@ file that was distributed with this source code.
 			var product_id = $form.find('input[name=add_cart[product_id]]').val();
             var $sele1 = $form.find('select[name=add_cart[classcategory_id1]]');
             var $sele2 = $form.find('select[name=add_cart[classcategory_id2]]');
+
+			console.log(product_id);
+			console.log($sele1);
+			console.log($sele2);
+
             eccube.setClassCategories($form, product_id, $sele1, $sele2, classcat_id2_selected);
         }
-
-		console.log(product_id);
-		console.log($sele1);
-		console.log($sele2);
 
         {% if form.classcategory_id2 is defined %}
 			fnSetClassCategories(
