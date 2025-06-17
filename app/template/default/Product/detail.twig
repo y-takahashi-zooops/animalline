@@ -143,6 +143,12 @@ file that was distributed with this source code.
 						function fnSetClassCategories() {
 							eccube.setClassCategories($form, product_id, $sele1, $sele2);
 
+
+							// 商品規格が確定したあと、ProductClass にセット
+							const selectedId1 = $sele1.val();
+							const selectedId2 = $sele2.length ? $sele2.val() : '';
+							const productClass = eccube.classCategories?.[selectedId1]?.[selectedId2];
+
 							if (productClass && productClass.product_class_id) {
 								console.log('設定したproduct_class_id:', productClass?.product_class_id);
 
@@ -162,15 +168,12 @@ file that was distributed with this source code.
 								return false;
 							}
 
-							// 商品規格が確定したあと、ProductClass にセット
-							const selectedId1 = $sele1.val();
-							const selectedId2 = $sele2.length ? $sele2.val() : '';
-							const productClass = eccube.classCategories?.[selectedId1]?.[selectedId2];
-
 							if (productClass && productClass.product_class_id) {
+								console.log("172行目")
 								$form.find('input[name="add_cart[product_class]"]').val(productClass.product_class_id);
 								return true;
 							} else {
+								console.log("176行目 else")
 								$form.find('input[name="add_cart[product_class]"]').val('');
 								return false;
 							}
