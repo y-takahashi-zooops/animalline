@@ -18,6 +18,7 @@ use Eccube\Service\PurchaseFlow\PurchaseContext;
 use Eccube\Service\PurchaseFlow\PurchaseFlow;
 use Eccube\Service\PurchaseFlow\PurchaseFlowResult;
 use Psr\Log\LoggerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class AbstractShoppingController extends AbstractController
 {
@@ -31,10 +32,14 @@ class AbstractShoppingController extends AbstractController
      */
     protected $logger;
 
+    protected Security $security;
+
     public function __construct(
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        Security $security
     ) {
         $this->logger = $logger;
+        $this->security = $security;
     }
 
     /**
