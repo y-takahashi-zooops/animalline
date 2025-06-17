@@ -167,16 +167,6 @@ file that was distributed with this source code.
 								$form.find('input[name="add_cart[product_class]"]').val('');
 								return false;
 							}
-
-							if (productClass && productClass.product_class_id) {
-								console.log("172行目")
-								$form.find('input[name="add_cart[product_class]"]').val(productClass.product_class_id);
-								return true;
-							} else {
-								console.log("176行目 else")
-								$form.find('input[name="add_cart[product_class]"]').val('');
-								return false;
-							}
 						}
 
 						$sele1.on('change', fnSetClassCategories);
