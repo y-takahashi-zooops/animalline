@@ -102,6 +102,31 @@ file that was distributed with this source code.
 			const $sele1 = $form.find('select[name="add_cart[classcategory_id1]"]');
 			const $sele2 = $form.find('select[name="add_cart[classcategory_id2]"]');
 
+			// 既存の選択肢をクリア
+			$sele2.empty();
+
+			// 新しいオプションを追加
+			const classCategories = eccube.classCategories;
+			const classcat_id1 = $sele1.val();  // 規格1の選択値を取得
+			if (classCategories[classcat_id1]) {
+				$.each(classCategories[classcat_id1], function(key, value) {
+					if (key !== '#') {  // 「選択してください」のオプションはスキップ
+						const option = $('<option></option>')
+							.attr('value', value.classcategory_id2)
+							.text(value.name);
+						$sele2.append(option);
+					}
+				});
+			}
+
+			// 初期選択されたclasscategory_id2があれば設定
+			if (classcat_id2_selected) {
+				$sele2.val(classcat_id2_selected);
+			}
+
+			// form_widgetを再描画して更新
+			$sele2.trigger('change');
+
 			console.log(product_id);
 			console.log($sele1);
 			console.log($sele2);
