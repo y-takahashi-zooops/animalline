@@ -46,6 +46,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Eccube\Common\EccubeConfig;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack; 
 
 class ShoppingController extends AbstractShoppingController
 {
