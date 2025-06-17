@@ -10553,8 +10553,8 @@ label[for="add_cart_cycle_type_1"] {
 }
 
 /* 間隔のラベルを消去 */
-label[for="month"],
-label[for="day"]{
+label[for="add_cart_month"],
+label[for="add_cart_day"]{
   display: none;
 }
 label[for="change_subscription_month"],
