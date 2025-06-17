@@ -81,17 +81,6 @@ class ShoppingController extends BaseShoppingController
         LoggerInterface $logger,
         EntityManagerInterface $entityManager
     ) {
-        parent::__construct(
-            $eccubeConfig,
-            $entityManager,
-            $translator,
-            $session,
-            $formFactory,
-            $eventDispatcher,
-            $requestStack,
-            $router
-        );
-
         $this->cartService = $cartService;
         $this->mailService = $mailService;
         $this->orderRepository = $orderRepository;
