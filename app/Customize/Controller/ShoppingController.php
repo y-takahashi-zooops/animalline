@@ -38,6 +38,7 @@ use Eccube\Controller\ShoppingController as BaseShoppingController;
 use Customize\Service\SubscriptionProcess;
 use Psr\Log\LoggerInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 
 class ShoppingController extends BaseShoppingController
@@ -79,7 +80,8 @@ class ShoppingController extends BaseShoppingController
         OrderHelper $orderHelper,
         SubscriptionProcess $subscriptionProcess,
         LoggerInterface $logger,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        FormFactoryInterface $formFactory,
     ) {
         $this->cartService = $cartService;
         $this->mailService = $mailService;
@@ -88,6 +90,7 @@ class ShoppingController extends BaseShoppingController
         $this->subscriptionProcess = $subscriptionProcess;
         $this->logger = $logger;
         $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
     }
 
     /**
