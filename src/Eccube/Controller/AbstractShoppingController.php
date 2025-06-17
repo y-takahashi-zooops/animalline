@@ -48,7 +48,7 @@ class AbstractShoppingController extends AbstractController
         EventDispatcherInterface $eventDispatcher,
         RequestStack $requestStack,
         RouterInterface $router,
-        LoggerInterface $logger,
+        LoggerInterface $logger
     ) {
         parent::__construct(
             $eccubeConfig,
