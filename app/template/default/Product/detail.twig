@@ -93,6 +93,17 @@ file that was distributed with this source code.
 
 {% block javascript %}
 	<script src="{{ asset('assets/js/vendor/translations.js') }}"></script>
+
+	<script>
+		// モーダル閉じる処理
+		$(document).on('click', '.ec-modal-overlay, .ec-modal .ec-inlineBtn--cancel, .ec-modal-close', function () {
+			console.log('モーダル閉じる処理：開始');
+			$('.ec-modal').hide();
+			$('.bg-load-overlay').fadeOut();
+			console.log('モーダル閉じる処理：完了');
+		});
+	</script>
+
 	<script>
 
 		function waitForElement(selector, callback, retries = 10) {
@@ -213,16 +224,6 @@ file that was distributed with this source code.
 						{% else %}
 							fnSetClassCategories('');
 						{% endif %}
-
-						
-						// モーダルを閉じる
-						$(document).on('click', '.ec-modal-overlay, .ec-modal .ec-inlineBtn--cancel, .ec-modal-close', function () {
-							console.log('モーダル閉じる処理：開始');
-							$('.ec-modal').hide();
-							$('.bg-load-overlay').fadeOut();
-							console.log('モーダル閉じる処理：完了');
-						});
-
 					} catch (e) {
 						console.error("Error setting classCategories:", e);
 					}
