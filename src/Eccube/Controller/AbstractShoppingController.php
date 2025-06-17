@@ -31,13 +31,10 @@ class AbstractShoppingController extends AbstractController
      */
     protected $logger;
 
-    protected FormFactoryInterface $formFactory;
-
     public function __construct(
         LoggerInterface $logger,
     ) {
         $this->logger = $logger;
-        $this->formFactory = $formFactory;
     }
 
     /**
