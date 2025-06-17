@@ -90,12 +90,12 @@ class CartController extends AbstractController
     ) {
         parent::__construct(
             $eccubeConfig,
-            $requestStack,
             $entityManager,
             $translator,
             $session,
             $formFactory,
             $eventDispatcher,
+            $requestStack,
             $router
         );
         $this->productClassRepository = $productClassRepository;
