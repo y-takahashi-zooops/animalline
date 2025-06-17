@@ -220,6 +220,11 @@ file that was distributed with this source code.
 				});
 			});
 		});
+		$(function () {
+            $('.ec-modal-overlay, .ec-modal .ec-inlineBtn--cancel, .ec-modal-close').on('click', function () {
+                $('.ec-modal').hide();
+            });
+        });
 	</script>
 
     {{ parent() }}
