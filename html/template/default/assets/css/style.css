@@ -10526,16 +10526,16 @@ Styleguide 22.1
 }
 
 /* 購入種別ラジオボタン */
-#order_type_0,
-#order_type_1 {
+#add_cart_order_type_0,
+#add_cart_order_type_1 {
   position:relative;	
   top :30px;
   right: 35px;
   transform: scale(3.0);
 }
 
-label[for="order_type_0"],
-label[for="order_type_1"] {
+label[for="add_cart_order_type_0"],
+label[for="add_cart_order_type_1"] {
   position :relative;
   right: 17px;
 }
