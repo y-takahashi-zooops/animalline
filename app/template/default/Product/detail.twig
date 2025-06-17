@@ -216,7 +216,7 @@ file that was distributed with this source code.
 
 						
 						// モーダルを閉じる
-						$('.ec-modal-overlay, .ec-modal .ec-inlineBtn--cancel, .ec-modal-close').on('click', function () {
+						$(document).on('click', '.ec-modal-overlay, .ec-modal .ec-inlineBtn--cancel, .ec-modal-close', function () {
 							console.log('モーダル閉じる処理：開始');
 							$('.ec-modal').hide();
 							$('.bg-load-overlay').fadeOut();
