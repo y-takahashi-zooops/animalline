@@ -96,45 +96,62 @@ file that was distributed with this source code.
         eccube.classCategories = {{ class_categories_json|raw }};;
 
         // 規格2に選択肢を割り当てる。
-        function fnSetClassCategories(form, classcat_id2_selected) {
-            var $form = $(form);
-			const product_id = $form.find('input[name="add_cart[product_id]"]').val();
-			const $sele1 = $form.find('select[name="add_cart[classcategory_id1]"]');
-			const $sele2 = $form.find('select[name="add_cart[classcategory_id2]"]');
+        document.addEventListener('DOMContentLoaded', function () {
+			waitForElement('#form1', function (formElement) {
+				waitForTranslator(function () {
+					try {
+						eccube.classCategories = {{ class_categories_json|raw }};
+						
+						// セレクト描画
+						const $form = $(formElement);
+						const product_id = $form.find('input[name="add_cart[product_id]"]').val();
+						const $sele1 = $form.find('select[name="add_cart[classcategory_id1]"]');
+						const $sele2 = $form.find('select[name="add_cart[classcategory_id2]"]');
+						
+						// 初期設定
+						function fnSetClassCategories() {
+							eccube.setClassCategories($form, product_id, $sele1, $sele2);
+							
+							// 商品規格が確定した後、ProductClass にセット
+							const selectedId1 = $sele1.val();
+							const selectedId2 = $sele2.length ? $sele2.val() : '';
+							const productClass = eccube.classCategories?.[selectedId1]?.[selectedId2];
+							
+							if (productClass && productClass.product_class_id) {
+								console.log('設定したproduct_class_id:', productClass.product_class_id);
+								
+								let $input = $form.find('input[name="add_cart[product_class]"]');
+								if (!$input.length) {
+									$input = $('<input>', { type: 'hidden', name: 'add_cart[product_class]' }).appendTo($form);
+								}
+								$input.val(productClass.product_class_id);
+								return true;
+							} else {
+								console.warn('ProductClassが見つかりません');
+								$form.find('input[name="add_cart[product_class]"]').val('');
+								return false;
+							}
+						}
 
-			// 既存の選択肢をクリア
-			$sele2.empty();
+						$sele1.on('change', fnSetClassCategories);
+						$sele2.on('change', fnSetClassCategories);
 
-			// 新しいオプションを追加
-			const classCategories = eccube.classCategories;
-			const classcat_id1 = $sele1.val();  // 規格1の選択値を取得
-			if (classCategories[classcat_id1]) {
-				$.each(classCategories[classcat_id1], function(key, value) {
-					if (key !== '#') {  // 「選択してください」のオプションはスキップ
-						const option = $('<option></option>')
-							.attr('value', value.classcategory_id2)
-							.text(value.name);
-						$sele2.append(option);
+						// 初期化
+						fnSetClassCategories();
+
+						{% if form.classcategory_id2 is defined %}
+							fnSetClassCategories({{ form.classcategory_id2.vars.value|json_encode|raw }});
+						{% elseif form.classcategory_id1 is defined %}
+							eccube.checkStock($form, {{ Product.id }}, {{ form.classcategory_id1.vars.value|json_encode|raw }}, null);
+						{% else %}
+							fnSetClassCategories('');
+						{% }
+					} catch (e) {
+						console.error("Error setting classCategories:", e);
 					}
 				});
-			}
-
-			// 初期選択されたclasscategory_id2があれば設定
-			if (classcat_id2_selected) {
-				$sele2.val(classcat_id2_selected);
-			}
-
-			// form_widgetを再描画して更新
-			$sele2.trigger('change');
-
-			console.log(product_id);
-			console.log($sele1);
-			console.log($sele2);
-
-            eccube.setClassCategories($form, product_id, $sele1, $sele2, classcat_id2_selected);
-        }
-
-		console.log(eccube.classCategories);
+			});
+		});
 
         {% if form.classcategory_id2 is defined %}
 			fnSetClassCategories(
