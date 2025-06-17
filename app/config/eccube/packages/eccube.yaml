@@ -91,9 +91,9 @@ parameters:
     eccube_address2_len: 32
     eccube_city_len: 10
     eccube_birth_max: 110
-    eccube_product_order_price_lower: 1
-    eccube_product_order_newer: 2
-    eccube_product_order_price_higher: 3
+    eccube_product_order_price_lower: 'price_asc'
+    eccube_product_order_newer: 'id_desc'
+    eccube_product_order_price_higher: 'price_desc'
     eccube_price_max: 2147483647
     eccube_tel_len_max: 14
     eccube_postal_code: 8
