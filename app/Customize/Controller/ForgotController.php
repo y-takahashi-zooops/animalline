@@ -275,18 +275,20 @@ class ForgotController extends AbstractController
                 ->getRegularCustomerByResetKey($reset_key, $form->get('login_email')->getData());
             if ($Customer) {
                 // パスワードの発行・更新
-                $encoder = $this->passwordHasher->getEncoder($Customer);
-                $pass = $form->get('password')->getData();
-                $Customer->setPassword($pass);
+                // $encoder = $this->passwordHasher->getEncoder($Customer);
+                // $pass = $form->get('password')->getData();
+                // $Customer->setPassword($pass);
+                $encoded = $this->passwordHasher->hashPassword($Customer, $form->get('password'));
+                $Customer->setPassword($encoded);
 
                 // 発行したパスワードの暗号化
-                if ($Customer->getSalt() === null) {
-                    $Customer->setSalt($this->passwordHasher->getEncoder($Customer)->createSalt());
-                }
-                $encPass = $encoder->encodePassword($pass, $Customer->getSalt());
+                // if ($Customer->getSalt() === null) {
+                //     $Customer->setSalt($this->passwordHasher->getEncoder($Customer)->createSalt());
+                // }
+                // $encPass = $encoder->encodePassword($pass, $Customer->getSalt());
 
-                // パスワードを更新
-                $Customer->setPassword($encPass);
+                // // パスワードを更新
+                // $Customer->setPassword($encPass);
                 // リセットキーをクリア
                 $Customer->setResetKey(null);
 
