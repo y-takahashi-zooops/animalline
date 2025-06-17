@@ -109,6 +109,7 @@ class ForgotController extends AbstractController
     public function index(Request $request)
     {
         if ($this->isGranted('ROLE_USER')) {
+            dd('ddでif分岐の挙動を確認', $this->isGranted('ROLE_USER'));
             throw new HttpException\NotFoundHttpException();
         }
 
