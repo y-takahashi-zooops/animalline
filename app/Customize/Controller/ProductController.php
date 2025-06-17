@@ -368,7 +368,7 @@ class ProductController extends BaseProductController
             if (empty($errorMessages)) {
                 // エラーが発生していない場合
                 $done = true;
-                array_push($messages, trans('front.product.add_cart_complete'));
+                array_push($messages, $this->translator->trans('front.product.add_cart_complete'));
             } else {
                 // エラーが発生している場合
                 $done = false;
