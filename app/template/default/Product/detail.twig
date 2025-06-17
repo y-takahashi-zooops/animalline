@@ -118,6 +118,14 @@ file that was distributed with this source code.
 		}
 
 		document.addEventListener('DOMContentLoaded', function () {
+			document.querySelector('.ec-modal-close')?.addEventListener('click', function () {
+				document.querySelector('.ec-modal')?.style.display = 'none';
+				document.querySelector('.bg-load-overlay')?.style.display = 'none';
+			});
+			document.querySelector('.ec-inlineBtn--cancel')?.addEventListener('click', function () {
+				document.querySelector('.ec-modal')?.style.display = 'none';
+				document.querySelector('.bg-load-overlay')?.style.display = 'none';
+			});
 
 			waitForElement('#form1', function (formElement) {
 				waitForTranslator(function () {
@@ -396,7 +404,7 @@ file that was distributed with this source code.
 												{{ form_errors(form.subscription_quantity) }}
 											</div>
 										</div>
-										<ul class="subscription_cycle_block"　style="display: none;>
+										<ul class="subscription_cycle_block">
 											<li style="font-weight: bold;">お届けサイクル：</li>
 											<li class="subscription_cycle">
 												<div class="mb-2">{{ form_row(form.cycle_type[0]) }}</div>
