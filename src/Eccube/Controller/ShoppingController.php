@@ -42,6 +42,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class ShoppingController extends AbstractShoppingController
 {
@@ -72,6 +73,8 @@ class ShoppingController extends AbstractShoppingController
 
     protected FormFactoryInterface $formFactory;
 
+    protected $security;
+
 
     public function __construct(
         CartService $cartService,
@@ -81,8 +84,24 @@ class ShoppingController extends AbstractShoppingController
         FormFactoryInterface $formFactory,
         LoggerInterface $logger,
         EventDispatcherInterface $eventDispatcher,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        Security $security,
+        EccubeConfig $eccubeConfig,
+        TranslatorInterface $translator,
+        SessionInterface $session,
+        RequestStack $requestStack,
+        RouterInterface $router
     ) {
+        parent::__construct(
+            $eccubeConfig,
+            $entityManager,
+            $translator,
+            $session,
+            $formFactory,
+            $eventDispatcher,
+            $requestStack,
+            $router
+        );
         $this->cartService = $cartService;
         $this->mailService = $mailService;
         $this->orderRepository = $orderRepository;
@@ -91,6 +110,7 @@ class ShoppingController extends AbstractShoppingController
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
         $this->entityManager = $entityManager;
+        $this->security = $security;
     }
 
     /**
@@ -595,7 +615,7 @@ class ShoppingController extends AbstractShoppingController
         }
 
         $CustomerAddress = new CustomerAddress();
-        if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
+        if ($this->security->isGranted('IS_AUTHENTICATED_FULLY')) {
             // ログイン時は会員と紐付け
             $CustomerAddress->setCustomer($this->getUser());
         } else {
@@ -623,7 +643,7 @@ class ShoppingController extends AbstractShoppingController
 
             $Shipping->setFromCustomerAddress($CustomerAddress);
 
-            if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
+            if ($this->security->isGranted('IS_AUTHENTICATED_FULLY')) {
                 $this->entityManager->persist($CustomerAddress);
             }
 
@@ -664,14 +684,14 @@ class ShoppingController extends AbstractShoppingController
      */
     public function login(Request $request, AuthenticationUtils $authenticationUtils)
     {
-        if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
+        if ($this->security->isGranted('IS_AUTHENTICATED_FULLY')) {
             return $this->redirectToRoute('shopping');
         }
 
         /* @var $form \Symfony\Component\Form\FormInterface */
         $builder = $this->formFactory->createNamedBuilder('', CustomerLoginType::class);
 
-        if ($this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+        if ($this->security->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             $Customer = $this->getUser();
             if ($Customer) {
                 $builder->get('login_email')->setData($Customer->getEmail());
