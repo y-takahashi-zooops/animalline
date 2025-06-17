@@ -278,7 +278,8 @@ class ForgotController extends AbstractController
                 // $encoder = $this->passwordHasher->getEncoder($Customer);
                 // $pass = $form->get('password')->getData();
                 // $Customer->setPassword($pass);
-                $encoded = $this->passwordHasher->hashPassword($Customer, $form->get('password'));
+                $plainPassword = $form->get('password')->getData();
+                $encoded = $this->passwordHasher->hashPassword($Customer, $plainPassword);
                 $Customer->setPassword($encoded);
 
                 // 発行したパスワードの暗号化
