@@ -43,6 +43,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
+use Eccube\Common\EccubeConfig;
 
 class ShoppingController extends AbstractShoppingController
 {
