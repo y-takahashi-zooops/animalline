@@ -325,7 +325,7 @@ class ProductController extends AbstractController
                 ];
             }
         }
-        // dd('データを確認', $Category, json_encode($productsClassCategories, JSON_UNESCAPED_UNICODE));
+        dd('データを確認', $Category, json_encode($productsClassCategories, JSON_UNESCAPED_UNICODE), $pagination);
 
         return [
             'subtitle' => $this->getPageTitle($searchData),
