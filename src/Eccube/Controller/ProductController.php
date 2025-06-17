@@ -225,7 +225,7 @@ class ProductController extends AbstractController
         foreach ($pagination as $Product) {
             /* @var $builder \Symfony\Component\Form\FormBuilderInterface */
             $builder = $this->formFactory->createNamedBuilder(
-                '',
+                'add_cart',
                 AddCartType::class,
                 null,
                 [
