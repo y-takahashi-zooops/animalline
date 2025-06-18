@@ -56,8 +56,6 @@ file that was distributed with this source code.
 
                 if (productData && productData.product_class_id) {
                     $form.find('input[name="add_cart[ProductClass]"]').val(productData.product_class_id);
-                    $form.find('input[name="add_cart[product_class]"]').val(productData.product_class_id);
-                    $form.find('input[name="add_cart[product_class_id]"]').val(productData.product_class_id);
                 } else {
                     console.warn("product_class_idが見つかりません");
                 }
@@ -606,8 +604,7 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     {{ form_rest(form) }}
-                                    <input type="hidden" name="add_cart[product_class]" value="">
-                                    <input type="hidden" name="add_cart[product_class_id]" value="">
+
                                 </form>
                                 てすと
                                 <div class="ec-productRole__btn">
