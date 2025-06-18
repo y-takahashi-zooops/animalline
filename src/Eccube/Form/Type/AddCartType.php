@@ -81,14 +81,21 @@ class AddCartType extends AbstractType
                     new Assert\NotBlank(),
                     new Assert\Regex(['pattern' => '/^\d+$/']),
                 ], ])
-            ->add('product_class_id', HiddenType::class, [
-                'required' => false,
-                'mapped' => false,
-                'attr' => [
-                    'id' => 'add_cart_ProductClass',             // EC-CUBE JSが期待するID
-                    'name' => 'add_cart[ProductClass]',          // EC-CUBE JSが期待するname
-                ],
-            ]);
+            ->add(
+                $builder
+                    ->create('product_class_id', HiddenType::class, [
+                        'data_class' => null,
+                        'data' => $Product->hasProductClass() ? $ProductClasses->first() : null,
+                        'constraints' => [
+                            new Assert\NotBlank(),
+                        ],
+                        'attr' => [
+                            'id' => 'add_cart_ProductClass',            // EC-CUBE JSが値をセットするID
+                            'name' => 'add_cart[ProductClass]',         // EC-CUBE JSが値をPOSTするname
+                        ],
+                    ])
+                    ->addModelTransformer(new EntityToIdTransformer($this->doctrine->getManager(), ProductClass::class))
+            );
 
         if ($Product->getStockFind()) {
             $builder
