@@ -85,8 +85,8 @@ class AddCartType extends AbstractType
                 'required' => false,
                 'mapped' => false,
                 'attr' => [
-                    'id' => 'add_cart_ProductClass',             // EC-CUBE JSが期待するID
-                    'name' => 'add_cart[ProductClass]',          // EC-CUBE JSが期待するname
+                    'id' => 'add_cart_ProductClassId',             // EC-CUBE JSが期待するID
+                    'name' => 'add_cart[ProductClassId]',          // EC-CUBE JSが期待するname
                 ],
             ]);
 
