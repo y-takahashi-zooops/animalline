@@ -289,17 +289,9 @@ class ProductController extends BaseProductController
         ]);
         if ($cartItem) {
             // 同商品がカートに存在したらカートに追加させない
-            // return $this->json([
-            //     'done' => false,
-            //     'messages' => ['この商品はすでにカートに入っています。'],
-            // ]);
-            return $this->render('Product/detail.twig', [
-                'form' => $form->createView(),
-                'Product' => $Product,
-                'BaseInfo' => $this->BaseInfo,
-                'errorMessages' => ['この商品はすでにカートに入っています。2'],
-                'is_favorite' => $is_favorite,
-                'class_categories_json' => $classCategoriesJson,
+            return $this->json([
+                'done' => false,
+                'messages' => ['この商品はすでにカートに入っています。'],
             ]);
         }
 
