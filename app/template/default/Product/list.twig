@@ -39,16 +39,20 @@ file that was distributed with this source code.
             $('.add-cart').on('click', function(e) {
                 var $form = $(this).parents('li').find('form');
 
+                // 6/18 10:45追加
                 console.log("add-cartの中", $form)
 
-                // 6/18 10:45追加
                 var productId = $(this).data('cartid');
 
                 // productsClassCategories に該当商品がある場合のみ設定
-                if (eccube.productsClassCategories && eccube.productsClassCategories[productId]) {
-                    var productClassId = eccube.productsClassCategories[productId]['product_class_id'];
-
-                    // hiddenに代入
+                if (
+                    eccube.productsClassCategories &&
+                    eccube.productsClassCategories[productId] &&
+                    eccube.productsClassCategories[productId]['__unselected'] &&
+                    eccube.productsClassCategories[productId]['__unselected'][''] &&
+                    eccube.productsClassCategories[productId]['__unselected']['']['product_class_id']
+                ) {
+                    var productClassId = eccube.productsClassCategories[productId]['__unselected']['']['product_class_id'];
                     $form.find('input[name="add_cart[product_class]"]').val(productClassId);
                 }
 
