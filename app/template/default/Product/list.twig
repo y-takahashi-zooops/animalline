@@ -41,6 +41,19 @@ file that was distributed with this source code.
 
                 console.log("add-cartの中", $form)
 
+                // 6/18 10:45追加
+                var productId = $(this).data('cartid');
+
+                // productsClassCategories に該当商品がある場合のみ設定
+                if (eccube.productsClassCategories && eccube.productsClassCategories[productId]) {
+                    var productClassId = eccube.productsClassCategories[productId]['product_class_id'];
+
+                    // hiddenに代入
+                    $form.find('input[name="add_cart[product_class]"]').val(productClassId);
+                }
+
+                // 6/18 10:45追加締め
+
                 // 個数フォームのチェック
                 var $quantity = $form.parent().find('.quantity');
                 if ($quantity.val() < 1) {
