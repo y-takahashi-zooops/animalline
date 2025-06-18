@@ -283,25 +283,27 @@ class ProductController extends BaseProductController
         $addCartData = $form->getData();
 
         // カート商品に同商品がないか検索
-        // $cartItem = $this->cartItemRepository->findOneBy([
-        //     'Cart' => $this->cartService->getCart(),
-        //     'ProductClass' => $addCartData->getProductClass()
-        // ]);
-        // if ($cartItem) {
-        //     // 同商品がカートに存在したらカートに追加させない
-        //     return $this->json([
-        //         'done' => false,
-        //         'messages' => ['この商品はすでにカートに入っています。'],
-        //     ]);
-        // }
-        // カート商品に同商品がないか検索
-        $cartItem = $this->cartItemRepository->findOneBy(['Cart' => $this->cartService->getCarts(), 'ProductClass' => $addCartData['product_class_id']]);
+        $cartItem = $this->cartItemRepository->findOneBy([
+            'Cart' => $this->cartService->getCart(),
+            'ProductClass' => $addCartData->getProductClass()
+        ]);
         if ($cartItem) {
             // 同商品がカートに存在したらカートに追加させない
-            return;
+            // return $this->json([
+            //     'done' => false,
+            //     'messages' => ['この商品はすでにカートに入っています。'],
+            // ]);
+            return $this->render('Product/detail.twig', [
+                'form' => $form->createView(),
+                'Product' => $Product,
+                'BaseInfo' => $this->BaseInfo,
+                'errorMessages' => ['この商品はすでにカートに入っています。2'],
+                'is_favorite' => $is_favorite,
+                'class_categories_json' => $classCategoriesJson,
+            ]);
         }
 
-        $this->logger->info(
+            $this->logger->info(
             'カート追加処理開始',
             [
                 'product_id' => $Product->getId(),
