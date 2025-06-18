@@ -26,6 +26,9 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Class MailController
@@ -38,13 +41,28 @@ class MailController extends AbstractController
     protected $mailTemplateRepository;
 
     /**
+     * @var FormFactoryInterface
+     */
+    protected FormFactoryInterface $formFactory;
+
+
+    /**
      * MailController constructor.
      *
      * @param MailTemplateRepository $mailTemplateRepository
+     * @param FormFactoryInterface $formFactory
      */
-    public function __construct(MailTemplateRepository $mailTemplateRepository)
+    public function __construct(
+        MailTemplateRepository $mailTemplateRepository,
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher,
+        EntityManagerInterface $entityManager
+    )
     {
         $this->mailTemplateRepository = $mailTemplateRepository;
+        $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -64,7 +82,7 @@ class MailController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_SETTING_SHOP_MAIL_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SHOP_MAIL_INDEX_INITIALIZE);
 
         $form = $builder->getForm();
         $form['template']->setData($Mail);
@@ -125,7 +143,7 @@ class MailController extends AbstractController
                     ],
                     $request
                 );
-                $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_SETTING_SHOP_MAIL_INDEX_COMPLETE, $event);
+                $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SHOP_MAIL_INDEX_COMPLETE);
 
                 $this->addSuccess('admin.common.save_complete', 'admin');
 
@@ -160,7 +178,7 @@ class MailController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_SETTING_SHOP_MAIL_PREVIEW_COMPLETE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SHOP_MAIL_PREVIEW_COMPLETE);
 
         return [
             'html_body' => $html_body,

@@ -32,6 +32,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @Route("/%eccube_admin_route%/store/plugin/api")
@@ -71,6 +76,13 @@ class OwnerStoreController extends AbstractController
     /** @var CacheUtil */
     private $cacheUtil;
 
+    protected FormFactoryInterface $formFactory;
+
+    /**
+     * @var Session
+     */
+    protected SessionInterface $session;
+
     /**
      * OwnerStoreController constructor.
      *
@@ -84,6 +96,7 @@ class OwnerStoreController extends AbstractController
      *
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
+     * @param SessionInterface $session,
      */
     public function __construct(
         PluginRepository $pluginRepository,
@@ -92,7 +105,11 @@ class OwnerStoreController extends AbstractController
         SystemService $systemService,
         PluginApiService $pluginApiService,
         BaseInfoRepository $baseInfoRepository,
-        CacheUtil $cacheUtil
+        CacheUtil $cacheUtil,
+        FormFactoryInterface $formFactory,
+        SessionInterface $session,
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
     ) {
         $this->pluginRepository = $pluginRepository;
         $this->pluginService = $pluginService;
@@ -103,6 +120,10 @@ class OwnerStoreController extends AbstractController
 
         // TODO: Check the flow of the composer service below
         $this->composerService = $composerService;
+        $this->formFactory = $formFactory;
+        $this->session = $session;
+        $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -113,12 +134,12 @@ class OwnerStoreController extends AbstractController
      * @Template("@admin/Store/plugin_search.twig")
      *
      * @param Request     $request
-     * @param int $page_no
-     * @param Paginator $paginator
+     * @param int|null  $page_no
+     * @param PaginatorInterface $paginator
      *
      * @return array
      */
-    public function search(Request $request, $page_no = null, Paginator $paginator)
+    public function search(Request $request, ?int $page_no = 1, PaginatorInterface $paginator)
     {
         if (empty($this->BaseInfo->getAuthenticationKey())) {
             $this->addWarning('admin.store.plugin.search.not_auth', 'admin');

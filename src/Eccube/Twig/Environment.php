@@ -13,24 +13,16 @@
 
 namespace Eccube\Twig;
 
+use Twig\Environment as BaseEnvironment;
+
 /**
  * @deprecated Twig\Environmentを利用してください。
  * https://github.com/EC-CUBE/ec-cube/pull/4362 の修正で不要になったが、互換性のためにクラスは残す。
  */
-class Environment extends \Twig_Environment
+class Environment extends BaseEnvironment
 {
-    /**
-     * @var \Twig_Environment
-     */
-    protected $twig;
-
-    public function __construct(\Twig_Environment $twig)
+    public function render($name, array $context = []): string
     {
-        $this->twig = $twig;
-    }
-
-    public function render($name, array $context = [])
-    {
-        return $this->twig->render($name, $context);
+        return parent::render($name, $context);
     }
 }

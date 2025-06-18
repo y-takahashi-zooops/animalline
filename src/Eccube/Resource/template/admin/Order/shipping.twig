@@ -469,7 +469,7 @@ file that was distributed with this source code.
                                                 <div class="col">
                                                     {% if shippingForm.vars.value.shipping_date %}
                                                         {# 登録済みの出荷で出荷日が設定されている場合は出荷日を表示する #}
-                                                        <span>{{ shippingForm.vars.value.shipping_date|date_min }}</span>
+                                                        <span>{{ shippingForm.vars.value.shipping_date|date('Y-m-d H:i:s') }}</span>
                                                     {% elseif shippingForm.vars.value.id %}
                                                         {# 登録済みの出荷で出荷日が設定されていない場合 #}
                                                         <!-- 出荷済にするボタン -->
@@ -493,7 +493,7 @@ file that was distributed with this source code.
                                                     {{ 'admin.common.last_update_date'|trans }}
                                                 </label>
                                                 <div class="col">
-                                                    <span>{{ shippingForm.vars.value.id ? shippingForm.vars.value.update_date|date_min }}</span>
+                                                    <span>{{ shippingForm.vars.value.id ? shippingForm.vars.value.update_date|date('Y-m-d H:i:s') }}</span>
                                                 </div>
                                             </div>
                                             <div class="row mb-2 align-items-center">

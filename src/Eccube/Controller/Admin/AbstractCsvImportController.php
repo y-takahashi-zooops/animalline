@@ -20,6 +20,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Eccube\Common\EccubeConfig;
 
 class AbstractCsvImportController extends AbstractController
 {
@@ -29,6 +30,12 @@ class AbstractCsvImportController extends AbstractController
      * @var string
      */
     protected $csvFileName;
+
+    public function __construct(
+        EccubeConfig $eccubeConfig
+    ) {
+        $this->eccubeConfig = $eccubeConfig;
+    }
 
     /**
      * アップロードされたCSVファイルの行ごとの処理

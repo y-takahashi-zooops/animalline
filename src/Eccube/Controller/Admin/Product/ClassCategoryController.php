@@ -26,6 +26,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\FormFactoryInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Doctrine\ORM\EntityManagerInterface;
+
 
 class ClassCategoryController extends AbstractController
 {
@@ -44,21 +49,37 @@ class ClassCategoryController extends AbstractController
      */
     protected $classNameRepository;
 
+    protected FormFactoryInterface $formFactory;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
     /**
      * ClassCategoryController constructor.
      *
      * @param ProductClassRepository $productClassRepository
      * @param ClassCategoryRepository $classCategoryRepository
      * @param ClassNameRepository $classNameRepository
+     * @param LoggerInterface $logger
      */
     public function __construct(
         ProductClassRepository $productClassRepository,
         ClassCategoryRepository $classCategoryRepository,
-        ClassNameRepository $classNameRepository
+        ClassNameRepository $classNameRepository,
+        FormFactoryInterface $formFactory,
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher,
+        EntityManagerInterface $entityManager
     ) {
         $this->productClassRepository = $productClassRepository;
         $this->classCategoryRepository = $classCategoryRepository;
         $this->classNameRepository = $classNameRepository;
+        $this->formFactory = $formFactory;
+        $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -93,7 +114,7 @@ class ClassCategoryController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_PRODUCT_CLASS_CATEGORY_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_PRODUCT_CLASS_CATEGORY_INDEX_INITIALIZE);
 
         $ClassCategories = $this->classCategoryRepository->getList($ClassName);
 
@@ -108,11 +129,11 @@ class ClassCategoryController extends AbstractController
         if ($request->getMethod() === 'POST') {
             $form->handleRequest($request);
             if ($form->isValid()) {
-                log_info('規格分類登録開始', [$id]);
+                $this->logger->info('規格分類登録開始', [$id]);
 
                 $this->classCategoryRepository->save($TargetClassCategory);
 
-                log_info('規格分類登録完了', [$id]);
+                $this->logger->info('規格分類登録完了', [$id]);
 
                 $event = new EventArgs(
                     [
@@ -122,7 +143,7 @@ class ClassCategoryController extends AbstractController
                     ],
                     $request
                 );
-                $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_PRODUCT_CLASS_CATEGORY_INDEX_COMPLETE, $event);
+                $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_PRODUCT_CLASS_CATEGORY_INDEX_COMPLETE);
 
                 $this->addSuccess('admin.common.save_complete', 'admin');
 
@@ -166,7 +187,7 @@ class ClassCategoryController extends AbstractController
             throw new NotFoundHttpException();
         }
 
-        log_info('規格分類削除開始', [$id]);
+        $this->logger->info('規格分類削除開始', [$id]);
 
         $TargetClassCategory = $this->classCategoryRepository->find($id);
         if (!$TargetClassCategory || $TargetClassCategory->getClassName() != $ClassName) {
@@ -185,11 +206,11 @@ class ClassCategoryController extends AbstractController
                 ],
                 $request
             );
-            $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_PRODUCT_CLASS_CATEGORY_DELETE_COMPLETE, $event);
+            $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_PRODUCT_CLASS_CATEGORY_DELETE_COMPLETE);
 
             $this->addSuccess('admin.common.delete_complete', 'admin');
 
-            log_info('規格分類削除完了', [$id]);
+            $this->logger->info('規格分類削除完了', [$id]);
         } catch (\Exception $e) {
             log_error('規格分類削除エラー', [$id, $e]);
 
@@ -212,7 +233,7 @@ class ClassCategoryController extends AbstractController
             throw new NotFoundHttpException();
         }
 
-        log_info('規格分類表示変更開始', [$id]);
+        $this->logger->info('規格分類表示変更開始', [$id]);
 
         $TargetClassCategory = $this->classCategoryRepository->find($id);
         if (!$TargetClassCategory || $TargetClassCategory->getClassName() != $ClassName) {
@@ -223,7 +244,7 @@ class ClassCategoryController extends AbstractController
 
         $this->classCategoryRepository->toggleVisibility($TargetClassCategory);
 
-        log_info('規格分類表示変更完了', [$id]);
+        $this->logger->info('規格分類表示変更完了', [$id]);
 
         $event = new EventArgs(
             [
@@ -232,7 +253,7 @@ class ClassCategoryController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_PRODUCT_CLASS_CATEGORY_DELETE_COMPLETE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_PRODUCT_CLASS_CATEGORY_DELETE_COMPLETE);
 
         if ($TargetClassCategory->isVisible()) {
             $this->addSuccess(trans('admin.common.to_show_complete', ['%name%' => $TargetClassCategory->getName()]), 'admin');

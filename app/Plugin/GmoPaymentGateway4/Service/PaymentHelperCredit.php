@@ -13,12 +13,24 @@ use Plugin\GmoPaymentGateway4\Service\Method\CreditCard;
 use Plugin\GmoPaymentGateway4\Util\PaymentUtil;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * クレジット決済処理を行うクラス
  */
 class PaymentHelperCredit extends PaymentHelper
 {
+    protected $entityManager;
+
+    public function __construct(
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
+    ) {
+        $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * GMO-PG 支払方法別のクラス名称を取得する
      *
@@ -179,9 +191,9 @@ class PaymentHelperCredit extends PaymentHelper
 
         $sendData['ACSUrl'] = $results['ACSUrl'];
         $sendData['PaReq'] = $results['PaReq'];
-        $sendData['TermUrl'] = $this->container->get('router')
-            ->generate('gmo_payment_gateway_3dsecure', [],
-                       UrlGeneratorInterface::ABSOLUTE_URL);
+        $sendData['TermUrl'] = $this->router->generate(
+            'gmo_payment_gateway_3dsecure', [], UrlGeneratorInterface::ABSOLUTE_URL
+        );
         $sendData['MD'] = $results['MD'];
 
         $template = '@GmoPaymentGateway4/payments/credit_3dsecure.twig';

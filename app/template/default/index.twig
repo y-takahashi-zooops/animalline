@@ -27,7 +27,7 @@
 
 		// 当月カレンダー作成
 		$.ajax({
-			url: '{{ url('calendar') }}',
+			url: '{{ url('customize_calendar_index.name') }}',
 			type: 'POST',
 			dataType: 'json',
 			data: {
@@ -43,7 +43,7 @@
 
 		// 翌月カレンダー作成
 		$.ajax({
-			url: '{{ url('calendar') }}',
+			url: '{{ url('customize_calendar_index.name') }}',
 			type: 'POST',
 			dataType: 'json',
 			data: {

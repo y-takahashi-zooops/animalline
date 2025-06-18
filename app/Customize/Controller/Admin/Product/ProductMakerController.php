@@ -22,6 +22,8 @@ use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class ProductMakerController extends AbstractController
 {
@@ -31,14 +33,23 @@ class ProductMakerController extends AbstractController
     protected $productMakerRepository;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected EntityManagerInterface $entityManager;
+
+    /**
      * Product maker controller constructor.
      *
      * @param ProductMakerRepository $productMakerRepository
      */
     public function __construct(
-        ProductMakerRepository $productMakerRepository
+        EntityManagerInterface $entityManager,
+        ProductMakerRepository $productMakerRepository,
+        FormFactoryInterface $formFactory
     ) {
+        $this->entityManager = $entityManager;
         $this->productMakerRepository = $productMakerRepository;
+        $this->formFactory = $formFactory;
     }
 
     /**
@@ -55,7 +66,7 @@ class ProductMakerController extends AbstractController
             $idDestroy &&
             $Maker = $this->productMakerRepository->find($idDestroy)
         ) {
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->remove($Maker);
             $entityManager->flush();
 
@@ -67,7 +78,7 @@ class ProductMakerController extends AbstractController
         $form = $this->createForm(ProductMakerType::class, $Maker);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($Maker);
             $entityManager->flush();
 
@@ -82,7 +93,8 @@ class ProductMakerController extends AbstractController
         $formUpdate = [];
         foreach ($Makers as $Maker) {
             $uniqueFormName = 'Form' . $Maker->getId();
-            $formHandle = $this->get('form.factory')->createNamed($uniqueFormName, ProductMakerType::class, $Maker);
+            // $formHandle = $this->get('form.factory')->createNamed($uniqueFormName, ProductMakerType::class, $Maker);
+            $formHandle = $this->formFactory->createNamed($uniqueFormName, ProductMakerType::class, $Maker);
             $formUpdate[$uniqueFormName] = $formHandle;
         }
         $formUpdateView = [];
@@ -94,7 +106,7 @@ class ProductMakerController extends AbstractController
             ) {
                 $formHandle->handleRequest($request);
                 if ($formHandle->isSubmitted() && $formHandle->isValid()) {
-                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager = $this->entityManager;
                     $entityManager->persist($Maker);
                     $entityManager->flush();
                 }

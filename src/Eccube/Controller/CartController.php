@@ -27,6 +27,15 @@ use Eccube\Service\OrderHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Psr\Log\LoggerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Doctrine\ORM\EntityManagerInterface;
+use Eccube\Common\EccubeConfig;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 class CartController extends AbstractController
 {
@@ -51,23 +60,50 @@ class CartController extends AbstractController
     protected $baseInfo;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * CartController constructor.
      *
      * @param ProductClassRepository $productClassRepository
      * @param CartService $cartService
      * @param PurchaseFlow $cartPurchaseFlow
      * @param BaseInfoRepository $baseInfoRepository
+     * @param LoggerInterface $logger
      */
     public function __construct(
         ProductClassRepository $productClassRepository,
         CartService $cartService,
         PurchaseFlow $cartPurchaseFlow,
-        BaseInfoRepository $baseInfoRepository
+        BaseInfoRepository $baseInfoRepository,
+        LoggerInterface $logger,
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator,
+        SessionInterface $session,
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher,
+        RequestStack $requestStack,
+        RouterInterface $router
     ) {
+        parent::__construct(
+            $eccubeConfig,
+            $entityManager,
+            $translator,
+            $session,
+            $formFactory,
+            $eventDispatcher,
+            $requestStack,
+            $router
+        );
         $this->productClassRepository = $productClassRepository;
         $this->cartService = $cartService;
         $this->purchaseFlow = $cartPurchaseFlow;
         $this->baseInfo = $baseInfoRepository->get();
+        $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -195,7 +231,7 @@ class CartController extends AbstractController
      */
     public function handleCartItem($operation, $productClassId)
     {
-        log_info('カート明細操作開始', ['operation' => $operation, 'product_class_id' => $productClassId]);
+        $this->logger->info('カート明細操作開始', ['operation' => $operation, 'product_class_id' => $productClassId]);
 
         $this->isTokenValid();
 
@@ -203,7 +239,7 @@ class CartController extends AbstractController
         $ProductClass = $this->productClassRepository->find($productClassId);
 
         if (is_null($ProductClass)) {
-            log_info('商品が存在しないため、カート画面へredirect', ['operation' => $operation, 'product_class_id' => $productClassId]);
+            $this->logger->info('商品が存在しないため、カート画面へredirect', ['operation' => $operation, 'product_class_id' => $productClassId]);
 
             return $this->redirectToRoute('cart');
         }
@@ -225,7 +261,7 @@ class CartController extends AbstractController
         $Carts = $this->cartService->getCarts();
         $this->execPurchaseFlow($Carts);
 
-        log_info('カート演算処理終了', ['operation' => $operation, 'product_class_id' => $productClassId]);
+        $this->logger->info('カート演算処理終了', ['operation' => $operation, 'product_class_id' => $productClassId]);
 
         return $this->redirectToRoute('cart');
     }
@@ -246,7 +282,7 @@ class CartController extends AbstractController
             [],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CART_BUYSTEP_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_CART_BUYSTEP_INITIALIZE);
 
         $this->cartService->setPrimary($cart_key);
         $this->cartService->save();
@@ -256,7 +292,7 @@ class CartController extends AbstractController
             [],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CART_BUYSTEP_COMPLETE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_CART_BUYSTEP_COMPLETE);
 
         if ($event->hasResponse()) {
             return $event->getResponse();

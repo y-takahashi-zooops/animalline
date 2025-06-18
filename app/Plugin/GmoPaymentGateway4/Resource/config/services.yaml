@@ -72,7 +72,6 @@ monolog:
             action_level: error
             passthru_level: info
             handler: GmoPaymentGateway4_rotating_file
-            channels: ['GmoPaymentGateway4']
             channels: ['!event', '!doctrine']
         GmoPaymentGateway4_rotating_file:
             type: rotating_file

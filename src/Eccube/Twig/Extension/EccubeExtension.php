@@ -20,7 +20,7 @@ use Eccube\Entity\ProductClass;
 use Eccube\Repository\ProductRepository;
 use Eccube\Util\StringUtil;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\Intl\Intl;
+use Symfony\Component\Intl\Currencies;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -59,7 +59,7 @@ class EccubeExtension extends AbstractExtension
         return [
             new TwigFunction('has_errors', [$this, 'hasErrors']),
             new TwigFunction('active_menus', [$this, 'getActiveMenus']),
-            new TwigFunction('class_categories_as_json', [$this, 'getClassCategoriesAsJson']),
+            // new TwigFunction('class_categories_as_json', [$this, 'getClassCategoriesAsJson']),
             new TwigFunction('product', [$this, 'getProduct']),
             new TwigFunction('php_*', [$this, 'getPhpFunctions'], ['pre_escape' => 'html', 'is_safe' => ['html']]),
             new TwigFunction('currency_symbol', [$this, 'getCurrencySymbol']),
@@ -363,7 +363,7 @@ class EccubeExtension extends AbstractExtension
         if (is_null($currency)) {
             $currency = $this->eccubeConfig->get('currency');
         }
-        $symbol = Intl::getCurrencyBundle()->getCurrencySymbol($currency);
+        $symbol = Currencies::getFractionDigits($currency);
 
         return $symbol;
     }

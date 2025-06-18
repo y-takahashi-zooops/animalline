@@ -11,15 +11,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Eccube\Security\Core\User;
+ namespace Eccube\Security\Core\User;
 
-use Eccube\Entity\Customer;
-use Eccube\Entity\Master\CustomerStatus;
-use Eccube\Repository\CustomerRepository;
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
+ use Eccube\Entity\Customer;
+ use Eccube\Entity\Master\CustomerStatus;
+ use Eccube\Repository\CustomerRepository;
+ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+ use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+ use Symfony\Component\Security\Core\User\UserInterface;
+ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class CustomerProvider implements UserProviderInterface
 {
@@ -45,15 +45,15 @@ class CustomerProvider implements UserProviderInterface
      *
      * @throws UsernameNotFoundException if the user is not found
      */
-    public function loadUserByUsername($username)
+    public function loadUserByIdentifier(string $identifier): UserInterface
     {
         $Customer = $this->customerRepository->findOneBy([
-            'email' => $username,
+            'email' => $identifier,
             'Status' => CustomerStatus::REGULAR,
         ]);
 
         if (null === $Customer) {
-            throw new UsernameNotFoundException(sprintf('Username "%s" does not exist.', $username));
+            throw new UserNotFoundException(sprintf('User with email "%s" does not exist.', $identifier));
         }
 
         return $Customer;
@@ -71,13 +71,13 @@ class CustomerProvider implements UserProviderInterface
      *
      * @throws UnsupportedUserException if the user is not supported
      */
-    public function refreshUser(UserInterface $user)
+     public function refreshUser(UserInterface $user): UserInterface
     {
         if (!$user instanceof Customer) {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($user)));
         }
 
-        return $this->loadUserByUsername($user->getUsername());
+        return $this->loadUserByIdentifier($user->getUsername());
     }
 
     /**
@@ -87,7 +87,7 @@ class CustomerProvider implements UserProviderInterface
      *
      * @return bool
      */
-    public function supportsClass($class)
+    public function supportsClass(string $class): bool
     {
         return Customer::class === $class;
     }

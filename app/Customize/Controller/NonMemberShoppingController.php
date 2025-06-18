@@ -25,6 +25,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Eccube\Controller\NonMemberShoppingController as BaseNonMemberShoppingController;
+use Symfony\Component\Form\FormFactoryInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class NonMemberShoppingController extends BaseNonMemberShoppingController
 {
@@ -48,6 +51,13 @@ class NonMemberShoppingController extends BaseNonMemberShoppingController
      */
     protected $cartService;
 
+    protected FormFactoryInterface $formFactory;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
     /**
      * NonMemberShoppingController constructor.
      *
@@ -55,17 +65,24 @@ class NonMemberShoppingController extends BaseNonMemberShoppingController
      * @param PrefRepository $prefRepository
      * @param OrderHelper $orderHelper
      * @param CartService $cartService
+     * @param LoggerInterface $logger
      */
     public function __construct(
         ValidatorInterface $validator,
         PrefRepository $prefRepository,
         OrderHelper $orderHelper,
-        CartService $cartService
+        CartService $cartService,
+        FormFactoryInterface $formFactory,
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->validator = $validator;
         $this->prefRepository = $prefRepository;
         $this->orderHelper = $orderHelper;
         $this->cartService = $cartService;
+        $this->formFactory = $formFactory;
+        $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -106,14 +123,14 @@ class NonMemberShoppingController extends BaseNonMemberShoppingController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_SHOPPING_NONMEMBER_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_SHOPPING_NONMEMBER_INITIALIZE);
 
         $form = $builder->getForm();
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            log_info('非会員お客様情報登録開始');
+            $this->logger->info('非会員お客様情報登録開始');
 
             $data = $form->getData();
             $Customer = new Customer();
@@ -140,13 +157,13 @@ class NonMemberShoppingController extends BaseNonMemberShoppingController
                 ],
                 $request
             );
-            $this->eventDispatcher->dispatch(EccubeEvents::FRONT_SHOPPING_NONMEMBER_COMPLETE, $event);
+            $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_SHOPPING_NONMEMBER_COMPLETE);
 
             if ($event->getResponse() !== null) {
                 return $event->getResponse();
             }
 
-            log_info('非会員お客様情報登録完了');
+            $this->logger->info('非会員お客様情報登録完了');
 
             return $this->redirectToRoute('shopping');
         }

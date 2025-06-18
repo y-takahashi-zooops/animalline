@@ -83,6 +83,7 @@ class InstockSchedule
      */
     private $update_date;
 
+
     public function getId(): ?int
     {
         return $this->id;

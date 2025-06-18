@@ -20,9 +20,17 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SearchPluginApiType extends AbstractType
 {
+    private TranslatorInterface $translator;
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -31,14 +39,14 @@ class SearchPluginApiType extends AbstractType
         $category = $options['category'];
         // Todo: constant for the API key
         $priceType = [
-            'charge' => trans('admin.store.plugin_owners_search.form.price_type.fee'),
-            'free' => trans('admin.store.plugin_owners_search.form.price_type.free'),
+            'charge' => $this->translator->trans('admin.store.plugin_owners_search.form.price_type.fee'),
+            'free' => $this->translator->trans('admin.store.plugin_owners_search.form.price_type.free'),
         ];
         // Todo: constant for the API key
         $orderBy = [
-            'date' => trans('admin.store.plugin_owners_search.form.sort.new'),
-            'price' => trans('admin.store.plugin_owners_search.form.sort.price'),
-            'dl' => trans('admin.store.plugin_owners_search.form.sort.dl'),
+            'date' => $this->translator->trans('admin.store.plugin_owners_search.form.sort.new'),
+            'price' => $this->translator->trans('admin.store.plugin_owners_search.form.sort.price'),
+            'dl' => $this->translator->trans('admin.store.plugin_owners_search.form.sort.dl'),
         ];
 
         $builder->add('category_id', ChoiceType::class, [
@@ -71,7 +79,7 @@ class SearchPluginApiType extends AbstractType
             'placeholder' => null,
             'class' => PageMax::class,
             'choice_label' => function (PageMax $pageMax) {
-                return trans('admin.common.count', ['%count%' => $pageMax->getName()]);
+                return $this->translator->trans('admin.common.count', ['%count%' => $pageMax->getName()]);
             },
         ]);
     }

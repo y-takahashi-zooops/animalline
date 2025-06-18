@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Eccube\Service\SystemService;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class MaintenanceController extends AbstractController
 {
@@ -27,9 +28,20 @@ class MaintenanceController extends AbstractController
      */
     protected $systemService;
 
-    public function __construct(SystemService $systemService)
-    {
+    /**
+     * @var string
+     */
+    protected $maintenanceFilePath;
+
+    protected FormFactoryInterface $formFactory;
+
+    public function __construct(SystemService $systemService,
+        string $maintenanceFilePath,
+        FormFactoryInterface $formFactory
+    ) {
         $this->systemService = $systemService;
+        $this->maintenanceFilePath = $maintenanceFilePath;
+        $this->formFactory = $formFactory;
     }
 
     /**
@@ -48,7 +60,7 @@ class MaintenanceController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $changeTo = $request->request->get('maintenance');
-            $path = $this->container->getParameter('eccube_content_maintenance_file_path');
+            $path = $this->maintenanceFilePath;
 
             if ($isMaintenance === false && $changeTo == 'on') {
                 // 現在メンテナンスモードではない　かつ　メンテナンスモードを有効　にした場合

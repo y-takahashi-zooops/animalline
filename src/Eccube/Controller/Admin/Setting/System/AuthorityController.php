@@ -22,6 +22,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class AuthorityController extends AbstractController
 {
@@ -30,14 +33,24 @@ class AuthorityController extends AbstractController
      */
     protected $authorityRoleRepository;
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * AuthorityController constructor.
      *
      * @param AuthorityRoleRepository $authorityRoleRepository
      */
-    public function __construct(AuthorityRoleRepository $authorityRoleRepository)
+    public function __construct(
+        AuthorityRoleRepository $authorityRoleRepository,
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher,
+        EntityManagerInterface $entityManager
+    )
     {
         $this->authorityRoleRepository = $authorityRoleRepository;
+        $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -69,7 +82,7 @@ class AuthorityController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_SETTING_SYSTEM_AUTHORITY_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SYSTEM_AUTHORITY_INDEX_INITIALIZE);
 
         $form = $builder->getForm();
 
@@ -112,7 +125,7 @@ class AuthorityController extends AbstractController
                 ],
                 $request
             );
-            $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_SETTING_SYSTEM_AUTHORITY_INDEX_COMPLETE, $event);
+            $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SYSTEM_AUTHORITY_INDEX_COMPLETE);
 
             $this->addSuccess('admin.common.save_complete', 'admin');
 

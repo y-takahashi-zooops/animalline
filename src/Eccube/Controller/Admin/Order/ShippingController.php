@@ -39,6 +39,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Psr\Log\LoggerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ShippingController extends AbstractController
 {
@@ -87,6 +90,14 @@ class ShippingController extends AbstractController
      */
     protected $purchaseFlow;
 
+    protected FormFactoryInterface $formFactory;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+
     /**
      * EditController constructor.
      *
@@ -99,6 +110,7 @@ class ShippingController extends AbstractController
      * @param SerializerInterface $serializer
      * @param OrderStateMachine $orderStateMachine
      * @param PurchaseFlow $orderPurchaseFlow
+     * @param LoggerInterface $logger
      */
     public function __construct(
         MailService $mailService,
@@ -109,7 +121,10 @@ class ShippingController extends AbstractController
         ShippingRepository $shippingRepository,
         SerializerInterface $serializer,
         OrderStateMachine $orderStateMachine,
-        PurchaseFlow $orderPurchaseFlow
+        PurchaseFlow $orderPurchaseFlow,
+        FormFactoryInterface $formFactory,
+        LoggerInterface $logger,
+        EntityManagerInterface $entityManager
     ) {
         $this->mailService = $mailService;
         $this->orderItemRepository = $orderItemRepository;
@@ -120,6 +135,9 @@ class ShippingController extends AbstractController
         $this->serializer = $serializer;
         $this->orderStateMachine = $orderStateMachine;
         $this->purchaseFlow = $orderPurchaseFlow;
+        $this->formFactory = $formFactory;
+        $this->logger = $logger;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -243,7 +261,7 @@ class ShippingController extends AbstractController
             }
 
             if (!$flowResult->hasError() && $request->get('mode') == 'register') {
-                log_info('出荷登録開始', [$Order->getId()]);
+                $this->logger->info('出荷登録開始', [$Order->getId()]);
 
                 try {
                     $this->purchaseFlow->prepare($Order, $purchaseContext);
@@ -257,7 +275,7 @@ class ShippingController extends AbstractController
 
                     $this->addInfo('admin.order.shipping_save_message', 'admin');
                     $this->addSuccess('admin.common.save_complete', 'admin');
-                    log_info('出荷登録完了', [$Order->getId()]);
+                    $this->logger->info('出荷登録完了', [$Order->getId()]);
 
                     return $this->redirectToRoute('admin_shipping_edit', ['id' => $Order->getId()]);
                 } catch (\Exception $e) {

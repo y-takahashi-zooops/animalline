@@ -293,23 +293,23 @@ file that was distributed with this source code.
                                     <div class="col-6">
                                         <div class="row mb-3">
                                             <div class="col-3"><i class="fa fa-inbox fa-fw mr-1" aria-hidden="true"></i>{{ 'admin.order.order_date'|trans }}</div>
-                                            <div class="col">{{ Order.order_date ? Order.order_date|date_sec : '' }}</div>
+                                            <div class="col">{{ Order.order_date ? Order.order_date|date('Y-m-d') : '' }}</div>
                                         </div>
                                         <div class="row mb-3">
                                             <div class="col-3"><i class="fa fa-money fa-fw mr-1" aria-hidden="true"></i>{{ 'admin.order.payment_date'|trans }}</div>
-                                            <div class="col">{{ Order.payment_date ? Order.payment_date|date_sec : '' }}</div>
+                                            <div class="col">{{ Order.payment_date ? Order.payment_date|date('Y-m-d') : '' }}</div>
                                         </div>
                                         {% if not Order.isMultiple %}
                                             <div class="row mb-3">
                                                 <div class="col-3"><i class="fa fa-truck fa-fw mr-1" aria-hidden="true"></i>{{ 'admin.order.shipping_date'|trans }}</div>
                                                 <div class="col">
-                                                    {{ Order.Shippings[0].shipping_date|date_sec }}
+                                                    {{ Order.Shippings[0].shipping_date|date('Y-m-d') }}
                                                 </div>
                                             </div>
                                         {% endif %}
                                         <div class="row mb-3">
                                             <div class="col-3"><i class="fa fa-refresh fa-fw mr-1" aria-hidden="true"></i>{{ 'admin.common.update_date'|trans }}</div>
-                                            <div class="col">{{ Order.update_date ? Order.update_date|date_sec : '' }}</div>
+                                            <div class="col">{{ Order.update_date ? Order.update_date|date('Y-m-d') : '' }}</div>
                                         </div>
                                         <div class="row mb-3">
                                             <div class="col-3"><i class="fa fa-mobile fa-fw mr-1" aria-hidden="true"></i>{{ 'admin.common.device_type'|trans }}</div>
@@ -323,24 +323,26 @@ file that was distributed with this source code.
                                 </div>
 
                                 {# エンティティ拡張の自動出力 #}
-                                {% for f in form if f.vars.eccube_form_options.auto_render %}
-                                    {% if f.vars.eccube_form_options.form_theme %}
-                                        {% form_theme f f.vars.eccube_form_options.form_theme %}
-                                        {{ form_row(f) }}
-                                    {% else %}
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <div class="row mb-3">
-                                                    <div class="col-3">
-                                                        <span>{{ f.vars.label|trans }}</span>
-                                                    </div>
-                                                    <div class="col">
-                                                        {{ form_widget(f) }}
-                                                        {{ form_errors(f) }}
+                                {% for f in form %}
+                                    {% if f.vars.eccube_form_options is defined and f.vars.eccube_form_options.auto_render %}
+                                        {% if f.vars.eccube_form_options.form_theme %}
+                                            {% form_theme f f.vars.eccube_form_options.form_theme %}
+                                            {{ form_row(f) }}
+                                        {% else %}
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="row mb-3">
+                                                        <div class="col-3">
+                                                            <span>{{ f.vars.label|trans }}</span>
+                                                        </div>
+                                                        <div class="col">
+                                                            {{ form_widget(f) }}
+                                                            {{ form_errors(f) }}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        {% endif %}
                                     {% endif %}
                                 {% endfor %}
 
@@ -715,7 +717,7 @@ file that was distributed with this source code.
                                     </div>
                                 </div>
                                 <table id="table-form-field" class="table table-striped table-sm mb-0"
-                                       data-prototype="{% filter escape %}{{ include('@admin/Order/order_item_prototype.twig', {'orderItemForm': form.OrderItems.vars.prototype}) }}{% endfilter %}"
+                                       data-prototype="{{ include('@admin/Order/order_item_prototype.twig', {'orderItemForm': form.OrderItems.vars.prototype}) | escape }}"
                                        >
                                     <thead class="table-active">
                                     <tr class="text-nowrap">
@@ -989,7 +991,7 @@ file that was distributed with this source code.
                                         <tbody>
                                         {% for MailHistory in Order.MailHistories %}
                                             <tr>
-                                                <td class="pl-3">{{ MailHistory.send_date|date_min }}</td>
+                                                <td class="pl-3">{{ MailHistory.send_date|date('Y-m-d H:i:s') }}</td>
                                                 <td class="pr-3">
                                                     <a class="text-primary" data-toggle="modal" data-target="#mail2-{{ loop.index }}">{{ MailHistory.mail_subject }}</a>
                                                     <div class="modal fade" id="mail2-{{ loop.index }}" tabindex="-1" role="dialog" aria-labelledby="mail2-{{ loop.index }}" aria-hidden="true">

@@ -28,11 +28,15 @@ use Symfony\Component\HttpKernel\Exception as HttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Eccube\Service\CartService;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class EntryController extends AbstractController
 {
@@ -62,9 +66,9 @@ class EntryController extends AbstractController
     protected $customerRepository;
 
     /**
-     * @var EncoderFactoryInterface
+     * @var UserPasswordHasherInterface
      */
-    protected $encoderFactory;
+    protected $passwordHasher;
 
     /**
      * @var TokenStorageInterface
@@ -76,6 +80,13 @@ class EntryController extends AbstractController
      */
     protected $cartService;
 
+    protected FormFactoryInterface $formFactory;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
     /**
      * EntryController constructor.
      *
@@ -84,9 +95,11 @@ class EntryController extends AbstractController
      * @param MailService $mailService
      * @param BaseInfoRepository $baseInfoRepository
      * @param CustomerRepository $customerRepository
-     * @param EncoderFactoryInterface $encoderFactory
+     * @param UserPasswordHasherInterface $passwordHasher,
      * @param ValidatorInterface $validatorInterface
      * @param TokenStorageInterface $tokenStorage
+     * @param FormFactoryInterface $formFactory
+     * @param LoggerInterface $logger
      */
     public function __construct(
         CartService $cartService,
@@ -94,30 +107,38 @@ class EntryController extends AbstractController
         MailService $mailService,
         BaseInfoRepository $baseInfoRepository,
         CustomerRepository $customerRepository,
-        EncoderFactoryInterface $encoderFactory,
+        UserPasswordHasherInterface $passwordHasher,
         ValidatorInterface $validatorInterface,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        FormFactoryInterface $formFactory,
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher,
+        EntityManagerInterface $entityManager
     ) {
         $this->customerStatusRepository = $customerStatusRepository;
         $this->mailService = $mailService;
         $this->BaseInfo = $baseInfoRepository->get();
         $this->customerRepository = $customerRepository;
-        $this->encoderFactory = $encoderFactory;
+        $this->passwordHasher = $passwordHasher;
         $this->recursiveValidator = $validatorInterface;
         $this->tokenStorage = $tokenStorage;
         $this->cartService = $cartService;
+        $this->formFactory = $formFactory;
+        $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->entityManager = $entityManager;
     }
 
     /**
      * 会員登録画面.
      *
-     * @Route("/entry", name="entry")
+     * @Route("/custom-entry", name="custom_entry")
      * @Template("Entry/index.twig")
      */
     public function index(Request $request)
     {
         if ($this->isGranted('ROLE_USER')) {
-            log_info('認証済のためログイン処理をスキップ');
+            $this->logger->info('認証済のためログイン処理をスキップ');
 
             return $this->redirectToRoute('mypage');
         }
@@ -126,7 +147,8 @@ class EntryController extends AbstractController
         $Customer = $this->customerRepository->newCustomer();
 
         /* @var $builder \Symfony\Component\Form\FormBuilderInterface */
-        $builder = $this->formFactory->createBuilder(EntryType::class, $Customer);
+        // $builder = $this->formFactory->createBuilder(EntryType::class, $Customer);
+        $builder = $this->formFactory->create(EntryType::class, $Customer);
 
         $event = new EventArgs(
             [
@@ -135,18 +157,18 @@ class EntryController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_ENTRY_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_ENTRY_INDEX_INITIALIZE);
 
         /* @var $form \Symfony\Component\Form\FormInterface */
-        $form = $builder->getForm();
+        $form = $this->formFactory->create(EntryType::class, $Customer);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             switch ($request->get('mode')) {
                 case 'confirm':
-                    log_info('会員登録確認開始');
-                    log_info('会員登録確認完了');
+                    $this->logger->info('会員登録確認開始');
+                    $this->logger->info('会員登録確認完了');
 
                     return $this->render(
                         'Entry/confirm.twig',
@@ -156,15 +178,12 @@ class EntryController extends AbstractController
                     );
 
                 case 'complete':
-                    log_info('会員登録開始');
+                    $this->logger->info('会員登録開始');
 
-                    $encoder = $this->encoderFactory->getEncoder($Customer);
-                    $salt = $encoder->createSalt();
-                    $password = $encoder->encodePassword($Customer->getPassword(), $salt);
+                    $password = $this->passwordHasher->hashPassword($Customer, $Customer->getPassword());
                     $secretKey = $this->customerRepository->getUniqueSecretKey();
 
                     $Customer
-                        ->setSalt($salt)
                         ->setPassword($password)
                         ->setSecretKey($secretKey)
                         ->setPoint(0);
@@ -172,7 +191,7 @@ class EntryController extends AbstractController
                     $this->entityManager->persist($Customer);
                     $this->entityManager->flush();
 
-                    log_info('会員登録完了');
+                    $this->logger->info('会員登録完了');
 
                     $event = new EventArgs(
                         [
@@ -181,7 +200,7 @@ class EntryController extends AbstractController
                         ],
                         $request
                     );
-                    $this->eventDispatcher->dispatch(EccubeEvents::FRONT_ENTRY_INDEX_COMPLETE, $event);
+                    $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_ENTRY_INDEX_COMPLETE);
 
 
                     $activateFlg = $this->BaseInfo->isOptionCustomerActivate();
@@ -197,7 +216,7 @@ class EntryController extends AbstractController
                             return $event->getResponse();
                         }
 
-                        log_info('仮会員登録完了画面へリダイレクト');
+                        $this->logger->info('仮会員登録完了画面へリダイレクト');
 
                         return $this->redirectToRoute('entry_complete');
 
@@ -279,7 +298,7 @@ class EntryController extends AbstractController
      */
     private function entryActivate(Request $request, $secret_key)
     {
-        log_info('本会員登録開始');
+        $this->logger->info('本会員登録開始');
         $Customer = $this->customerRepository->getProvisionalCustomerBySecretKey($secret_key);
         if (is_null($Customer)) {
             throw new HttpException\NotFoundHttpException();
@@ -290,7 +309,7 @@ class EntryController extends AbstractController
         $this->entityManager->persist($Customer);
         $this->entityManager->flush();
 
-        log_info('本会員登録完了');
+        $this->logger->info('本会員登録完了');
 
         $event = new EventArgs(
             [
@@ -298,7 +317,7 @@ class EntryController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_ENTRY_ACTIVATE_COMPLETE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_ENTRY_ACTIVATE_COMPLETE);
 
         // メール送信
         $this->mailService->sendCustomerCompleteMail($Customer);
@@ -319,7 +338,7 @@ class EntryController extends AbstractController
             $this->cartService->save();
         }
 
-        log_info('ログイン済に変更', [$this->getUser()->getId()]);
+        $this->logger->info('ログイン済に変更', [$this->getUser()->getId()]);
 
         return $qtyInCart;
 

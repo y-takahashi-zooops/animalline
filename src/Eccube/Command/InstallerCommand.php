@@ -24,15 +24,16 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class InstallerCommand extends Command
 {
     protected static $defaultName = 'eccube:install';
 
     /**
-     * @var ContainerInterface
+     * @var ParameterBagInterface
      */
-    protected $container;
+    protected $params;
 
     /**
      * @var SymfonyStyle
@@ -46,11 +47,11 @@ class InstallerCommand extends Command
 
     private $envFileUpdater;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(ParameterBagInterface $params)
     {
         parent::__construct();
 
-        $this->container = $container;
+        $this->params = $params;
 
         /* env更新処理無名クラス */
         $this->envFileUpdater = new class() {
@@ -125,7 +126,7 @@ class InstallerCommand extends Command
         ]);
 
         // DATABASE_URL
-        $databaseUrl = $this->container->getParameter('eccube_database_url');
+        $databaseUrl = $this->params->get('eccube_database_url');
         if (empty($databaseUrl)) {
             $databaseUrl = 'sqlite:///var/eccube.db';
         }
@@ -135,14 +136,14 @@ class InstallerCommand extends Command
         $this->envFileUpdater->serverVersion = $this->getDatabaseServerVersion($databaseUrl);
 
         // MAILER_URL
-        $mailerUrl = $this->container->getParameter('eccube_mailer_url');
+        $mailerUrl = $this->params->get('eccube_mailer_url');
         if (empty($mailerUrl)) {
             $mailerUrl = 'null://localhost';
         }
         $this->envFileUpdater->mailerUrl = $this->io->ask('Mailer Url', $mailerUrl);
 
         // ECCUBE_AUTH_MAGIC
-        $authMagic = $this->container->getParameter('eccube_auth_magic');
+        $authMagic = $this->params->get('eccube_auth_magic');
         if (empty($authMagic) || $authMagic === '<change.me>') {
             $authMagic = StringUtil::random();
         }
@@ -161,21 +162,21 @@ class InstallerCommand extends Command
         $this->envFileUpdater->appDebug = env('APP_DEBUG', '1');
 
         // ECCUBE_ADMIN_ROUTE
-        $adminRoute = $this->container->getParameter('eccube_admin_route');
+        $adminRoute = $this->params->get('eccube_admin_route');
         if (empty($adminRoute)) {
             $adminRoute = 'admin';
         }
         $this->envFileUpdater->adminRoute = $adminRoute;
 
         // ECCUBE_TEMPLATE_CODE
-        $templateCode = $this->container->getParameter('eccube_theme_code');
+        $templateCode = $this->params->get('eccube_theme_code');
         if (empty($templateCode)) {
             $templateCode = 'default';
         }
         $this->envFileUpdater->templateCode = $templateCode;
 
         // ECCUBE_LOCALE
-        $locale = $this->container->getParameter('locale');
+        $locale = $this->params->get('locale');
         if (empty($locale)) {
             $locale = 'ja';
         }
@@ -193,7 +194,7 @@ class InstallerCommand extends Command
         }
 
         // envファイルへの更新反映処理
-        $this->envFileUpdater->envDir = $this->container->getParameter('kernel.project_dir');
+        $this->envFileUpdater->envDir = $this->params->get('kernel.project_dir');
         $this->envFileUpdater->updateEnvFile();
     }
 
@@ -207,7 +208,7 @@ class InstallerCommand extends Command
         // Process実行時に, APP_ENV/APP_DEBUGが子プロセスに引き継がれてしまうため,
         // 生成された.envをロードして上書きする.
         if ($input->isInteractive()) {
-            $envDir = $this->container->getParameter('kernel.project_dir');
+            $envDir = $this->params->get('kernel.project_dir');
             if (file_exists($envDir.'/.env')) {
                 (new Dotenv($envDir))->overload();
             }

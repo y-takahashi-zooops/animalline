@@ -28,6 +28,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Customize\Repository\DnaSalesHeaderRepository;
 use Customize\Repository\DnaSalesStatusRepository;
+use Doctrine\ORM\EntityManagerInterface;
 
 class DnaController extends AbstractController
 {
@@ -82,6 +83,11 @@ class DnaController extends AbstractController
     protected $dnaSalesStatusRepository;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected EntityManagerInterface $entityManager;
+
+    /**
      * DnaController constructor
      * @param DnaQueryService $dnaQueryService
      * @param DnaCheckStatusRepository $dnaCheckStatusRepository
@@ -94,6 +100,7 @@ class DnaController extends AbstractController
      * @param DnaSalesStatusRepository $dnaSalesStatusRepository
      */
     public function __construct(
+        EntityManagerInterface $entityManager,
         DnaQueryService                $dnaQueryService,
         DnaCheckStatusRepository       $dnaCheckStatusRepository,
         BreederPetsRepository          $breederPetsRepository,
@@ -115,6 +122,7 @@ class DnaController extends AbstractController
         $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
         $this->dnaSalesHeaderRepository = $dnaSalesHeaderRepository;
         $this->dnaSalesStatusRepository = $dnaSalesStatusRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -238,7 +246,7 @@ class DnaController extends AbstractController
             return new JsonResponse(['isSuccess' => false], 404);
         }
 
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->entityManager;
         $DnaCheckKind->setDeleteFlg(!$DnaCheckKind->getDeleteFlg());
         $entityManager->flush();
 
@@ -257,7 +265,7 @@ class DnaController extends AbstractController
             return new JsonResponse(['isSuccess' => false], 404);
         }
 
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->entityManager;
         $DnaCheckKindEc->setDeleteFlg(!$DnaCheckKindEc->getDeleteFlg());
         $entityManager->flush();
 

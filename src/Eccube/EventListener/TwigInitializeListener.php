@@ -29,12 +29,14 @@ use Eccube\Repository\PageRepository;
 use Eccube\Repository\PageLayoutRepository;
 use Eccube\Repository\BlockPositionRepository;
 use Eccube\Request\Context;
-use SunCat\MobileDetectBundle\DeviceDetector\MobileDetector;
+// use SunCat\MobileDetectBundle\DeviceDetector\MobileDetector;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
+use Detection\MobileDetect;
+use Psr\Log\LoggerInterface;
 
 class TwigInitializeListener implements EventSubscriberInterface
 {
@@ -89,7 +91,7 @@ class TwigInitializeListener implements EventSubscriberInterface
     private $eccubeConfig;
 
     /**
-     * @var MobileDetector
+     * @var MobileDetect
      */
     private $mobileDetector;
 
@@ -103,6 +105,8 @@ class TwigInitializeListener implements EventSubscriberInterface
      */
     private $layoutRepository;
 
+    private $logger;
+
     /**
      * TwigInitializeListener constructor.
      *
@@ -115,7 +119,7 @@ class TwigInitializeListener implements EventSubscriberInterface
      * @param AuthorityRoleRepository $authorityRoleRepository
      * @param EccubeConfig $eccubeConfig
      * @param Context $context
-     * @param MobileDetector $mobileDetector
+     * @param MobileDetect $mobileDetector
      * @param UrlGeneratorInterface $router
      * @param LayoutRepository $layoutRepository
      */
@@ -129,9 +133,10 @@ class TwigInitializeListener implements EventSubscriberInterface
         AuthorityRoleRepository $authorityRoleRepository,
         EccubeConfig $eccubeConfig,
         Context $context,
-        MobileDetector $mobileDetector,
+        MobileDetect $mobileDetector,
         UrlGeneratorInterface $router,
-        LayoutRepository $layoutRepository
+	LayoutRepository $layoutRepository,
+	LoggerInterface $logger
     ) {
         $this->twig = $twig;
         $this->baseInfoRepository = $baseInfoRepository;
@@ -144,16 +149,17 @@ class TwigInitializeListener implements EventSubscriberInterface
         $this->requestContext = $context;
         $this->mobileDetector = $mobileDetector;
         $this->router = $router;
-        $this->layoutRepository = $layoutRepository;
+	$this->layoutRepository = $layoutRepository;
+	$this->logger = $logger;
     }
 
     /**
-     * @param GetResponseEvent $event
+     * @param RequestEvent $event
      *
      * @throws NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(RequestEvent $event)
     {
         if ($this->initialized) {
             return;
@@ -171,11 +177,11 @@ class TwigInitializeListener implements EventSubscriberInterface
     }
 
     /**
-     * @param GetResponseEvent $event
+     * @param RequestEvent $event
      *
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function setFrontVariables(GetResponseEvent $event)
+    public function setFrontVariables(RequestEvent $event)
     {
         $request = $event->getRequest();
         /** @var \Symfony\Component\HttpFoundation\ParameterBag $attributes */
@@ -187,6 +193,8 @@ class TwigInitializeListener implements EventSubscriberInterface
         }
 
         $type = DeviceType::DEVICE_TYPE_PC;
+        // $detect = new MobileDetect();
+
         if ($this->mobileDetector->isMobile()) {
             $type = DeviceType::DEVICE_TYPE_MB;
         }
@@ -209,7 +217,7 @@ class TwigInitializeListener implements EventSubscriberInterface
 
         // Pageに紐づくLayoutにDeviceTypeが一致するLayoutがない場合はPCのレイアウトを探す
         if (!$Layout) {
-            log_info('fallback to PC layout');
+	    $this->logger->info('fallback to PC layout');
             foreach ($PageLayouts as $PageLayout) {
                 if ($PageLayout->getDeviceTypeId() == DeviceType::DEVICE_TYPE_PC) {
                     $Layout = $PageLayout->getLayout();
@@ -246,9 +254,9 @@ class TwigInitializeListener implements EventSubscriberInterface
     }
 
     /**
-     * @param GetResponseEvent $event
+     * @param RequestEvent $event
      */
-    public function setAdminGlobals(GetResponseEvent $event)
+    public function setAdminGlobals(RequestEvent $event)
     {
         // メニュー表示用配列.
         $menus = [];

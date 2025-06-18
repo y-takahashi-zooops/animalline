@@ -1,0 +1,25 @@
+入金額の不足を検知しました。
+
+受注ID: {{ data.order_id }}
+決済オーダーID： {{ data.OrderID }}
+決済方法: {{ data.pay_type }}
+{% if data.ReceiptDate is defined %}
+受付日時: {{ data.ReceiptDate }}
+{% endif %}
+{% if data.TranDate is defined %}
+処理日時: {{ data.TranDate }}
+{% endif %}
+{% if data.Amount is not empty %}
+決済金額(振込依頼金額): {{ data.Amount|number_format }}円
+{% endif %}
+{% if data.GanbInAmount is defined and data.GanbInAmount is not empty %}
+入金金額: {{ data.GanbInAmount|number_format }}円
+{% endif %}
+{% if data.GanbTotalTransferAmount is defined and data.GanbTotalTransferAmount is not empty %}
+累計入金額: {{ data.GanbTotalTransferAmount|number_format }}円
+{% endif %}
+
+大変お手数ですが、ご確認お願い致します。
+
+EC-CUBE管理画面の受注管理/受注一覧より該当する受注の詳細を
+ご確認ください。

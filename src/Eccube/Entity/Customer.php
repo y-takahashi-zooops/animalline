@@ -21,6 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 if (!class_exists('\Eccube\Entity\Customer')) {
     /**
@@ -32,7 +33,7 @@ if (!class_exists('\Eccube\Entity\Customer')) {
      * @ORM\HasLifecycleCallbacks()
      * @ORM\Entity(repositoryClass="Eccube\Repository\CustomerRepository")
      */
-    class Customer extends \Eccube\Entity\AbstractEntity implements UserInterface
+    class Customer extends \Eccube\Entity\AbstractEntity implements UserInterface, PasswordAuthenticatedUserInterface
     {
         /**
          * @var int
@@ -296,6 +297,26 @@ if (!class_exists('\Eccube\Entity\Customer')) {
         private $conservationContactHeader;
 
         /**
+         * @ORM\Column(name="regist_type", type="string", nullable=true)
+         */
+        private $regist_type;
+
+        /**
+         * @ORM\Column(name="relation_id", type="string", nullable=true)
+         */
+        private $relation_id;
+
+        /**
+         * @ORM\Column(name="is_conservation", type="string", nullable=true)
+         */
+        private $is_conservation;
+
+        /**
+         * @ORM\Column(name="is_breeder", type="string", nullable=true)
+         */
+        private $is_breeder;
+
+        /**
          * Constructor
          */
         public function __construct()
@@ -321,23 +342,33 @@ if (!class_exists('\Eccube\Entity\Customer')) {
         /**
          * {@inheritdoc}
          */
-        public function getRoles()
+        public function getRoles(): array
         {
             return ['ROLE_USER'];
-        }
+	}
+
+	/**
+         * ユーザー識別子を返す（Symfony 5.3 以降必須）
+         *
+         * @return string
+         */
+         public function getUserIdentifier(): string
+         {
+            return (string) $this->email;
+         }
 
         /**
          * {@inheritdoc}
          */
-        public function getUsername()
+        public function getUsername(): string
         {
-            return $this->email;
+            return $this->getUserIdentifier();
         }
 
         /**
          * {@inheritdoc}
          */
-        public function eraseCredentials()
+        public function eraseCredentials(): void
         {
         }
 
@@ -644,7 +675,7 @@ if (!class_exists('\Eccube\Entity\Customer')) {
          *
          * @return string|null
          */
-        public function getPassword()
+        public function getPassword(): ?string
         {
             return $this->password;
         }
@@ -1222,6 +1253,50 @@ if (!class_exists('\Eccube\Entity\Customer')) {
                 }
             }
 
+            return $this;
+        }
+
+        public function getRegistType(): ?string
+        {
+            return $this->regist_type;
+        }
+
+        public function setRegistType(?string $registType): self
+        {
+            $this->regist_type = $registType;
+            return $this;
+        }
+
+        public function getRelationId(): ?string
+        {
+            return $this->relation_id;
+        }
+
+        public function setRelationId(?int $relationId): self
+        {
+            $this->relation_id = $relationId;
+            return $this;
+        }
+
+        public function getIsConservation(): ?string
+        {
+            return $this->is_conservation;
+        }
+
+        public function setIsConservation(int $isConservation): self
+        {
+            $this->is_conservation = $isConservation;
+            return $this;
+        }
+
+        public function getIsBreeder(): ?string
+        {
+            return $this->is_breeder;
+        }
+
+        public function setIsBreeder(int $isBreeder): self
+        {
+            $this->is_breeder = $isBreeder;
             return $this;
         }
     }

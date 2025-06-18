@@ -34,6 +34,17 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Eccube\Controller\ProductController as BaseProductController;
 use Eccube\Repository\CartItemRepository;
 use Eccube\Repository\CartRepository;
+use Symfony\Component\Form\FormFactoryInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Knp\Component\Pager\PaginatorInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use Eccube\Common\EccubeConfig;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RouterInterface;
 
 class ProductController extends BaseProductController
 {
@@ -78,9 +89,14 @@ class ProductController extends BaseProductController
     protected $cartItemRepository;
 
     /**
-     * @var CartRepository
+     * @var LoggerInterface
      */
-    protected $cartRepository;
+    protected $logger;
+
+    /**
+     * @var SessionInterface
+     */
+    protected SessionInterface $session;
 
     private $title = '';
 
@@ -96,6 +112,8 @@ class ProductController extends BaseProductController
      * @param ProductListMaxRepository $productListMaxRepository
      * @param CartItemRepository $cartItemRepository
      * @param CartRepository $cartRepository
+     * @param LoggerInterface $logger
+     * @param SessionInterface $session
      */
     public function __construct(
         PurchaseFlow $cartPurchaseFlow,
@@ -106,15 +124,36 @@ class ProductController extends BaseProductController
         AuthenticationUtils $helper,
         ProductListMaxRepository $productListMaxRepository,
         CartItemRepository $cartItemRepository,
-        CartRepository $cartRepository
+        CartRepository $cartRepository,
+        FormFactoryInterface $formFactory,
+        LoggerInterface $logger,
+        SessionInterface $session,
+        EventDispatcherInterface $eventDispatcher,
+        EntityManagerInterface $entityManager,
+        EccubeConfig $eccubeConfig,
+        TranslatorInterface $translator,
+        RequestStack $requestStack,
+        RouterInterface $router        
     ) {
-        $this->purchaseFlow = $cartPurchaseFlow;
-        $this->customerFavoriteProductRepository = $customerFavoriteProductRepository;
-        $this->cartService = $cartService;
-        $this->productRepository = $productRepository;
-        $this->BaseInfo = $baseInfoRepository->get();
-        $this->helper = $helper;
-        $this->productListMaxRepository = $productListMaxRepository;
+        parent::__construct(
+            $cartPurchaseFlow,
+            $customerFavoriteProductRepository,
+            $cartService,
+            $productRepository,
+            $baseInfoRepository,
+            $helper,
+            $productListMaxRepository,
+            $formFactory,
+            $logger,
+            $session,
+            $eventDispatcher,
+            $entityManager,
+            $eccubeConfig,
+            $translator,
+            $requestStack,
+            $router
+        );
+
         $this->cartItemRepository = $cartItemRepository;
         $this->cartRepository = $cartRepository;
     }
@@ -133,7 +172,7 @@ class ProductController extends BaseProductController
         }
 
         $builder = $this->formFactory->createNamedBuilder(
-            '',
+            'add_cart',
             AddCartType::class,
             null,
             [
@@ -149,43 +188,132 @@ class ProductController extends BaseProductController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_PRODUCT_CART_ADD_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_PRODUCT_CART_ADD_INITIALIZE);
+
+        $is_favorite = false;
+        if ($this->isGranted('ROLE_USER')) {
+            $Customer = $this->getUser();
+            $is_favorite = $this->customerFavoriteProductRepository->isFavorite($Customer, $Product);
+        }
+
+        // JSONの成型
+        $classCategories = [
+            '__unselected' => [
+                '__unselected' => [
+                    'name' => $this->translator->trans('common.select'),
+                    'product_class_id' => '',
+                ],
+            ],
+        ];
+
+        foreach ($Product->getProductClasses() as $ProductClass) {
+            if (!$ProductClass->isVisible()) {
+                continue;
+            }
+
+            $ClassCategory1 = $ProductClass->getClassCategory1();
+            $ClassCategory2 = $ProductClass->getClassCategory2();
+            if ($ClassCategory2 && !$ClassCategory2->isVisible()) {
+                continue;
+            }
+
+            $id1 = $ClassCategory1 ? (string) $ClassCategory1->getId() : '__unselected2';
+            $id2 = $ClassCategory2 ? (string) $ClassCategory2->getId() : '';
+
+            $name2 = $ClassCategory2
+                ? $ClassCategory2->getName() . (!$ProductClass->getStockFind() ? ' ' . $this->translator->trans('front.product.out_of_stock_label') : '')
+                : $this->translator->trans('common.select');
+
+            if (!isset($classCategories[$id1][''])) {
+                $classCategories[$id1]['#'] = [
+                    'classcategory_id2' => '',
+                    'name' => $this->translator->trans('common.select'),
+                    'product_class_id' => '',
+                ];
+            }
+
+            $classCategories[$id1][$id2] = [
+                'classcategory_id2' => $id2,
+                'name' => $name2,
+                'stock_find' => $ProductClass->getStockFind(),
+                'price01' => $ProductClass->getPrice01() === null ? '' : number_format($ProductClass->getPrice01()),
+                'price02' => number_format($ProductClass->getPrice02()),
+                'price01_inc_tax' => $ProductClass->getPrice01() === null ? '' : number_format($ProductClass->getPrice01IncTax()),
+                'price02_inc_tax' => number_format($ProductClass->getPrice02IncTax()),
+                'product_class_id' => (string) $ProductClass->getId(),
+                'product_code' => $ProductClass->getCode() ?? '',
+                'sale_type' => $ProductClass->getSaleType() ? (string) $ProductClass->getSaleType()->getId() : '',
+                'item_cost' => method_exists($ProductClass, 'getItemCost') ? (float) $ProductClass->getItemCost() : 0.0,
+            ];
+        }
+
+        $classCategoriesJson = json_encode($classCategories, JSON_UNESCAPED_UNICODE);
 
         /* @var $form \Symfony\Component\Form\FormInterface */
         $form = $builder->getForm();
         $form->handleRequest($request);
 
-        if (!$form->isValid()) {
-            throw new NotFoundHttpException();
+        if (!$form->isSubmitted() || !$form->isValid()) {
+            $this->logger->error('フォームバリデーションエラー', [
+                'form_data' => $request->request->all(),
+                'errors' => (string) $form->getErrors(true, false),
+            ]);
+
+            // if ($request->isXmlHttpRequest()) {
+            //     return $this->json([
+            //         'done' => false,
+            //         'messages' => ['入力内容に誤りがあります！'],
+            //     ]);
+            // }
+
+            return $this->render('Product/detail.twig', [
+                'form' => $form->createView(),
+                'Product' => $Product,
+                'BaseInfo' => $this->BaseInfo,
+                'errorMessages' => ['入力内容に誤りがあります。'],
+                'is_favorite' => $is_favorite,
+                'class_categories_json' => $classCategoriesJson,
+            ]);
         }
+
+        // if (!$form->isValid()) {
+        //     throw new NotFoundHttpException();
+        // }
 
         $addCartData = $form->getData();
 
         // カート商品に同商品がないか検索
-            $cartItem = $this->cartItemRepository->findOneBy(['Cart' => $this->cartService->getCarts(),'ProductClass' => $addCartData['product_class_id']]);
-            if ($cartItem) {
-                // 同商品がカートに存在したらカートに追加させない
-                return;
-            }
+        $cartItem = $this->cartItemRepository->findOneBy([
+            'Cart' => $this->cartService->getCart(),
+            'ProductClass' => $addCartData->getProductClass()
+        ]);
+        if ($cartItem) {
+            // 同商品がカートに存在したらカートに追加させない
+            return $this->json([
+                'done' => false,
+                'messages' => ['この商品はすでにカートに入っています。'],
+            ]);
+        }
 
-        log_info(
+            $this->logger->info(
             'カート追加処理開始',
             [
                 'product_id' => $Product->getId(),
-                'product_class_id' => $addCartData['product_class_id'],
-                'quantity' => $addCartData['quantity'],
-                'is_repeat' => $addCartData['is_repeat'],
-                'repeat_span' => $addCartData['repeat_span'],
-                'span_unit' => $addCartData['span_unit'],
+                'product_class_id' => $addCartData->getProductClass()?->getId(),
+                'quantity' => $addCartData->getQuantity(),
+                'is_repeat' => $addCartData->getIsRepeat(),
+                'repeat_span' => $addCartData->getRepeatSpan(),
+                'span_unit' => $addCartData->getSpanUnit(),
+                'is_favorite' => $is_favorite,
             ]
         );
 
         $this->cartService->addProduct(
-            $addCartData['product_class_id'],
-            $addCartData['quantity'],
-            $addCartData['is_repeat'],
-            $addCartData['repeat_span'],
-            $addCartData['span_unit']
+            $addCartData->getProductClass(),
+            $addCartData->getQuantity(),
+            $addCartData->getIsRepeat(),
+            $addCartData->getRepeatSpan(),
+            $addCartData->getSpanUnit()
         );
 
         // 明細の正規化
@@ -194,7 +322,7 @@ class ProductController extends BaseProductController
             $result = $this->purchaseFlow->validate($Cart, new PurchaseContext($Cart, $this->getUser()));
             // 復旧不可のエラーが発生した場合は追加した明細を削除.
             if ($result->hasError()) {
-                $this->cartService->removeProduct($addCartData['product_class_id']);
+                $this->cartService->removeProduct($addCartData->getProductClass()?->getId());
                 foreach ($result->getErrors() as $error) {
                     $errorMessages[] = $error->getMessage();
                 }
@@ -206,15 +334,15 @@ class ProductController extends BaseProductController
 
         $this->cartService->save();
 
-        log_info(
+        $this->logger->info(
             'カート追加処理完了',
             [
                 'product_id' => $Product->getId(),
-                'product_class_id' => $addCartData['product_class_id'],
-                'quantity' => $addCartData['quantity'],
-                'is_repeat' => $addCartData['is_repeat'],
-                'repeat_span' => $addCartData['repeat_span'],
-                'span_unit' => $addCartData['span_unit'],
+                'product_class_id' => $addCartData->getProductClass()?->getId(),
+                'quantity' => $addCartData->getQuantity(),
+                'is_repeat' => $addCartData->getIsRepeat(),
+                'repeat_span' => $addCartData->getRepeatSpan(),
+                'span_unit' => $addCartData->getSpanUnit(),
             ]
         );
 
@@ -225,7 +353,7 @@ class ProductController extends BaseProductController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_PRODUCT_CART_ADD_COMPLETE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_PRODUCT_CART_ADD_COMPLETE);
 
         if ($event->getResponse() !== null) {
             return $event->getResponse();
@@ -241,7 +369,7 @@ class ProductController extends BaseProductController
             if (empty($errorMessages)) {
                 // エラーが発生していない場合
                 $done = true;
-                array_push($messages, trans('front.product.add_cart_complete'));
+                array_push($messages, $this->translator->trans('front.product.add_cart_complete'));
             } else {
                 // エラーが発生している場合
                 $done = false;

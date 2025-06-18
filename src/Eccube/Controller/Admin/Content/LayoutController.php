@@ -34,6 +34,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment as Twig;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Form\FormFactoryInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class LayoutController extends AbstractController
 {
@@ -78,6 +80,8 @@ class LayoutController extends AbstractController
      */
     protected $isPreview = false;
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * LayoutController constructor.
      *
@@ -88,7 +92,17 @@ class LayoutController extends AbstractController
      * @param ProductRepository $productRepository
      * @param DeviceTypeRepository $deviceTypeRepository
      */
-    public function __construct(BlockRepository $blockRepository, BlockPositionRepository $blockPositionRepository, LayoutRepository $layoutRepository, PageLayoutRepository $pageLayoutRepository, PageRepository $pageRepository, ProductRepository $productRepository, DeviceTypeRepository $deviceTypeRepository)
+    public function __construct(
+        BlockRepository $blockRepository,
+        BlockPositionRepository $blockPositionRepository,
+        LayoutRepository $layoutRepository,
+        PageLayoutRepository $pageLayoutRepository,
+        PageRepository $pageRepository,
+        ProductRepository $productRepository,
+        DeviceTypeRepository $deviceTypeRepository,
+        FormFactoryInterface $formFactory,
+        EntityManagerInterface $entityManager
+    )
     {
         $this->blockRepository = $blockRepository;
         $this->blockPositionRepository = $blockPositionRepository;
@@ -97,6 +111,8 @@ class LayoutController extends AbstractController
         $this->pageRepository = $pageRepository;
         $this->productRepository = $productRepository;
         $this->deviceTypeRepository = $deviceTypeRepository;
+        $this->formFactory = $formFactory;
+        $this->entityManager = $entityManager;
     }
 
     /**

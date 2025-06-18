@@ -16,6 +16,7 @@ namespace Eccube\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 if (!class_exists('\Eccube\Entity\Member')) {
@@ -28,7 +29,7 @@ if (!class_exists('\Eccube\Entity\Member')) {
      * @ORM\HasLifecycleCallbacks()
      * @ORM\Entity(repositoryClass="Eccube\Repository\MemberRepository")
      */
-    class Member extends \Eccube\Entity\AbstractEntity implements UserInterface
+    class Member extends \Eccube\Entity\AbstractEntity implements UserInterface, PasswordAuthenticatedUserInterface
     {
         public static function loadValidatorMetadata(ClassMetadata $metadata)
         {
@@ -49,7 +50,15 @@ if (!class_exists('\Eccube\Entity\Member')) {
         /**
          * {@inheritdoc}
          */
-        public function getRoles()
+        public function getUserIdentifier(): string
+        {
+            return $this->login_id; // ユーザー識別子としてlogin_idを返す
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function getRoles(): array
         {
             return ['ROLE_ADMIN'];
         }
@@ -65,7 +74,7 @@ if (!class_exists('\Eccube\Entity\Member')) {
         /**
          * {@inheritdoc}
          */
-        public function eraseCredentials()
+        public function eraseCredentials(): void
         {
         }
 
@@ -260,7 +269,7 @@ if (!class_exists('\Eccube\Entity\Member')) {
          *
          * @return Member
          */
-        public function setPassword($password)
+        public function setPassword(?string $password): self
         {
             $this->password = $password;
 
@@ -272,7 +281,7 @@ if (!class_exists('\Eccube\Entity\Member')) {
          *
          * @return string
          */
-        public function getPassword()
+        public function getPassword(): ?string
         {
             return $this->password;
         }

@@ -24,6 +24,7 @@ use Plugin\ProductReview4\Entity\ProductReviewStatus;
 use Plugin\ProductReview4\Repository\ProductReviewRepository;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Class ReviewAdminControllerTest.
@@ -49,6 +50,13 @@ class ReviewAdminControllerTest extends AbstractAdminWebTestCase
      * @var ProductStatusRepository
      */
     protected $productReviewRepo;
+
+    public function __construct(
+        EntityManagerInterface $entityManager
+    ) {
+        $this->entityManager = $entityManager;
+    }
+
 
     /**
      * Setup method.

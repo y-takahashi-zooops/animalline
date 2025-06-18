@@ -24,31 +24,35 @@ use Plugin\GmoPaymentGateway4\Service\Method\CarDocomo;
 use Plugin\GmoPaymentGateway4\Service\Method\CarSoftbank;
 use Plugin\GmoPaymentGateway4\Service\Method\RakutenPay;
 use Plugin\GmoPaymentGateway4\Util\PaymentUtil;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class PluginManager extends AbstractPluginManager
 {
-    /**
-     * Update the plugin.
-     *
-     * @param array $meta
-     * @param ContainerInterface $container
-     */
+    private $entityManager;
+    private $eccubeConfig;
+
+    public function __construct(EntityManagerInterface $entityManager, EccubeConfig $eccubeConfig)
+    {
+        $this->entityManager = $entityManager;
+        $this->eccubeConfig = $eccubeConfig;
+    }
+
     public function update(array $meta, ContainerInterface $container)
     {
         PaymentUtil::logInfo('PluginManager::update start.');
 
         try {
             // GMO-PG プラグイン設定用のレコードを生成
-            $this->createConfig($container);
+            $this->createConfig();
             // 支払方法を追加
-            $this->createPayments($container);
+            $this->createPayments();
             // マイページ/カード情報編集向けにページおよび
             // ページレイアウトを生成
-            $this->createPageLayout($container);
+            $this->createPageLayout();
             // GMO-PG プラグイン設定の接続先の入力指定を廃止する
             // 入力指定が設定されていたら本番環境に変更する
-            $this->stopConnectServerType($container);
+            $this->stopConnectServerType();
         } catch (\Exception $e) {
             PaymentUtil::logError($e->getMessage());
             throw $e;
@@ -61,7 +65,6 @@ class PluginManager extends AbstractPluginManager
      * Enable the plugin.
      *
      * @param array $meta
-     * @param ContainerInterface $container
      */
     public function enable(array $meta, ContainerInterface $container)
     {
@@ -69,15 +72,15 @@ class PluginManager extends AbstractPluginManager
 
         try {
             // GMO-PG プラグイン設定用のレコードを生成
-            $this->createConfig($container);
+            $this->createConfig();
             // 支払方法を追加
-            $this->createPayments($container);
+            $this->createPayments();
             // マイページ/カード情報編集向けにページおよび
             // ページレイアウトを生成
-            $this->createPageLayout($container);
+            $this->createPageLayout();
             // GMO-PG プラグイン設定の接続先の入力指定を廃止する
             // 入力指定が設定されていたら本番環境に変更する
-            $this->stopConnectServerType($container);
+            $this->stopConnectServerType();
         } catch (\Exception $e) {
             PaymentUtil::logError($e->getMessage());
             throw $e;
@@ -89,18 +92,18 @@ class PluginManager extends AbstractPluginManager
     /**
      * GMO-PG プラグイン設定用のレコードを生成
      */
-    private function createConfig(ContainerInterface $container)
+    private function createConfig()
     {
         PaymentUtil::logInfo('PluginManager::createConfig start.');
 
-        $entityManager = $container->get('doctrine')->getManager();
+        $entityManager = $this->entityManager;
         $GmoConfig = $entityManager->find(GmoConfig::class, 1);
         if ($GmoConfig) {
             PaymentUtil::logInfo('GmoConfig found.');
             return;
         }
 
-        $EccubeConfig = $container->get(EccubeConfig::class);
+        $EccubeConfig = $this->eccubeConfig;
         $server_url =
             $EccubeConfig['gmo_payment_gateway.' .
                           'admin.config.test.server_url'];
@@ -187,13 +190,12 @@ class PluginManager extends AbstractPluginManager
     /**
      * 支払方法を追加
      */
-    private function createPayment
-        (ContainerInterface $container, array $paymentInfo)
+    private function createPayment(array $paymentInfo)
     {
         PaymentUtil::logInfo('PluginManager::createPayment(' .
                              $paymentInfo['class'] . ') start.');
 
-        $entityManager = $container->get('doctrine')->getManager();
+         $entityManager = $this->entityManager;
 
         $Payment = $entityManager->getRepository(Payment::class)
             ->findOneBy(['method_class' => $paymentInfo['class']]);
@@ -246,7 +248,7 @@ class PluginManager extends AbstractPluginManager
     /**
      * プラグインがサポートする支払方法を追加
      */
-    private function createPayments(ContainerInterface $container)
+    private function createPayments()
     {
         PaymentUtil::logInfo('PluginManager::createPayments start.');
 
@@ -271,7 +273,7 @@ class PluginManager extends AbstractPluginManager
 
         // 支払方法を追加
         foreach ($payments as $payment) {
-            $this->createPayment($container, $payment);
+            $this->createPayment($payment);
         }
 
         PaymentUtil::logInfo('PluginManager::createPayments end.');
@@ -280,11 +282,11 @@ class PluginManager extends AbstractPluginManager
     /**
      * マイページ/カード情報編集向けにページおよびページレイアウトを生成
      */
-    private function createPageLayout(ContainerInterface $container)
+    private function createPageLayout()
     {
         PaymentUtil::logInfo('PluginManager::createPageLayout start.');
 
-        $entityManager = $container->get('doctrine')->getManager();
+        $entityManager = $this->entityManager;
 
         $url = 'gmo_mypage_card_edit';
 
@@ -340,11 +342,11 @@ class PluginManager extends AbstractPluginManager
      * GMO-PG プラグイン設定の接続先の入力指定を廃止する
      * 入力指定が設定されていたら本番環境に変更する
      */
-    private function stopConnectServerType(ContainerInterface $container)
+    private function stopConnectServerType()
     {
         PaymentUtil::logInfo('PluginManager::stopConnectServerType start.');
 
-        $entityManager = $container->get('doctrine')->getManager();
+        $entityManager = $this->entityManager;
         $GmoConfig = $entityManager->find(GmoConfig::class, 1);
         if (is_null($GmoConfig)) {
             PaymentUtil::logInfo('GmoConfig not found.');
@@ -353,7 +355,7 @@ class PluginManager extends AbstractPluginManager
 
         // 入力指定されている場合のみ
         if ($GmoConfig->getConnectServerType() == 3) {
-            $EccubeConfig = $container->get(EccubeConfig::class);
+            $EccubeConfig = $this->eccubeConfig;
             $server_url =
                 $EccubeConfig['gmo_payment_gateway.' .
                               'admin.config.prod.server_url'];

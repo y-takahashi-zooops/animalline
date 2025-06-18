@@ -155,7 +155,7 @@ file that was distributed with this source code.
                                                 {% endif %}
                                             </div>
                                             <div class="list">
-                                                <span>{{ TaxRule.default_tax_rule  ? 'admin.setting.shop.tax.base_rate_setting'|trans : TaxRule.apply_date|date_min }}</span>
+                                                <span>{{ TaxRule.default_tax_rule  ? 'admin.setting.shop.tax.base_rate_setting'|trans : TaxRule.apply_date|date('Y-m-d H:i:s') }}</span>
                                             </div>
                                         </td>
                                         <td class="align-middle">

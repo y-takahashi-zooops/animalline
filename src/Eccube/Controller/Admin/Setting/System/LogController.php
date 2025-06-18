@@ -20,9 +20,21 @@ use Eccube\Form\Type\Admin\LogType;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class LogController extends AbstractController
 {
+    
+    public function __construct(
+        EventDispatcherInterface $eventDispatcher,
+        FormFactoryInterface $formFactory,
+    )
+    {
+        $this->eventDispatcher = $eventDispatcher;
+        $this->formFactory = $formFactory;
+    }
+
     /**
      * @Route("/%eccube_admin_route%/setting/system/log", name="admin_setting_system_log")
      * @Template("@admin/Setting/System/log.twig")
@@ -46,7 +58,7 @@ class LogController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_SETTING_SYSTEM_LOG_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SYSTEM_LOG_INDEX_INITIALIZE);
         $formData = $event->getArgument('data');
 
         $form = $builder->getForm();
@@ -62,7 +74,7 @@ class LogController extends AbstractController
                 ],
                 $request
             );
-            $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_SETTING_SYSTEM_LOG_INDEX_COMPLETE, $event);
+            $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SYSTEM_LOG_INDEX_COMPLETE);
         }
         $logDir = $this->getParameter('kernel.logs_dir').DIRECTORY_SEPARATOR.$this->getParameter('kernel.environment');
         $logFile = $logDir.'/'.$formData['files'];

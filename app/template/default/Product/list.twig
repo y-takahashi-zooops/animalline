@@ -14,11 +14,7 @@ file that was distributed with this source code.
 
 {% block javascript %}
     <script>
-        eccube.productsClassCategories = {
-            {% for Product in pagination %}
-            "{{ Product.id|escape('js') }}": {{ class_categories_as_json(Product)|raw }}{% if loop.last == false %}, {% endif %}
-            {% endfor %}
-        };
+        eccube.productsClassCategories = {{ products_class_categories_json|raw }};
 
         $(function() {
 
@@ -39,7 +35,25 @@ file that was distributed with this source code.
             });
 
             $('.add-cart').on('click', function(e) {
+                e.preventDefault();
+
                 var $form = $(this).parents('li').find('form');
+
+                const productId = $(this).data('cartid');
+
+                // productDataを取得（オプショナルチェーンは使わずES5で書く）
+                var productData = (
+                    eccube.productsClassCategories &&
+                    eccube.productsClassCategories[productId] &&
+                    eccube.productsClassCategories[productId]['__unselected'] &&
+                    eccube.productsClassCategories[productId]['__unselected']['']
+                ) ? eccube.productsClassCategories[productId]['__unselected'][''] : null;
+
+                if (productData && productData.product_class_id) {
+                    $form.find('input[name="add_cart[ProductClass]"]').val(productData.product_class_id);
+                } else {
+                    console.warn("product_class_idが見つかりません");
+                }
 
                 // 個数フォームのチェック
                 var $quantity = $form.parent().find('.quantity');
@@ -94,7 +108,7 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block main %}
-    {% if search_form.category_id.vars.errors|length > 0 %}
+    {% if search_form is defined and search_form.category_id is defined and search_form.category_id.vars.errors|length > 0 %}
         <div class="ec-searchnavRole">
             <p class="errormsg text-danger">{{ 'ご指定のカテゴリは存在しません'|trans }}</p>
         </div>
@@ -524,8 +538,12 @@ file that was distributed with this source code.
                 {% if pagination.totalItemCount > 0 %}
                     <div class="ec-searchnavRole__actions">
                         <div class="ec-select">
-                            {{ form_widget(disp_number_form, {'id': '', 'attr': {'class': 'disp-number'}}) }}
-                            {{ form_widget(order_by_form, {'id': '', 'attr': {'class': 'order-by'}}) }}
+                            {% if disp_number_form is defined and disp_number_form is not null %}
+                                {{ form_widget(disp_number_form, {'id': '', 'attr': {'class': 'disp-number'}}) }}
+                            {% endif %}
+                            {% if order_by_form is defined and order_by_form is not null %}
+                                {{ form_widget(order_by_form, {'id': '', 'attr': {'class': 'order-by'}}) }}
+                            {% endif %}
                         </div>
                     </div>
                 {% endif %}
@@ -579,6 +597,7 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     {{ form_rest(form) }}
+
                                 </form>
                                 <div class="ec-productRole__btn">
                                     <button type="submit" class="ec-blockBtn--action add-cart" data-cartid="{{ Product.id }}" form="productForm{{ Product.id }}">

@@ -28,6 +28,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Class PaymentController
@@ -40,13 +43,28 @@ class PaymentController extends AbstractController
     protected $paymentRepository;
 
     /**
+     * @var FormFactoryInterface
+     */
+    protected FormFactoryInterface $formFactory;
+
+
+    /**
      * PaymentController constructor.
      *
      * @param PaymentRepository $paymentRepository
+     * @param FormFactoryInterface $formFactory
      */
-    public function __construct(PaymentRepository $paymentRepository)
+    public function __construct(
+        PaymentRepository $paymentRepository,
+        EventDispatcherInterface $eventDispatcher,
+        FormFactoryInterface $formFactory,
+        EntityManagerInterface $entityManager
+    )
     {
         $this->paymentRepository = $paymentRepository;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->formFactory = $formFactory;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -67,7 +85,7 @@ class PaymentController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_SETTING_SHOP_PAYMENT_INDEX_COMPLETE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SHOP_PAYMENT_INDEX_COMPLETE);
 
         return [
             'Payments' => $Payments,
@@ -105,7 +123,7 @@ class PaymentController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_SETTING_SHOP_PAYMENT_EDIT_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SHOP_PAYMENT_EDIT_INITIALIZE);
 
         $form = $builder->getForm();
 
@@ -143,7 +161,7 @@ class PaymentController extends AbstractController
                 ],
                 $request
             );
-            $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_SETTING_SHOP_PAYMENT_EDIT_COMPLETE, $event);
+            $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SHOP_PAYMENT_EDIT_COMPLETE);
 
             $this->addSuccess('admin.common.save_complete', 'admin');
 
@@ -195,7 +213,7 @@ class PaymentController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_SETTING_SHOP_PAYMENT_IMAGE_ADD_COMPLETE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SHOP_PAYMENT_IMAGE_ADD_COMPLETE);
         $filename = $event->getArgument('filename');
 
         return $this->json(['filename' => $filename], 200);
@@ -229,7 +247,7 @@ class PaymentController extends AbstractController
                 ],
                 $request
             );
-            $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_SETTING_SHOP_PAYMENT_DELETE_COMPLETE, $event);
+            $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SHOP_PAYMENT_DELETE_COMPLETE);
 
             $this->addSuccess('admin.common.delete_complete', 'admin');
         } catch (ForeignKeyConstraintViolationException $e) {

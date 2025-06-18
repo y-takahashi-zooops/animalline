@@ -38,6 +38,8 @@ use Customize\Repository\DnaCheckStatusHeaderRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Customize\Repository\PetLikeRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class BreederPetController extends AbstractController
 {
@@ -142,6 +144,13 @@ class BreederPetController extends AbstractController
     protected $petLikeRepository;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected EntityManagerInterface $entityManager;
+
+    protected FormFactoryInterface $formFactory;
+
+    /**
      * BreederController constructor.
      *
      * @param BreederContactsRepository $breederContactsRepository
@@ -164,6 +173,7 @@ class BreederPetController extends AbstractController
      * @param PetLikeRepository $petLikeRepository
      * @param DnaCheckStatusDetailRepository $dnaCheckStatusDetailRepository
      * @param DnaCheckKindsRepository $dnaCheckKindsRepository
+     * @param EntityManagerInterface $entityManager
      */
     public function __construct(
         BreederContactsRepository        $breederContactsRepository,
@@ -185,7 +195,9 @@ class BreederPetController extends AbstractController
         BreederPetinfoTemplateRepository $breederPetinfoTemplateRepository,
         PetLikeRepository $petLikeRepository,
         DnaCheckStatusDetailRepository $dnaCheckStatusDetailRepository,
-        DnaCheckKindsRepository $dnaCheckKindsRepository
+        DnaCheckKindsRepository $dnaCheckKindsRepository,
+        EntityManagerInterface $entityManager,
+        FormFactoryInterface $formFactory
     )
     {
         $this->breederContactsRepository = $breederContactsRepository;
@@ -208,6 +220,8 @@ class BreederPetController extends AbstractController
         $this->petLikeRepository = $petLikeRepository;
         $this->dnaCheckStatusDetailRepository = $dnaCheckStatusDetailRepository;
         $this->dnaCheckKindsRepository = $dnaCheckKindsRepository;
+        $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
     }
 
     /**
@@ -259,7 +273,7 @@ class BreederPetController extends AbstractController
      */
     public function movie_upload(Request $request,$pet_id)
     {
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->entityManager;
 
         $pet = $this->breederPetsRepository->find($pet_id);
         if (!$pet) {
@@ -526,7 +540,7 @@ class BreederPetController extends AbstractController
     {
         $sessid = session_id();
 
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->entityManager;
 
         $like =  $this->petLikeRepository->getLike($sessid, 1, $id);
         if(!$like){
@@ -653,7 +667,7 @@ class BreederPetController extends AbstractController
                 $breederPet->setPedigreeCode('0');
             }
             */
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $breeder = $this->breedersRepository->find($breederId);
             $breederPet->setBreeder($breeder);
             $breederPet->setIsActive(1);
@@ -830,7 +844,7 @@ class BreederPetController extends AbstractController
                 $img2 = $this->setImageSrc($request->get('img2'), $petId);
                 $img3 = $this->setImageSrc($request->get('img3'), $petId);
                 $img4 = $this->setImageSrc($request->get('img4'), $petId);
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->entityManager;
                 $breederPet->setThumbnailPath($img0);
                 $entityManager->persist($breederPet);
                 foreach ($breederPetImages as $key => $image) {

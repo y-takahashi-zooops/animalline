@@ -41,6 +41,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Eccube\Common\EccubeConfig;
+use Symfony\Component\Form\FormFactoryInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class PluginController extends AbstractController
 {
@@ -75,6 +78,12 @@ class PluginController extends AbstractController
     private $systemService;
 
     /**
+     * @var FormFactoryInterface
+     */
+    protected FormFactoryInterface $formFactory;
+
+
+    /**
      * PluginController constructor.
      *
      * @param PluginRepository $pluginRepository
@@ -85,6 +94,7 @@ class PluginController extends AbstractController
      *
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
+     * @param FormFactoryInterface $formFactory
      */
     public function __construct(
         PluginRepository $pluginRepository,
@@ -92,7 +102,10 @@ class PluginController extends AbstractController
         BaseInfoRepository $baseInfoRepository,
         PluginApiService $pluginApiService,
         ComposerServiceInterface $composerService,
-        SystemService $systemService
+        SystemService $systemService,
+        EccubeConfig $eccubeConfig,
+        FormFactoryInterface $formFactory,
+        EntityManagerInterface $entityManager
     ) {
         $this->pluginRepository = $pluginRepository;
         $this->pluginService = $pluginService;
@@ -100,6 +113,9 @@ class PluginController extends AbstractController
         $this->pluginApiService = $pluginApiService;
         $this->composerService = $composerService;
         $this->systemService = $systemService;
+        $this->eccubeConfig = $eccubeConfig;
+        $this->formFactory = $formFactory;
+        $this->entityManager = $entityManager;
     }
 
     /**

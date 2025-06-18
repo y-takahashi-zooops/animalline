@@ -24,7 +24,12 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use Eccube\Common\EccubeConfig;
 
 class MemberController extends AbstractController
 {
@@ -39,25 +44,43 @@ class MemberController extends AbstractController
     protected $memberRepository;
 
     /**
-     * @var EncoderFactoryInterface
+     * @var UserPasswordHasherInterface
      */
-    protected $encoderFactory;
+    protected $passwordHasher;
+
+    protected FormFactoryInterface $formFactory;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
 
     /**
      * MemberController constructor.
      *
-     * @param EncoderFactoryInterface $encoderFactory
+     * @param UserPasswordHasherInterface $passwordHasher
      * @param MemberRepository $memberRepository
      * @param TokenStorageInterface $tokenStorage
+     * @param LoggerInterface $logger
      */
     public function __construct(
-        EncoderFactoryInterface $encoderFactory,
+        UserPasswordHasherInterface $passwordHasher,
         MemberRepository $memberRepository,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        FormFactoryInterface $formFactory,
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher,
+        EntityManagerInterface $entityManager,
+        EccubeConfig $eccubeConfig
     ) {
-        $this->encoderFactory = $encoderFactory;
+        $this->passwordHasher = $passwordHasher;
         $this->memberRepository = $memberRepository;
         $this->tokenStorage = $tokenStorage;
+        $this->formFactory = $formFactory;
+        $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->entityManager = $entityManager;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     /**
@@ -77,7 +100,7 @@ class MemberController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_SETTING_SYSTEM_MEMBER_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SYSTEM_MEMBER_INDEX_INITIALIZE);
 
         $form = $builder->getForm();
 
@@ -104,19 +127,14 @@ class MemberController extends AbstractController
             'builder' => $builder,
             'Member' => $Member,
         ], $request);
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_SETTING_SYSTEM_MEMBER_EDIT_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SYSTEM_MEMBER_EDIT_INITIALIZE);
 
         $form = $builder->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $encoder = $this->encoderFactory->getEncoder($Member);
-            $salt = $encoder->createSalt();
-            $rawPassword = $Member->getPassword();
-            $encodedPassword = $encoder->encodePassword($rawPassword, $salt);
-            $Member
-                ->setSalt($salt)
-                ->setPassword($encodedPassword);
+            $hashedPassword = $this->passwordHasher->hashPassword($Member, $Member->getPassword());
+            $Member->setPassword($hashedPassword);
 
             $this->memberRepository->save($Member);
 
@@ -127,7 +145,7 @@ class MemberController extends AbstractController
                 ],
                 $request
             );
-            $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_SETTING_SYSTEM_MEMBER_EDIT_COMPLETE, $event);
+            $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SYSTEM_MEMBER_EDIT_COMPLETE);
 
             $this->addSuccess('admin.common.save_complete', 'admin');
 
@@ -164,7 +182,7 @@ class MemberController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_SETTING_SYSTEM_MEMBER_EDIT_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SYSTEM_MEMBER_EDIT_INITIALIZE);
 
         $form = $builder->getForm();
         $form->handleRequest($request);
@@ -175,17 +193,8 @@ class MemberController extends AbstractController
                 // 変更前のパスワード(暗号化済み)をセット
                 $Member->setPassword($previousPassword);
             } else {
-                $salt = $Member->getSalt();
-                // 2系からのデータ移行でsaltがセットされていない場合はsaltを生成.
-                if (empty($salt)) {
-                    $salt = bin2hex(openssl_random_pseudo_bytes(5));
-                    $Member->setSalt($salt);
-                }
-
-                $rawPassword = $Member->getPassword();
-                $encoder = $this->encoderFactory->getEncoder($Member);
-                $encodedPassword = $encoder->encodePassword($rawPassword, $salt);
-                $Member->setPassword($encodedPassword);
+                $hashedPassword = $this->passwordHasher->hashPassword($Member, $Member->getPassword());
+                $Member->setPassword($hashedPassword);
             }
 
             $this->memberRepository->save($Member);
@@ -197,7 +206,7 @@ class MemberController extends AbstractController
                 ],
                 $request
             );
-            $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_SETTING_SYSTEM_MEMBER_EDIT_COMPLETE, $event);
+            $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SYSTEM_MEMBER_EDIT_COMPLET);
 
             $this->addSuccess('admin.common.save_complete', 'admin');
 
@@ -259,7 +268,7 @@ class MemberController extends AbstractController
     {
         $this->isTokenValid();
 
-        log_info('メンバー削除開始', [$Member->getId()]);
+        $this->logger->info('メンバー削除開始', [$Member->getId()]);
 
         try {
             $this->memberRepository->delete($Member);
@@ -270,18 +279,18 @@ class MemberController extends AbstractController
                 ],
                 $request
             );
-            $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_SETTING_SYSTEM_MEMBER_DELETE_COMPLETE, $event);
+            $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SYSTEM_MEMBER_DELETE_COMPLETE);
 
             $this->addSuccess('admin.common.delete_complete', 'admin');
 
-            log_info('メンバー削除完了', [$Member->getId()]);
+            $this->logger->info('メンバー削除完了', [$Member->getId()]);
         } catch (ForeignKeyConstraintViolationException $e) {
-            log_info('メンバー削除エラー', [$Member->getId()]);
+            $this->logger->info('メンバー削除エラー', [$Member->getId()]);
 
             $message = trans('admin.common.delete_error_foreign_key', ['%name%' => $Member->getName()]);
             $this->addError($message, 'admin');
         } catch (\Exception $e) {
-            log_info('メンバー削除エラー', [$Member->getId(), $e]);
+            $this->logger->info('メンバー削除エラー', [$Member->getId(), $e]);
 
             $message = trans('admin.common.delete_error');
             $this->addError($message, 'admin');

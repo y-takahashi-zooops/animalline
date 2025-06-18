@@ -55,6 +55,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class ProductController extends AbstractController
 {
@@ -109,6 +114,19 @@ class ProductController extends AbstractController
     protected $tagRepository;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
+     * @var CartRepository
+     */
+    protected $cartRepository;
+
+    protected FormFactoryInterface $formFactory;
+
+
+    /**
      * ProductController constructor.
      *
      * @param CsvExportService $csvExportService
@@ -121,6 +139,7 @@ class ProductController extends AbstractController
      * @param PageMaxRepository $pageMaxRepository
      * @param ProductStatusRepository $productStatusRepository
      * @param TagRepository $tagRepository
+     * @param LoggerInterface $logger
      */
     public function __construct(
         CsvExportService $csvExportService,
@@ -132,7 +151,12 @@ class ProductController extends AbstractController
         BaseInfoRepository $baseInfoRepository,
         PageMaxRepository $pageMaxRepository,
         ProductStatusRepository $productStatusRepository,
-        TagRepository $tagRepository
+        TagRepository $tagRepository,
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher,
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager,
+        FormFactoryInterface $formFactory
     ) {
         $this->csvExportService = $csvExportService;
         $this->productClassRepository = $productClassRepository;
@@ -144,6 +168,11 @@ class ProductController extends AbstractController
         $this->pageMaxRepository = $pageMaxRepository;
         $this->productStatusRepository = $productStatusRepository;
         $this->tagRepository = $tagRepository;
+        $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
     }
 
     /**
@@ -162,7 +191,7 @@ class ProductController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_PRODUCT_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_PRODUCT_INDEX_INITIALIZE);
 
         $searchForm = $builder->getForm();
 
@@ -253,7 +282,7 @@ class ProductController extends AbstractController
             $request
         );
 
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_PRODUCT_INDEX_SEARCH, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_PRODUCT_INDEX_SEARCH);
 
         $pagination = $paginator->paginate(
             $qb,
@@ -344,7 +373,7 @@ class ProductController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_PRODUCT_ADD_IMAGE_COMPLETE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_PRODUCT_ADD_IMAGE_COMPLETE);
         $files = $event->getArgument('files');
 
         return $this->json(['files' => $files], 200);
@@ -412,7 +441,7 @@ class ProductController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_PRODUCT_EDIT_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_PRODUCT_EDIT_INITIALIZE);
 
         $form = $builder->getForm();
 
@@ -443,7 +472,7 @@ class ProductController extends AbstractController
         if ('POST' === $request->getMethod()) {
             $form->handleRequest($request);
             if ($form->isValid()) {
-                log_info('商品登録開始', [$id]);
+                $this->logger->info('商品登録開始', [$id]);
                 $Product = $form->getData();
 
                 if (!$has_class) {
@@ -590,7 +619,7 @@ class ProductController extends AbstractController
                 $Product->setUpdateDate(new \DateTime());
                 $this->entityManager->flush();
 
-                log_info('商品登録完了', [$id]);
+                $this->logger->info('商品登録完了', [$id]);
 
                 $event = new EventArgs(
                     [
@@ -599,7 +628,7 @@ class ProductController extends AbstractController
                     ],
                     $request
                 );
-                $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_PRODUCT_EDIT_COMPLETE, $event);
+                $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_PRODUCT_EDIT_COMPLETE);
 
                 $this->addSuccess('admin.common.save_complete', 'admin');
 
@@ -639,7 +668,7 @@ class ProductController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_PRODUCT_EDIT_SEARCH, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_PRODUCT_EDIT_SEARCH);
 
         $searchForm = $builder->getForm();
 
@@ -698,7 +727,7 @@ class ProductController extends AbstractController
             }
 
             if ($Product instanceof Product) {
-                log_info('商品削除開始', [$id]);
+                $this->logger->info('商品削除開始', [$id]);
 
                 $deleteImages = $Product->getProductImage();
                 $ProductClasses = $Product->getProductClasses();
@@ -715,7 +744,7 @@ class ProductController extends AbstractController
                         ],
                         $request
                     );
-                    $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_PRODUCT_DELETE_COMPLETE, $event);
+                    $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_PRODUCT_DELETE_COMPLETE);
                     $deleteImages = $event->getArgument('deleteImages');
 
                     // 画像ファイルの削除(commit後に削除させる)
@@ -728,22 +757,22 @@ class ProductController extends AbstractController
                         }
                     }
 
-                    log_info('商品削除完了', [$id]);
+                    $this->logger->info('商品削除完了', [$id]);
 
                     $success = true;
                     $message = trans('admin.common.delete_complete');
 
                     $cacheUtil->clearDoctrineCache();
                 } catch (ForeignKeyConstraintViolationException $e) {
-                    log_info('商品削除エラー', [$id]);
+                    $this->logger->info('商品削除エラー', [$id]);
                     $message = trans('admin.common.delete_error_foreign_key', ['%name%' => $Product->getName()]);
                 }
             } else {
-                log_info('商品削除エラー', [$id]);
+                $this->logger->info('商品削除エラー', [$id]);
                 $message = trans('admin.common.delete_error');
             }
         } else {
-            log_info('商品削除エラー', [$id]);
+            $this->logger->info('商品削除エラー', [$id]);
             $message = trans('admin.common.delete_error');
         }
 
@@ -846,7 +875,7 @@ class ProductController extends AbstractController
                     ],
                     $request
                 );
-                $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_PRODUCT_COPY_COMPLETE, $event);
+                $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_PRODUCT_COPY_COMPLETE);
 
                 $this->addSuccess('admin.product.copy_complete', 'admin');
 
@@ -871,7 +900,7 @@ class ProductController extends AbstractController
             [],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_PRODUCT_DISPLAY_COMPLETE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_PRODUCT_DISPLAY_COMPLETE);
 
         if (!is_null($id)) {
             return $this->redirectToRoute('product_detail', ['id' => $id, 'admin' => '1']);
@@ -968,7 +997,7 @@ class ProductController extends AbstractController
                             ],
                             $request
                         );
-                        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_PRODUCT_CSV_EXPORT, $event);
+                        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_PRODUCT_CSV_EXPORT);
 
                         $ExportCsvRow->pushData();
                     }
@@ -986,7 +1015,7 @@ class ProductController extends AbstractController
         $response->headers->set('Content-Disposition', 'attachment; filename='.$filename);
         $response->send();
 
-        log_info('商品CSV出力ファイル名', [$filename]);
+        $this->logger->info('商品CSV出力ファイル名', [$filename]);
 
         return $response;
     }

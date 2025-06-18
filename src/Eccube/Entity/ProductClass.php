@@ -36,6 +36,21 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         private $tax_rate = false;
 
         /**
+         * @ORM\Column(name="jan_code", type="string", length=13, nullable=true)
+         */
+        private $jan_code;
+
+        /**
+         * @ORM\Column(name="stock_code", type="string", length=5, nullable=true)
+         */
+        private $stock_code;
+
+        /**
+         * @ORM\Column(name="incentive_ratio", type="decimal", precision=5, scale=2, nullable=true)
+         */
+        private $incentive_ratio;
+
+        /**
          * 商品規格名を含めた商品名を返す.
          *
          * @return string
@@ -346,6 +361,16 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
          * @ORM\OneToMany(targetEntity=ReturnSchedule::class, mappedBy="ProductClass")
          */
         private $ReturnSchedule;
+
+        /**
+         * @ORM\Column(name="supplier_code", type="string", nullable=true)
+         */
+        private $supplier_code;
+
+        /**
+         * @ORM\Column(name="item_cost", type="string", nullable=true)
+         */
+        private $item_cost;
 
         /**
          * Constructor
@@ -883,6 +908,55 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         public function getReturnSchedule(): Collection
         {
             return $this->ReturnSchedule;
+        }
+
+        public function getSupplierCode(): ?string
+        {
+            return $this->supplier_code;
+        }
+
+        public function setSupplierCode(?string $supplier_code): self
+        {
+            $this->supplier_code = $supplier_code;
+            return $this;
+        }
+
+        public function getItemCost(): ?string
+        {
+            return $this->item_cost;
+        }
+
+        public function getJanCode(): ?string
+        {
+            return $this->jan_code;
+        }
+
+        public function setJanCode(?string $jan_code): self
+        {
+            $this->jan_code = $jan_code;
+            return $this;
+        }
+
+        public function getStockCode(): ?string
+        {
+            return $this->stock_code;
+        }
+
+        public function setStockCode(?string $stock_code): self
+        {
+            $this->stock_code = $stock_code;
+            return $this;
+        }
+
+        public function getIncentiveRatio(): ?float
+        {
+            return $this->incentive_ratio;
+        }
+
+        public function setIncentiveRatio(?float $incentive_ratio): self
+        {
+            $this->incentive_ratio = $incentive_ratio;
+            return $this;
         }
     }
 }

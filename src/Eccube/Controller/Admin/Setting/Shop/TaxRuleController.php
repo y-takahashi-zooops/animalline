@@ -24,6 +24,9 @@ use Eccube\Repository\TaxRuleRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Class TaxRuleController
@@ -40,16 +43,28 @@ class TaxRuleController extends AbstractController
      */
     protected $taxRuleRepository;
 
+    protected FormFactoryInterface $formFactory;
+
+
     /**
      * TaxRuleController constructor.
      *
      * @param BaseInfoRepository $baseInfoRepository
      * @param TaxRuleRepository $taxRuleRepository
      */
-    public function __construct(BaseInfoRepository $baseInfoRepository, TaxRuleRepository $taxRuleRepository)
+    public function __construct(
+        BaseInfoRepository $baseInfoRepository,
+        TaxRuleRepository $taxRuleRepository,
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher,
+        EntityManagerInterface $entityManager
+    )
     {
         $this->BaseInfo = $baseInfoRepository->get();
         $this->taxRuleRepository = $taxRuleRepository;
+        $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -73,7 +88,7 @@ class TaxRuleController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_SETTING_SHOP_TAX_RULE_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SHOP_TAX_RULE_INDEX_INITIALIZE);
 
         $form = $builder->getForm();
 
@@ -92,7 +107,7 @@ class TaxRuleController extends AbstractController
                     ],
                     $request
                 );
-                $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_SETTING_SHOP_TAX_RULE_INDEX_COMPLETE, $event);
+                $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SHOP_TAX_RULE_INDEX_COMPLETE);
 
                 $this->addSuccess('admin.common.save_complete', 'admin');
 
@@ -165,7 +180,7 @@ class TaxRuleController extends AbstractController
                 ],
                 $request
             );
-            $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_SETTING_SHOP_TAX_RULE_DELETE_COMPLETE, $event);
+            $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SHOP_TAX_RULE_DELETE_COMPLETE);
 
             $this->addSuccess('admin.common.delete_complete', 'admin');
         }

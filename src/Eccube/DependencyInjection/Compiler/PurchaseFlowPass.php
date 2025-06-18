@@ -14,7 +14,6 @@
 namespace Eccube\DependencyInjection\Compiler;
 
 use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\AnnotationRegistry;
 use Eccube\Annotation\CartFlow;
 use Eccube\Annotation\OrderFlow;
 use Eccube\Annotation\ShoppingFlow;
@@ -50,7 +49,6 @@ class PurchaseFlowPass implements CompilerPassInterface
             self::PURCHASE_PROCESSOR_TAG => 'addPurchaseProcessor',
         ];
 
-        AnnotationRegistry::registerAutoloadNamespace('Eccube\Annotation', __DIR__.'/../../../../src');
         $reader = new AnnotationReader();
 
         foreach ($processorTags as $tag => $methodName) {

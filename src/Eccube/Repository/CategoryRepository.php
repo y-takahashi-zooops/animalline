@@ -18,7 +18,7 @@ use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Eccube\Common\EccubeConfig;
 use Eccube\Entity\Category;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Eccube\Repository\Master\ProductStatusRepository;
 
 /**
@@ -43,12 +43,12 @@ class CategoryRepository extends AbstractRepository
     /**
      * CategoryRepository constructor.
      *
-     * @param RegistryInterface $registry
+     * @param ManagerRegistry $registry
      * @param EccubeConfig $eccubeConfig
      * @param ProductStatusRepository $productStatusRepository
      */
     public function __construct(
-        RegistryInterface $registry,
+        ManagerRegistry $registry,
         EccubeConfig $eccubeConfig,
         ProductStatusRepository $productStatusRepository
     ) {

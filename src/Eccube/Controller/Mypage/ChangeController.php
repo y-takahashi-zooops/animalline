@@ -23,7 +23,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ChangeController extends AbstractController
 {
@@ -38,18 +43,37 @@ class ChangeController extends AbstractController
     protected $customerRepository;
 
     /**
-     * @var EncoderFactoryInterface
+     * @var UserPasswordHasherInterface
      */
-    protected $encoderFactory;
+    protected $passwordHasher;
+
+    protected FormFactoryInterface $formFactory;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
 
     public function __construct(
         CustomerRepository $customerRepository,
-        EncoderFactoryInterface $encoderFactory,
-        TokenStorageInterface $tokenStorage
+        UserPasswordHasherInterface $passwordHasher,
+        TokenStorageInterface $tokenStorage,
+        FormFactoryInterface $formFactory,
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher,
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
+
     ) {
         $this->customerRepository = $customerRepository;
-        $this->encoderFactory = $encoderFactory;
+        $this->passwordHasher = $passwordHasher;
         $this->tokenStorage = $tokenStorage;
+        $this->formFactory = $formFactory;
+        $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -77,29 +101,25 @@ class ChangeController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_MYPAGE_CHANGE_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_MYPAGE_CHANGE_INDEX_INITIALIZE);
 
         /* @var $form \Symfony\Component\Form\FormInterface */
         $form = $builder->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            log_info('会員編集開始');
+            $this->logger->info('会員編集開始');
 
             if ($Customer->getPassword() === $this->eccubeConfig['eccube_default_password']) {
                 $Customer->setPassword($previous_password);
             } else {
-                $encoder = $this->encoderFactory->getEncoder($Customer);
-                if ($Customer->getSalt() === null) {
-                    $Customer->setSalt($encoder->createSalt());
-                }
-                $Customer->setPassword(
-                    $encoder->encodePassword($Customer->getPassword(), $Customer->getSalt())
-                );
+                $encoded = $this->passwordHasher->hashPassword($Customer, $Customer->getPassword());
+                $Customer->setPassword($encoded);
+                $Customer->setSalt(null);
             }
             $this->entityManager->flush();
 
-            log_info('会員編集完了');
+            $this->logger->info('会員編集完了');
 
             $event = new EventArgs(
                 [
@@ -108,7 +128,7 @@ class ChangeController extends AbstractController
                 ],
                 $request
             );
-            $this->eventDispatcher->dispatch(EccubeEvents::FRONT_MYPAGE_CHANGE_INDEX_COMPLETE, $event);
+            $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_MYPAGE_CHANGE_INDEX_COMPLETE);
 
             return $this->redirect($this->generateUrl('mypage_change_complete'));
         }

@@ -46,6 +46,16 @@ if (!class_exists('\Eccube\Entity\Product')) {
         private $className2;
 
         /**
+         * @ORM\Column(name="item_weight", type="decimal", precision=6, scale=2, nullable=true)
+         */
+        private $item_weight;
+
+        /**
+         * @ORM\Column(name="is_check_auth", type="boolean", nullable=true)
+         */
+        private $is_check_auth;
+
+        /**
          * @return string
          */
         public function __toString()
@@ -1124,6 +1134,32 @@ if (!class_exists('\Eccube\Entity\Product')) {
                 }
             }
 
+            return $this;
+        }
+
+        // getter
+        public function getItemWeight(): ?float
+        {
+            return $this->item_weight;
+        }
+
+        // setter
+        public function setItemWeight(?float $item_weight): self
+        {
+            $this->item_weight = $item_weight;
+            return $this;
+        }
+
+        // getter
+        public function getIsCheckAuth(): ?bool
+        {
+            return $this->is_check_auth;
+        }
+
+        // setter
+        public function setIsCheckAuth(?bool $is_check_auth): self
+        {
+            $this->is_check_auth = $is_check_auth;
             return $this;
         }
     }

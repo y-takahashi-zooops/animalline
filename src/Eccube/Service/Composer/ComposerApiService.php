@@ -23,6 +23,7 @@ use Eccube\Service\SchemaService;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class ComposerApiService
@@ -53,16 +54,23 @@ class ComposerApiService implements ComposerServiceInterface
      */
     private $pluginContext;
 
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
     public function __construct(
         EccubeConfig $eccubeConfig,
         BaseInfoRepository $baseInfoRepository,
         SchemaService $schemaService,
-        PluginContext $pluginContext
+        PluginContext $pluginContext,
+        LoggerInterface $logger
     ) {
         $this->eccubeConfig = $eccubeConfig;
         $this->schemaService = $schemaService;
         $this->baseInfoRepository = $baseInfoRepository;
         $this->pluginContext = $pluginContext;
+        $this->logger = $logger;
     }
 
     /**
@@ -322,7 +330,7 @@ class ComposerApiService implements ComposerServiceInterface
                 log_error($log);
                 throw new PluginException($log);
             }
-            log_info($log, $commands);
+            $this->logger->info($log, $commands);
 
             return $log;
         } elseif ($exitCode) {

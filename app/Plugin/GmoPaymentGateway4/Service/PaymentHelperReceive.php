@@ -21,12 +21,24 @@ use Plugin\GmoPaymentGateway4\Service\Method\CarDocomo;
 use Plugin\GmoPaymentGateway4\Service\Method\CarSoftbank;
 use Plugin\GmoPaymentGateway4\Service\Method\RakutenPay;
 use Plugin\GmoPaymentGateway4\Util\PaymentUtil;
+use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * 結果通知／その他受信向け決済処理を行うクラス
  */
 class PaymentHelperReceive extends PaymentHelper
 {
+    protected $entityManager;
+
+    public function __construct(
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
+    ) {
+        $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * GMO-PG 支払方法別のクラス名称を取得する
      *
@@ -978,19 +990,16 @@ class PaymentHelperReceive extends PaymentHelper
             'orderData' => $paymentLogData,
             'payment_method' => $payment_method,
         ]);
+        $email = (new Email())
+            ->subject($subject)
+            ->from($this->BaseInfo->getEmail01(), $this->BaseInfo->getShopName())
+            ->to($this->BaseInfo->getEmail02())
+            ->bcc($this->BaseInfo->getEmail01())
+            ->replyTo($this->BaseInfo->getEmail03())
+            ->returnPath($this->BaseInfo->getEmail04())
+            ->html($body);
 
-        $message = (new \Swift_Message())
-            ->setSubject($subject)
-            ->setFrom([$this->BaseInfo->getEmail01() =>
-                       $this->BaseInfo->getShopName()])
-            ->setTo($this->BaseInfo->getEmail02())
-            ->setBcc($this->BaseInfo->getEmail01())
-            ->setReplyTo($this->BaseInfo->getEmail03())
-            ->setReturnPath($this->BaseInfo->getEmail04())
-            ->setBody($body);
-        $this->mailer->send($message);
-
-        PaymentUtil::logInfo('sendMail end.');
+        $this->mailer->send($email);
     }
 
     /**

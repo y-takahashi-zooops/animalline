@@ -21,6 +21,7 @@ use Eccube\Repository\PageRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class UserDataController extends AbstractController
 {
@@ -42,10 +43,12 @@ class UserDataController extends AbstractController
      */
     public function __construct(
         PageRepository $pageRepository,
-        DeviceTypeRepository $deviceTypeRepository
+        DeviceTypeRepository $deviceTypeRepository,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->pageRepository = $pageRepository;
         $this->deviceTypeRepository = $deviceTypeRepository;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -73,7 +76,7 @@ class UserDataController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_USER_DATA_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_USER_DATA_INDEX_INITIALIZE);
 
         return $this->render($file);
     }

@@ -16,100 +16,76 @@ namespace Eccube\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use Eccube\Common\Constant;
 use Eccube\Common\EccubeConfig;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as BaseAbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
-use Symfony\Component\Translation\TranslatorInterface;
+// use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Routing\RouterInterface;
 
-class AbstractController extends Controller
+class AbstractController extends BaseAbstractController
 {
     /**
      * @var EccubeConfig
      */
-    protected $eccubeConfig;
+    protected EccubeConfig $eccubeConfig;
 
     /**
      * @var EntityManagerInterface
      */
-    protected $entityManager;
+    protected EntityManagerInterface $entityManager;
 
     /**
      * @var TranslatorInterface
      */
-    protected $translator;
+    protected TranslatorInterface $translator;
 
     /**
      * @var FormFactoryInterface
      */
-    protected $formFactory;
+    protected FormFactoryInterface $formFactory;
 
     /**
      * @var EventDispatcherInterface
      */
-    protected $eventDispatcher;
+    protected EventDispatcherInterface $eventDispatcher;
 
     /**
      * @var Session
      */
-    protected $session;
+    protected SessionInterface $session;
 
     /**
-     * @param EccubeConfig $eccubeConfig
-     * @required
+     * @var RequestStack
      */
-    public function setEccubeConfig(EccubeConfig $eccubeConfig)
-    {
+    protected RequestStack $requestStack;
+
+    protected RouterInterface $router;
+
+    public function __construct(
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator,
+        SessionInterface $session,
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher,
+        RequestStack $requestStack,
+        RouterInterface $router,
+    ) {
         $this->eccubeConfig = $eccubeConfig;
-    }
-
-    /**
-     * @param EntityManagerInterface $entityManager
-     * @required
-     */
-    public function setEntityManager(EntityManagerInterface $entityManager)
-    {
         $this->entityManager = $entityManager;
-    }
-
-    /**
-     * @param TranslatorInterface $translator
-     * @required
-     */
-    public function setTranslator(TranslatorInterface $translator)
-    {
         $this->translator = $translator;
-    }
-
-    /**
-     * @param SessionInterface $session
-     * @required
-     */
-    public function setSession(SessionInterface $session)
-    {
         $this->session = $session;
-    }
-
-    /**
-     * @param FormFactoryInterface $formFactory
-     * @required
-     */
-    public function setFormFactory(FormFactoryInterface $formFactory)
-    {
         $this->formFactory = $formFactory;
-    }
-
-    /**
-     * @param EventDispatcherInterface $eventDispatcher
-     * @required
-     */
-    public function setEventDispatcher(EventDispatcherInterface $eventDispatcher)
-    {
         $this->eventDispatcher = $eventDispatcher;
+        $this->requestStack = $requestStack;
+        $this->router = $router;
     }
 
     public function addSuccess($message, $namespace = 'front')
@@ -176,12 +152,12 @@ class AbstractController extends Controller
      */
     public function forwardToRoute($route, array $path = [], array $query = [])
     {
-        $Route = $this->get('router')->getRouteCollection()->get($route);
-        if (!$Route) {
+        $routeObj = $this->router->getRouteCollection()->get($route);
+        if (!$routeObj) {
             throw new RouteNotFoundException(sprintf('The named route "%s" as such route does not exist.', $route));
         }
 
-        return $this->forward($Route->getDefault('_controller'), $path, $query);
+        return $this->forward($routeObj->getDefault('_controller'), $path, $query);
     }
 
     /**
@@ -196,7 +172,7 @@ class AbstractController extends Controller
     protected function isTokenValid()
     {
         /** @var Request $request */
-        $request = $this->container->get('request_stack')->getCurrentRequest();
+        $request = $this->requestStack->getCurrentRequest();
         $token = $request->get(Constant::TOKEN_NAME)
             ? $request->get(Constant::TOKEN_NAME)
             : $request->headers->get('ECCUBE-CSRF-TOKEN');

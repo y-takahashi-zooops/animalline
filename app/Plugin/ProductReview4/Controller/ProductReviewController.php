@@ -27,6 +27,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Psr\Log\LoggerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Class ProductReviewController front.
@@ -44,17 +46,27 @@ class ProductReviewController extends AbstractController
     private $productReviewRepository;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * ProductReviewController constructor.
      *
      * @param ProductReviewStatusRepository $productStatusRepository
      * @param ProductReviewRepository $productReviewRepository
+     * @param LoggerInterface $logger
      */
     public function __construct(
         ProductReviewStatusRepository $productStatusRepository,
-        ProductReviewRepository $productReviewRepository
+        ProductReviewRepository $productReviewRepository,
+        LoggerInterface $logger,
+        EntityManagerInterface $entityManager
     ) {
         $this->productReviewStatusRepository = $productStatusRepository;
         $this->productReviewRepository = $productReviewRepository;
+        $this->logger = $logger;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -69,7 +81,7 @@ class ProductReviewController extends AbstractController
     public function index(Request $request, Product $Product)
     {
         if (!$this->session->has('_security_admin') && $Product->getStatus()->getId() !== ProductStatus::DISPLAY_SHOW) {
-            log_info('Product review', ['status' => 'Not permission']);
+            $this->logger->info('Product review', ['status' => 'Not permission']);
 
             throw new NotFoundHttpException();
         }
@@ -84,7 +96,7 @@ class ProductReviewController extends AbstractController
 
             switch ($request->get('mode')) {
                 case 'confirm':
-                    log_info('Product review config confirm');
+                    $this->logger->info('Product review config confirm');
 
                     return $this->render('ProductReview4/Resource/template/default/confirm.twig', [
                         'form' => $form->createView(),
@@ -94,7 +106,7 @@ class ProductReviewController extends AbstractController
                     break;
 
                 case 'complete':
-                    log_info('Product review complete');
+                    $this->logger->info('Product review complete');
                     if ($this->isGranted('ROLE_USER')) {
                         $Customer = $this->getUser();
                         $ProductReview->setCustomer($Customer);
@@ -104,7 +116,7 @@ class ProductReviewController extends AbstractController
                     $this->entityManager->persist($ProductReview);
                     $this->entityManager->flush($ProductReview);
 
-                    log_info('Product review complete', ['id' => $Product->getId()]);
+                    $this->logger->info('Product review complete', ['id' => $Product->getId()]);
 
                     return $this->redirectToRoute('product_review_complete', ['id' => $Product->getId()]);
                     break;

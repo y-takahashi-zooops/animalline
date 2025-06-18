@@ -33,6 +33,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Class DeliveryController
@@ -70,14 +73,30 @@ class DeliveryController extends AbstractController
     protected $saleTypeRepository;
 
     /**
+     * @var FormFactoryInterface
+     */
+    protected FormFactoryInterface $formFactory;
+
+    /**
      * DeliveryController constructor.
      *
      * @param PaymentOptionRepository $paymentOptionRepository
      * @param DeliveryFeeRepository $deliveryFeeRepository
      * @param PrefRepository $prefRepository
      * @param DeliveryRepository $deliveryRepository
+     * @param FormFactoryInterface $formFactory
      */
-    public function __construct(PaymentOptionRepository $paymentOptionRepository, DeliveryFeeRepository $deliveryFeeRepository, PrefRepository $prefRepository, DeliveryRepository $deliveryRepository, DeliveryTimeRepository $deliveryTimeRepository, SaleTypeRepository $saleTypeRepository)
+    public function __construct(
+        PaymentOptionRepository $paymentOptionRepository,
+        DeliveryFeeRepository $deliveryFeeRepository,
+        PrefRepository $prefRepository,
+        DeliveryRepository $deliveryRepository,
+        DeliveryTimeRepository $deliveryTimeRepository,
+        SaleTypeRepository $saleTypeRepository,
+        EventDispatcherInterface $eventDispatcher,
+        FormFactoryInterface $formFactory,
+        EntityManagerInterface $entityManager
+    )
     {
         $this->paymentOptionRepository = $paymentOptionRepository;
         $this->deliveryFeeRepository = $deliveryFeeRepository;
@@ -85,6 +104,9 @@ class DeliveryController extends AbstractController
         $this->deliveryRepository = $deliveryRepository;
         $this->deliveryTimeRepository = $deliveryTimeRepository;
         $this->saleTypeRepository = $saleTypeRepository;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->formFactory = $formFactory;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -102,7 +124,7 @@ class DeliveryController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_SETTING_SHOP_DELIVERY_INDEX_COMPLETE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SHOP_DELIVERY_INDEX_COMPLETE);
 
         return [
             'Deliveries' => $Deliveries,
@@ -186,7 +208,7 @@ class DeliveryController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_SETTING_SHOP_DELIVERY_EDIT_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SHOP_DELIVERY_EDIT_INITIALIZE);
 
         $form = $builder->getForm();
 
@@ -254,7 +276,7 @@ class DeliveryController extends AbstractController
                     ],
                     $request
                 );
-                $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_SETTING_SHOP_DELIVERY_EDIT_COMPLETE, $event);
+                $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SHOP_DELIVERY_EDIT_COMPLETE);
 
                 $this->addSuccess('admin.common.save_complete', 'admin');
 
@@ -304,7 +326,7 @@ class DeliveryController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_SETTING_SHOP_DELIVERY_DELETE_COMPLETE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SHOP_DELIVERY_DELETE_COMPLETE);
 
         $this->addSuccess('admin.common.delete_complete', 'admin');
 
@@ -336,7 +358,7 @@ class DeliveryController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_SETTING_SHOP_DELIVERY_VISIBILITY_COMPLETE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SHOP_DELIVERY_VISIBILITY_COMPLETE);
 
         $this->addSuccess($message, 'admin');
 

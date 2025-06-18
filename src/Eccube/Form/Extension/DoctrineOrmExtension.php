@@ -13,9 +13,7 @@
 
 namespace Eccube\Form\Extension;
 
-use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\Reader;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Eccube\Annotation\FormAppend;
 use Eccube\Annotation\FormExtension;
@@ -27,6 +25,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 /**
  * @FormExtension
@@ -122,8 +121,8 @@ class DoctrineOrmExtension extends AbstractTypeExtension
         );
     }
 
-    public function getExtendedType()
+    public static function getExtendedTypes(): iterable
     {
-        return FormType::class;
+        return [EntityType::class];
     }
 }

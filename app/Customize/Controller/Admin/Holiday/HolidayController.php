@@ -13,6 +13,9 @@ use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class HolidayController extends AbstractController
 {
@@ -21,10 +24,29 @@ class HolidayController extends AbstractController
      */
     protected $businessHolidayRepository;
 
+    protected FormFactoryInterface $formFactory;
+
+    /**
+     * @var Session
+     */
+    protected SessionInterface $session;
+
+    /**
+     * ProductController constructor.
+     *
+     * @param SessionInterface $session,
+     * @param EntityManagerInterface $entityManager
+     */
     public function __construct(
-        BusinessHolidayRepository $businessHolidayRepository
+        BusinessHolidayRepository $businessHolidayRepository,
+        FormFactoryInterface $formFactory,
+        SessionInterface $session,
+        EntityManagerInterface $entityManager
     ) {
         $this->businessHolidayRepository = $businessHolidayRepository;
+        $this->formFactory = $formFactory;
+        $this->session = $session;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -67,7 +89,8 @@ class HolidayController extends AbstractController
 
             $Holiday = (new BusinessHoliday)
                 ->setHolidayDate($holidayDate);
-            $em = $this->getDoctrine()->getManager();
+            // $em = $this->getDoctrine()->getManager();
+            $em = $this->entityManager;
             $em->persist($Holiday);
             $em->flush();
 

@@ -24,6 +24,8 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Class CsvController
@@ -40,16 +42,24 @@ class CsvController extends AbstractController
      */
     protected $csvTypeRepository;
 
+
     /**
      * CsvController constructor.
      *
      * @param CsvRepository $csvRepository
      * @param CsvTypeRepository $csvTypeRepository
      */
-    public function __construct(CsvRepository $csvRepository, CsvTypeRepository $csvTypeRepository)
+    public function __construct(
+        CsvRepository $csvRepository,
+        CsvTypeRepository $csvTypeRepository,
+        EventDispatcherInterface $eventDispatcher,
+        EntityManagerInterface $entityManager
+    )
     {
         $this->csvRepository = $csvRepository;
         $this->csvTypeRepository = $csvTypeRepository;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -121,7 +131,7 @@ class CsvController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_SETTING_SHOP_CSV_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SHOP_CSV_INDEX_INITIALIZE);
 
         $form = $builder->getForm();
 
@@ -160,7 +170,7 @@ class CsvController extends AbstractController
                 ],
                 $request
             );
-            $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_SETTING_SHOP_CSV_INDEX_COMPLETE, $event);
+            $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SHOP_CSV_INDEX_COMPLETE);
 
             $this->addSuccess('admin.common.save_complete', 'admin');
 

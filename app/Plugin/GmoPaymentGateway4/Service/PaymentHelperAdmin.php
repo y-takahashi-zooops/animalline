@@ -18,12 +18,24 @@ use Plugin\GmoPaymentGateway4\Service\Method\CarDocomo;
 use Plugin\GmoPaymentGateway4\Service\Method\CarSoftbank;
 use Plugin\GmoPaymentGateway4\Service\Method\RakutenPay;
 use Plugin\GmoPaymentGateway4\Util\PaymentUtil;
+use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * 管理画面向け決済処理を行うクラス
  */
 class PaymentHelperAdmin extends PaymentHelper
 {
+    protected $entityManager;
+    
+    public function __construct(
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
+    ) {
+        $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * GMO-PG 支払方法別のクラス名称を取得する
      *

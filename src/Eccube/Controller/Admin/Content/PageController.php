@@ -30,6 +30,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Twig\Environment;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class PageController extends AbstractController
 {
@@ -49,19 +52,32 @@ class PageController extends AbstractController
     protected $deviceTypeRepository;
 
     /**
+     * @var FormFactoryInterface
+     */
+    protected FormFactoryInterface $formFactory;
+
+
+    /**
      * PageController constructor.
      *
      * @param PageRepository $pageRepository
      * @param DeviceTypeRepository $deviceTypeRepository
+     * @param FormFactoryInterface $formFactory
      */
     public function __construct(
         PageRepository $pageRepository,
         PageLayoutRepository $pageLayoutRepository,
-        DeviceTypeRepository $deviceTypeRepository
+        DeviceTypeRepository $deviceTypeRepository,
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher,
+        EntityManagerInterface $entityManager
     ) {
         $this->pageRepository = $pageRepository;
         $this->pageLayoutRepository = $pageLayoutRepository;
         $this->deviceTypeRepository = $deviceTypeRepository;
+        $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -78,7 +94,7 @@ class PageController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_CONTENT_PAGE_INDEX_COMPLETE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_CONTENT_PAGE_INDEX_COMPLETE);
 
         return [
             'Pages' => $Pages,
@@ -110,7 +126,7 @@ class PageController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_CONTENT_PAGE_EDIT_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_CONTENT_PAGE_EDIT_INITIALIZE);
 
         $form = $builder->getForm();
 
@@ -219,7 +235,7 @@ class PageController extends AbstractController
                 ],
                 $request
             );
-            $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_CONTENT_PAGE_EDIT_COMPLETE, $event);
+            $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_CONTENT_PAGE_EDIT_COMPLETE);
 
             $this->addSuccess('admin.common.save_complete', 'admin');
 
@@ -284,7 +300,7 @@ class PageController extends AbstractController
                 ],
                 $request
             );
-            $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_CONTENT_PAGE_DELETE_COMPLETE, $event);
+            $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_CONTENT_PAGE_DELETE_COMPLETE);
 
             $this->addSuccess('admin.common.delete_complete', 'admin');
 

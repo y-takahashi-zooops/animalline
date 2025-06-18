@@ -64,7 +64,7 @@
                                         <span>{{ 'product_review.admin.product_review_edit.posted_date'|trans }}</span>
                                     </div>
                                     <div class="col">
-                                        {{ ProductReview.create_date|date_min }}
+                                        {{ ProductReview.create_date|date('Y-m-d H:i:s') }}
                                     </div>
                                 </div>
 

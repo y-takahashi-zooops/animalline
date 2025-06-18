@@ -34,6 +34,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ReceiveController extends AbstractController
 {
@@ -136,7 +137,8 @@ class ReceiveController extends AbstractController
         PaymentHelperSoftbank $PaymentHelperSoftbank,
         PaymentHelperRakutenPay $PaymentHelperRakutenPay,
         PaymentHelperReceive $PaymentHelperReceive,
-        ErrorUtil $errorUtil
+        ErrorUtil $errorUtil,
+        EntityManagerInterface $entityManager
     ) {
         $this->orderRepository = $orderRepository;
         $this->orderStatusRepository = $orderStatusRepository;
@@ -151,6 +153,7 @@ class ReceiveController extends AbstractController
         $this->PaymentHelperRakutenPay = $PaymentHelperRakutenPay;
         $this->PaymentHelperReceive = $PaymentHelperReceive;
         $this->errorUtil = $errorUtil;
+        $this->entityManager = $entityManager;
     }
 
     /**

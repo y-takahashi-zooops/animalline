@@ -37,6 +37,7 @@ use Customize\Service\MailService;
 use Customize\Repository\DnaSalesHeaderRepository;
 use Customize\Repository\DnaSalesStatusRepository;
 use Customize\Repository\DnaSalesDetailRepository;
+use Doctrine\ORM\EntityManagerInterface;
 
 class JddcBuyController extends AbstractController
 {
@@ -99,6 +100,11 @@ class JddcBuyController extends AbstractController
      * @var DnaSalesDetailRepository
      */
     protected $dnaSalesDetailRepository;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    protected EntityManagerInterface $entityManager;
     
 
     /**
@@ -130,7 +136,8 @@ class JddcBuyController extends AbstractController
         CustomerRepository $customerRepository,
         DnaSalesHeaderRepository $dnaSalesHeaderRepository,
         DnaSalesStatusRepository $dnaSalesStatusRepository,
-        DnaSalesDetailRepository $dnaSalesDetailRepository
+        DnaSalesDetailRepository $dnaSalesDetailRepository,
+        EntityManagerInterface $entityManager,
     ) {
         $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
         $this->breederPetsRepository = $breederPetsRepository;
@@ -144,6 +151,7 @@ class JddcBuyController extends AbstractController
         $this->dnaSalesHeaderRepository = $dnaSalesHeaderRepository;
         $this->dnaSalesStatusRepository = $dnaSalesStatusRepository;
         $this->dnaSalesDetailRepository = $dnaSalesDetailRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -294,9 +302,9 @@ class JddcBuyController extends AbstractController
         }
         
         $countCheckKind = count($this->dnaCheckKindsRepository->findBy(['Breeds' => $Pet->getBreedsType(), "delete_flg" => 0]));
-        
+
         //更新の時は前の登録データ削除（フラグを立ててメールを送らない）
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->entityManager;
         $lists = $this->dnaCheckStatusDetailRepository->findBy(['CheckStatus' => $Dna]);
         $is_sendmail = true;
         foreach($lists as $list){

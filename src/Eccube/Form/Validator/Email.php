@@ -19,4 +19,10 @@ namespace Eccube\Form\Validator;
  */
 class Email extends \Symfony\Component\Validator\Constraints\Email
 {
+    /**
+     * RFC準拠の厳密な検証を行うかどうか（trueで行う）
+     *
+     * @var bool
+     */
+    public $strict = false;
 }

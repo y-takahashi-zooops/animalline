@@ -27,6 +27,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class WithdrawController extends AbstractController
 {
@@ -55,6 +59,13 @@ class WithdrawController extends AbstractController
      */
     private $orderHelper;
 
+    protected FormFactoryInterface $formFactory;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
     /**
      * WithdrawController constructor.
      *
@@ -63,19 +74,28 @@ class WithdrawController extends AbstractController
      * @param TokenStorageInterface $tokenStorage
      * @param CartService $cartService
      * @param OrderHelper $orderHelper
+     * @param LoggerInterface $logger
      */
     public function __construct(
         MailService $mailService,
         CustomerStatusRepository $customerStatusRepository,
         TokenStorageInterface $tokenStorage,
         CartService $cartService,
-        OrderHelper $orderHelper
+        OrderHelper $orderHelper,
+        FormFactoryInterface $formFactory,
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher,
+        EntityManagerInterface $entityManager
     ) {
         $this->mailService = $mailService;
         $this->customerStatusRepository = $customerStatusRepository;
         $this->tokenStorage = $tokenStorage;
         $this->cartService = $cartService;
         $this->orderHelper = $orderHelper;
+        $this->formFactory = $formFactory;
+        $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -94,7 +114,7 @@ class WithdrawController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_MYPAGE_WITHDRAW_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_MYPAGE_WITHDRAW_INDEX_INITIALIZE);
 
         $form = $builder->getForm();
 
@@ -103,7 +123,7 @@ class WithdrawController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             switch ($request->get('mode')) {
                 case 'confirm':
-                    log_info('退会確認画面表示');
+                    $this->logger->info('退会確認画面表示');
 
                     return $this->render(
                         'Mypage/withdraw_confirm.twig',
@@ -113,7 +133,7 @@ class WithdrawController extends AbstractController
                     );
 
                 case 'complete':
-                    log_info('退会処理開始');
+                    $this->logger->info('退会処理開始');
 
                     /* @var $Customer \Eccube\Entity\Customer */
                     $Customer = $this->getUser();
@@ -126,7 +146,7 @@ class WithdrawController extends AbstractController
 
                     $this->entityManager->flush();
 
-                    log_info('退会処理完了');
+                    $this->logger->info('退会処理完了');
 
                     $event = new EventArgs(
                         [
@@ -134,7 +154,7 @@ class WithdrawController extends AbstractController
                             'Customer' => $Customer,
                         ], $request
                     );
-                    $this->eventDispatcher->dispatch(EccubeEvents::FRONT_MYPAGE_WITHDRAW_INDEX_COMPLETE, $event);
+                    $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_MYPAGE_WITHDRAW_INDEX_COMPLETE);
 
                     // メール送信
                     $this->mailService->sendCustomerWithdrawMail($Customer, $email);
@@ -146,7 +166,7 @@ class WithdrawController extends AbstractController
                     // ログアウト
                     $this->tokenStorage->setToken(null);
 
-                    log_info('ログアウト完了');
+                    $this->logger->info('ログアウト完了');
 
                     return $this->redirect($this->generateUrl('mypage_withdraw_complete'));
             }

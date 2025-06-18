@@ -389,22 +389,24 @@ file that was distributed with this source code.
                 </div>
 
                 {# エンティティ拡張の自動出力 #}
-                {% for f in searchForm if f.vars.eccube_form_options.auto_render %}
-                    {# TODO 1項目1行になるのを改善 #}
-                    <div class="row mb-2">
-                        {% if f.vars.eccube_form_options.form_theme %}
-                            {% form_theme f f.vars.eccube_form_options.form_theme %}
-                            {{ form_row(f) }}
-                        {% else %}
-                            <div class="col">
-                                <div class="mb-3">
-                                    <label>{{ f.vars.label|trans }}</label>
-                                    {{ form_widget(f) }}
-                                    {{ form_errors(f) }}
+                {% for f in searchForm %}
+                    {% if f.vars.eccube_form_options is defined and f.vars.eccube_form_options.auto_render %}
+                        {# TODO 1項目1行になるのを改善 #}
+                        <div class="row mb-2">
+                            {% if f.vars.eccube_form_options.form_theme %}
+                                {% form_theme f f.vars.eccube_form_options.form_theme %}
+                                {{ form_row(f) }}
+                            {% else %}
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <label>{{ f.vars.label|trans }}</label>
+                                        {{ form_widget(f) }}
+                                        {{ form_errors(f) }}
+                                    </div>
                                 </div>
-                            </div>
-                        {% endif %}
-                    </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
                 {% endfor %}
             </div>
             <div class="c-outsideBlock__contents">
@@ -535,7 +537,7 @@ file that was distributed with this source code.
                                                     />
                                                 </td>
                                                 <td class="align-middle text-left">
-                                                    <a class="action-edit" href="{{ url('admin_order_edit', { id : Order.id }) }}">{{ Order.order_no }}<br>{{ Order.name01 ~ Order.name02 }}<br>{{ Order.order_date|date_min }}</a>
+                                                    <a class="action-edit" href="{{ url('admin_order_edit', { id : Order.id }) }}">{{ Order.order_no }}<br>{{ Order.name01 ~ Order.name02 }}<br>{{ Order.order_date|date('Y-m-d H:i:s') }}</a>
                                                 </td>
                                                 <td class="align-middle text-center">
                                                     {{ Order.payment_method }}
@@ -545,7 +547,7 @@ file that was distributed with this source code.
                                                 </td>
                                                 <td class="align-middle text-right">
                                                     {{ Order.payment_total|price }}<br>
-                                                    {{ Order.payment_date ? Order.payment_date|date_day : 'admin.order.not_payment'|trans }}
+                                                    {{ Order.payment_date ? Order.payment_date|date('Y-m-d') : 'admin.order.not_payment'|trans }}
                                                 </td>
                                                 <td class="align-middle text-center">
                                                     {% if Order.message is not empty %}
@@ -568,10 +570,10 @@ file that was distributed with this source code.
                                                             {% endif %}
                                                         </a>
                                                     {% else %}
-                                                        {{ Shipping.shipping_date ? Shipping.shipping_date|date_day : 'admin.order.unshipped'|trans }}
+                                                        {{ Shipping.shipping_date ? Shipping.shipping_date|date('Y-m-d') : 'admin.order.unshipped'|trans }}
                                                     {% endif %}
                                                     {% if Shipping.mail_send_date %}
-                                                        {% set send_mail_date = Shipping.mail_send_date|date_min %}
+                                                        {% set send_mail_date = Shipping.mail_send_date|date('Y-m-d H:i:s') %}
                                                         <i class="fa fa-envelope fa-lg text-secondary" aria-hidden="true" data-tooltip="true" data-placement="top" data-original-title="{{ 'admin.order.shipping_mail__completed'|trans({'%date%': send_mail_date}) }}"></i>
                                                     {% endif %}
                                                 </td>

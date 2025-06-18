@@ -22,7 +22,12 @@ use Eccube\Util\CacheUtil;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Twig_Environment;
+// use Twig_Environment;
+use Twig\Environment;
+use Symfony\Component\Form\FormFactoryInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * Class ShopController
@@ -30,7 +35,7 @@ use Twig_Environment;
 class ShopController extends AbstractController
 {
     /**
-     * @var Twig_Environment
+     * @var Environment
      */
     protected $twig;
 
@@ -40,15 +45,37 @@ class ShopController extends AbstractController
     protected $baseInfoRepository;
 
     /**
+     * @var FormFactoryInterface
+     */
+    protected FormFactoryInterface $formFactory;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    protected EntityManagerInterface $entityManager;
+
+    /**
      * ShopController constructor.
      *
-     * @param Twig_Environment $twig
+     * @param Environment $twig
      * @param BaseInfoRepository $baseInfoRepository
+     * @param FormFactoryInterface $formFactory
      */
-    public function __construct(Twig_Environment $twig, BaseInfoRepository $baseInfoRepository)
+    public function __construct(
+        Environment $twig,
+        BaseInfoRepository $baseInfoRepository,
+        FormFactoryInterface $formFactory,
+        EntityManagerInterface $entityManager,
+        EventDispatcherInterface $eventDispatcher,
+        SessionInterface $session
+    )
     {
         $this->baseInfoRepository = $baseInfoRepository;
         $this->twig = $twig;
+        $this->formFactory = $formFactory;
+        $this->entityManager = $entityManager;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->session = $session;
     }
 
     /**
@@ -75,7 +102,7 @@ class ShopController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_SETTING_SHOP_SHOP_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SHOP_SHOP_INDEX_INITIALIZE);
 
         $form = $builder->getForm();
         $form->handleRequest($request);
@@ -92,8 +119,8 @@ class ShopController extends AbstractController
                 $request
             );
             $this->eventDispatcher->dispatch(
-                EccubeEvents::ADMIN_SETTING_SHOP_SHOP_INDEX_COMPLETE,
-                $event
+                $event,
+                EccubeEvents::ADMIN_SETTING_SHOP_SHOP_INDEX_COMPLETE
             );
 
             // キャッシュの削除

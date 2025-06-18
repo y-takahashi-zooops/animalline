@@ -15,7 +15,8 @@ namespace Eccube\Entity;
 
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Inflector\Inflector;
+use Doctrine\Inflector\Inflector;
+use Doctrine\Inflector\InflectorFactory;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\MappedSuperclass;
 use Doctrine\ORM\Proxy\Proxy;
@@ -29,9 +30,10 @@ abstract class AbstractEntity implements \ArrayAccess
 {
     private $AnnotationReader;
 
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
-        $method = Inflector::classify($offset);
+        $inflector = InflectorFactory::create()->build();
+	$method = $inflector->classify($offset);
 
         return method_exists($this, $method)
             || method_exists($this, "get$method")
@@ -39,13 +41,14 @@ abstract class AbstractEntity implements \ArrayAccess
             || method_exists($this, "has$method");
     }
 
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
     }
 
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
-        $method = Inflector::classify($offset);
+        $inflector = InflectorFactory::create()->build();
+        $method = $inflector->classify($offset);
 
         if (method_exists($this, $method)) {
             return $this->$method();
@@ -58,7 +61,7 @@ abstract class AbstractEntity implements \ArrayAccess
         }
     }
 
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
     }
 

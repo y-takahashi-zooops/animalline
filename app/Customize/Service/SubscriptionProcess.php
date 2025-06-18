@@ -41,7 +41,7 @@ class SubscriptionProcess extends AbstractController
     /**
      * @var EntityManagerInterface
      */
-    protected $entityManager;
+    protected EntityManagerInterface $entityManager;
 
     /**
      * @var SubscriptionContractRepository

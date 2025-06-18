@@ -303,7 +303,7 @@ gmo_payment_gateway.admin.payment_edit.au.order_mail_title1.note1: ご注文完�
 gmo_payment_gateway.admin.payment_edit.au.order_mail_body1.caution: （上限1,000文字）
 gmo_payment_gateway.admin.payment_edit.au.ClientField1.caution: （上限100文字）
 gmo_payment_gateway.admin.payment_edit.au.ClientField2.caution: （上限100文字）
-gmo_payment_gateway.admin.payment_edit.au.action_error1: ※ サービス名（店名）に禁止されている文字「%char%」が含まれています。
+gmo_payment_gateway.admin.payment_edit.au.action_error1: '※ サービス名（店名）に禁止されている文字「%char%」が含まれています。'
 
 # ドコモケータイ払い
 gmo_payment_gateway.admin.payment_edit.docomo.col1: 処理区分
@@ -329,7 +329,7 @@ gmo_payment_gateway.admin.payment_edit.docomo.order_mail_title1.note1: ご注文
 gmo_payment_gateway.admin.payment_edit.docomo.order_mail_body1.caution: （上限1,000文字）
 gmo_payment_gateway.admin.payment_edit.docomo.ClientField1.caution: （上限100文字）
 gmo_payment_gateway.admin.payment_edit.docomo.ClientField2.caution: （上限100文字）
-gmo_payment_gateway.admin.payment_edit.docomo.action_error1: ※ ドコモ表示項目%no%に禁止されている文字「%char%」が含まれています。
+gmo_payment_gateway.admin.payment_edit.docomo.action_error1: '※ ドコモ表示項目%no%に禁止されている文字「%char%」が含まれています。'
 
 # ソフトバンクまとめて支払い
 gmo_payment_gateway.admin.payment_edit.softbank.col1: 処理区分
@@ -392,9 +392,9 @@ gmo_payment_gateway.admin.order_edit.button.reauth: 再オーソリ実行
 gmo_payment_gateway.admin.order_edit.button.status: 決済状態確認・反映
 gmo_payment_gateway.admin.order_edit.amount.attention: ※決済金額とお支払い合計に差異があります。
 gmo_payment_gateway.admin.order_edit.action_msg: 決済操作が完了しました。
-gmo_payment_gateway.admin.order_edit.action_error1: %action%に対応していない決済です。
+gmo_payment_gateway.admin.order_edit.action_error1: '%action%に対応していない決済です。'
 gmo_payment_gateway.admin.order_edit.action_error2: 処理日付が不足しています。
-gmo_payment_gateway.admin.order_edit.action_error3: 期限を越えています。(決済日から%target_term_days%日以内)
+gmo_payment_gateway.admin.order_edit.action_error3: '期限を越えています。(決済日から%target_term_days%日以内)'
 gmo_payment_gateway.admin.order_edit.action_error4: 再オーソリはクレジットカード決済のみ対応しています。
 gmo_payment_gateway.admin.order_edit.action_error5: 取り消されていない注文は再オーソリ出来ません。
 gmo_payment_gateway.admin.order_edit.action_error6: '決済処理エラー：取引の現状態に対して、処理可能な操作ではありません。'
@@ -413,7 +413,7 @@ gmo_payment_gateway.admin.customer_edit.title: PGマルチペイメントサー�
 gmo_payment_gateway.admin.customer_edit.member_id: GMOメンバーID
 
 # 管理 決済状況一覧
-gmo_payment_gateway.admin.payment_status.bulk_action.success: %count%件を処理しました。
+gmo_payment_gateway.admin.payment_status.bulk_action.success: '%count%件を処理しました。'
 gmo_payment_gateway.admin.payment_status.title: 決済状況一覧
 gmo_payment_gateway.admin.payment_status.sub_title: 受注管理
 gmo_payment_gateway.admin.payment_status.search: 検索
@@ -424,7 +424,7 @@ gmo_payment_gateway.admin.payment_status.search_condition_payment_status: 決済
 gmo_payment_gateway.admin.payment_status.invalid_condition: 検索条件に誤りがあります
 gmo_payment_gateway.admin.payment_status.no_result: 検索条件に合致するデータが見つかりませんでした
 gmo_payment_gateway.admin.payment_status.change_condition: 検索条件を変えて、再度検索をお試しください。
-gmo_payment_gateway.admin.payment_status.display_count: %count%件
+gmo_payment_gateway.admin.payment_status.display_count: '%count%件'
 gmo_payment_gateway.admin.payment_status.col_order_date: 受注日時
 gmo_payment_gateway.admin.payment_status.col_order_no: 注文番号
 gmo_payment_gateway.admin.payment_status.col_order_name: お名前
@@ -449,9 +449,9 @@ gmo_payment_gateway.admin.payment_status.bulk_alert: 選択されていません
 gmo_payment_gateway.shopping.com.mismatch.payment: 支払い方法が一致していません。
 gmo_payment_gateway.shopping.com.unusable.order: 決済処理中の受注が存在しません。
 gmo_payment_gateway.shopping.com.unusable.paymentinfo: 受注から決済情報が取得出来ませんでした。
-gmo_payment_gateway.shopping.com.done.info1: カートをクリアします[%order_id%]
-gmo_payment_gateway.shopping.com.done.info2: 注文メールの送信を行います[%order_id%]
-gmo_payment_gateway.shopping.com.done.info3: 注文処理が完了しました。購入完了画面へ遷移します。[%order_id%]
+gmo_payment_gateway.shopping.com.done.info1: 'カートをクリアします[%order_id%]'
+gmo_payment_gateway.shopping.com.done.info2: '注文メールの送信を行います[%order_id%]'
+gmo_payment_gateway.shopping.com.done.info3: '注文処理が完了しました。購入完了画面へ遷移します。[%order_id%]'
 
 # フロント クレジットカード入力フォーム
 gmo_payment_gateway.shopping.credit.title.register_card: 登録済みクレジットカード決済
@@ -507,7 +507,7 @@ gmo_payment_gateway.shopping.cvs.col1.note1: お支払いをするコンビニ�
 # フロント Pay-easy入力フォーム
 gmo_payment_gateway.shopping.payeasy.net.note1: Pay-easy決済と注文処理が完了しました。
 gmo_payment_gateway.shopping.payeasy.net.note2: 金融機関反映のため、20秒程度お待ち下さい。自動で画面が切り替わります。
-gmo_payment_gateway.shopping.payeasy.netbank.info1: 注文処理が完了しました。[%order_id%]
+gmo_payment_gateway.shopping.payeasy.netbank.info1: '注文処理が完了しました。[%order_id%]'
 
 # フロント キャリア決済入力フォーム
 gmo_payment_gateway.shopping.carrier.note1: キャリア決済の画面に移動します。
@@ -559,7 +559,7 @@ gmo_payment_gateway.payment_helper.confno1: 確認番号
 gmo_payment_gateway.payment_helper.confno2: 企業コード
 gmo_payment_gateway.payment_helper.confno3: 申込番号
 gmo_payment_gateway.payment_helper.paymentterm: お支払い期限
-gmo_payment_gateway.payment_helper.paymentterm.fmt: %04d年%02d月%02d日 %02d時%02d分
+gmo_payment_gateway.payment_helper.paymentterm.fmt: '%04d年%02d月%02d日 %02d時%02d分'
 gmo_payment_gateway.payment_helper.receipturl: 払込票URL
 gmo_payment_gateway.payment_helper.cvstitle: でのお支払い
 gmo_payment_gateway.payment_helper.payinfono: 決済情報番号

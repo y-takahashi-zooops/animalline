@@ -13,10 +13,19 @@
 
 namespace Eccube\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Eccube\Common\EccubeConfig;
 use Eccube\Entity\ItemHolderInterface;
 use Eccube\Service\PurchaseFlow\PurchaseContext;
 use Eccube\Service\PurchaseFlow\PurchaseFlow;
 use Eccube\Service\PurchaseFlow\PurchaseFlowResult;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AbstractShoppingController extends AbstractController
 {
@@ -24,6 +33,35 @@ class AbstractShoppingController extends AbstractController
      * @var PurchaseFlow
      */
     protected $purchaseFlow;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    public function __construct(
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator,
+        SessionInterface $session,
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher,
+        RequestStack $requestStack,
+        RouterInterface $router,
+        LoggerInterface $logger
+    ) {
+        parent::__construct(
+            $eccubeConfig,
+            $entityManager,
+            $translator,
+            $session,
+            $formFactory,
+            $eventDispatcher,
+            $requestStack,
+            $router
+        );
+        $this->logger = $logger;
+    }
 
     /**
      * @param PurchaseFlow $shoppingPurchaseFlow
@@ -56,13 +94,13 @@ class AbstractShoppingController extends AbstractController
         }
 
         if ($flowResult->hasError()) {
-            log_info('Errorが発生したため購入エラー画面へ遷移します.', [$flowResult->getErrors()]);
+            $this->logger->info('Errorが発生したため購入エラー画面へ遷移します.', [$flowResult->getErrors()]);
 
             return $this->redirectToRoute('shopping_error');
         }
 
         if ($flowResult->hasWarning()) {
-            log_info('Warningが発生したため注文手続き画面へ遷移します.', [$flowResult->getWarning()]);
+            $this->logger->info('Warningが発生したため注文手続き画面へ遷移します.', [$flowResult->getWarning()]);
 
             return $this->redirectToRoute('shopping');
         }

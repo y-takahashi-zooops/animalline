@@ -63,7 +63,7 @@ class EccubeConfig implements \ArrayAccess
      *
      * @return bool
      */
-    public function offsetExists($offset)
+    public function offsetExists(mixed $offset): bool
     {
         return $this->has($offset);
     }
@@ -73,7 +73,7 @@ class EccubeConfig implements \ArrayAccess
      *
      * @return mixed
      */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->get($offset);
     }
@@ -82,7 +82,7 @@ class EccubeConfig implements \ArrayAccess
      * @param mixed $offset
      * @param mixed $value
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         $this->set($offset, $value);
     }
@@ -92,7 +92,7 @@ class EccubeConfig implements \ArrayAccess
      *
      * @throws \Exception
      */
-    public function offsetUnset($offset)
+    public function offsetUnset(mixed $offset): void
     {
         throw new \Exception();
     }

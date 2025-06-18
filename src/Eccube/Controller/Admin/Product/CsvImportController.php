@@ -43,6 +43,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Psr\Log\LoggerInterface;
+use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 class CsvImportController extends AbstractCsvImportController
 {
@@ -86,6 +90,13 @@ class CsvImportController extends AbstractCsvImportController
      */
     protected $validator;
 
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    protected FormFactoryInterface $formFactory;
+
     private $errors = [];
 
     /**
@@ -100,6 +111,7 @@ class CsvImportController extends AbstractCsvImportController
      * @param ProductClassRepository $ProductClassRepository
      * @param ValidatorInterface $validator
      * @throws \Exception
+     * @param LoggerInterface $logger
      */
     public function __construct(
         DeliveryDurationRepository $deliveryDurationRepository,
@@ -109,7 +121,11 @@ class CsvImportController extends AbstractCsvImportController
         ProductStatusRepository $productStatusRepository,
         ProductRepository $productRepository,
         ProductClassRepository $productClassRepository,
-        ValidatorInterface $validator
+        ValidatorInterface $validator,
+        FormFactoryInterface $formFactory,
+        LoggerInterface $logger,
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
     ) {
         $this->deliveryDurationRepository = $deliveryDurationRepository;
         $this->tagRepository = $tagRepository;
@@ -119,6 +135,10 @@ class CsvImportController extends AbstractCsvImportController
         $this->productRepository = $productRepository;
         $this->productClassRepository = $productClassRepository;
         $this->validator = $validator;
+        $this->formFactory = $formFactory;
+        $this->logger = $logger;
+        $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -141,7 +161,7 @@ class CsvImportController extends AbstractCsvImportController
             if ($form->isValid()) {
                 $formFile = $form['import_file']->getData();
                 if (!empty($formFile)) {
-                    log_info('商品CSV登録開始');
+                    $this->logger->info('商品CSV登録開始');
                     $data = $this->getImportData($formFile);
                     if ($data === false) {
                         $this->addErrors(trans('admin.common.csv_invalid_format'));
@@ -282,7 +302,7 @@ class CsvImportController extends AbstractCsvImportController
                         }
                     }
 
-                    log_info('商品CSV登録完了');
+                    $this->logger->info('商品CSV登録完了');
                     $message = 'admin.common.csv_upload_complete';
                     $this->session->getFlashBag()->add('eccube.admin.success', $message);
 
@@ -310,7 +330,7 @@ class CsvImportController extends AbstractCsvImportController
             if ($form->isValid()) {
                 $formFile = $form['import_file']->getData();
                 if (!empty($formFile)) {
-                    log_info('カテゴリCSV登録開始');
+                    $this->logger->info('カテゴリCSV登録開始');
                     $data = $this->getImportData($formFile);
                     if ($data === false) {
                         $this->addErrors(trans('admin.common.csv_invalid_format'));
@@ -368,12 +388,12 @@ class CsvImportController extends AbstractCsvImportController
                         if (isset($row[$headerByKey['category_del_flg']]) && StringUtil::isNotBlank($row[$headerByKey['category_del_flg']])) {
                             if (StringUtil::trimAll($row[$headerByKey['category_del_flg']]) == 1) {
                                 if ($Category->getId()) {
-                                    log_info('カテゴリ削除開始', [$Category->getId()]);
+                                    $this->logger->info('カテゴリ削除開始', [$Category->getId()]);
                                     try {
                                         $this->categoryRepository->delete($Category);
-                                        log_info('カテゴリ削除完了', [$Category->getId()]);
+                                        $this->logger->info('カテゴリ削除完了', [$Category->getId()]);
                                     } catch (ForeignKeyConstraintViolationException $e) {
-                                        log_info('カテゴリ削除エラー', [$Category->getId(), $e]);
+                                        $this->logger->info('カテゴリ削除エラー', [$Category->getId(), $e]);
                                         $message = trans('admin.common.delete_error_foreign_key', ['%name%' => $Category->getName()]);
                                         $this->addError($message, 'admin');
 
@@ -442,7 +462,7 @@ class CsvImportController extends AbstractCsvImportController
                     }
 
                     $this->entityManager->getConnection()->commit();
-                    log_info('カテゴリCSV登録完了');
+                    $this->logger->info('カテゴリCSV登録完了');
                     $message = 'admin.common.csv_upload_complete';
                     $this->session->getFlashBag()->add('eccube.admin.success', $message);
 

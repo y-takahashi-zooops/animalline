@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\HttpKernel\Event\PostResponseEvent;
+use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -64,7 +64,7 @@ class CacheUtil implements EventSubscriberInterface
         $this->clearCacheAfterResponse = $env;
     }
 
-    public function forceClearCache(PostResponseEvent $event)
+    public function forceClearCache(TerminateEvent $event)
     {
         if ($this->clearCacheAfterResponse === false) {
             return;
@@ -219,7 +219,7 @@ class CacheUtil implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [KernelEvents::TERMINATE => 'forceClearCache'];
     }

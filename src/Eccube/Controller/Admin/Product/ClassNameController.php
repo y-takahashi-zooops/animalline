@@ -25,6 +25,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\FormFactoryInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ClassNameController extends AbstractController
 {
@@ -33,14 +37,32 @@ class ClassNameController extends AbstractController
      */
     protected $classNameRepository;
 
+    protected FormFactoryInterface $formFactory;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+
     /**
      * ClassNameController constructor.
      *
      * @param ClassNameRepository $classNameRepository
+     * @param LoggerInterface $logger
      */
-    public function __construct(ClassNameRepository $classNameRepository)
-    {
+    public function __construct(
+        ClassNameRepository $classNameRepository,
+        FormFactoryInterface $formFactory,
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher,
+        EntityManagerInterface $entityManager
+    ) {
         $this->classNameRepository = $classNameRepository;
+        $this->formFactory = $formFactory;
+        $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -69,7 +91,7 @@ class ClassNameController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_PRODUCT_CLASS_NAME_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_PRODUCT_CLASS_NAME_INDEX_INITIALIZE);
 
         $ClassNames = $this->classNameRepository->getList();
 
@@ -87,11 +109,11 @@ class ClassNameController extends AbstractController
         if ($request->getMethod() === 'POST') {
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
-                log_info('商品規格登録開始', [$id]);
+                $this->logger->info('商品規格登録開始', [$id]);
 
                 $this->classNameRepository->save($TargetClassName);
 
-                log_info('商品規格登録完了', [$id]);
+                $this->logger->info('商品規格登録完了', [$id]);
 
                 $event = new EventArgs(
                     [
@@ -100,7 +122,7 @@ class ClassNameController extends AbstractController
                     ],
                     $request
                 );
-                $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_PRODUCT_CLASS_NAME_INDEX_COMPLETE, $event);
+                $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_PRODUCT_CLASS_NAME_INDEX_COMPLETE);
 
                 $this->addSuccess('admin.common.save_complete', 'admin');
 
@@ -141,17 +163,17 @@ class ClassNameController extends AbstractController
     {
         $this->isTokenValid();
 
-        log_info('商品規格削除開始', [$ClassName->getId()]);
+        $this->logger->info('商品規格削除開始', [$ClassName->getId()]);
 
         try {
             $this->classNameRepository->delete($ClassName);
 
             $event = new EventArgs(['ClassName' => $ClassName], $request);
-            $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_PRODUCT_CLASS_NAME_DELETE_COMPLETE, $event);
+            $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_PRODUCT_CLASS_NAME_DELETE_COMPLETE);
 
             $this->addSuccess('admin.common.delete_complete', 'admin');
 
-            log_info('商品規格削除完了', [$ClassName->getId()]);
+            $this->logger->info('商品規格削除完了', [$ClassName->getId()]);
         } catch (\Exception $e) {
             $message = trans('admin.common.delete_error_foreign_key', ['%name%' => $ClassName->getName()]);
             $this->addError($message, 'admin');

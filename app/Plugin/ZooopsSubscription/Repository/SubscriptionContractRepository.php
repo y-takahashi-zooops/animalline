@@ -4,7 +4,7 @@ namespace Plugin\ZooopsSubscription\Repository;
 
 use Eccube\Repository\AbstractRepository;
 use Plugin\ZooopsSubscription\Entity\SubscriptionContract;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\QueryBuilder;
 use Eccube\Doctrine\Query\Queries;
 use Eccube\Repository\QueryKey;
@@ -25,10 +25,10 @@ class SubscriptionContractRepository extends AbstractRepository
     /**
      * SubscriptionContractRepository constructor.
      *
-     * @param RegistryInterface $registry
+     * @param ManagerRegistry $registry
      * @param Queries $queries
      */
-    public function __construct(RegistryInterface $registry, Queries $queries)
+    public function __construct(ManagerRegistry $registry, Queries $queries)
     {
         parent::__construct($registry, SubscriptionContract::class);
         $this->queries = $queries;

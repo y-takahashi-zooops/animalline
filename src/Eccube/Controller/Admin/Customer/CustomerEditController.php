@@ -24,7 +24,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class CustomerEditController extends AbstractController
 {
@@ -34,16 +40,43 @@ class CustomerEditController extends AbstractController
     protected $customerRepository;
 
     /**
-     * @var EncoderFactoryInterface
+     * @var UserPasswordHasherInterface
      */
-    protected $encoderFactory;
+    protected $passwordHasher;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
+     * @var FormFactoryInterface
+     */
+    protected FormFactoryInterface $formFactory;
+
+    /**
+     * @var Session
+     */
+    protected SessionInterface $session;
 
     public function __construct(
         CustomerRepository $customerRepository,
-        EncoderFactoryInterface $encoderFactory
+        UserPasswordHasherInterface $passwordHasher,
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher,
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager,
+        FormFactoryInterface $formFactory,
+        SessionInterface $session
     ) {
         $this->customerRepository = $customerRepository;
-        $this->encoderFactory = $encoderFactory;
+        $this->passwordHasher = $passwordHasher;
+        $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
+        $this->session = $session;
     }
 
     /**
@@ -85,25 +118,21 @@ class CustomerEditController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_CUSTOMER_EDIT_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_CUSTOMER_EDIT_INDEX_INITIALIZE);
 
         $form = $builder->getForm();
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            log_info('会員登録開始', [$Customer->getId()]);
-
-            $encoder = $this->encoderFactory->getEncoder($Customer);
+            $this->logger->info('会員登録開始', [$Customer->getId()]);
 
             if ($Customer->getPassword() === $this->eccubeConfig['eccube_default_password']) {
                 $Customer->setPassword($previous_password);
             } else {
-                if ($Customer->getSalt() === null) {
-                    $Customer->setSalt($encoder->createSalt());
-                    $Customer->setSecretKey($this->customerRepository->getUniqueSecretKey());
-                }
-                $Customer->setPassword($encoder->encodePassword($Customer->getPassword(), $Customer->getSalt()));
+                $Customer->setPassword(
+                   $this->passwordHasher->hashPassword($Customer, $Customer->getPassword())
+                );
             }
 
             // 退会ステータスに更新の場合、ダミーのアドレスに更新
@@ -115,7 +144,7 @@ class CustomerEditController extends AbstractController
             $this->entityManager->persist($Customer);
             $this->entityManager->flush();
 
-            log_info('会員登録完了', [$Customer->getId()]);
+            $this->logger->info('会員登録完了', [$Customer->getId()]);
 
             $event = new EventArgs(
                 [
@@ -124,7 +153,7 @@ class CustomerEditController extends AbstractController
                 ],
                 $request
             );
-            $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_CUSTOMER_EDIT_INDEX_COMPLETE, $event);
+            $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_CUSTOMER_EDIT_INDEX_COMPLETE);
 
             $this->addSuccess('admin.common.save_complete', 'admin');
 

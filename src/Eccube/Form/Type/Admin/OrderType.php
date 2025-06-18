@@ -43,6 +43,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class OrderType extends AbstractType
 {
@@ -66,6 +67,8 @@ class OrderType extends AbstractType
      */
     protected $orderStatusRepository;
 
+    private TranslatorInterface $translator;
+
     /**
      * OrderType constructor.
      *
@@ -77,12 +80,14 @@ class OrderType extends AbstractType
         EntityManagerInterface $entityManager,
         EccubeConfig $eccubeConfig,
         OrderStateMachine $orderStateMachine,
-        OrderStatusRepository $orderStatusRepository
+        OrderStatusRepository $orderStatusRepository,
+        TranslatorInterface $translator
     ) {
         $this->entityManager = $entityManager;
         $this->eccubeConfig = $eccubeConfig;
         $this->orderStateMachine = $orderStateMachine;
         $this->orderStatusRepository = $orderStatusRepository;
+        $this->translator = $translator;
     }
 
     /**
@@ -213,7 +218,7 @@ class OrderType extends AbstractType
                 'choice_label' => function (Payment $Payment) {
                     return $Payment->isVisible()
                         ? $Payment->getMethod()
-                        : $Payment->getMethod().trans('admin.common.hidden_label');
+                        : $Payment->getMethod(). $this->translator->trans('admin.common.hidden_label');
                 },
                 'placeholder' => false,
                 'query_builder' => function ($er) {
@@ -426,7 +431,7 @@ class OrderType extends AbstractType
         if ($oldStatus->getId() != $newStatus->getId()) {
             if (!$this->orderStateMachine->can($Order, $newStatus)) {
                 $form['OrderStatus']->addError(
-                    new FormError(trans('admin.order.failed_to_change_status__short', [
+                    new FormError($this->translator->trans('admin.order.failed_to_change_status__short', [
                         '%from%' => $oldStatus->getName(),
                         '%to%' => $newStatus->getName(),
                     ])));
@@ -456,7 +461,7 @@ class OrderType extends AbstractType
         if ($count < 1) {
             // 画面下部にエラーメッセージを表示させる
             $form = $event->getForm();
-            $form['OrderItemsErrors']->addError(new FormError(trans('admin.order.product_item_not_found')));
+            $form['OrderItemsErrors']->addError(new FormError($this->translator->trans('admin.order.product_item_not_found')));
         }
     }
 

@@ -27,6 +27,8 @@ use Eccube\Repository\Master\ProductListOrderByRepository;
 use Eccube\Repository\ProductRepository;
 use Eccube\Repository\CategoryRepository;
 use Customize\Config\AnilineConf;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CustomTopController extends AbstractController
 {
@@ -55,18 +57,24 @@ class CustomTopController extends AbstractController
      */
     private $mailService;
 
+    protected FormFactoryInterface $formFactory;
+
     public function __construct(
         NewsRepository $NewsRepository,
         ProductRepository $productRepository,
         CategoryRepository $categoryRepository,
         ProductListOrderByRepository $productListOrderByRepository,
-        MailService $mailService
+        MailService $mailService,
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->NewsRepository = $NewsRepository;
         $this->productListOrderByRepository = $productListOrderByRepository;
         $this->productRepository = $productRepository;
         $this->categoryRepository = $categoryRepository;
         $this->mailService = $mailService;
+        $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
     }
     /**
      * @Route("/ec", name="homepage")
@@ -292,7 +300,7 @@ class CustomTopController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_CONTACT_INDEX_INITIALIZE);
 
         $form = $builder->getForm();
         $form->handleRequest($request);      

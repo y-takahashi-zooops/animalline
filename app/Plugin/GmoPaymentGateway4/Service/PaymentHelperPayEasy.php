@@ -12,12 +12,19 @@ use Eccube\Service\Payment\PaymentResult;
 use Plugin\GmoPaymentGateway4\Util\PaymentUtil;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Eccube\Common\EccubeConfig;
 
 /**
  * Pay-easy決済処理を行う基底クラス
  */
 abstract class PaymentHelperPayEasy extends PaymentHelper
 {
+    public function __construct(
+        EccubeConfig $eccubeConfig
+    ) {
+        $this->eccubeConfig = $eccubeConfig;
+    }
+
     /**
      * 決済完了案内本文を返す
      *

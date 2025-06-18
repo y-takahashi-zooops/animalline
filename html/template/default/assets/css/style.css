@@ -10526,35 +10526,35 @@ Styleguide 22.1
 }
 
 /* 購入種別ラジオボタン */
-#order_type_0,
-#order_type_1 {
+#add_cart_order_type_0,
+#add_cart_order_type_1 {
   position:relative;	
   top :30px;
   right: 35px;
   transform: scale(3.0);
 }
 
-label[for="order_type_0"],
-label[for="order_type_1"] {
+label[for="add_cart_order_type_0"],
+label[for="add_cart_order_type_1"] {
   position :relative;
   right: 17px;
 }
 
 /* お届けサイクルラジオボタン */
-#cycle_type_0,
-#cycle_type_1 {
+#add_cart_cycle_type_0,
+#add_cart_cycle_type_1 {
   transform: scale(1.5);
 }
 
-label[for="cycle_type_0"],
-label[for="cycle_type_1"] {
+label[for="add_cart_cycle_type_0"],
+label[for="add_cart_cycle_type_1"] {
   font-weight: normal;
   padding-left: 5px;
 }
 
 /* 間隔のラベルを消去 */
-label[for="month"],
-label[for="day"]{
+label[for="add_cart_month"],
+label[for="add_cart_day"]{
   display: none;
 }
 label[for="change_subscription_month"],

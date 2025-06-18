@@ -21,6 +21,8 @@ use Eccube\Service\MailService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ContactController extends AbstractController
 {
@@ -29,15 +31,21 @@ class ContactController extends AbstractController
      */
     protected $mailService;
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * ContactController constructor.
      *
      * @param MailService $mailService
      */
     public function __construct(
-        MailService $mailService)
-    {
+        MailService $mailService,
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher
+    ) {
         $this->mailService = $mailService;
+        $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -76,7 +84,7 @@ class ContactController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_CONTACT_INDEX_INITIALIZE);
 
         $form = $builder->getForm();
         $form->handleRequest($request);
@@ -102,7 +110,7 @@ class ContactController extends AbstractController
                         ],
                         $request
                     );
-                    $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_COMPLETE, $event);
+                    $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_CONTACT_INDEX_COMPLETE);
 
                     $data = $event->getArgument('data');
 

@@ -1,92 +1,23 @@
 <?php
 
-/*
- * This file is part of EC-CUBE
- *
- * Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
- *
- * http://www.ec-cube.co.jp/
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-function log_emergency($message, array $context = [])
-{
-    $app = \Eccube\Application::getInstance();
-    if (isset($app['eccube.logger'])) {
-        $app['eccube.logger']->emergency($message, $context);
-    }
-}
-
-function log_alert($message, array $context = [])
-{
-    $app = \Eccube\Application::getInstance();
-    if (isset($app['eccube.logger'])) {
-        $app['eccube.logger']->alert($message, $context);
-    }
-}
-
-function log_critical($message, array $context = [])
-{
-    $app = \Eccube\Application::getInstance();
-    if (isset($app['eccube.logger'])) {
-        $app['eccube.logger']->critical($message, $context);
-    }
-}
-
-function log_error($message, array $context = [])
-{
-    $app = \Eccube\Application::getInstance();
-    if (isset($app['eccube.logger'])) {
-        $app['eccube.logger']->error($message, $context);
-    }
-}
-
-function log_warning($message, array $context = [])
-{
-    $app = \Eccube\Application::getInstance();
-    if (isset($app['eccube.logger'])) {
-        $app['eccube.logger']->warning($message, $context);
-    }
-}
-
-function log_notice($message, array $context = [])
-{
-    $app = \Eccube\Application::getInstance();
-    if (isset($app['eccube.logger'])) {
-        $app['eccube.logger']->notice($message, $context);
-    }
-}
-
-function log_info($message, array $context = [])
-{
-    $app = \Eccube\Application::getInstance();
-    if (isset($app['eccube.logger'])) {
-        $app['eccube.logger']->info($message, $context);
-    }
-}
-
-function log_debug($message, array $context = [])
-{
-    $app = \Eccube\Application::getInstance();
-    if (isset($app['eccube.logger'])) {
-        $app['eccube.logger']->debug($message, $context);
-    }
-}
+use Psr\Log\LoggerInterface;
 
 /**
- * プラグイン用ログ出力関数
+ * ログ出力.
  *
- * @param $channel 設定されたchannel名
- *
- * @return \Symfony\Bridge\Monolog\Logger
+ * @param string $message
+ * @param array $context
+ * @param string $level
  */
-function logs($channel)
+function log_info($message, array $context = [], $level = 'info')
 {
-    $app = \Eccube\Application::getInstance();
+    static $logger;
 
-    $container = $app->getParentContainer();
+    if (null === $logger) {
+        $container = \Eccube\Application::getInstance()->getContainer();
+        /** @var LoggerInterface $logger */
+        $logger = $container->get('monolog.logger.eccube');
+    }
 
-    return $container->get('monolog.logger.'.$channel);
+    $logger->log($level, $message, $context);
 }

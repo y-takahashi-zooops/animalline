@@ -13,7 +13,7 @@
 
 namespace Customize\Form\Type;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;
 use Eccube\Common\EccubeConfig;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;

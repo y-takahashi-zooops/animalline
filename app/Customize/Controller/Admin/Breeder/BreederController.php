@@ -35,6 +35,8 @@ use Knp\Component\Pager\PaginatorInterface;
 use Customize\Service\MailService;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class BreederController extends AbstractController
 {
@@ -104,6 +106,13 @@ class BreederController extends AbstractController
     protected $breederEvaluationsRepository;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected EntityManagerInterface $entityManager;
+
+    protected FormFactoryInterface $formFactory;
+
+    /**
      * breederController constructor.
      * @param BreedersRepository $breedersRepository
      * @param BreedsRepository $breedsRepository
@@ -120,6 +129,7 @@ class BreederController extends AbstractController
      * @param BreederEvaluationsRepository $breederEvaluationsRepository
      */
     public function __construct(
+        EntityManagerInterface $entityManager,
         BreedersRepository               $breedersRepository,
         BreedsRepository                 $breedsRepository,
         BreederPetImageRepository        $breederPetImageRepository,
@@ -132,7 +142,8 @@ class BreederController extends AbstractController
         DnaCheckStatusRepository         $dnaCheckStatusRepository,
         DnaQueryService                  $dnaQueryService,
         DnaCheckKindsRepository          $dnaCheckKindsRepository,
-        BreederEvaluationsRepository     $breederEvaluationsRepository
+        BreederEvaluationsRepository     $breederEvaluationsRepository,
+        FormFactoryInterface $formFactory
     ) {
         $this->breedersRepository = $breedersRepository;
         $this->breederPetsRepository = $breederPetsRepository;
@@ -147,6 +158,8 @@ class BreederController extends AbstractController
         $this->dnaQueryService = $dnaQueryService;
         $this->dnaCheckKindsRepository = $dnaCheckKindsRepository;
         $this->breederEvaluationsRepository = $breederEvaluationsRepository;
+        $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
     }
 
     /**
@@ -242,7 +255,7 @@ class BreederController extends AbstractController
                 ->setLicensePref($breederData->getPrefLicense())
                 ->setThumbnailPath($thumbnailPath)
                 ->setLicenseThumbnailPath($licenseThumbnailPath);
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
 
             if ($request->get('breeders')['is_active'] == AnilineConf::IS_ACTIVE_PRIVATE) {
                 $breederPets = $this->breederPetsRepository->findBy(['Breeder' => $breederData]);
@@ -397,7 +410,7 @@ class BreederController extends AbstractController
 
             $evaluation = $this->breederEvaluationsRepository->find($id);
             $evaluation->setIsActive($result);
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($evaluation);
             $entityManager->flush();
 

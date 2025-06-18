@@ -18,12 +18,26 @@ use Plugin\ProductReview4\Repository\ProductReviewConfigRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Psr\Log\LoggerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Class ConfigController.
  */
 class ConfigController extends \Eccube\Controller\AbstractController
 {
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    public function __construct(
+        LoggerInterface $logger,
+        EntityManagerInterface $entityManager
+    ) {
+        $this->logger = $logger;
+        $this->entityManager = $entityManager;
+    }
     /**
      * @Route("/%eccube_admin_route%/product_review/config", name="product_review4_admin_config")
      * @Template("@ProductReview4/admin/config.twig")
@@ -44,7 +58,7 @@ class ConfigController extends \Eccube\Controller\AbstractController
             $this->entityManager->persist($Config);
             $this->entityManager->flush($Config);
 
-            log_info('Product review config', ['status' => 'Success']);
+            $this->logger->info('Product review config', ['status' => 'Success']);
             $this->addSuccess('product_review.admin.save.complete', 'admin');
 
             return $this->redirectToRoute('product_review4_admin_config');

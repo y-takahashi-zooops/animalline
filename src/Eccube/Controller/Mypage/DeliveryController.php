@@ -26,6 +26,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Psr\Log\LoggerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 class DeliveryController extends AbstractController
 {
@@ -39,10 +43,26 @@ class DeliveryController extends AbstractController
      */
     protected $customerAddressRepository;
 
-    public function __construct(BaseInfoRepository $baseInfoRepository, CustomerAddressRepository $customerAddressRepository)
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    public function __construct(
+        BaseInfoRepository $baseInfoRepository,
+        CustomerAddressRepository $customerAddressRepository,
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher,
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
+)
     {
         $this->BaseInfo = $baseInfoRepository->get();
         $this->customerAddressRepository = $customerAddressRepository;
+        $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -118,18 +138,18 @@ class DeliveryController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_MYPAGE_DELIVERY_EDIT_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_MYPAGE_DELIVERY_EDIT_INITIALIZE);
 
         $form = $builder->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            log_info('お届け先登録開始', [$id]);
+            $this->logger->info('お届け先登録開始', [$id]);
 
             $this->entityManager->persist($CustomerAddress);
             $this->entityManager->flush();
 
-            log_info('お届け先登録完了', [$id]);
+            $this->logger->info('お届け先登録完了', [$id]);
 
             $event = new EventArgs(
                 [
@@ -139,7 +159,7 @@ class DeliveryController extends AbstractController
                 ],
                 $request
             );
-            $this->eventDispatcher->dispatch(EccubeEvents::FRONT_MYPAGE_DELIVERY_EDIT_COMPLETE, $event);
+            $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_MYPAGE_DELIVERY_EDIT_COMPLETE);
 
             $this->addSuccess('mypage.delivery.add.complete');
 
@@ -162,7 +182,7 @@ class DeliveryController extends AbstractController
     {
         $this->isTokenValid();
 
-        log_info('お届け先削除開始', [$CustomerAddress->getId()]);
+        $this->logger->info('お届け先削除開始', [$CustomerAddress->getId()]);
 
         $Customer = $this->getUser();
 
@@ -178,11 +198,11 @@ class DeliveryController extends AbstractController
                 'CustomerAddress' => $CustomerAddress,
             ], $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_MYPAGE_DELIVERY_DELETE_COMPLETE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_MYPAGE_DELIVERY_DELETE_COMPLETE);
 
         $this->addSuccess('mypage.address.delete.complete');
 
-        log_info('お届け先削除完了', [$CustomerAddress->getId()]);
+        $this->logger->info('お届け先削除完了', [$CustomerAddress->getId()]);
 
         return $this->redirect($this->generateUrl('mypage_delivery'));
     }

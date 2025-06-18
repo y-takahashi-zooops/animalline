@@ -25,6 +25,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Doctrine\ORM\EntityManagerInterface;
 
 class AdoptionExaminationController extends AbstractController
 {
@@ -44,6 +45,11 @@ class AdoptionExaminationController extends AbstractController
     protected $mailService;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected EntityManagerInterface $entityManager;
+
+    /**
      * AdoptionExaminationController constructor.
      *
      * @param ConservationsRepository $conservationsRepository
@@ -54,11 +60,13 @@ class AdoptionExaminationController extends AbstractController
     public function __construct(
         ConservationsRepository $conservationsRepository,
         CustomerRepository      $customerRepository,
-        MailService             $mailService
+        MailService             $mailService,
+        EntityManagerInterface $entityManager
     ) {
         $this->conservationsRepository = $conservationsRepository;
         $this->customerRepository = $customerRepository;
         $this->mailService = $mailService;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -124,7 +132,7 @@ class AdoptionExaminationController extends AbstractController
                 $this->mailService->sendAdoptionExaminationMailReject($Customer, $data);
             }
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($Customer);
             $entityManager->flush();
 

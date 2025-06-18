@@ -34,7 +34,8 @@ class Normalize extends FunctionNode
 
     public function getSql(SqlWalker $sqlWalker)
     {
-        switch ($sqlWalker->getConnection()->getDriver()->getName()) {
+        $driverName = $sqlWalker->getConnection()->getParams()['driver'] ?? null;
+        switch ($driverName) {
             case 'pdo_pgsql':
                 $sql = sprintf("LOWER(TRANSLATE(%s, '%s', '%s'))", $this->string->dispatch($sqlWalker), self::FROM, self::TO);
                 break;
