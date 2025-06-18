@@ -283,16 +283,22 @@ class ProductController extends BaseProductController
         $addCartData = $form->getData();
 
         // カート商品に同商品がないか検索
-        $cartItem = $this->cartItemRepository->findOneBy([
-            'Cart' => $this->cartService->getCart(),
-            'ProductClass' => $addCartData->getProductClass()
-        ]);
+        // $cartItem = $this->cartItemRepository->findOneBy([
+        //     'Cart' => $this->cartService->getCart(),
+        //     'ProductClass' => $addCartData->getProductClass()
+        // ]);
+        // if ($cartItem) {
+        //     // 同商品がカートに存在したらカートに追加させない
+        //     return $this->json([
+        //         'done' => false,
+        //         'messages' => ['この商品はすでにカートに入っています。'],
+        //     ]);
+        // }
+        // カート商品に同商品がないか検索
+        $cartItem = $this->cartItemRepository->findOneBy(['Cart' => $this->cartService->getCarts(), 'ProductClass' => $addCartData['product_class_id']]);
         if ($cartItem) {
             // 同商品がカートに存在したらカートに追加させない
-            return $this->json([
-                'done' => false,
-                'messages' => ['この商品はすでにカートに入っています。'],
-            ]);
+            return;
         }
 
         $this->logger->info(
