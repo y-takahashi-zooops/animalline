@@ -42,10 +42,14 @@ file that was distributed with this source code.
                 var $form = $(this).parents('li').find('form');
 
                 // 6/18 10:45追加
-                var productId = $(this).data('cartid');
+                const product_class = $form.find('select[name="add_cart[classcategory_id1]"]').val();
+                const productId = $(this).data('cartid');
+                const productData = eccube.productsClassCategories?.[product_class]?.['__unselected']?.[''];
 
                 console.log("add-cartの中", $form);
+                console.log("product_class:", product_class);
                 console.log("productId:", productId);
+                console.log("productData:", productData);
 
                 // productDataを取得（オプショナルチェーンは使わずES5で書く）
                 var productData = (
