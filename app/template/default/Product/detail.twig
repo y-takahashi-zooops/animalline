@@ -162,6 +162,7 @@ file that was distributed with this source code.
 							eccube.checkStock($form, {{ Product.id }}, {{ form.classcategory_id1.vars.value|json_encode|raw }}, null);
 						{% else %}
 							console.log('fnSetClassCategoriesを空で実行');
+							console.log(eccube.classCategories);
 							fnSetClassCategories('');
 						{% endif %}
 
