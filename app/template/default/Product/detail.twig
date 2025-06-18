@@ -161,10 +161,11 @@ file that was distributed with this source code.
 						{% elseif form.classcategory_id1 is defined %}
 							eccube.checkStock($form, {{ Product.id }}, {{ form.classcategory_id1.vars.value|json_encode|raw }}, null);
 						{% else %}
+							const tmp = $form.classcategory_id2 is defined;
 							console.log('fnSetClassCategoriesを空で実行');
 							console.log(eccube.classCategories);
 							console.log($form);
-							console.log($form.classcategory_id2 is defined);
+							console.log(tmp);
 							fnSetClassCategories('');
 						{% endif %}
 
