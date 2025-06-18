@@ -163,6 +163,7 @@ file that was distributed with this source code.
 						{% else %}
 							console.log('fnSetClassCategoriesを空で実行');
 							console.log(eccube.classCategories);
+							console.log(form.classcategory_id2.vars.value|json_encode|raw);
 							fnSetClassCategories('');
 						{% endif %}
 
