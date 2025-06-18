@@ -16,6 +16,8 @@ file that was distributed with this source code.
     <script>
         eccube.productsClassCategories = {{ products_class_categories_json|raw }};
 
+        console.log(eccube.productsClassCategories);
+
         $(function() {
 
             // 表示件数を変更
@@ -36,6 +38,8 @@ file that was distributed with this source code.
 
             $('.add-cart').on('click', function(e) {
                 var $form = $(this).parents('li').find('form');
+
+                console.log("add-cartの中", $form)
 
                 // 個数フォームのチェック
                 var $quantity = $form.parent().find('.quantity');
