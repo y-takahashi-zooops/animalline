@@ -43,18 +43,13 @@ file that was distributed with this source code.
                 console.log("add-cartの中", $form)
 
                 var productId = $(this).data('cartid');
+                const productData = eccube.productsClassCategories?.[product_class_id]?.['__unselected']?.[''];
 
-                // productsClassCategories に該当商品がある場合のみ設定
-                // product_class_id を自動で代入
-                if (
-                    eccube.productsClassCategories &&
-                    eccube.productsClassCategories[productId] &&
-                    eccube.productsClassCategories[productId]['__unselected'] &&
-                    eccube.productsClassCategories[productId]['__unselected'][''] &&
-                    eccube.productsClassCategories[productId]['__unselected']['']['product_class_id']
-                ) {
-                    var productClassId = eccube.productsClassCategories[productId]['__unselected']['']['product_class_id'];
-                    $form.find('input[name="add_cart[product_class_id]"]').val(productClassId);
+                console.log("productId:", productId);
+                console.log("productData:", productData);
+
+                if (productData?.product_class_id) {
+                    $form.find('input[name="add_cart[product_class_id]"]').val(productData.product_class_id);
                 }
 
                 // 6/18 10:45追加締め
