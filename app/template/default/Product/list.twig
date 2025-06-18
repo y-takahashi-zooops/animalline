@@ -62,6 +62,8 @@ file that was distributed with this source code.
                         // Buttonを無効にする
                         $('.add-cart').prop('disabled', true);
                     }
+
+                    console.log("from serialize", $form.serialize());
                 }).done(function(data) {
                     // レスポンス内のメッセージをalertで表示
                     $.each(data.messages, function() {
