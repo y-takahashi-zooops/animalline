@@ -42,14 +42,7 @@ file that was distributed with this source code.
                 var $form = $(this).parents('li').find('form');
 
                 // 6/18 10:45追加
-                const product_class = $form.find('select[name="add_cart[classcategory_id1]"]').val();
                 const productId = $(this).data('cartid');
-                const product_Data = eccube.productsClassCategories?.[product_class]?.['__unselected']?.[''];
-
-                console.log("add-cartの中", $form);
-                console.log("product_class:", product_class);
-                console.log("productId:", productId);
-                console.log("product_Data:", product_Data);
 
                 // productDataを取得（オプショナルチェーンは使わずES5で書く）
                 var productData = (
@@ -63,8 +56,8 @@ file that was distributed with this source code.
 
                 if (productData && productData.product_class_id) {
                     $form.find('input[name="add_cart[ProductClass]"]').val(productData.product_class_id);
-                    $form.find('input[name="add_cart[product_class]"]').val(productId);
-                    $form.find('input[name="add_cart[product_class_id]"]').val(productId);
+                    $form.find('input[name="add_cart[product_class]"]').val(productData.product_class_id);
+                    $form.find('input[name="add_cart[product_class_id]"]').val(productData.product_class_id);
                 } else {
                     console.warn("product_class_idが見つかりません");
                 }
