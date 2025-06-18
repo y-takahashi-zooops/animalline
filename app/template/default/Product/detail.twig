@@ -164,7 +164,7 @@ file that was distributed with this source code.
 							console.log('fnSetClassCategoriesを空で実行');
 							console.log(eccube.classCategories);
 							console.log($form);
-							
+							$form.find('input[name="add_cart[ProductClass]"]').val(eccube.classCategories.__unselected2[""].product_class_id);
 							fnSetClassCategories('');
 						{% endif %}
 
