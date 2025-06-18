@@ -37,6 +37,8 @@ file that was distributed with this source code.
             });
 
             $('.add-cart').on('click', function(e) {
+                e.preventDefault();
+                
                 var $form = $(this).parents('li').find('form');
 
                 // 6/18 10:45追加
