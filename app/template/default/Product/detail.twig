@@ -128,6 +128,7 @@ file that was distributed with this source code.
 
 						// 初期設定
 						function fnSetClassCategories() {
+							const currentVal = $sele2.val(); // 現在の選択値を保存
 							// $sele2の内容を空にする
 							$sele2.empty();
 
@@ -147,6 +148,10 @@ file that was distributed with this source code.
 										$sele2.append(option);
 									}
 								});
+							}
+							// 再設定（前の選択があればそれを再選択）
+							if (currentVal) {
+								$sele2.val(currentVal);
 							}
 						}
 
@@ -170,6 +175,35 @@ file that was distributed with this source code.
 					}
 				});
 			});
+		});
+	</script>
+	<script>
+		// プルダウンが選択されたときに要素を更新する
+		function updateProductClassId() {
+			const id1 = $('select[name="add_cart[classcategory_id1]"]').val();
+			const id2 = $('select[name="add_cart[classcategory_id2]"]').val();
+			console.log(id1);
+			console.log(id2);
+			console.log(eccube.classCategories);
+
+			if (eccube.classCategories &&
+				eccube.classCategories[id1] &&
+				eccube.classCategories[id1][id2]
+			) {
+				const productClassId = eccube.classCategories[id1][id2].product_class_id;
+				$('input[name="add_cart[ProductClass]"]').val(productClassId);
+			} else {
+				$('input[name="add_cart[ProductClass]"]').val('');
+			}
+			console.log($('input[name="add_cart[ProductClass]"]').val());
+		}
+
+		$('select[name="add_cart[classcategory_id1]"]').on('change', function () {
+			// set classcategory_id2 options...
+			updateProductClassId();
+		});
+		$('select[name="add_cart[classcategory_id2]"]').on('change', function () {
+			updateProductClassId();
 		});
 	</script>
     <script>
@@ -203,38 +237,57 @@ file that was distributed with this source code.
             $('.add-cart').on('click', function(event) {
                 {% if form.classcategory_id1 is defined %}
                 // 規格1フォームの必須チェック
-                if ($('#classcategory_id1').val() == '__unselected' || $('#classcategory_id1').val() == '') {
-                    $('#classcategory_id1')[0].setCustomValidity('{{ '項目が選択されていません'|trans }}');
-                    return true;
-                } else {
-                    $('#classcategory_id1')[0].setCustomValidity('');
-                }
+                const $cat1 = $('select[name="add_cart[classcategory_id1]"]');
+				if ($cat1.length > 0) {
+					if ($cat1.val() === '__unselected' || $cat1.val() === '') {
+						$cat1[0].setCustomValidity('{{ '項目が選択されていません'|trans }}');
+						return true;
+					} else {
+						$cat1[0].setCustomValidity('');
+					}
+				}
                 {% endif %}
 
                 {% if form.classcategory_id2 is defined %}
                 // 規格2フォームの必須チェック
-                if ($('#classcategory_id2').val() == '__unselected' || $('#classcategory_id2').val() == '') {
-                    $('#classcategory_id2')[0].setCustomValidity('{{ '項目が選択されていません'|trans }}');
-                    return true;
-                } else {
-                    $('#classcategory_id2')[0].setCustomValidity('');
-                }
+                const $cat2 = $('select[name="add_cart[classcategory_id2]"]');
+				if ($cat2.length > 0) {
+					if ($cat2.val() === '__unselected' || $cat2.val() === '') {
+						$cat2[0].setCustomValidity('{{ '項目が選択されていません'|trans }}');
+						return true;
+					} else {
+						$cat2[0].setCustomValidity('');
+					}
+				}
                 {% endif %}
 
                 // 個数フォームのチェック(通常注文)
-					if ($('#normal_quantity').val() < 1) {
-						$('#normal_quantity')[0].setCustomValidity('{{ '1以上で入力してください。'|trans }}');
+					const $normalQty = $('#add_cart_normal_quantity');
+					if ($normalQty.length && $normalQty.val() < 1) {
+						$normalQty[0].setCustomValidity('{{ '1以上で入力してください。'|trans }}');
 						return true;
 					} else {
-						$('#normal_quantity')[0].setCustomValidity('');
+						$normalQty[0].setCustomValidity('');
 					}
                 // 個数フォームのチェック(定期便)
-					if ($('#subscription_quantity').val() < 1) {
-						$('#subscription_quantity')[0].setCustomValidity('{{ '1以上で入力してください。'|trans }}');
+					const $subQty = $('#add_cart_subscription_quantity');
+					if ($subQty.length && $subQty.val() < 1) {
+						$subQty[0].setCustomValidity('{{ '1以上で入力してください。'|trans }}');
 						return true;
 					} else {
-						$('#subscription_quantity')[0].setCustomValidity('');
+						$subQty[0].setCustomValidity('');
 					}
+
+				// 商品規格IDの設定
+				const selectedId1 = $('select[name="add_cart[classcategory_id1]"]').val();
+				const selectedId2 = $('select[name="add_cart[classcategory_id2]"]').val();
+				if (eccube.productsClassCategories[selectedId1] &&
+					eccube.productsClassCategories[selectedId1][selectedId2]) {
+					const productClassId = eccube.productsClassCategories[selectedId1][selectedId2].product_class_id;
+					$('input[name="add_cart[ProductClass]"]').val(productClassId);
+				}
+				// productsClassの値を更新
+				updateProductClassId();
 
                 event.preventDefault();
                 $form = $('#form1');
