@@ -182,9 +182,6 @@ file that was distributed with this source code.
 		function updateProductClassId() {
 			const id1 = $('select[name="add_cart[classcategory_id1]"]').val();
 			const id2 = $('select[name="add_cart[classcategory_id2]"]').val();
-			console.log(id1);
-			console.log(id2);
-			console.log(eccube.classCategories);
 
 			if (eccube.classCategories &&
 				eccube.classCategories[id1] &&
@@ -195,7 +192,6 @@ file that was distributed with this source code.
 			} else {
 				$('input[name="add_cart[ProductClass]"]').val('');
 			}
-			console.log($('input[name="add_cart[ProductClass]"]').val());
 		}
 
 		$('select[name="add_cart[classcategory_id1]"]').on('change', function () {
@@ -278,14 +274,6 @@ file that was distributed with this source code.
 						$subQty[0].setCustomValidity('');
 					}
 
-				// 商品規格IDの設定
-				const selectedId1 = $('select[name="add_cart[classcategory_id1]"]').val();
-				const selectedId2 = $('select[name="add_cart[classcategory_id2]"]').val();
-				if (eccube.productsClassCategories[selectedId1] &&
-					eccube.productsClassCategories[selectedId1][selectedId2]) {
-					const productClassId = eccube.productsClassCategories[selectedId1][selectedId2].product_class_id;
-					$('input[name="add_cart[ProductClass]"]').val(productClassId);
-				}
 				// productsClassの値を更新
 				updateProductClassId();
 
