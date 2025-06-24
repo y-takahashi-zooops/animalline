@@ -16,6 +16,113 @@ file that was distributed with this source code.
     <script>
         eccube.productsClassCategories = {{ products_class_categories_json|raw }};
 
+		function waitForElement(selector, callback, retries = 10) {
+			const el = document.querySelector(selector);
+			if (el) {
+				callback(el);
+			} else if (retries > 0) {
+				setTimeout(() => waitForElement(selector, callback, retries - 1), 100);
+			} else {
+				console.warn('Element not found:', selector);
+			}
+		}
+
+		function waitForTranslator(callback, retries = 10) {
+			if (typeof Translator !== 'undefined') {
+				callback();
+			} else if (retries > 0) {
+				setTimeout(() => waitForTranslator(callback, retries - 1), 100);
+			} else {
+				console.warn("Translator is not loaded yet.");
+				callback(); // fallback 実行
+			}
+		}
+
+		document.addEventListener('DOMContentLoaded', function () {
+            $('.ec-shelfGrid__item form').each(function () {
+                try {
+                    const $form = $(this);
+                    const productId = $form.find('input[name="add_cart[product_id]"]').val();
+                    const $sele1 = $form.find('select[name="add_cart[classcategory_id1]"]');
+                    const $sele2 = $form.find('select[name="add_cart[classcategory_id2]"]');
+
+                    function fnSetClassCategories() {
+                        const currentVal = $sele2.val();
+                        $sele2.empty();
+                        $sele2.append($('<option></option>').attr('value', '__unselected').text('選択してください'));
+
+                        const classcat_id1 = $sele1.val();
+                        const categories = eccube.productsClassCategories?.[productId]?.[classcat_id1];
+                        if (categories) {
+                            $.each(categories, function (key, value) {
+                                if (key !== '#') {
+                                    $sele2.append(
+                                        $('<option></option>').attr('value', value.classcategory_id2).text(value.name)
+                                    );
+                                }
+                            });
+                        }
+
+                        if (currentVal) {
+                            $sele2.val(currentVal);
+                        }
+                    }
+
+                    $sele1.on('change', fnSetClassCategories);
+                    // 初期化
+                    fnSetClassCategories();
+
+                    {% if form.classcategory_id2 is defined %}
+                        fnSetClassCategories({{ form.classcategory_id2.vars.value|json_encode|raw }});
+                    {% elseif form.classcategory_id1 is defined %}
+                        eccube.checkStock($form, {{ Product.id }}, {{ form.classcategory_id1.vars.value|json_encode|raw }}, null);
+                    {% else %}
+                        // classCategoriesがない商品に関してはデフォルト値のvalを設定する
+                        // $form.find('input[name="add_cart[ProductClass]"]').val(eccube.productsClassCategories.__unselected2[""].product_class_id);
+                        if (eccube.productsClassCategories[productId]
+                                && eccube.productsClassCategories[productId]['__unselected']
+                                && eccube.productsClassCategories[productId]['__unselected']['']
+                        ) {
+                            const defaultProductClassId = eccube.productsClassCategories[productId]['__unselected'][''].product_class_id;
+                            $form.find('input[name="add_cart[ProductClass]"]').val(defaultProductClassId);
+                        }
+                        fnSetClassCategories('');
+                    {% endif %}
+                } catch (e) {
+						console.error("Error setting productsClassCategories:", e);
+				}
+            });
+		});
+	</script>
+    <script>
+        // プルダウンが選択されたときに要素を更新する
+        function updateProductClassId(selectElement) {
+            const $select = $(selectElement);
+            const $form = $select.closest('form');
+
+            const productId = $form.find('input[name="add_cart[product_id]"]').val();
+            const id1 = $form.find('select[name="add_cart[classcategory_id1]"]').val();
+            const id2 = $form.find('select[name="add_cart[classcategory_id2]"]').val();
+
+            if (eccube.productsClassCategories?.[productId]?.[id1]?.[id2]) {
+                const productClassId = eccube.productsClassCategories[productId][id1][id2].product_class_id;
+                $form.find('input[name="add_cart[ProductClass]"]').val(productClassId);
+            } else {
+                $form.find('input[name="add_cart[ProductClass]"]').val('');
+            }
+        }
+
+        // ProductClass更新処理を呼び出し
+        $('select[name="add_cart[classcategory_id1]"]').on('change', function () {
+            updateProductClassId(this);
+        });
+        $('select[name="add_cart[classcategory_id2]"]').on('change', function () {
+            updateProductClassId(this);
+        });
+	</script>
+    <script>
+        eccube.productsClassCategories = {{ products_class_categories_json|raw }};
+
         $(function() {
 
             // 表示件数を変更
@@ -39,20 +146,16 @@ file that was distributed with this source code.
 
                 var $form = $(this).parents('li').find('form');
 
-                const productId = $(this).data('cartid');
+                // ここで一度 ProductClass を明示的に更新
+                const $sele1 = $form.find('select[name="add_cart[classcategory_id1]"]');
+                const $sele2 = $form.find('select[name="add_cart[classcategory_id2]"]');
+                const id1 = $sele1.val();
+                const id2 = $sele2.val();
+                const productId = $form.find('input[name="add_cart[product_id]"]').val();
 
-                // productDataを取得（オプショナルチェーンは使わずES5で書く）
-                var productData = (
-                    eccube.productsClassCategories &&
-                    eccube.productsClassCategories[productId] &&
-                    eccube.productsClassCategories[productId]['__unselected'] &&
-                    eccube.productsClassCategories[productId]['__unselected']['']
-                ) ? eccube.productsClassCategories[productId]['__unselected'][''] : null;
-
-                if (productData && productData.product_class_id) {
-                    $form.find('input[name="add_cart[ProductClass]"]').val(productData.product_class_id);
-                } else {
-                    console.warn("product_class_idが見つかりません");
+                if (eccube.productsClassCategories?.[productId]?.[id1]?.[id2]) {
+                    const productClassId = eccube.productsClassCategories[productId][id1][id2].product_class_id;
+                    $form.find('input[name="add_cart[ProductClass]"]').val(productClassId);
                 }
 
                 // 個数フォームのチェック
