@@ -129,26 +129,24 @@ file that was distributed with this source code.
 						// 初期設定
 						function fnSetClassCategories() {
 							const currentVal = $sele2.val(); // 現在の選択値を保存
-							// $sele2の内容を空にする
 							$sele2.empty();
-
 							// デフォルトの「選択してください」を追加
-							const defaultOption = $('<option></option>').attr('value', '__unselected').text('選択してください');
-							$sele2.append(defaultOption);
+							$sele2.append($('<option></option>').attr('value', '__unselected').text('選択してください'));
 
 							// 規格2のオプションを追加
-							const classCategories = eccube.classCategories;
-							const classcat_id1 = $sele1.val();  // 規格1の選択値を取得
-							if (classCategories[classcat_id1]) {
-								$.each(classCategories[classcat_id1], function(key, value) {
-									if (key !== '#') {  // 「選択してください」のオプションはスキップ
-										const option = $('<option></option>')
-											.attr('value', value.classcategory_id2)
-											.text(value.name);
-										$sele2.append(option);
+							const classcat_id1 = $sele1.val();
+							const categories = eccube.classCategories?.[classcat_id1];
+							if (categories) {
+								$.each(categories, function (key, value) {
+									if (key !== '#') {
+										// 「選択してください」のオプションはスキップ
+										$sele2.append(
+											$('<option></option>').attr('value', value.classcategory_id2).text(value.name)
+										);
 									}
 								});
 							}
+
 							// 再設定（前の選択があればそれを再選択）
 							if (currentVal) {
 								$sele2.val(currentVal);
@@ -166,7 +164,14 @@ file that was distributed with this source code.
 							eccube.checkStock($form, {{ Product.id }}, {{ form.classcategory_id1.vars.value|json_encode|raw }}, null);
 						{% else %}
 							// classCategoriesがない商品に関してはデフォルト値のvalを設定する
-							$form.find('input[name="add_cart[ProductClass]"]').val(eccube.classCategories.__unselected2[""].product_class_id);
+							// $form.find('input[name="add_cart[ProductClass]"]').val(eccube.classCategories.__unselected2[""].product_class_id);
+							if (eccube.classCategories
+                                && eccube.classCategories['__unselected']
+                                && eccube.classCategories['__unselected']['']
+							) {
+								const defaultProductClassId = eccube.classCategories['__unselected'][''].product_class_id;
+								$form.find('input[name="add_cart[ProductClass]"]').val(defaultProductClassId);
+							}
 							fnSetClassCategories('');
 						{% endif %}
 
@@ -181,7 +186,8 @@ file that was distributed with this source code.
 		// プルダウンが選択されたときに要素を更新する
 		function updateProductClassId() {
 			const id1 = $('select[name="add_cart[classcategory_id1]"]').val();
-			const id2 = $('select[name="add_cart[classcategory_id2]"]').val();
+			const id2Element = $('select[name="add_cart[classcategory_id2]"]');
+    		const id2 = id2Element.length > 0 ? id2Element.val() : '';
 
 			if (eccube.classCategories &&
 				eccube.classCategories[id1] &&

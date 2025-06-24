@@ -47,15 +47,18 @@ file that was distributed with this source code.
                     const $sele2 = $form.find('select[name="add_cart[classcategory_id2]"]');
 
                     function fnSetClassCategories() {
-                        const currentVal = $sele2.val();
+                        const currentVal = $sele2.val(); // 現在の選択値を保存
                         $sele2.empty();
+                        // デフォルトの「選択してください」を追加
                         $sele2.append($('<option></option>').attr('value', '__unselected').text('選択してください'));
 
+                        // 規格2のオプションを追加
                         const classcat_id1 = $sele1.val();
                         const categories = eccube.productsClassCategories?.[productId]?.[classcat_id1];
                         if (categories) {
                             $.each(categories, function (key, value) {
                                 if (key !== '#') {
+                                    // 「選択してください」のオプションはスキップ
                                     $sele2.append(
                                         $('<option></option>').attr('value', value.classcategory_id2).text(value.name)
                                     );
@@ -63,6 +66,7 @@ file that was distributed with this source code.
                             });
                         }
 
+                        // 再設定（前の選択があればそれを再選択）
                         if (currentVal) {
                             $sele2.val(currentVal);
                         }
