@@ -13,8 +13,8 @@
 
 namespace Eccube\Repository;
 
+use Doctrine\Persistence\ManagerRegistry as RegistryInterface;
 use Eccube\Entity\ProductTag;
-use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * ProductTagRepository
@@ -24,7 +24,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ProductTagRepository extends AbstractRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, ProductTag::class);
     }
