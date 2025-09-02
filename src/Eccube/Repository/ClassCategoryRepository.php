@@ -15,6 +15,7 @@ namespace Eccube\Repository;
 
 use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
+use Doctrine\Persistence\ManagerRegistry as RegistryInterface;
 use Eccube\Entity\ClassCategory;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -29,10 +30,10 @@ class ClassCategoryRepository extends AbstractRepository
     /**
      * ClassCategoryRepository constructor.
      *
-     * @param ManagerRegistry $registry
+     * @param RegistryInterface $registry
      */
     public function __construct(
-        ManagerRegistry $registry
+        RegistryInterface $registry
     ) {
         parent::__construct($registry, ClassCategory::class);
     }
@@ -44,7 +45,7 @@ class ClassCategoryRepository extends AbstractRepository
      *
      * @return array 規格カテゴリの配列
      */
-    public function getList(\Eccube\Entity\ClassName $ClassName = null)
+    public function getList(?\Eccube\Entity\ClassName $ClassName = null)
     {
         $qb = $this->createQueryBuilder('cc')
             ->orderBy('cc.sort_no', 'DESC'); // TODO ClassName ごとにソートした方が良いかも
