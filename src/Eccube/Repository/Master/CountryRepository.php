@@ -13,9 +13,9 @@
 
 namespace Eccube\Repository\Master;
 
+use Doctrine\Persistence\ManagerRegistry as RegistryInterface;
 use Eccube\Entity\Master\Country;
 use Eccube\Repository\AbstractRepository;
-use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * CountryRepository
@@ -25,7 +25,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CountryRepository extends AbstractRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Country::class);
     }
