@@ -14,8 +14,8 @@
 namespace Eccube\Repository;
 
 use Doctrine\ORM\Query;
+use Doctrine\Persistence\ManagerRegistry as RegistryInterface;
 use Eccube\Entity\Payment;
-use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * PaymentRepository
@@ -28,9 +28,9 @@ class PaymentRepository extends AbstractRepository
     /**
      * PaymentRepository constructor.
      *
-     * @param ManagerRegistry $registry
+     * @param RegistryInterface $registry
      */
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Payment::class);
     }
@@ -61,7 +61,7 @@ class PaymentRepository extends AbstractRepository
     public function findPayments($delivery, $returnType = false)
     {
         $query = $this->createQueryBuilder('p')
-            ->innerJoin('Eccube\Entity\PaymentOption', 'po', 'WITH', 'po.payment_id = p.id')
+            ->innerJoin(\Eccube\Entity\PaymentOption::class, 'po', 'WITH', 'po.payment_id = p.id')
             ->where('po.Delivery = (:delivery) AND p.visible = true')
             ->orderBy('p.sort_no', 'DESC')
             ->setParameter('delivery', $delivery)

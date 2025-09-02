@@ -14,9 +14,9 @@
 namespace Eccube\Repository;
 
 use Doctrine\ORM\NoResultException;
+use Doctrine\Persistence\ManagerRegistry as RegistryInterface;
 use Eccube\Common\EccubeConfig;
 use Eccube\Entity\Page;
-use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * PageRepository
@@ -52,12 +52,11 @@ class PageRepository extends AbstractRepository
     /**
      * PageRepository constructor.
      *
-     * @param ManagerRegistry $registry
+     * @param RegistryInterface $registry
      * @param EccubeConfig $eccubeConfig
-     * @param ContainerInterface $container
      */
     public function __construct(
-        ManagerRegistry $registry,
+        RegistryInterface $registry,
         EccubeConfig $eccubeConfig,
         string $userDataRealDir,
         string $templateRealDir,
@@ -122,7 +121,7 @@ class PageRepository extends AbstractRepository
      */
     public function newPage()
     {
-        $Page = new \Eccube\Entity\Page();
+        $Page = new Page();
         $Page->setEditType(Page::EDIT_TYPE_USER);
 
         return $Page;
