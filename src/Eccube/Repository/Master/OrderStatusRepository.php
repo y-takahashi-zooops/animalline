@@ -13,11 +13,11 @@
 
 namespace Eccube\Repository\Master;
 
-use Eccube\Entity\Master\OrderStatus;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
+use Doctrine\Persistence\ManagerRegistry as RegistryInterface;
+use Eccube\Entity\Master\OrderStatus;
 use Eccube\Repository\AbstractRepository;
-use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * OrderStatusRepository
@@ -30,9 +30,9 @@ class OrderStatusRepository extends AbstractRepository
     /**
      * OrderStatusRepository constructor.
      *
-     * @param ManagerRegistry $registry
+     * @param RegistryInterface $registry
      */
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, OrderStatus::class);
     }
@@ -44,14 +44,14 @@ class OrderStatusRepository extends AbstractRepository
      *
      * @param array $criteria
      * @param array $orderBy
-     * @param integer $limit
-     * @param integer $offset
+     * @param int $limit
+     * @param int $offset
      *
      * @return array
      *
      * @see EntityRepository::findBy()
      */
-    public function findNotContainsBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+    public function findNotContainsBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null)
     {
         $qb = $this->createQueryBuilder('o');
 
