@@ -13,8 +13,8 @@
 
 namespace Eccube\Repository;
 
+use Doctrine\Persistence\ManagerRegistry as RegistryInterface;
 use Eccube\Entity\BlockPosition;
-use Doctrine\Persistence\ManagerRegistry; 
 
 /**
  * BlockPositionRepository
@@ -33,9 +33,9 @@ class BlockPositionRepository extends AbstractRepository
      * BlockPositionRepository constructor.
      *
      * @param BlockRepository $blockRepository
-     * @param ManagerRegistry $registry
+     * @param RegistryInterface $registry
      */
-    public function __construct(BlockRepository $blockRepository, ManagerRegistry $registry)
+    public function __construct(BlockRepository $blockRepository, RegistryInterface $registry)
     {
         parent::__construct($registry, BlockPosition::class);
         $this->blockRepository = $blockRepository;

@@ -13,8 +13,8 @@
 
 namespace Eccube\Repository;
 
+use Doctrine\Persistence\ManagerRegistry as RegistryInterface;
 use Eccube\Entity\Cart;
-use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * CartRepository
@@ -24,7 +24,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CartRepository extends AbstractRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Cart::class);
     }
