@@ -13,9 +13,9 @@
 
 namespace Eccube\Repository;
 
+use Doctrine\Persistence\ManagerRegistry as RegistryInterface;
 use Eccube\Entity\Delivery;
 use Eccube\Entity\Payment;
-use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * DelivRepository
@@ -25,7 +25,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class DeliveryRepository extends AbstractRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Delivery::class);
     }

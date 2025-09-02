@@ -13,8 +13,8 @@
 
 namespace Eccube\Repository;
 
+use Doctrine\Persistence\ManagerRegistry as RegistryInterface;
 use Eccube\Entity\CustomerAddress;
-use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * CustomerAddressRepository
@@ -27,9 +27,9 @@ class CustomerAddressRepository extends AbstractRepository
     /**
      * CustomerAddressRepository constructor.
      *
-     * @param ManagerRegistry $registry
+     * @param RegistryInterface $registry
      */
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, CustomerAddress::class);
     }
@@ -37,7 +37,7 @@ class CustomerAddressRepository extends AbstractRepository
     /**
      * お届け先を削除します.
      *
-     * @param \Eccube\Entity\CustomerAddress $CustomerAddress
+     * @param CustomerAddress $CustomerAddress
      */
     public function delete($CustomerAddress)
     {
