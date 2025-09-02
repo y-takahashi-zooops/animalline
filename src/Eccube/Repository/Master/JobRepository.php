@@ -13,9 +13,9 @@
 
 namespace Eccube\Repository\Master;
 
+use Doctrine\Persistence\ManagerRegistry as RegistryInterface;
 use Eccube\Entity\Master\Job;
 use Eccube\Repository\AbstractRepository;
-use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * JobRepository
@@ -25,7 +25,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class JobRepository extends AbstractRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Job::class);
     }
