@@ -17,8 +17,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
+use Doctrine\Persistence\ManagerRegistry as RegistryInterface;
 use Eccube\Entity\News;
-use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * NewsRepository
@@ -28,7 +28,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class NewsRepository extends AbstractRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, News::class);
     }
