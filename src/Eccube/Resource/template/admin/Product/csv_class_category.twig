@@ -10,14 +10,15 @@ file that was distributed with this source code.
 #}
 {% extends '@admin/default_frame.twig' %}
 
-{% set menus = ['product', 'category_csv_import'] %}
+{% set menus = ['product', 'class_category_csv_import'] %}
 
-{% block title %}{{ 'admin.product.category_csv_upload'|trans }}{% endblock %}
+{% block title %}{{ 'admin.product.class_category_csv_upload'|trans }}{% endblock %}
 {% block sub_title %}{{ 'admin.product.product_management'|trans }}{% endblock %}
 
 {% form_theme form '@admin/Form/bootstrap_4_horizontal_layout.html.twig' %}
 
 {% block javascript %}
+    <script src="{{ asset('assets/js/vendor/spin.min.js', 'admin') }}"></script>
     <script>
         $(function() {
 
@@ -66,16 +67,16 @@ file that was distributed with this source code.
             <div class="c-primaryCol">
                 <div class="card rounded border-0 mb-4">
                     <div class="card-header">
-                        <div class="d-inline-block" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ 'tooltip.category.csv_upload'|trans }}"><span>{{ 'admin.common.csv_upload'|trans }}</span><i class="fa fa-question-circle fa-lg fa-lg ms-1"></i></div>
+                        <div class="d-inline-block" data-tooltip="true" data-placement="top" title="{{ 'tooltip.class_category.csv_upload'|trans }}"><span>{{ 'admin.common.csv_upload'|trans }}</span><i class="fa fa-question-circle fa-lg fa-lg ml-1"></i></div>
                     </div>
                     <div id="ex-csv_category-upload" class="card-body">
                         <div class="row">
                             <div class="col-2"><span>{{ 'admin.common.csv_select'|trans }}</span></div>
                             <div class="col">
-                                <form id="upload-form" method="post" action="{{ url('admin_product_category_csv_import') }}" enctype="multipart/form-data">
+                                <form id="upload-form" method="post" action="{{ url('admin_product_class_category_csv_import') }}" enctype="multipart/form-data">
                                     {{ form_widget(form._token) }}
                                     <div class="mb-2">
-                                        <span id="file-select" class="btn btn-ec-regular me-2">{{ 'admin.common.file_select'|trans }}</span>
+                                        <span id="file-select" class="btn btn-ec-regular mr-2">{{ 'admin.common.file_select'|trans }}</span>
                                         <span id="admin_csv_import_import_file_name">{{ 'admin.common.file_select_empty'|trans }}</span>
                                         {{ form_widget(form.import_file, {'attr': {'accept': 'text/csv,text/tsv', 'class': 'd-none'}}) }}
                                         {{ form_errors(form.import_file) }}
@@ -94,14 +95,14 @@ file that was distributed with this source code.
                     <div class="card-header">
                         <div class="row justify-content-between">
                             <div class="col-6">
-                                <div class="d-inline-block" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ 'tooltip.category.csv_format'|trans }}"><span class="align-middle">{{ 'admin.common.csv_format'|trans }}</span><i class="fa fa-question-circle fa-lg fa-lg ms-1"></i></div>
+                                <div class="d-inline-block" data-tooltip="true" data-placement="top" title="{{ 'tooltip.class_category.csv_format'|trans }}"><span class="align-middle">{{ 'admin.common.csv_format'|trans }}</span><i class="fa fa-question-circle fa-lg fa-lg ml-1"></i></div>
                             </div>
                             <div class="col-4 text-end">
-                                <a href="{{ url('admin_product_csv_template', {'type': 'category'}) }}" class="btn btn-ec-regular" id="download-button">{{ 'admin.common.csv_skeleton_download'|trans }}</a>
+                                <a href="{{ url('admin_product_csv_template', {'type': 'class_category'}) }}" class="btn btn-ec-regular" id="download-button">{{ 'admin.common.csv_skeleton_download'|trans }}</a>
                             </div>
                         </div>
                     </div>
-                    <div id="ex-csv_category-format" class="card-body">
+                    <div id="ex-csv_class_name-format" class="card-body">
                         <table class="table table-striped table-bordered">
                             <tbody>
                             {% for header, key in headers %}
@@ -113,7 +114,7 @@ file that was distributed with this source code.
                                     </th>
                                     <td class="align-middle">
                                         {% if key.description %}
-                                            {{ key.description|trans }}
+                                            {{ key.description|trans|raw }}
                                         {% endif %}
                                     </td>
                                 </tr>
