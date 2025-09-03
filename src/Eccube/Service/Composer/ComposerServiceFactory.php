@@ -13,8 +13,7 @@
 
 namespace Eccube\Service\Composer;
 
-use Eccube\Entity\BaseInfo;
-use Eccube\Repository\BaseInfoRepository;
+use Psr\Container\ContainerInterface;
 
 class ComposerServiceFactory
 {
