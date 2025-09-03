@@ -82,7 +82,7 @@ class LogType extends AbstractType
                     new Assert\NotBlank(),
                     new Assert\Range(['min' => 1, 'max' => 50000]),
                 ],
-            ]);
+            ])
             ->add('download', SubmitType::class, [
                 'label' => 'admin.common.download',
             ]);

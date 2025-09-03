@@ -13,12 +13,11 @@
 
 namespace Eccube\Twig;
 
-use Twig\Template as TwigBaseTemplate;
-use Twig\Source;
 use Eccube\Event\TemplateEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Twig\Source;
 
-class Template extends TwigBaseTemplate
+class Template extends \Twig\Template
 {
     /**
      * {@inheritdoc}
@@ -34,7 +33,7 @@ class Template extends TwigBaseTemplate
             $eventDispatcher = $globals['event_dispatcher'];
             $originCode = $this->env->getLoader()->getSourceContext($this->getTemplateName())->getCode();
             $event = new TemplateEvent($this->getTemplateName(), $originCode, $context);
-            $eventDispatcher->dispatch($event, $this->getTemplateName() );
+            $eventDispatcher->dispatch($event, $this->getTemplateName());
             if ($event->getSource() !== $originCode) {
                 $newTemplate = $this->env->createTemplate($event->getSource());
                 $newTemplate->display($event->getParameters(), $blocks);
@@ -44,15 +43,6 @@ class Template extends TwigBaseTemplate
         } else {
             parent::display($context, $blocks);
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getSourceContext()
-    {
-        // FIXME Twig\Loader\FilesystemLoader の実装を持ってきたが,これで問題ないか要確認
-        return new Source('', $this->getTemplateName(), '');
     }
 
     public function getTemplateName(): string
@@ -69,9 +59,15 @@ class Template extends TwigBaseTemplate
         return [];
     }
 
-    protected function doDisplay(array $context, array $blocks = []): iterable
+    protected function doDisplay(array $context, array $blocks = []): \Traversable|array
     {
-        // キャッシュ生成時にTwig側が動的に生成するので空でもOK
+        // Templateのキャッシュ作成時に動的に作成されるメソッド
         return [];
+    }
+
+    public function getSourceContext(): \Twig\Source
+    {
+        // FIXME Twig\Loader\FilesystemLoader の実装を持ってきたが,これで問題ないか要確認
+        return new Source('', $this->getTemplateName(), '');
     }
 }

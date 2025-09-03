@@ -253,11 +253,12 @@ class OrderHelper extends BaseOrderHelper
      * セッションに保持されている非会員情報を取得する.
      * 非会員購入時に入力されたお客様情報を返す.
      *
+     * @param string $session_key
      * @return Customer
      */
-    public function getNonMember()
+    public function getNonMember($session_key = self::SESSION_NON_MEMBER)
     {
-        $NonMember = $this->session->get(self::SESSION_NON_MEMBER);
+        $NonMember = $this->session->get($session_key);
         if ($NonMember && $NonMember->getPref()) {
             $Pref = $this->prefRepository->find($NonMember->getPref()->getId());
             $NonMember->setPref($Pref);
