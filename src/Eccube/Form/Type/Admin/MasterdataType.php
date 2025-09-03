@@ -50,7 +50,7 @@ class MasterdataType extends AbstractType
         $masterdata = [];
 
         // /** @var MappingDriverChain $driverChain */
-        // $driverChain = $this->entityManager->getConfiguration()->getMetadataDriverImpl();
+        // $driverChain = $this->entityManager->getConfiguration()->getMetadataDriverImpl()->getDriver();
         // /** @var MappingDriver[] $drivers */
         // $drivers = $driverChain->getDrivers();
 
@@ -60,6 +60,11 @@ class MasterdataType extends AbstractType
         //         foreach ($classNames as $className) {
         //             /** @var ClassMetadata $meta */
         //             $meta = $this->entityManager->getMetadataFactory()->getMetadataFor($className);
+        //             // OrderStatus/OrderStatusColorは対象外
+        //             // @see https://github.com/EC-CUBE/ec-cube/pull/4844
+        //             if (in_array($meta->getName(), [OrderStatus::class, OrderStatusColor::class, CustomerOrderStatus::class])) {
+        //                 continue;
+        //             }
         //             if (strpos($meta->rootEntityName, 'Master') !== false
         //                 && $meta->hasField('id')
         //                 && $meta->hasField('name')
@@ -96,7 +101,7 @@ class MasterdataType extends AbstractType
                     new Assert\NotBlank(),
                 ],
             ])
-            ;
+        ;
     }
 
     /**

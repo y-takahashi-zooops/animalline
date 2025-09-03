@@ -1,32 +1,16 @@
 security:
+    enable_authenticator_manager: true
     password_hashers:
         legacy:
-            algorithm: sha256
-            encode_as_base64: false
-            iterations: 1
-
-        # Eccube\Entity\Customer:
-        #     # algorithm: sodium
-        #     algorithm: bcrypt
-        #     migrate_from:
-        #         - bcrypt
-        #         - legacy
-
-        App\Hasher\LegacyCustomerPasswordHasher:
-            id: App\Hasher\LegacyCustomerPasswordHasher
-
-        Eccube\Entity\Member:
-            # algorithm: sodium
-            algorithm: bcrypt
-            migrate_from:
-                - bcrypt
-
+            id: 'Eccube\Security\PasswordHasher\PasswordHasher'
         Eccube\Entity\Customer:
-            algorithm: auto
+            algorithm: 'auto'
             migrate_from:
-                # - App\Hasher\LegacyCustomerPasswordHasher
-                - bcrypt
-
+                - legacy
+        Eccube\Entity\Member:
+            algorithm: 'auto'
+            migrate_from:
+                - legacy
     providers:
         # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
         # In this example, users are stored via Doctrine in the database
@@ -55,6 +39,9 @@ security:
                 use_forward: false
                 success_handler: app.eccube.security.success_handler
                 failure_handler: eccube.security.failure_handler
+            login_throttling:
+                max_attempts: '%eccube_login_throttling_max_attempts%'
+                interval: '%eccube_login_throttling_interval%'
             logout:
                 path: admin_logout
                 target: admin_login
@@ -82,6 +69,9 @@ security:
                 use_forward: false
                 success_handler: app.eccube.security.success_handler
                 failure_handler: eccube.security.failure_handler
+            login_throttling:
+                max_attempts: '%eccube_login_throttling_max_attempts%'
+                interval: '%eccube_login_throttling_interval%'
             logout:
                 path: logout
                 target: adoption_top
@@ -104,6 +94,9 @@ security:
                 use_forward: false
                 success_handler: app.eccube.security.success_handler
                 failure_handler: eccube.security.failure_handler
+            login_throttling:
+                max_attempts: '%eccube_login_throttling_max_attempts%'
+                interval: '%eccube_login_throttling_interval%'
             logout:
                 path: logout
                 target: breeder_top
@@ -126,6 +119,9 @@ security:
                 use_forward: false
                 success_handler: app.eccube.security.success_handler
                 failure_handler: eccube.security.failure_handler
+            login_throttling:
+                max_attempts: '%eccube_login_throttling_max_attempts%'
+                interval: '%eccube_login_throttling_interval%'
             logout:
                 path: logout
                 target: homepage

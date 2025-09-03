@@ -9,6 +9,12 @@ monolog:
             # handler:  easylog
             handler: stream
             channels: ["!event"]
+        main:
+            type: rotating_file
+            path: '%kernel.logs_dir%/%kernel.environment%/site.log'
+            level: debug
+            formatter: eccube.log.formatter.line
+            max_files: 10
         # easylog:
         #     type: service
         #     id:   easycorp.easylog.handler
@@ -16,10 +22,3 @@ monolog:
             type: console
             process_psr_3_messages: false
             channels: ['!event', '!doctrine', '!console']
-
-# services:
-#     easycorp.easylog.handler:
-#         class: EasyCorp\EasyLog\EasyLogHandler
-#         public: false
-#         arguments:
-#             - '%kernel.logs_dir%/%kernel.environment%/site.log'

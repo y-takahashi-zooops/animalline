@@ -48,7 +48,7 @@ class AddCartType extends AbstractType
     /**
      * @var \Eccube\Entity\Product
      */
-    protected $Product = null;
+    protected $Product;
 
     /**
      * @var ProductClassRepository
@@ -68,7 +68,7 @@ class AddCartType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        /* @var $Product \Eccube\Entity\Product */
+        /** @var \Eccube\Entity\Product $Product */
         $Product = $options['product'];
         $this->Product = $Product;
         $ProductClasses = $Product->getProductClasses();
@@ -213,7 +213,7 @@ class AddCartType extends AbstractType
                 ]),
             ], '[classcategory_id1]');
         }
-        //商品規格2初期状態(未選択)の場合の返却値は「NULL」で「__unselected」ではない
+        // 商品規格2初期状態(未選択)の場合の返却値は「NULL」で「__unselected」ではない
         if ($this->Product->getClassName2()) {
             $context->getValidator()->validate($data['classcategory_id2'], [
                 new Assert\NotBlank(),

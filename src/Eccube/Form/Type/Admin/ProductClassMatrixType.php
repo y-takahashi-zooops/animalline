@@ -40,7 +40,7 @@ class ProductClassMatrixType extends AbstractType
                         ->orderBy('cn.sort_no', 'DESC');
                 },
                 'choice_label' => function (ClassName $className) {
-                    return sprintf("%s (%s)", $className->getName(), $className->getBackendName());
+                    return sprintf('%s (%s)', $className->getName(), $className->getBackendName());
                 },
                 'placeholder' => 'admin.product.select__class1',
                 'constraints' => [
@@ -54,12 +54,12 @@ class ProductClassMatrixType extends AbstractType
                         ->orderBy('cn.sort_no', 'DESC');
                 },
                 'choice_label' => function (ClassName $className) {
-                    return sprintf("%s (%s)", $className->getName(), $className->getBackendName());
+                    return sprintf('%s (%s)', $className->getName(), $className->getBackendName());
                 },
                 'placeholder' => 'admin.product.select__class2',
                 'constraints' => new Callback(function (
-                    ClassName $ClassName2 = null,
-                    ExecutionContextInterface $context
+                    ?ClassName $ClassName2 = null,
+                    ExecutionContextInterface $context,
                 ) {
                     $ClassName1 = $context->getRoot()->get('class_name1')->getData();
                     if ($ClassName1 && $ClassName2) {

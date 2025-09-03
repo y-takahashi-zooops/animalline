@@ -70,7 +70,8 @@ class AddPointProcessor extends ItemHolderPostValidator
         // 明細ごとのポイントを集計
         $totalPoint = array_reduce($itemHolder->getItems()->toArray(),
             function ($carry, ItemInterface $item) use ($basicPointRate) {
-                $pointRate = $item->isProduct() ? $item->getProductClass()->getPointRate() : null;
+                $pointRate = $item->getPointRate() ? $item->getPointRate() : null;
+
                 if ($pointRate === null) {
                     $pointRate = $basicPointRate;
                 }
@@ -83,7 +84,7 @@ class AddPointProcessor extends ItemHolderPostValidator
                 } elseif ($item->isProduct()) {
                     // ポイント = 単価 * ポイント付与率 * 数量
                     $point = round($item->getPrice() * ($pointRate / 100)) * $item->getQuantity();
-                } elseif($item->isDiscount()) {
+                } elseif ($item->isDiscount()) {
                     $point = round($item->getPrice() * ($pointRate / 100)) * $item->getQuantity();
                 }
 

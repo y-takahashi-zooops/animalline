@@ -2,6 +2,4 @@
 # https://symfony.com/doc/master/bundles/DoctrineBundle/configuration.html
 doctrine:
     orm:
-        result_cache_driver:
-            type: pool
-            pool: doctrine.result_cache_pool
+        result_cache_driver: ~

@@ -13,18 +13,18 @@
 
 namespace Eccube\Service\PurchaseFlow\Processor;
 
-use Eccube\Service\PurchaseFlow\ItemHolderPreprocessor;
 use Eccube\Entity\ItemHolderInterface;
-use Eccube\Service\PurchaseFlow\PurchaseContext;
-use Eccube\Entity\OrderItem;
-use Eccube\Repository\Master\OrderItemTypeRepository;
-use Eccube\Repository\Master\TaxDisplayTypeRepository;
 use Eccube\Entity\Master\OrderItemType;
 use Eccube\Entity\Master\TaxDisplayType;
-use Eccube\Entity\Order;
-use Eccube\Entity\Payment;
-use Eccube\Repository\Master\TaxTypeRepository;
 use Eccube\Entity\Master\TaxType;
+use Eccube\Entity\Order;
+use Eccube\Entity\OrderItem;
+use Eccube\Entity\Payment;
+use Eccube\Repository\Master\OrderItemTypeRepository;
+use Eccube\Repository\Master\TaxDisplayTypeRepository;
+use Eccube\Repository\Master\TaxTypeRepository;
+use Eccube\Service\PurchaseFlow\ItemHolderPreprocessor;
+use Eccube\Service\PurchaseFlow\PurchaseContext;
 
 class PaymentChargePreprocessor implements ItemHolderPreprocessor
 {
@@ -53,7 +53,7 @@ class PaymentChargePreprocessor implements ItemHolderPreprocessor
     public function __construct(
         OrderItemTypeRepository $orderItemTypeRepository,
         TaxDisplayTypeRepository $taxDisplayTypeRepository,
-        TaxTypeRepository $taxTypeRepository
+        TaxTypeRepository $taxTypeRepository,
     ) {
         $this->orderItemTypeRepository = $orderItemTypeRepository;
         $this->taxDisplayTypeRepository = $taxDisplayTypeRepository;
@@ -93,7 +93,6 @@ class PaymentChargePreprocessor implements ItemHolderPreprocessor
      */
     protected function addChargeItem(ItemHolderInterface $itemHolder)
     {
-        /** @var Order $itemHolder */
         $OrderItemType = $this->orderItemTypeRepository->find(OrderItemType::CHARGE);
         $TaxDisplayType = $this->taxDisplayTypeRepository->find(TaxDisplayType::INCLUDED);
         $Taxation = $this->taxTypeRepository->find(TaxType::TAXATION);

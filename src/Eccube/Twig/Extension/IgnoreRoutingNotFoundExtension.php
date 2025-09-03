@@ -13,28 +13,36 @@
 
 namespace Eccube\Twig\Extension;
 
-use Symfony\Bridge\Twig\Extension\RoutingExtension;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Extension\AbstractExtension;
+use Twig\Node\Expression\ArrayExpression;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Node;
 use Twig\TwigFunction;
 
+/**
+ * \Symfony\Bridge\Twig\Extension\RoutingExtension の拡張です.
+ * Symfony5 より \Symfony\Bridge\Twig\Extension\RoutingExtension が final になったため, 各メソッドを移植しています.
+ */
 class IgnoreRoutingNotFoundExtension extends AbstractExtension
 {
+    /** @var UrlGeneratorInterface */
+    private $generator;
 
-    private UrlGeneratorInterface $urlGenerator;
-
-    public function __construct(UrlGeneratorInterface $urlGenerator)
+    public function __construct(UrlGeneratorInterface $generator)
     {
-        $this->urlGenerator = $urlGenerator;
+        $this->generator = $generator;
     }
 
-
+    /**
+     * {@inheritdoc}
+     */
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('path', [$this, 'getPath']),
-            new TwigFunction('url', [$this, 'getUrl']),
+            new TwigFunction('url', [$this, 'getUrl'], ['is_safe_callback' => [$this, 'isUrlGenerationSafe']]),
+            new TwigFunction('path', [$this, 'getPath'], ['is_safe_callback' => [$this, 'isUrlGenerationSafe']]),
         ];
     }
 
@@ -45,31 +53,18 @@ class IgnoreRoutingNotFoundExtension extends AbstractExtension
      *
      * @param string $name
      * @param array $parameters
-     * @param int $referenceType
+     * @param bool $relative
      *
      * @return string
      */
-    public function getPath(string $name, array $parameters = [], int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): string
+    public function getPath($name, $parameters = [], $relative = false)
     {
-        /*try {
-            return parent::getPath($name, $parameters, $relative);
-        } catch (RouteNotFoundException $e) {
-            log_warning($e->getMessage(), ['exception' => $e]);
-
-            return parent::getPath('homepage').'404?bind='.$name;
-        }*/
-
         try {
-            return $this->urlGenerator->generate($name, $parameters, $referenceType);
+            return $this->generator->generate($name, $parameters, $relative ? UrlGeneratorInterface::RELATIVE_PATH : UrlGeneratorInterface::ABSOLUTE_PATH);
         } catch (RouteNotFoundException $e) {
             log_warning($e->getMessage(), ['exception' => $e]);
 
-            try {
-                return $this->urlGenerator->generate('homepage', [], $referenceType) . '404?bind=' . $name;
-            } catch (\Exception $e) {
-                // fallback if homepage is also missing
-                return '/404?bind=' . $name;
-            }
+            return $this->generator->generate('homepage', $parameters, $relative ? UrlGeneratorInterface::RELATIVE_PATH : UrlGeneratorInterface::ABSOLUTE_PATH).'404?bind='.$name;
         }
     }
 
@@ -84,26 +79,37 @@ class IgnoreRoutingNotFoundExtension extends AbstractExtension
      *
      * @return string
      */
-    public function getUrl(string $name, array $parameters = [], int $referenceType = UrlGeneratorInterface::ABSOLUTE_URL): string
+    public function getUrl($name, $parameters = [], $schemeRelative = false)
     {
-        /*try {
-            return parent::getUrl($name, $parameters, $schemeRelative);
-        } catch (RouteNotFoundException $e) {
-            log_warning($e->getMessage(), ['exception' => $e]);
-
-            return parent::getUrl('homepage').'404?bind='.$name;
-        }*/
         try {
-            return $this->urlGenerator->generate($name, $parameters, $referenceType);
+            return $this->generator->generate($name, $parameters, $schemeRelative ? UrlGeneratorInterface::NETWORK_PATH : UrlGeneratorInterface::ABSOLUTE_URL);
         } catch (RouteNotFoundException $e) {
             log_warning($e->getMessage(), ['exception' => $e]);
 
-            try {
-                return $this->urlGenerator->generate('homepage', [], $referenceType) . '404?bind=' . $name;
-            } catch (\Exception $e) {
-                // fallback if homepage is also missing
-                return '/404?bind=' . $name;
-            }
+            return $this->generator->generate('homepage', $parameters, $schemeRelative ? UrlGeneratorInterface::NETWORK_PATH : UrlGeneratorInterface::ABSOLUTE_URL).'404?bind='.$name;
         }
+    }
+
+    /**
+     * @param Node $argsNode The arguments of the path/url function
+     *
+     * @return array An array with the contexts the URL is safe
+     *
+     * @see \Symfony\Bridge\Twig\Extension\RoutingExtension
+     */
+    public function isUrlGenerationSafe(Node $argsNode): array
+    {
+        // support named arguments
+        $paramsNode = $argsNode->hasNode('parameters') ? $argsNode->getNode('parameters') : (
+            $argsNode->hasNode(1) ? $argsNode->getNode(1) : null
+        );
+
+        if (null === $paramsNode || $paramsNode instanceof ArrayExpression && \count($paramsNode) <= 2
+            && (!$paramsNode->hasNode(1) || $paramsNode->getNode(1) instanceof ConstantExpression)
+        ) {
+            return ['html'];
+        }
+
+        return [];
     }
 }

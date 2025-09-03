@@ -101,7 +101,7 @@ class PointProcessor implements DiscountProcessor, PurchaseProcessor
                     $discount = $this->pointHelper->pointToDiscount($usePoint);
                     $result = ProcessResult::warn(trans('purchase_flow.over_customer_point'), self::class);
                 }
-                // 受注登録・編集実行時
+            // 受注登録・編集実行時
             } else {
                 // 支払い金額 < 利用ポイントによる値引き額.
                 if ($itemHolder->getTotal() >= 0 && $itemHolder->getTotal() + $discount < 0) {
@@ -136,7 +136,7 @@ class PointProcessor implements DiscountProcessor, PurchaseProcessor
     }
 
     /**
-     * {@inheritdoc
+     * {@inheritdoc}
      */
     public function commit(ItemHolderInterface $target, PurchaseContext $context)
     {
@@ -144,7 +144,7 @@ class PointProcessor implements DiscountProcessor, PurchaseProcessor
     }
 
     /**
-     * {@inheritdoc
+     * {@inheritdoc}
      */
     public function rollback(ItemHolderInterface $itemHolder, PurchaseContext $context)
     {
