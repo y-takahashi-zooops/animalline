@@ -25,8 +25,8 @@ use Eccube\Repository\OrderRepository;
 use Eccube\Repository\ProductClassRepository;
 use Eccube\Service\Cart\CartItemAllocator;
 use Eccube\Service\Cart\CartItemComparator;
+use Eccube\Session\Session;
 use Eccube\Util\StringUtil;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -38,12 +38,12 @@ class CartService
     protected $carts;
 
     /**
-     * @var SessionInterface
+     * @var Session
      */
     protected $session;
 
     /**
-     * @var \Doctrine\ORM\EntityManagerInterface
+     * @var EntityManagerInterface
      */
     protected $entityManager;
 
@@ -101,7 +101,7 @@ class CartService
      * @param AuthorizationCheckerInterface $authorizationChecker
      */
     public function __construct(
-        SessionInterface $session,
+        Session $session,
         EntityManagerInterface $entityManager,
         ProductClassRepository $productClassRepository,
         CartRepository $cartRepository,
@@ -109,7 +109,7 @@ class CartService
         CartItemAllocator $cartItemAllocator,
         OrderRepository $orderRepository,
         TokenStorageInterface $tokenStorage,
-        AuthorizationCheckerInterface $authorizationChecker
+        AuthorizationCheckerInterface $authorizationChecker,
     ) {
         $this->session = $session;
         $this->entityManager = $entityManager;
@@ -407,14 +407,12 @@ class CartService
         }
 
         $this->session->set('cart_keys', $cartKeys);
-
-        return;
     }
 
     /**
      * @param  string $pre_order_id
      *
-     * @return \Eccube\Service\CartService
+     * @return CartService
      */
     public function setPreOrderId($pre_order_id)
     {
@@ -437,7 +435,7 @@ class CartService
     }
 
     /**
-     * @return \Eccube\Service\CartService
+     * @return CartService
      */
     public function clear()
     {
@@ -515,7 +513,7 @@ class CartService
     /**
      * @param string $allocatedId
      */
-    protected function createCartKey($allocatedId, Customer $Customer = null)
+    protected function createCartKey($allocatedId, ?Customer $Customer = null)
     {
         if ($Customer instanceof Customer) {
             return $Customer->getId().'_'.$allocatedId;
