@@ -49,9 +49,10 @@ class Template extends TwigBaseTemplate
     /**
      * {@inheritdoc}
      */
-    public function getSourceContext(): Source
+    public function getSourceContext()
     {
-        return $this->env->getLoader()->getSourceContext($this->getTemplateName());
+        // FIXME Twig\Loader\FilesystemLoader の実装を持ってきたが,これで問題ないか要確認
+        return new Source('', $this->getTemplateName(), '');
     }
 
     public function getTemplateName(): string
@@ -65,12 +66,12 @@ class Template extends TwigBaseTemplate
     public function getDebugInfo(): array
     {
         // Templateのキャッシュ作成時に動的に作成されるメソッド
-        return[];
+        return [];
     }
 
     protected function doDisplay(array $context, array $blocks = []): iterable
     {
         // キャッシュ生成時にTwig側が動的に生成するので空でもOK
-        return[];
+        return [];
     }
 }

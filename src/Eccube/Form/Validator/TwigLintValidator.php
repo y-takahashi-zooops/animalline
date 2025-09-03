@@ -18,21 +18,20 @@ use Symfony\Component\Validator\ConstraintValidator;
 use Twig\Error\Error;
 use Twig\Loader\ArrayLoader;
 use Twig\Source;
-use Twig\Environment;
 
 class TwigLintValidator extends ConstraintValidator
 {
     /**
-     * @var \Environment
+     * @var \Twig\Environment
      */
     protected $twig;
 
     /**
      * TwigLintValidator constructor.
      *
-     * @param \Environment $twig
+     * @param \Twig\Environment $twig
      */
-    public function __construct(Environment $twig)
+    public function __construct(\Twig\Environment $twig)
     {
         $this->twig = $twig;
     }

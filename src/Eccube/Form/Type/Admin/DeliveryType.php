@@ -60,6 +60,9 @@ class DeliveryType extends AbstractType
             ])
             ->add('description', TextareaType::class, [
                 'required' => false,
+                'constraints' => [
+                    new Assert\Length(['max' => $this->eccubeConfig['eccube_ltext_len']]),
+                ],
             ])
             ->add('confirm_url', TextType::class, [
                 'required' => false,
@@ -115,7 +118,7 @@ class DeliveryType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => 'Eccube\Entity\Delivery',
+            'data_class' => \Eccube\Entity\Delivery::class,
         ]);
     }
 

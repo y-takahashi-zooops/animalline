@@ -14,15 +14,19 @@
 namespace Eccube\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Eccube\Common\EccubeConfig;
+use Eccube\Util\StringUtil;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\DataCollector\MemoryDataCollector;
+use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 
 class SystemService implements EventSubscriberInterface
 {
-    const AUTO_MAINTENANCE = 'auto_maintenance';
-    const AUTO_MAINTENANCE_UPDATE = 'auto_maintenance_update';
+    public const MAINTENANCE_TOKEN_KEY = 'maintenance_token';
+    public const AUTO_MAINTENANCE = 'auto_maintenance';
+    public const AUTO_MAINTENANCE_UPDATE = 'auto_maintenance_update';
 
     /**
      * メンテナンスモードを無効にする場合はtrue
@@ -36,12 +40,17 @@ class SystemService implements EventSubscriberInterface
      *
      * @var string
      */
-    private $maintenanceMode = null;
+    private $maintenanceMode;
 
     /**
      * @var EntityManagerInterface
      */
     protected $entityManager;
+
+    /**
+     * @var EccubeConfig
+     */
+    protected $eccubeConfig;
 
     protected string $maintenanceFilePath;
 
@@ -52,9 +61,11 @@ class SystemService implements EventSubscriberInterface
      */
     public function __construct(
         EntityManagerInterface $entityManager,
+        EccubeConfig $eccubeConfig,
         string $maintenanceFilePath
     ) {
         $this->entityManager = $entityManager;
+        $this->eccubeConfig = $eccubeConfig;
         $this->maintenanceFilePath = $maintenanceFilePath;
     }
 
@@ -136,19 +147,25 @@ class SystemService implements EventSubscriberInterface
      * @param bool $isEnable
      * @param string $mode
      */
-    public function switchMaintenance($isEnable = false, $mode = self::AUTO_MAINTENANCE)
+    public function switchMaintenance($isEnable = false, $mode = self::AUTO_MAINTENANCE, bool $force = false)
     {
-        $isMaintenanceMode = $this->isMaintenanceMode();
-        $path = $this->maintenanceFilePath;
-
-        if ($isEnable && $isMaintenanceMode === false) {
-            file_put_contents($path, $mode);
-        } elseif ($isEnable === false && $isMaintenanceMode) {
-            $contents = file_get_contents($path);
-            if ($contents == $mode) {
-                unlink($path);
-            }
+        if ($isEnable) {
+            $this->enableMaintenance($mode, $force);
+        } else {
+            $this->disableMaintenanceNow($mode, $force);
         }
+    }
+
+    public function getMaintenanceToken(): ?string
+    {
+        $path = $this->eccubeConfig->get('eccube_content_maintenance_file_path');
+        if (!\file_exists($path)) {
+            return null;
+        }
+
+        $contents = \file_get_contents($path);
+
+        return \explode(':', $contents)[1] ?? null;
     }
 
     /**
@@ -163,6 +180,15 @@ class SystemService implements EventSubscriberInterface
         }
     }
 
+    public function enableMaintenance($mode = self::AUTO_MAINTENANCE, bool $force = false): void
+    {
+        if ($force || !$this->isMaintenanceMode()) {
+            $path = $this->eccubeConfig->get('eccube_content_maintenance_file_path');
+            $token = StringUtil::random(32);
+            \file_put_contents($path, "{$mode}:{$token}");
+        }
+    }
+
     /**
      * メンテナンスモードを解除する
      *
@@ -174,6 +200,21 @@ class SystemService implements EventSubscriberInterface
     {
         $this->disableMaintenanceAfterResponse = true;
         $this->maintenanceMode = $mode;
+    }
+
+    public function disableMaintenanceNow($mode = self::AUTO_MAINTENANCE, bool $force = false): void
+    {
+        if (!$this->isMaintenanceMode()) {
+            return;
+        }
+
+        $path = $this->eccubeConfig->get('eccube_content_maintenance_file_path');
+        $contents = \file_get_contents($path);
+        $currentMode = \explode(':', $contents)[0] ?? null;
+
+        if ($force || $currentMode === $mode) {
+            \unlink($path);
+        }
     }
 
     /**
