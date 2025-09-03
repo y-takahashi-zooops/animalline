@@ -49,12 +49,6 @@ services:
         autoconfigure: true
         tags: ['controller.service_arguments']
 
-    Eccube\Service\Composer\ComposerApiService:
-        public: true
-        shared: true
-        autowire: true
-        autoconfigure: true
-
     Eccube\Command\GenerateProxyCommand:
         class: Eccube\Command\GenerateProxyCommand
         autowire: true
@@ -341,23 +335,6 @@ services:
             $prefRepository: '@Eccube\Repository\Master\PrefRepository'
             $session: '@session'
             $security: '@Symfony\Bundle\SecurityBundle\Security'
-            
-    # MobileDetect:
-    #     class: MobileDetect\MobileDetect
-
-    # MobileDetect\MobileDetect: ~
-
-    # mobile_detector:
-    #         class: MobileDetect\MobileDetect
-
-    Detection\MobileDetect: ~
-
-    mobile_detector:
-        class: Detection\MobileDetect
-
-    Eccube\EventListener\TwigInitializeListener:
-        arguments:
-            $mobileDetector: '@mobile_detector'
 
     Doctrine\Common\Annotations\AnnotationReader: ~
     
@@ -488,11 +465,6 @@ services:
     Eccube\Controller\AbstractController:
         arguments:
             $eccubeConfig: '@Eccube\Common\EccubeConfig'
-
-    Eccube\Controller\ShoppingController:
-        autowire: true
-        autoconfigure: true
-        public: true
 
     Eccube\Controller\AbstractShoppingController:
         arguments:

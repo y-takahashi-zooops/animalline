@@ -106,7 +106,7 @@ class MemberType extends AbstractType
                 'constraints' => [
                     new Assert\NotBlank(),
                 ],
-            ]);
+            ])
             ->add('two_factor_auth_enabled', ToggleSwitchType::class, [
             ]);
 

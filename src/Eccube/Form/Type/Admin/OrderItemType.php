@@ -153,7 +153,7 @@ class OrderItemType extends AbstractType
                         'message' => 'form_error.float_only',
                     ]),
                 ],
-            ]);
+            ])
             ->add('point_rate', HiddenType::class, [
                 'required' => false,
                 'constraints' => [

@@ -30,7 +30,7 @@ use Plugin\EccubePaymentLite4\Repository\MyPageRegularSettingRepository;
 use Plugin\EccubePaymentLite4\Repository\PaymentStatusRepository;
 use Plugin\EccubePaymentLite4\Repository\RegularCycleTypeRepository;
 use Plugin\EccubePaymentLite4\Repository\RegularStatusRepository;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class PluginManager extends AbstractPluginManager
 {
