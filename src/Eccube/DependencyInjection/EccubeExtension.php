@@ -146,21 +146,10 @@ class EccubeExtension extends Extension implements PrependExtensionInterface
 
         // prependのタイミングではコンテナのインスタンスは利用できない.
         // 直接dbalのconnectionを生成し, dbアクセスを行う.
-        $params = $config['dbal'] ?? [];
+        $params = $config['dbal']['connections'][$config['dbal']['default_connection']];
         // ContainerInterface::resolveEnvPlaceholders() で取得した DATABASE_URL は
         // % がエスケープされているため、環境変数から取得し直す
-
-	// 環境変数 DATABASE_URL を取得
-	$envUrl = $container->resolveEnvPlaceholders('%env(DATABASE_URL)%', true);
-	if (!empty($envUrl)) {
-           $params['url'] = $envUrl;
-        }    
-
-        // 最低限 driver か driverClass または url が必要
-        if (empty($params['url']) && empty($params['driver']) && empty($params['driverClass'])) {
-           throw new \RuntimeException('Missing database connection information. Please check DATABASE_URL or dbal config.');
-        }
-
+        $params['url'] = env('DATABASE_URL');
         $conn = DriverManager::getConnection($params);
 
         if (!$this->isConnected($conn)) {
@@ -168,7 +157,7 @@ class EccubeExtension extends Extension implements PrependExtensionInterface
         }
 
         $stmt = $conn->query('select * from dtb_plugin');
-        $plugins = $stmt->fetchAllAssociative();
+        $plugins = $stmt->fetchAll();
 
         $enabled = [];
         foreach ($plugins as $plugin) {

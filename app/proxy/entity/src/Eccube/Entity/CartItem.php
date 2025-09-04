@@ -15,7 +15,7 @@ namespace Eccube\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-if (!class_exists(CartItem::class)) {
+
     /**
      * CartItem
      *
@@ -31,7 +31,7 @@ if (!class_exists(CartItem::class)) {
      */
     class CartItem extends AbstractEntity implements ItemInterface
     {
-        use PointRateTrait;
+        use PointRateTrait, \Customize\Entity\CartItemTrait;
 
         /**
          * @var int
@@ -273,4 +273,3 @@ if (!class_exists(CartItem::class)) {
             return $this;
         }
     }
-}

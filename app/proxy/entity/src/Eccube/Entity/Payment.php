@@ -20,16 +20,20 @@ use Doctrine\ORM\Mapping as ORM;
      * Payment
      *
      * @ORM\Table(name="dtb_payment")
+     * 
      * @ORM\InheritanceType("SINGLE_TABLE")
+     * 
      * @ORM\DiscriminatorColumn(name="discriminator_type", type="string", length=255)
+     * 
      * @ORM\HasLifecycleCallbacks()
+     * 
      * @ORM\Entity(repositoryClass="Eccube\Repository\PaymentRepository")
      */
-    class Payment extends \Eccube\Entity\AbstractEntity
+    class Payment extends AbstractEntity
     {
     use \Plugin\GmoPaymentGateway4\Entity\PaymentTrait;
 
-    /**
+        /**
          * @return string
          */
         public function __toString()
@@ -41,7 +45,9 @@ use Doctrine\ORM\Mapping as ORM;
          * @var int
          *
          * @ORM\Column(name="id", type="integer", options={"unsigned":true})
+         * 
          * @ORM\Id
+         * 
          * @ORM\GeneratedValue(strategy="IDENTITY")
          */
         private $id;
@@ -75,7 +81,7 @@ use Doctrine\ORM\Mapping as ORM;
         private $sort_no;
 
         /**
-         * @var boolean
+         * @var bool
          *
          * @ORM\Column(name="fixed", type="boolean", options={"default":true})
          */
@@ -131,10 +137,12 @@ use Doctrine\ORM\Mapping as ORM;
         private $PaymentOptions;
 
         /**
-         * @var \Eccube\Entity\Member
+         * @var Member
          *
          * @ORM\ManyToOne(targetEntity="Eccube\Entity\Member")
+         * 
          * @ORM\JoinColumns({
+         * 
          *   @ORM\JoinColumn(name="creator_id", referencedColumnName="id")
          * })
          */
@@ -257,7 +265,7 @@ use Doctrine\ORM\Mapping as ORM;
         /**
          * Set fixed.
          *
-         * @param boolean $fixed
+         * @param bool $fixed
          *
          * @return Payment
          */
@@ -271,7 +279,7 @@ use Doctrine\ORM\Mapping as ORM;
         /**
          * Get fixed.
          *
-         * @return boolean
+         * @return bool
          */
         public function isFixed()
         {
@@ -351,7 +359,7 @@ use Doctrine\ORM\Mapping as ORM;
         }
 
         /**
-         * @return integer
+         * @return int
          */
         public function isVisible()
         {
@@ -359,7 +367,7 @@ use Doctrine\ORM\Mapping as ORM;
         }
 
         /**
-         * @param boolean $visible
+         * @param bool $visible
          *
          * @return Payment
          */
@@ -421,11 +429,11 @@ use Doctrine\ORM\Mapping as ORM;
         /**
          * Add paymentOption.
          *
-         * @param \Eccube\Entity\PaymentOption $paymentOption
+         * @param PaymentOption $paymentOption
          *
          * @return Payment
          */
-        public function addPaymentOption(\Eccube\Entity\PaymentOption $paymentOption)
+        public function addPaymentOption(PaymentOption $paymentOption)
         {
             $this->PaymentOptions[] = $paymentOption;
 
@@ -435,11 +443,11 @@ use Doctrine\ORM\Mapping as ORM;
         /**
          * Remove paymentOption.
          *
-         * @param \Eccube\Entity\PaymentOption $paymentOption
+         * @param PaymentOption $paymentOption
          *
-         * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+         * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
          */
-        public function removePaymentOption(\Eccube\Entity\PaymentOption $paymentOption)
+        public function removePaymentOption(PaymentOption $paymentOption)
         {
             return $this->PaymentOptions->removeElement($paymentOption);
         }
@@ -457,11 +465,11 @@ use Doctrine\ORM\Mapping as ORM;
         /**
          * Set creator.
          *
-         * @param \Eccube\Entity\Member|null $creator
+         * @param Member|null $creator
          *
          * @return Payment
          */
-        public function setCreator(\Eccube\Entity\Member $creator = null)
+        public function setCreator(?Member $creator = null)
         {
             $this->Creator = $creator;
 
@@ -471,7 +479,7 @@ use Doctrine\ORM\Mapping as ORM;
         /**
          * Get creator.
          *
-         * @return \Eccube\Entity\Member|null
+         * @return Member|null
          */
         public function getCreator()
         {
