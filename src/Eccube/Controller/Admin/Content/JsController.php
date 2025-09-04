@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of EC-CUBE
  *
@@ -25,15 +26,18 @@ use Symfony\Component\Routing\Annotation\Route;
 class JsController extends AbstractController
 {
     /**
-     * @Route("/%eccube_admin_route%/content/js", name="admin_content_js")
+     * @Route("/%eccube_admin_route%/content/js", name="admin_content_js", methods={"GET", "POST"})
+     * 
      * @Template("@admin/Content/js.twig")
      */
     public function index(Request $request)
     {
+        $this->addInfoOnce('admin.common.restrict_file_upload_info', 'admin');
+
         $builder = $this->formFactory
             ->createBuilder(FormType::class)
             ->add('js', TextareaType::class, [
-                'required' => false
+                'required' => false,
             ]);
         $form = $builder->getForm();
         $jsPath = $this->getParameter('eccube_html_dir').'/user_data/assets/js/customize.js';
@@ -48,6 +52,7 @@ class JsController extends AbstractController
             try {
                 $fs->dumpFile($jsPath, $form->get('js')->getData());
                 $this->addSuccess('admin.common.save_complete', 'admin');
+
                 return $this->redirectToRoute('admin_content_js');
             } catch (IOException $e) {
                 $message = trans('admin.common.save_error');
@@ -56,8 +61,9 @@ class JsController extends AbstractController
             }
 
         }
+
         return [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ];
     }
 }

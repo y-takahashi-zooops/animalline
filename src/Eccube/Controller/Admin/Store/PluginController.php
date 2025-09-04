@@ -105,7 +105,7 @@ class PluginController extends AbstractController
         SystemService $systemService,
         EccubeConfig $eccubeConfig,
         FormFactoryInterface $formFactory,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ) {
         $this->pluginRepository = $pluginRepository;
         $this->pluginService = $pluginService;
@@ -121,7 +121,8 @@ class PluginController extends AbstractController
     /**
      * インストール済プラグイン画面
      *
-     * @Route("/%eccube_admin_route%/store/plugin", name="admin_store_plugin")
+     * @Route("/%eccube_admin_route%/store/plugin", name="admin_store_plugin", methods={"GET"})
+     *
      * @Template("@admin/Store/plugin.twig")
      *
      * @return array
@@ -317,15 +318,15 @@ class PluginController extends AbstractController
             if ($Plugin->getSource()) {
                 $requires = $this->pluginService->getPluginRequired($Plugin);
                 $requires = array_filter($requires, function ($req) {
-                    $code = preg_replace('/^ec-cube\//', '', $req['name']);
+                    $code = preg_replace('/^ec-cube\//i', '', $req['name']);
                     /** @var Plugin $DependPlugin */
-                    $DependPlugin = $this->pluginRepository->findOneBy(['code' => $code]);
+                    $DependPlugin = $this->pluginRepository->findByCode($code);
 
                     return $DependPlugin->isEnabled() == false;
                 });
                 if (!empty($requires)) {
                     $names = array_map(function ($req) {
-                        return "「${req['description']}」";
+                        return "「{$req['description']}」";
                     }, $requires);
                     $message = trans('%depend_name%を先に有効化してください。', ['%name%' => $Plugin->getName(), '%depend_name%' => implode(', ', $names)]);
 
@@ -373,7 +374,7 @@ class PluginController extends AbstractController
      * @param Plugin $Plugin
      * @param CacheUtil $cacheUtil
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse|RedirectResponse
+     * @return JsonResponse|RedirectResponse
      */
     public function disable(Request $request, Plugin $Plugin, CacheUtil $cacheUtil)
     {
@@ -490,7 +491,8 @@ class PluginController extends AbstractController
     /**
      * プラグインファイルアップロード画面
      *
-     * @Route("/%eccube_admin_route%/store/plugin/install", name="admin_store_plugin_install")
+     * @Route("/%eccube_admin_route%/store/plugin/install", name="admin_store_plugin_install", methods={"GET", "POST"})
+     *
      * @Template("@admin/Store/plugin_install.twig")
      *
      * @param Request $request
@@ -500,6 +502,7 @@ class PluginController extends AbstractController
      */
     public function install(Request $request, CacheUtil $cacheUtil)
     {
+        $this->addInfoOnce('admin.common.restrict_file_upload_info', 'admin');
         $form = $this->formFactory
             ->createBuilder(PluginLocalInstallType::class)
             ->getForm();
@@ -555,7 +558,8 @@ class PluginController extends AbstractController
     /**
      * 認証キー設定画面
      *
-     * @Route("/%eccube_admin_route%/store/plugin/authentication_setting", name="admin_store_authentication_setting")
+     * @Route("/%eccube_admin_route%/store/plugin/authentication_setting", name="admin_store_authentication_setting", methods={"GET", "POST"})
+     *
      * @Template("@admin/Store/authentication_setting.twig")
      *
      * @param Request $request
@@ -606,7 +610,7 @@ class PluginController extends AbstractController
         $pluginCodes = [];
 
         // DB登録済みプラグインコードのみ取得
-        foreach ($plugins as $key => $plugin) {
+        foreach ($plugins as $plugin) {
             $pluginCodes[] = $plugin->getCode();
         }
         // DB登録済みプラグインコードPluginディレクトリから排他
@@ -622,7 +626,7 @@ class PluginController extends AbstractController
             try {
                 $this->pluginService->checkPluginArchiveContent($dir->getRealPath());
             } catch (PluginException $e) {
-                //config.yamlに不備があった際は全てスキップ
+                // config.yamlに不備があった際は全てスキップ
                 log_warning($e->getMessage());
                 continue;
             }

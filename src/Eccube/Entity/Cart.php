@@ -18,19 +18,25 @@ use Doctrine\ORM\Mapping as ORM;
 use Eccube\Service\PurchaseFlow\InvalidItemException;
 use Eccube\Service\PurchaseFlow\ItemCollection;
 
-if (!class_exists('\Eccube\Entity\Cart')) {
+if (!class_exists(Cart::class)) {
     /**
      * Cart
      *
      * @ORM\Table(name="dtb_cart", indexes={
+     * 
      *     @ORM\Index(name="dtb_cart_update_date_idx", columns={"update_date"})
      *  },
      *  uniqueConstraints={
+     * 
      *     @ORM\UniqueConstraint(name="dtb_cart_pre_order_id_idx", columns={"pre_order_id"})
      *  }))
+     * 
      * @ORM\InheritanceType("SINGLE_TABLE")
+     * 
      * @ORM\DiscriminatorColumn(name="discriminator_type", type="string", length=255)
+     * 
      * @ORM\HasLifecycleCallbacks()
+     * 
      * @ORM\Entity(repositoryClass="Eccube\Repository\CartRepository")
      */
     class Cart extends AbstractEntity implements PurchaseInterface, ItemHolderInterface
@@ -38,10 +44,12 @@ if (!class_exists('\Eccube\Entity\Cart')) {
         use PointTrait;
 
         /**
-         * @var integer
+         * @var int
          *
          * @ORM\Column(name="id", type="integer", options={"unsigned":true})
+         * 
          * @ORM\Id
+         * 
          * @ORM\GeneratedValue(strategy="IDENTITY")
          */
         private $id;
@@ -54,10 +62,12 @@ if (!class_exists('\Eccube\Entity\Cart')) {
         private $cart_key;
 
         /**
-         * @var \Eccube\Entity\Customer
+         * @var Customer
          *
          * @ORM\ManyToOne(targetEntity="Eccube\Entity\Customer")
+         * 
          * @ORM\JoinColumns({
+         * 
          *   @ORM\JoinColumn(name="customer_id", referencedColumnName="id")
          * })
          */
@@ -72,6 +82,8 @@ if (!class_exists('\Eccube\Entity\Cart')) {
          * @var \Doctrine\Common\Collections\Collection|CartItem[]
          *
          * @ORM\OneToMany(targetEntity="Eccube\Entity\CartItem", mappedBy="Cart", cascade={"persist"})
+         * 
+         * @ORM\OrderBy({"id" = "ASC"})
          */
         private $CartItems;
 
@@ -80,7 +92,7 @@ if (!class_exists('\Eccube\Entity\Cart')) {
          *
          * @ORM\Column(name="pre_order_id", type="string", length=255, nullable=true)
          */
-        private $pre_order_id = null;
+        private $pre_order_id;
 
         /**
          * @var string
@@ -154,6 +166,8 @@ if (!class_exists('\Eccube\Entity\Cart')) {
         public function setCartKey(string $cartKey)
         {
             $this->cart_key = $cartKey;
+
+            return $this;
         }
 
         /**
@@ -169,7 +183,7 @@ if (!class_exists('\Eccube\Entity\Cart')) {
         /**
          * @param  bool                $lock
          *
-         * @return \Eccube\Entity\Cart
+         * @return Cart
          *
          * @deprecated 使用しないので削除予定
          */
@@ -189,9 +203,9 @@ if (!class_exists('\Eccube\Entity\Cart')) {
         }
 
         /**
-         * @param  integer             $pre_order_id
+         * @param  int             $pre_order_id
          *
-         * @return \Eccube\Entity\Cart
+         * @return Cart
          */
         public function setPreOrderId($pre_order_id)
         {
@@ -203,7 +217,7 @@ if (!class_exists('\Eccube\Entity\Cart')) {
         /**
          * @param  CartItem            $CartItem
          *
-         * @return \Eccube\Entity\Cart
+         * @return Cart
          */
         public function addCartItem(CartItem $CartItem)
         {
@@ -213,7 +227,7 @@ if (!class_exists('\Eccube\Entity\Cart')) {
         }
 
         /**
-         * @return \Eccube\Entity\Cart
+         * @return Cart
          */
         public function clearCartItems()
         {
@@ -232,6 +246,8 @@ if (!class_exists('\Eccube\Entity\Cart')) {
 
         /**
          * Alias of getCartItems()
+         * 
+         * @return ItemCollection
          */
         public function getItems()
         {
@@ -241,7 +257,7 @@ if (!class_exists('\Eccube\Entity\Cart')) {
         /**
          * @param  CartItem[]          $CartItems
          *
-         * @return \Eccube\Entity\Cart
+         * @return Cart
          */
         public function setCartItems($CartItems)
         {
@@ -253,7 +269,7 @@ if (!class_exists('\Eccube\Entity\Cart')) {
         /**
          * Set total.
          *
-         * @param integer $total_price
+         * @param int $total_price
          *
          * @return Cart
          */
@@ -282,6 +298,8 @@ if (!class_exists('\Eccube\Entity\Cart')) {
 
         /**
          * Alias of getTotalPrice
+         *
+         * @return string
          */
         public function getTotal()
         {
@@ -289,7 +307,7 @@ if (!class_exists('\Eccube\Entity\Cart')) {
         }
 
         /**
-         * @return integer
+         * @return int
          */
         public function getTotalQuantity()
         {
@@ -320,7 +338,7 @@ if (!class_exists('\Eccube\Entity\Cart')) {
         /**
          * 個数の合計を返します。
          *
-         * @return integer
+         * @return int
          */
         public function getQuantity()
         {
@@ -346,9 +364,9 @@ if (!class_exists('\Eccube\Entity\Cart')) {
         }
 
         /**
-         * @return Customer
+         * @return Customer|null
          */
-        public function getCustomer(): Customer
+        public function getCustomer(): ?Customer
         {
             return $this->Customer;
         }
@@ -356,9 +374,11 @@ if (!class_exists('\Eccube\Entity\Cart')) {
         /**
          * @param Customer $Customer
          */
-        public function setCustomer(Customer $Customer = null)
+        public function setCustomer(?Customer $Customer = null)
         {
             $this->Customer = $Customer;
+
+            return $this;
         }
 
         /**

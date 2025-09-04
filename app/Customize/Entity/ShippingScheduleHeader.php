@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Eccube\Entity\Shipping;
+use Customize\Entity\Order;
 
 /**
  * @ORM\Table(name="ald_shipping_schedule_header")
@@ -142,6 +143,12 @@ class ShippingScheduleHeader
      * @ORM\OneToMany(targetEntity=ShippingSchedule::class, mappedBy="ShippingScheduleHeader")
      */
     private $ShippingSchedule;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Order::class, inversedBy="ShippingScheduleHeaders")
+     * @ORM\JoinColumn(name="order_id", referencedColumnName="id", nullable=false)
+     */
+    private $Order;
 
     /**
      * @ORM\ManyToOne(targetEntity=Shipping::class, inversedBy="ShippingScheduleHeader")
@@ -419,6 +426,23 @@ class ShippingScheduleHeader
         return $this;
     }
 
+    /**
+     * @return Order|null
+     */
+    public function getOrder()
+    {
+        return $this->Order;
+    }
+
+    /**
+     * @param Order $Order
+     * @return self
+     */
+    public function setOrder($Order)
+    {
+        $this->Order = $Order;
+        return $this;
+    }
     /**
      * Set createDate.
      *

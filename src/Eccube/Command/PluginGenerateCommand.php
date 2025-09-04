@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of EC-CUBE
  *
@@ -13,61 +12,58 @@
 
 namespace Eccube\Command;
 
+use Eccube\Common\EccubeConfig;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 class PluginGenerateCommand extends Command
 {
     protected static $defaultName = 'eccube:plugin:generate';
-
     /**
      * @var SymfonyStyle
      */
     protected $io;
-
     /**
      * @var Filesystem
      */
     protected $fs;
 
-    private string $projectDir;
+    /**
+     * @var EccubeConfig
+     */
+    protected $eccubeConfig;
 
-    public function __construct(string $projectDir)
+    public function __construct(EccubeConfig $eccubeConfig)
     {
         parent::__construct();
-        $this->projectDir = $projectDir;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     protected function configure()
     {
         $this
-            ->addArgument('name', InputArgument::REQUIRED, 'plugin name')
-            ->addArgument('code', InputArgument::REQUIRED, 'plugin code')
-            ->addArgument('ver', InputArgument::REQUIRED, 'plugin version')
+            ->addArgument('name', InputOption::VALUE_REQUIRED, 'plugin name')
+            ->addArgument('code', InputOption::VALUE_REQUIRED, 'plugin code')
+            ->addArgument('ver', InputOption::VALUE_REQUIRED, 'plugin version')
             ->setDescription('Generate plugin skeleton.');
     }
-
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
         $this->io = new SymfonyStyle($input, $output);
         $this->fs = new Filesystem();
     }
-
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         if (null !== $input->getArgument('name') && null !== $input->getArgument('code') && null !== $input->getArgument('ver')) {
             return;
         }
-
         $this->io->title('EC-CUBE Plugin Generator Interactive Wizard');
-
         // Plugin name.
         $name = $input->getArgument('name');
         if (null !== $name) {
@@ -76,7 +72,6 @@ class PluginGenerateCommand extends Command
             $name = $this->io->ask('name', 'EC-CUBE Sample Plugin');
             $input->setArgument('name', $name);
         }
-
         // Plugin code.
         $code = $input->getArgument('code');
         if (null !== $code) {
@@ -85,7 +80,6 @@ class PluginGenerateCommand extends Command
             $code = $this->io->ask('code', 'Sample', [$this, 'validateCode']);
             $input->setArgument('code', $code);
         }
-
         // Plugin version.
         $version = $input->getArgument('ver');
         if (null !== $version) {
@@ -95,17 +89,15 @@ class PluginGenerateCommand extends Command
             $input->setArgument('ver', $version);
         }
     }
-
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $name = $input->getArgument('name');
         $code = $input->getArgument('code');
         $version = $input->getArgument('ver');
-
         $this->validateCode($code);
         $this->validateVersion($version);
 
-        $pluginDir = $this->projectDir . '/app/Plugin/' . $code;
+        $pluginDir = $this->eccubeConfig->get('kernel.project_dir').'/app/Plugin/'.$code;
 
         $this->createDirectories($pluginDir);
         $this->createConfig($pluginDir, $name, $code, $version);
@@ -115,11 +107,14 @@ class PluginGenerateCommand extends Command
         $this->createTwigBlock($pluginDir, $code);
         $this->createConfigController($pluginDir, $code);
         $this->createGithubActions($pluginDir);
+        $this->createGitattributes($pluginDir);
 
         $this->io->success(sprintf('Plugin was successfully created: %s %s %s', $name, $code, $version));
+
+        return 0;
     }
 
-    public function validateCode($code): string
+    public function validateCode($code)
     {
         if (empty($code)) {
             throw new InvalidArgumentException('The code can not be empty.');
@@ -131,20 +126,17 @@ class PluginGenerateCommand extends Command
             throw new InvalidArgumentException('The code [a-zA-Z_] is available.');
         }
 
-        $pluginDir = $this->projectDir . '/app/Plugin/' . $code;
+        $pluginDir = $this->eccubeConfig->get('kernel.project_dir').'/app/Plugin/'.$code;
         if (file_exists($pluginDir)) {
             throw new InvalidArgumentException('Plugin directory exists.');
         }
-
         return $code;
     }
-
     public function validateVersion($version)
     {
         // TODO
         return $version;
     }
-
     /**
      * @param string $pluginDir
      */
@@ -161,35 +153,32 @@ class PluginGenerateCommand extends Command
             'Resource/template/admin',
             '.github/workflows',
         ];
-
         foreach ($dirs as $dir) {
             $this->fs->mkdir($pluginDir.'/'.$dir);
         }
     }
-
     /**
      * @param string $pluginDir
      */
     protected function createConfig($pluginDir, $name, $code, $version)
     {
+        $lowerCode = mb_strtolower($code);
         $source = <<<EOL
 {
-  "name": "ec-cube/$code",
+  "name": "ec-cube/$lowerCode",
   "version": "$version",
   "description": "$name",
   "type": "eccube-plugin",
   "require": {
-    "ec-cube/plugin-installer": "~0.0.7"
+    "ec-cube/plugin-installer": "~0.0.7 || ^2.0"
   },
   "extra": {
     "code": "$code"
   }
 }
 EOL;
-
         $this->fs->dumpFile($pluginDir.'/composer.json', $source);
     }
-
 
     /**
      * @param string $pluginDir
@@ -204,19 +193,13 @@ on:
 jobs:
   deploy:
     name: Build
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Packaging
-        working-directory: ../
         run: |
-          rm -rf $GITHUB_WORKSPACE/.github
-          find $GITHUB_WORKSPACE -name "dummy" -delete
-          find $GITHUB_WORKSPACE -name ".git*" -and ! -name ".gitkeep" -print0 | xargs -0 rm -rf
-          chmod -R o+w $GITHUB_WORKSPACE
-          cd $GITHUB_WORKSPACE
-          tar cvzf ../${{ github.event.repository.name }}-${{ github.event.release.tag_name }}.tar.gz ./*
+          git archive HEAD --format=tar.gz > ../${{ github.event.repository.name }}-${{ github.event.release.tag_name }}.tar.gz
       - name: Upload binaries to release of TGZ
         uses: svenstaro/upload-release-action@v1-release
         with:
@@ -226,10 +209,20 @@ jobs:
           tag: ${{ github.ref }}
           overwrite: true
 ';
-
         $this->fs->dumpFile($pluginDir.'/.github/workflows/release.yml', $source);
     }
 
+    protected function createGitattributes($pluginDir)
+    {
+        $source = <<<EOL
+/.gitattributes             export-ignore
+/.github                    export-ignore
+/.gitignore                 export-ignore
+/dummy                      export-ignore
+EOL;
+
+        $this->fs->dumpFile($pluginDir.'/.gitattributes', $source);
+    }
 
     /**
      * @param string $pluginDir
@@ -239,7 +232,6 @@ jobs:
         $this->fs->dumpFile($pluginDir.'/Resource/locale/messages.ja.yaml', '');
         $this->fs->dumpFile($pluginDir.'/Resource/locale/validators.ja.yaml', '');
     }
-
     /**
      * @param string $pluginDir
      */
@@ -247,11 +239,8 @@ jobs:
     {
         $source = <<<EOL
 <?php
-
-namespace Plugin\\${code};
-
+namespace Plugin\\{$code};
 use Eccube\\Common\\EccubeTwigBlock;
-
 class TwigBlock implements EccubeTwigBlock
 {
     /**
@@ -262,11 +251,9 @@ class TwigBlock implements EccubeTwigBlock
         return [];
     }
 }
-
 EOL;
         $this->fs->dumpFile($pluginDir.'/TwigBlock.php', $source);
     }
-
     /**
      * @param string $pluginDir
      */
@@ -274,11 +261,8 @@ EOL;
     {
         $source = <<<EOL
 <?php
-
-namespace Plugin\\${code};
-
+namespace Plugin\\{$code};
 use Eccube\\Common\\EccubeNav;
-
 class Nav implements EccubeNav
 {
     /**
@@ -289,11 +273,9 @@ class Nav implements EccubeNav
         return [];
     }
 }
-
 EOL;
         $this->fs->dumpFile($pluginDir.'/Nav.php', $source);
     }
-
     /**
      * @param string $pluginDir
      */
@@ -301,11 +283,8 @@ EOL;
     {
         $source = <<<EOL
 <?php
-
-namespace Plugin\\${code};
-
+namespace Plugin\\{$code};
 use Symfony\\Component\\EventDispatcher\\EventSubscriberInterface;
-
 class Event implements EventSubscriberInterface
 {
     /**
@@ -316,38 +295,30 @@ class Event implements EventSubscriberInterface
         return [];
     }
 }
-
 EOL;
         $this->fs->dumpFile($pluginDir.'/Event.php', $source);
     }
-
     /**
      * @param string $pluginDir
      */
     protected function createConfigController($pluginDir, $code)
     {
-        $snakecased = $this->underscore($code);
-
+        $snakecased = Container::underscore($code);
         $source = <<<EOL
-    
 <?php
-
-namespace Plugin\\${code}\\Controller\\Admin;
-
+namespace Plugin\\{$code}\\Controller\\Admin;
 use Eccube\\Controller\\AbstractController;
-use Plugin\\${code}\\Form\\Type\\Admin\\ConfigType;
-use Plugin\\${code}\\Repository\\ConfigRepository;
+use Plugin\\{$code}\\Form\\Type\\Admin\\ConfigType;
+use Plugin\\{$code}\\Repository\\ConfigRepository;
 use Sensio\\Bundle\\FrameworkExtraBundle\\Configuration\\Template;
 use Symfony\\Component\\HttpFoundation\\Request;
 use Symfony\\Component\\Routing\\Annotation\\Route;
-
 class ConfigController extends AbstractController
 {
     /**
      * @var ConfigRepository
      */
     protected \$configRepository;
-
     /**
      * ConfigController constructor.
      *
@@ -357,109 +328,90 @@ class ConfigController extends AbstractController
     {
         \$this->configRepository = \$configRepository;
     }
-
     /**
-     * @Route("/%eccube_admin_route%/${snakecased}/config", name="${snakecased}_admin_config")
-     * @Template("@${code}/admin/config.twig")
+     * @Route("/%eccube_admin_route%/{$snakecased}/config", name="{$snakecased}_admin_config")
+     * @Template("@{$code}/admin/config.twig")
      */
     public function index(Request \$request)
     {
         \$Config = \$this->configRepository->get();
         \$form = \$this->createForm(ConfigType::class, \$Config);
         \$form->handleRequest(\$request);
-
         if (\$form->isSubmitted() && \$form->isValid()) {
             \$Config = \$form->getData();
             \$this->entityManager->persist(\$Config);
-            \$this->entityManager->flush(\$Config);
+            \$this->entityManager->flush();
             \$this->addSuccess('登録しました。', 'admin');
-
-            return \$this->redirectToRoute('${snakecased}_admin_config');
+            return \$this->redirectToRoute('{$snakecased}_admin_config');
         }
-
         return [
             'form' => \$form->createView(),
         ];
     }
 }
-
 EOL;
-
         $this->fs->dumpFile($pluginDir.'/Controller/Admin/ConfigController.php', $source);
-
         $source = <<<EOL
 <?php
-
-namespace Plugin\\${code}\\Entity;
-
+namespace Plugin\\{$code}\\Entity;
 use Doctrine\\ORM\\Mapping as ORM;
-
-/**
- * Config
- *
- * @ORM\Table(name="plg_${snakecased}_config")
- * @ORM\Entity(repositoryClass="Plugin\\${code}\\Repository\\ConfigRepository")
- */
-class Config
-{
+if (!class_exists('\\Plugin\\{$code}\\Entity\\Config', false)) {
     /**
-     * @var int
+     * Config
      *
-     * @ORM\Column(name="id", type="integer", options={"unsigned":true})
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\Table(name="plg_{$snakecased}_config")
+     * @ORM\Entity(repositoryClass="Plugin\\{$code}\\Repository\\ConfigRepository")
      */
-    private \$id;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=255)
-     */
-    private \$name;
-
-    /**
-     * @return int
-     */
-    public function getId()
+    class Config
     {
-        return \$this->id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return \$this->name;
-    }
-
-    /**
-     * @param string \$name
-     *
-     * @return \$this;
-     */
-    public function setName(\$name)
-    {
-        \$this->name = \$name;
-
-        return \$this;
+        /**
+         * @var int
+         *
+         * @ORM\Column(name="id", type="integer", options={"unsigned":true})
+         * @ORM\Id
+         * @ORM\GeneratedValue(strategy="IDENTITY")
+         */
+        private \$id;
+        /**
+         * @var string
+         *
+         * @ORM\Column(name="name", type="string", length=255)
+         */
+        private \$name;
+        /**
+         * @return int
+         */
+        public function getId()
+        {
+            return \$this->id;
+        }
+        /**
+         * @return string
+         */
+        public function getName()
+        {
+            return \$this->name;
+        }
+        /**
+         * @param string \$name
+         *
+         * @return \$this;
+         */
+        public function setName(\$name)
+        {
+            \$this->name = \$name;
+            return \$this;
+        }
     }
 }
-
 EOL;
-
         $this->fs->dumpFile($pluginDir.'/Entity/Config.php', $source);
-
         $source = <<<EOL
 <?php
-
-namespace Plugin\\${code}\\Repository;
-
+namespace Plugin\\{$code}\\Repository;
+use Doctrine\Persistence\ManagerRegistry;
 use Eccube\\Repository\\AbstractRepository;
-use Plugin\\${code}\\Entity\\Config;
-use Doctrine\\Persistence\\ManagerRegistry;
-
+use Plugin\\{$code}\\Entity\\Config;
 /**
  * ConfigRepository
  *
@@ -477,35 +429,34 @@ class ConfigRepository extends AbstractRepository
     {
         parent::__construct(\$registry, Config::class);
     }
-
     /**
      * @param int \$id
      *
-     * @return null|Config
+     * @return Config
+     *
+     * @throws \Exception
      */
     public function get(\$id = 1)
     {
-        return \$this->find(\$id);
+        \$Config = \$this->find(\$id);
+        if (null === \$Config) {
+            throw new \Exception('Config not found. id = '.\$id);
+        }
+        return \$Config;
     }
 }
-
 EOL;
-
         $this->fs->dumpFile($pluginDir.'/Repository/ConfigRepository.php', $source);
-
         $source = <<<EOL
 <?php
-
-namespace Plugin\\${code}\\Form\\Type\\Admin;
-
-use Plugin\\${code}\\Entity\\Config;
+namespace Plugin\\{$code}\\Form\\Type\\Admin;
+use Plugin\\{$code}\\Entity\\Config;
 use Symfony\\Component\\Form\\AbstractType;
 use Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType;
 use Symfony\\Component\\Form\\FormBuilderInterface;
 use Symfony\\Component\\OptionsResolver\\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-
 class ConfigType extends AbstractType
 {
     /**
@@ -520,7 +471,6 @@ class ConfigType extends AbstractType
             ],
         ]);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -531,30 +481,19 @@ class ConfigType extends AbstractType
         ]);
     }
 }
-
 EOL;
-
         $this->fs->dumpFile($pluginDir.'/Form/Type/Admin/ConfigType.php', $source);
-
         $source = <<<EOL
 {% extends '@admin/default_frame.twig' %}
-
 {% set menus = ['store', 'plugin', 'plugin_list'] %}
-
-{% block title %}${code}{% endblock %}
+{% block title %}{$code}{% endblock %}
 {% block sub_title %}プラグイン一覧{% endblock %}
-
 {% form_theme form '@admin/Form/bootstrap_4_horizontal_layout.html.twig' %}
-
 {% block stylesheet %}{% endblock stylesheet %}
-
 {% block javascript %}{% endblock javascript %}
-
 {% block main %}
     <form role="form" method="post">
-
         {{ form_widget(form._token) }}
-
         <div class="c-contentsArea__cols">
             <div class="c-contentsArea__primaryCol">
                 <div class="c-primaryCol">
@@ -563,7 +502,7 @@ EOL;
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-3"><span>名前</span><span
-                                            class="badge badge-primary ml-1">必須</span></div>
+                                            class="badge bg-primary ml-1">必須</span></div>
                                 <div class="col mb-2">
                                     {{ form_widget(form.name) }}
                                     {{ form_errors(form.name) }}
@@ -599,13 +538,7 @@ EOL;
         </div>
     </form>
 {% endblock %}
-
 EOL;
         $this->fs->dumpFile($pluginDir.'/Resource/template/admin/config.twig', $source);
-    }
-
-    private function underscore(string $text): string
-    {
-        return strtolower(preg_replace('/(?<=\\w)([A-Z])/', '_$1', $text));
     }
 }

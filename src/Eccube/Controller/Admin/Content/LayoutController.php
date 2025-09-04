@@ -18,8 +18,8 @@ use Eccube\Controller\AbstractController;
 use Eccube\Entity\Layout;
 use Eccube\Form\Type\Admin\LayoutType;
 use Eccube\Entity\Master\ProductStatus;
-use Eccube\Repository\BlockRepository;
 use Eccube\Repository\BlockPositionRepository;
+use Eccube\Repository\BlockRepository;
 use Eccube\Repository\LayoutRepository;
 use Eccube\Repository\PageLayoutRepository;
 use Eccube\Repository\PageRepository;
@@ -39,7 +39,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class LayoutController extends AbstractController
 {
-    const DUMMY_BLOCK_ID = 9999999999;
+    public const DUMMY_BLOCK_ID = 9999999999;
 
     /**
      * @var BlockRepository
@@ -76,7 +76,7 @@ class LayoutController extends AbstractController
     protected $deviceTypeRepository;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $isPreview = false;
 
@@ -116,7 +116,8 @@ class LayoutController extends AbstractController
     }
 
     /**
-     * @Route("/%eccube_admin_route%/content/layout", name="admin_content_layout")
+     * @Route("/%eccube_admin_route%/content/layout", name="admin_content_layout", methods={"GET"})
+     * 
      * @Template("@admin/Content/layout_list.twig")
      */
     public function index()
@@ -164,11 +165,11 @@ class LayoutController extends AbstractController
     }
 
     /**
-     * @Route("/%eccube_admin_route%/content/layout/new", name="admin_content_layout_new")
-     * @Route("/%eccube_admin_route%/content/layout/{id}/edit", requirements={"id" = "\d+"}, name="admin_content_layout_edit")
+     * @Route("/%eccube_admin_route%/content/layout/new", name="admin_content_layout_new", methods={"GET", "POST"})
+     * @Route("/%eccube_admin_route%/content/layout/{id}/edit", requirements={"id" = "\d+"}, name="admin_content_layout_edit", methods={"GET", "POST"})
      * @Template("@admin/Content/layout.twig")
      */
-    public function edit(Request $request, $id = null, $previewPageId = null, CacheUtil $cacheUtil)
+    public function edit(Request $request, CacheUtil $cacheUtil, $id = null, $previewPageId = null)
     {
         if (is_null($id)) {
             $Layout = new Layout();
@@ -288,13 +289,13 @@ class LayoutController extends AbstractController
     }
 
     /**
-     * @Route("/%eccube_admin_route%/content/layout/{id}/preview", requirements={"id" = "\d+"}, name="admin_content_layout_preview")
+     * @Route("/%eccube_admin_route%/content/layout/{id}/preview", requirements={"id" = "\d+"}, name="admin_content_layout_preview", methods={"POST"})
      */
     public function preview(Request $request, $id, CacheUtil $cacheUtil)
     {
         $form = $request->get('admin_layout');
         $this->isPreview = true;
 
-        return $this->edit($request, $id, $form['Page'], $cacheUtil);
+        return $this->edit($request, $cacheUtil, $id, $form['Page']);
     }
 }

@@ -59,7 +59,8 @@ class TagController extends AbstractController
     }
 
     /**
-     * @Route("/%eccube_admin_route%/product/tag", name="admin_product_tag")
+     * @Route("/%eccube_admin_route%/product/tag", name="admin_product_tag", methods={"GET", "POST"})
+     * 
      * @Template("@admin/Product/tag.twig")
      *
      * @param Request $request
@@ -184,7 +185,7 @@ class TagController extends AbstractController
         if ($request->isXmlHttpRequest() && $this->isTokenValid()) {
             $sortNos = $request->request->all();
             foreach ($sortNos as $tagId => $sortNo) {
-                /* @var $Tag \Eccube\Entity\Tag */
+                /** @var Tag $Tag */
                 $Tag = $this->tagRepository
                     ->find($tagId);
                 $Tag->setSortNo($sortNo);

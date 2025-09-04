@@ -70,7 +70,7 @@ class TransactionListener implements EventSubscriberInterface
     public function onKernelRequest(RequestEvent $event)
     {
         if (!$this->isEnabled) {
-            $this->logger->debug('Transaction Listener is disabled.');
+            log_debug('Transaction Listener is disabled.');
             return;
         }
 
@@ -86,7 +86,7 @@ class TransactionListener implements EventSubscriberInterface
         $Connection->setAutoCommit(false);
         $Connection->setTransactionIsolation(TransactionIsolationLevel::READ_COMMITTED);
         $this->em->beginTransaction();
-        $this->logger->debug('Begin Transaction.');
+        log_debug('Begin Transaction.');
     }
 
     /**
@@ -97,7 +97,7 @@ class TransactionListener implements EventSubscriberInterface
     public function onKernelException(ExceptionEvent $event)
     {
         if (!$this->isEnabled) {
-            $this->logger->debug('Transaction Listener is disabled.');
+            log_debug('Transaction Listener is disabled.');
             return;
         }
 
@@ -105,11 +105,13 @@ class TransactionListener implements EventSubscriberInterface
             return;
         }
 
-        if ($this->em->getConnection()->isTransactionActive()) {
-            $this->em->rollback();
-            $this->logger->debug('Rollback executed.');
+        if ($this->em->getConnection()->getNativeConnection()->inTransaction()) {
+            if ($this->em->getConnection()->isRollbackOnly()) {
+                $this->em->rollback();
+            }
+            log_debug('Rollback executed.');
         } else {
-            $this->logger->debug('Transaction is not active. Rollback skipped.');
+            log_debug('Transaction is not active. Rollback skipped.');
         }
     }
 
@@ -121,19 +123,19 @@ class TransactionListener implements EventSubscriberInterface
     public function onKernelTerminate(TerminateEvent $event)
     {
         if (!$this->isEnabled) {
-            $this->logger->debug('Transaction Listener is disabled.');
+            log_debug('Transaction Listener is disabled.');
             return;
         }
-        if ($this->em->getConnection()->isTransactionActive()) {
+        if ($this->em->getConnection()->getNativeConnection()->inTransaction()) {
             if ($this->em->getConnection()->isRollbackOnly()) {
                 $this->em->rollback();
-                $this->logger->debug('Rollback executed.');
+                log_debug('Rollback executed.');
             } else {
                 $this->em->commit();
-                $this->logger->debug('Commit executed.');
+                log_debug('Commit executed.');
             }
         } else {
-	    $this->logger->debug('Transaction is not active. Rollback skipped.');
+	    log_debug('Transaction is not active. Rollback skipped.');
 	}
     }
 
