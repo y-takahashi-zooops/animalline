@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of EC-CUBE
  *
@@ -10,10 +9,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Eccube\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Eccube\Common\EccubeConfig;
 use Eccube\Repository\CartRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -26,30 +25,26 @@ class DeleteCartsCommand extends Command
     protected static $defaultName = 'eccube:delete-carts';
 
     /**
+     * @var EccubeConfig
+     */
+    protected $eccubeConfig;
+
+    /**
      * @var SymfonyStyle
      */
     protected $io;
-
     /**
      * @var string
      */
     protected $locale;
-
-    /**
-     * @var string
-     */
-    protected $timezoneId;
-
     /**
      * @var \DateTimeZone
      */
     protected $timezone;
-
     /**
      * @var \IntlDateFormatter
      */
     protected $formatter;
-
     /**
      * @var EntityManagerInterface
      */
@@ -59,12 +54,11 @@ class DeleteCartsCommand extends Command
      */
     private $cartRepository;
 
-    public function __construct(string $locale, string $timezoneId, EntityManagerInterface $entityManager, CartRepository $cartRepository)
+    public function __construct(EccubeConfig $eccubeConfig, EntityManagerInterface $entityManager, CartRepository $cartRepository)
     {
         parent::__construct();
 
-        $this->locale = $locale;
-        $this->timezoneId = $timezoneId;
+        $this->eccubeConfig = $eccubeConfig;
         $this->entityManager = $entityManager;
         $this->cartRepository = $cartRepository;
     }
@@ -81,7 +75,6 @@ class DeleteCartsCommand extends Command
         if (null !== $input->getArgument('date')) {
             return;
         }
-
         $pattern = $this->formatter->getPattern();
         $this->io->title('Delete Cart Command Interactive Wizard');
         $this->io->text([
@@ -93,19 +86,17 @@ class DeleteCartsCommand extends Command
             'Now we\'ll ask you for the value of all the missing command arguments.',
             '',
         ]);
-
         $now = new \DateTime('now', $this->timezone);
-
         $dateStr = $this->formatter->format($now->getTimestamp());
         $dateStr = $this->io->ask('date', $dateStr);
-
         $input->setArgument('date', $dateStr);
     }
 
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
         $this->io = new SymfonyStyle($input, $output);
-        $this->timezone = new \DateTimeZone($this->timezoneId);
+        $this->locale = $this->eccubeConfig->get('locale');
+        $this->timezone = new \DateTimeZone($this->eccubeConfig->get('timezone'));
         $this->formatter = $this->createIntlFormatter();
     }
 
@@ -114,34 +105,30 @@ class DeleteCartsCommand extends Command
         $dateStr = $input->getArgument('date');
         $timestamp = $this->formatter->parse($dateStr);
         $dateTime = new \DateTime("@$timestamp", $this->timezone);
-
         $this->deleteCarts($dateTime);
 
         $this->io->success('Delete carts successful.');
+
+        return 0;
     }
 
     protected function deleteCarts(\DateTime $dateTime)
     {
         try {
             $this->entityManager->beginTransaction();
-
             $qb = $this->cartRepository->createQueryBuilder('c')
                 ->delete()
                 ->where('c.update_date <= :date')
                 ->setParameter('date', $dateTime);
-
             $deleteRows = $qb->getQuery()->getResult();
-
             $this->entityManager->flush();
             $this->entityManager->commit();
 
-            $this->io->comment("Deleted ${deleteRows} carts.");
+            $this->io->comment("Deleted {$deleteRows} carts.");
         } catch (\Exception $e) {
             $this->io->error('Failed delete carts. Rollbacked.');
             $this->entityManager->rollback();
         }
-
-        return;
     }
 
     protected function createIntlFormatter()

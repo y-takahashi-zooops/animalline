@@ -22,12 +22,11 @@ use Eccube\Util\CacheUtil;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-// use Twig_Environment;
-use Twig\Environment;
 use Symfony\Component\Form\FormFactoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Twig\Environment;
 
 /**
  * Class ShopController
@@ -67,7 +66,7 @@ class ShopController extends AbstractController
         FormFactoryInterface $formFactory,
         EntityManagerInterface $entityManager,
         EventDispatcherInterface $eventDispatcher,
-        SessionInterface $session
+        SessionInterface $session,
     )
     {
         $this->baseInfoRepository = $baseInfoRepository;
@@ -79,7 +78,8 @@ class ShopController extends AbstractController
     }
 
     /**
-     * @Route("/%eccube_admin_route%/setting/shop", name="admin_setting_shop")
+     * @Route("/%eccube_admin_route%/setting/shop", name="admin_setting_shop", methods={"GET", "POST"})
+     *
      * @Template("@admin/Setting/Shop/shop_master.twig")
      *
      * @param Request $request

@@ -17,11 +17,13 @@ use Eccube\Controller\AbstractController;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Eccube\Form\Type\Admin\LogType;
-use Symfony\Component\Routing\Annotation\Route;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Routing\Annotation\Route;
 
 class LogController extends AbstractController
 {
@@ -36,7 +38,8 @@ class LogController extends AbstractController
     }
 
     /**
-     * @Route("/%eccube_admin_route%/setting/system/log", name="admin_setting_system_log")
+     * @Route("/%eccube_admin_route%/setting/system/log", name="admin_setting_system_log", methods={"GET", "POST"})
+     *
      * @Template("@admin/Setting/System/log.twig")
      *
      * @return array
@@ -61,6 +64,7 @@ class LogController extends AbstractController
         $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SYSTEM_LOG_INDEX_INITIALIZE);
         $formData = $event->getArgument('data');
 
+        /** @var \Symfony\Component\Form\Form $form */
         $form = $builder->getForm();
 
         if ('POST' === $request->getMethod()) {
@@ -79,10 +83,27 @@ class LogController extends AbstractController
         $logDir = $this->getParameter('kernel.logs_dir').DIRECTORY_SEPARATOR.$this->getParameter('kernel.environment');
         $logFile = $logDir.'/'.$formData['files'];
 
-        return [
-            'form' => $form->createView(),
-            'log' => $this->parseLogFile($logFile, $formData),
-        ];
+        if ($form->getClickedButton() && $form->getClickedButton()->getName() === 'download' && $form->isValid()) {
+            $bufferSize = 1024 * 50;
+            $response = new StreamedResponse();
+            $response->headers->set('Content-Length', filesize($logFile));
+            $response->headers->set('Content-Disposition', 'attachment; filename='.basename($logFile));
+            $response->headers->set('Content-Type', 'application/octet-stream');
+            $response->setCallback(function () use ($logFile, $bufferSize) {
+                if ($fh = fopen($logFile, 'r')) {
+                    while (!feof($fh)) {
+                        echo fread($fh, $bufferSize);
+                    }
+                }
+            });
+
+            return $response;
+        } else {
+            return [
+                'form' => $form->createView(),
+                'log' => $this->parseLogFile($logFile, $formData),
+            ];
+        }
     }
 
     /**

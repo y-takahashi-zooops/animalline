@@ -13,7 +13,7 @@
 
 namespace Eccube\Command;
 
-use Doctrine\Common\Annotations\AnnotationRegistry;
+use Eccube\Common\EccubeConfig;
 use Eccube\Service\EntityProxyService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,12 +28,16 @@ class GenerateProxyCommand extends Command
      */
     private $entityProxyService;
 
-    public function __construct(EntityProxyService $entityProxyService, string $projectDir,  array $enabledPlugins)
+    /**
+     * @var EccubeConfig
+     */
+    private $eccubeConfig;
+    
+    public function __construct(EntityProxyService $entityProxyService, EccubeConfig $eccubeConfig)
     {
         parent::__construct();
         $this->entityProxyService = $entityProxyService;
-        $this->projectDir = $projectDir;
-        $this->enabledPlugins = $enabledPlugins;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     protected function configure()
@@ -44,22 +48,24 @@ class GenerateProxyCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        // アノテーションを読み込めるように設定.
-        AnnotationRegistry::registerAutoloadNamespace('Eccube\Annotation', __DIR__.'/../../../src');
+        $projectDir = $this->eccubeConfig->get('kernel.project_dir');
+        $includeDirs = [$projectDir.'/app/Customize/Entity'];
 
-        $includeDirs = [$this->projectDir.'/app/Customize/Entity'];
+        $enabledPlugins = $this->eccubeConfig->get('eccube.plugins.enabled');
 
-        foreach ($this->enabledPlugins as $code) {
-            if (file_exists($this->projectDir.'/app/Plugin/'.$code.'/Entity')) {
-                $includeDirs[] = $this->projectDir.'/app/Plugin/'.$code.'/Entity';
+        foreach ($enabledPlugins as $code) {
+            if (file_exists($projectDir.'/app/Plugin/'.$code.'/Entity')) {
+                $includeDirs[] = $projectDir.'/app/Plugin/'.$code.'/Entity';
             }
         }
 
         $this->entityProxyService->generate(
             $includeDirs,
             [],
-            $this->projectDir.'/app/proxy/entity',
+            $projectDir.'/app/proxy/entity',
             $output
         );
+
+        return 0;
     }
 }

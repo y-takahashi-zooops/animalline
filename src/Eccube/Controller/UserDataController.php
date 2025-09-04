@@ -44,7 +44,7 @@ class UserDataController extends AbstractController
     public function __construct(
         PageRepository $pageRepository,
         DeviceTypeRepository $deviceTypeRepository,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
     ) {
         $this->pageRepository = $pageRepository;
         $this->deviceTypeRepository = $deviceTypeRepository;
@@ -52,7 +52,7 @@ class UserDataController extends AbstractController
     }
 
     /**
-     * @Route("/%eccube_user_data_route%/{route}", name="user_data", requirements={"route": "([0-9a-zA-Z_\-]+\/?)+(?<!\/)"})
+     * @Route("/%eccube_user_data_route%/{route}", name="user_data", requirements={"route": "([0-9a-zA-Z_\-]+\/?)+(?<!\/)"}, methods={"GET"})
      */
     public function index(Request $request, $route)
     {

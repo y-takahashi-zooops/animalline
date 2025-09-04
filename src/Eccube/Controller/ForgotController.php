@@ -13,6 +13,8 @@
 
 namespace Eccube\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Eccube\Common\EccubeConfig;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Eccube\Form\Type\Front\ForgotType;
@@ -22,15 +24,13 @@ use Eccube\Service\MailService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception as HttpException;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use Eccube\Common\EccubeConfig;
-use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 
 class ForgotController extends AbstractController
 {
@@ -76,7 +76,7 @@ class ForgotController extends AbstractController
         LoggerInterface $logger,
         EventDispatcherInterface $eventDispatcher,
         EccubeConfig $eccubeConfig,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ) {
         $this->validator = $validator;
         $this->mailService = $mailService;
@@ -91,12 +91,13 @@ class ForgotController extends AbstractController
     /**
      * パスワードリマインダ.
      *
-     * @Route("/forgot", name="forgot")
+     * @Route("/forgot", name="forgot", methods={"GET", "POST"})
+     * 
      * @Template("Forgot/index.twig")
      */
     public function index(Request $request)
     {
-        if ($this->isGranted('ROLE_USER')) {
+        if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw new HttpException\NotFoundHttpException();
         }
 
@@ -163,12 +164,13 @@ class ForgotController extends AbstractController
     /**
      * 再設定URL送信完了画面.
      *
-     * @Route("/forgot/complete", name="forgot_complete")
+     * @Route("/forgot/complete", name="forgot_complete", methods={"GET"})
+     *
      * @Template("Forgot/complete.twig")
      */
     public function complete(Request $request)
     {
-        if ($this->isGranted('ROLE_USER')) {
+        if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw new HttpException\NotFoundHttpException();
         }
 
@@ -178,12 +180,13 @@ class ForgotController extends AbstractController
     /**
      * パスワード再発行実行画面.
      *
-     * @Route("/forgot/reset/{reset_key}", name="forgot_reset")
+     * @Route("/forgot/reset/{reset_key}", name="forgot_reset", methods={"GET", "POST"})
+     *
      * @Template("Forgot/reset.twig")
      */
     public function reset(Request $request, $reset_key)
     {
-        if ($this->isGranted('ROLE_USER')) {
+        if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw new HttpException\NotFoundHttpException();
         }
 
@@ -225,12 +228,9 @@ class ForgotController extends AbstractController
                 ->getRegularCustomerByResetKey($reset_key, $form->get('login_email')->getData());
             if ($Customer) {
                 // パスワードの発行・更新
-                $pass = $form->get('password')->getData();
-                $hashedPassword = $this->passwordHasher->hashPassword($Customer, $pass);
-
-                // パスワードを更新
-                $Customer->setPassword($hashedPassword);
-                $Customer->setSalt(null);
+                $password = $this->passwordHasher->hashPassword($Customer, $form->get('password')->getData());
+                $Customer->setPassword($password);
+                
                 // リセットキーをクリア
                 $Customer->setResetKey(null);
 
