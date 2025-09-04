@@ -64,7 +64,6 @@ class Kernel extends BaseKernel
         $this->loadEntityProxies();
     }
 
-
     public function getCacheDir(): string
     {
         return $this->getProjectDir().'/var/cache/'.$this->environment;
@@ -80,7 +79,7 @@ class Kernel extends BaseKernel
         return $this->getProjectDir().'/app/config/eccube';
     }
 
-    public function registerBundles(): \Generator
+    public function registerBundles(): iterable
     {
         $contents = require $this->getProjectDir().'/app/config/eccube/bundles.php';
         foreach ($contents as $class => $envs) {
@@ -143,9 +142,6 @@ class Kernel extends BaseKernel
 
         date_default_timezone_set($timezone);
 
-        // RFC違反のメールを送信できるよう独自のValidationを設定
-        // Symfony Mailerに移行済みのため不要な処理を削除
-
         $Logger = $container->get('eccube.logger');
         if ($Logger !== null && $Logger instanceof Log\Logger) {
             LoggerFacade::init($container, $Logger);
@@ -184,7 +180,6 @@ class Kernel extends BaseKernel
         $loader->load($dir.'/services_'.$this->environment.self::CONFIG_EXTS, 'glob');
     }
 
-    // 追記
     protected function configureRoutes(RoutingConfigurator $routes)
     {
         $container = $this->getContainer();
@@ -209,31 +204,13 @@ class Kernel extends BaseKernel
         $builder = $routes->import($confDir.'/routes_'.$this->environment.self::CONFIG_EXTS);
         $builder->schemes($scheme);
 
-	// dev環境用 profiler ルーティング
-        if ($this->environment === 'dev') {
-            $profilerPath = $confDir . '/routes/dev/web_profiler.yaml';
-           if (file_exists($profilerPath)) {
-               $routes->import($profilerPath, '/', 'yaml');
-           }
-        }
-
-        // 環境別ルーティング
-        $routesEnvFile = $confDir . '/routes' . self::CONFIG_EXTS;
-        if (file_exists($routesEnvFile)) {
-            $routes->import($routesEnvFile, '/', 'glob');
-        }
-        $routesEnvFile2 = $confDir . '/routes_' . $this->environment . self::CONFIG_EXTS;
-        if (file_exists($routesEnvFile2)) {
-            $routes->import($routesEnvFile2, '/', 'glob');
-	}
-
         // 有効なプラグインのルーティングをインポートする.
         $plugins = $container->getParameter('eccube.plugins.enabled');
         $pluginDir = $this->getProjectDir().'/app/Plugin';
         foreach ($plugins as $plugin) {
             $dir = $pluginDir.'/'.$plugin.'/Controller';
             if (file_exists($dir)) {
-                $builder = $routes->import($dir,'annotation');
+                $builder = $routes->import($dir, '/', 'annotation');
                 $builder->schemes($scheme);
             }
             if (file_exists($pluginDir.'/'.$plugin.'/Resource/config')) {
@@ -242,7 +219,6 @@ class Kernel extends BaseKernel
             }
         }
     }
-
 
     protected function build(ContainerBuilder $container)
     {
@@ -260,7 +236,6 @@ class Kernel extends BaseKernel
 
         // DocumentRootをルーティディレクトリに設定する.
         $container->addCompilerPass(new WebServerDocumentRootPass('%kernel.project_dir%/'));
-
 
         // twigのurl,path関数を差し替え
         $container->addCompilerPass(new TwigExtensionPass());
@@ -346,6 +321,12 @@ class Kernel extends BaseKernel
 
     protected function loadEntityProxies()
     {
+        // see https://github.com/EC-CUBE/ec-cube/issues/4727
+        // キャッシュクリアなど、コード内でコマンドを利用している場合に2回実行されてしまう
+        if (true === $this->booted) {
+            return;
+        }
+
         $files = Finder::create()
             ->in(__DIR__.'/../../app/proxy/entity/')
             ->name('*.php')
