@@ -37,17 +37,25 @@ class EntityProxyService
     protected $eccubeConfig;
 
     /**
+     * @var string
+     */
+    protected $projectDir;
+
+    /**
      * EntityProxyService constructor.
      *
      * @param EntityManagerInterface $entityManager
      * @param EccubeConfig $eccubeConfig
+     * @param string $projectDir
      */
     public function __construct(
         EntityManagerInterface $entityManager,
         EccubeConfig $eccubeConfig,
+        string $projectDir
     ) {
         $this->entityManager = $entityManager;
         $this->eccubeConfig = $eccubeConfig;
+        $this->projectDir = $projectDir;
     }
 
     /**
@@ -94,7 +102,7 @@ class EntityProxyService
             foreach ($traits as $trait) {
                 $this->addTrait($entityTokens, $trait);
             }
-            $projectDir = str_replace('\\', '/', $this->eccubeConfig->get('kernel.project_dir'));
+            $projectDir = str_replace('\\', '/', $this->projectDir);
 
             // baseDir e.g. /src/Eccube/Entity and /app/Plugin/PluginCode/Entity
             $baseDir = str_replace($projectDir, '', str_replace($baseName, '', $fileName));
@@ -115,7 +123,7 @@ class EntityProxyService
 
     private function originalEntityPath(string $entityClassName): string
     {
-        $projectDir = rtrim(str_replace('\\', '/', $this->eccubeConfig->get('kernel.project_dir')), '/');
+        $projectDir = rtrim(str_replace('\\', '/', $this->projectDir), '/');
         $originalPath = null;
 
         if (preg_match('/\AEccube\\\\Entity\\\\(.+)\z/', $entityClassName, $matches)) {

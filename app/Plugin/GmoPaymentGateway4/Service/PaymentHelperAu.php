@@ -9,6 +9,7 @@ namespace Plugin\GmoPaymentGateway4\Service;
 
 use Eccube\Entity\Order;
 use Eccube\Service\Payment\PaymentResult;
+use Plugin\GmoPaymentGateway4\Repository\GmoConfigRepository;
 use Plugin\GmoPaymentGateway4\Service\Method\CarAu;
 use Plugin\GmoPaymentGateway4\Util\PaymentUtil;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,11 +26,11 @@ class PaymentHelperAu extends PaymentHelperCarrier
 
     public function __construct(
         array $eccubeConfig,
-        GmoConfig $GmoConfig,
+        GmoConfigRepository $gmoConfigRepository,
         UrlGeneratorInterface $router
     ) {
         $this->eccubeConfig = $eccubeConfig;
-        $this->GmoConfig = $GmoConfig;
+        $this->GmoConfig = $gmoConfigRepository->get();
         $this->router = $router;
     }
 
