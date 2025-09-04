@@ -108,7 +108,7 @@ services:
         lazy: true
 
     Eccube\Service\Composer\ComposerServiceInterface:
-        factory: ['@Eccube\Service\Composer\ComposerServiceFactory', createService]
+        factory: ['Eccube\Service\Composer\ComposerServiceFactory', createService]
         arguments:
             $container: !service_locator
                 Eccube\Service\Composer\ComposerApiService: '@Eccube\Service\Composer\ComposerApiService'
@@ -357,8 +357,8 @@ services:
     
     Plugin\GmoPaymentGateway4\Service\PaymentHelperAu:
         arguments:
-        - '%eccube.config%'
-        - '@Plugin\GmoPaymentGateway4\Service\GmoConfig'
+        - '@Eccube\Common\EccubeConfig'
+        - '@Plugin\GmoPaymentGateway4\Repository\GmoConfigRepository'
         - '@router'
     
     Plugin\ProductReview4\PluginManager:

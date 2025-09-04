@@ -14,7 +14,7 @@ use Eccube\Service\MailService;
 use Eccube\Service\OrderHelper;
 use Eccube\Service\Payment\PaymentResult;
 use Eccube\Service\PurchaseFlow\PurchaseFlow;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Plugin\GmoPaymentGateway4\Service\PaymentHelperPayEasyNet;
 use Plugin\GmoPaymentGateway4\Util\PaymentUtil;
 
@@ -24,7 +24,7 @@ use Plugin\GmoPaymentGateway4\Util\PaymentUtil;
 class PayEasyNet extends PayEasy
 {
     /**
-     * @var Session
+     * @var SessionInterface
      */
     protected $session;
 
@@ -41,7 +41,7 @@ class PayEasyNet extends PayEasy
     /**
      * PayEasyNet constructor.
      *
-     * @param Session $session
+     * @param SessionInterface $session
      * @param EntityManagerInterface $entityManager
      * @param CartService $cartService
      * @param MailService $mailService
@@ -50,7 +50,7 @@ class PayEasyNet extends PayEasy
      * @param PaymentHelperPayEasyNet $paymentHelperPayEasyNet
      */
     public function __construct(
-        Session $session,
+        SessionInterface $session,
         EntityManagerInterface $entityManager,
         CartService $cartService,
         MailService $mailService,

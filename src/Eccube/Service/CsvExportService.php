@@ -32,6 +32,7 @@ use Eccube\Util\EntityUtil;
 use Eccube\Util\FormUtil;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Knp\Component\Pager\PaginatorInterface;
 
 class CsvExportService
 {
@@ -111,14 +112,23 @@ class CsvExportService
     protected $formFactory;
 
     /**
+     * @var PaginatorInterface
+     */
+    protected $paginator;
+
+    /**
      * CsvExportService constructor.
      *
      * @param EntityManagerInterface $entityManager
      * @param CsvRepository $csvRepository
      * @param CsvTypeRepository $csvTypeRepository
      * @param OrderRepository $orderRepository
+     * @param ShippingRepository $shippingRepository
      * @param CustomerRepository $customerRepository
+     * @param ProductRepository $productRepository
      * @param EccubeConfig $eccubeConfig
+     * @param FormFactoryInterface $formFactory
+     * @param PaginatorInterface $paginator
      */
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -130,7 +140,7 @@ class CsvExportService
         ProductRepository $productRepository,
         EccubeConfig $eccubeConfig,
         FormFactoryInterface $formFactory,
-        PaginatorInterface $paginator,
+        PaginatorInterface $paginator
     ) {
         $this->entityManager = $entityManager;
         $this->csvRepository = $csvRepository;
@@ -141,6 +151,7 @@ class CsvExportService
         $this->eccubeConfig = $eccubeConfig;
         $this->productRepository = $productRepository;
         $this->formFactory = $formFactory;
+        $this->paginator = $paginator;
     }
 
     /**
