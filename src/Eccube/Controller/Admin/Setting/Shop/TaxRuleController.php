@@ -70,8 +70,9 @@ class TaxRuleController extends AbstractController
     /**
      * 税率設定の初期表示・登録
      *
-     * @Route("/%eccube_admin_route%/setting/shop/tax", name="admin_setting_shop_tax")
-     * @Route("/%eccube_admin_route%/setting/shop/tax/new", name="admin_setting_shop_tax_new")
+     * @Route("/%eccube_admin_route%/setting/shop/tax", name="admin_setting_shop_tax", methods={"GET", "POST"})
+     * @Route("/%eccube_admin_route%/setting/shop/tax/new", name="admin_setting_shop_tax_new", methods={"GET", "POST"})
+     *
      * @Template("@admin/Setting/Shop/tax_rule.twig")
      */
     public function index(Request $request)
@@ -123,7 +124,7 @@ class TaxRuleController extends AbstractController
         $errors = [];
         /** @var TaxRule $TaxRule */
         foreach ($TaxRules as $TaxRule) {
-            /* @var $builder \Symfony\Component\Form\FormBuilderInterface */
+            /** @var \Symfony\Component\Form\FormBuilderInterface $builder */
             $builder = $this->formFactory->createBuilder(TaxRuleType::class, $TaxRule);
             if ($TaxRule->isDefaultTaxRule()) {
                 $builder->remove('apply_date');

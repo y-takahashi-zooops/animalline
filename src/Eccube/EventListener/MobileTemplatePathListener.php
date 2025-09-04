@@ -13,12 +13,12 @@
 
 namespace Eccube\EventListener;
 
+use Detection\MobileDetect;
 use Eccube\Common\EccubeConfig;
 use Eccube\Request\Context;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Twig\Environment;
-use Detection\MobileDetect;
 
 class MobileTemplatePathListener implements EventSubscriberInterface
 {
@@ -33,7 +33,7 @@ class MobileTemplatePathListener implements EventSubscriberInterface
     protected $twig;
 
     /**
-     * @var Mobile_Detect
+     * @var MobileDetect
      */
     protected $detector;
 
@@ -52,8 +52,6 @@ class MobileTemplatePathListener implements EventSubscriberInterface
 
     public function onKernelRequest(RequestEvent $event)
     {
-        $detect = $this->detector;
-
         if (!$event->isMainRequest()) {
             return;
         }
@@ -62,7 +60,7 @@ class MobileTemplatePathListener implements EventSubscriberInterface
             return;
         }
 
-        if (!$detect->isMobile()) {
+        if (!$this->detector->isMobile()) {
             return;
         }
 
@@ -77,8 +75,8 @@ class MobileTemplatePathListener implements EventSubscriberInterface
             ];
         }
 
-        $loader = new \Twig_Loader_Chain([
-            new \Twig_Loader_Filesystem($paths),
+        $loader = new \Twig\Loader\ChainLoader([
+            new \Twig\Loader\FilesystemLoader($paths),
             $this->twig->getLoader(),
         ]);
 

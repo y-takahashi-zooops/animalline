@@ -29,18 +29,19 @@ use Eccube\Service\CsvExportService;
 use Eccube\Service\MailService;
 use Eccube\Util\FormUtil;
 use Knp\Component\Pager\Paginator;
+use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Eccube\Common\EccubeConfig;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CustomerController extends AbstractController
 {
@@ -92,7 +93,7 @@ class CustomerController extends AbstractController
         LoggerInterface $logger,
         EventDispatcherInterface $eventDispatcher,
         EccubeConfig $eccubeConfig,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ) {
         $this->pageMaxRepository = $pageMaxRepository;
         $this->customerRepository = $customerRepository;
@@ -108,11 +109,12 @@ class CustomerController extends AbstractController
     }
 
     /**
-     * @Route("/%eccube_admin_route%/customer", name="admin_customer")
-     * @Route("/%eccube_admin_route%/customer/page/{page_no}", requirements={"page_no" = "\d+"}, name="admin_customer_page")
+     * @Route("/%eccube_admin_route%/customer", name="admin_customer", methods={"GET", "POST"})
+     * @Route("/%eccube_admin_route%/customer/page/{page_no}", requirements={"page_no" = "\d+"}, name="admin_customer_page", methods={"GET", "POST"})
+     * 
      * @Template("@admin/Customer/index.twig")
      */
-    public function index(Request $request, $page_no = null, Paginator $paginator)
+    public function index(Request $request, PaginatorInterface $paginator, $page_no = null)
     {
         $session = $this->session;
         $builder = $this->formFactory->createBuilder(SearchCustomerType::class);
@@ -204,7 +206,7 @@ class CustomerController extends AbstractController
     }
 
     /**
-     * @Route("/%eccube_admin_route%/customer/{id}/resend", requirements={"id" = "\d+"}, name="admin_customer_resend")
+     * @Route("/%eccube_admin_route%/customer/{id}/resend", requirements={"id" = "\d+"}, name="admin_customer_resend", methods={"GET"})
      */
     public function resend(Request $request, $id)
     {
@@ -216,6 +218,11 @@ class CustomerController extends AbstractController
         if (is_null($Customer)) {
             throw new NotFoundHttpException();
         }
+
+        $secretKey = $this->customerRepository->getUniqueSecretKey();
+        $Customer->setSecretKey($secretKey);
+        $this->entityManager->persist($Customer);
+        $this->entityManager->flush();
 
         $activateUrl = $this->generateUrl(
             'entry_activate',
@@ -290,7 +297,7 @@ class CustomerController extends AbstractController
     /**
      * 会員CSVの出力.
      *
-     * @Route("/%eccube_admin_route%/customer/export", name="admin_customer_export")
+     * @Route("/%eccube_admin_route%/customer/export", name="admin_customer_export", methods={"GET"})
      *
      * @param Request $request
      *
@@ -322,7 +329,7 @@ class CustomerController extends AbstractController
             $this->csvExportService->exportData(function ($entity, $csvService) use ($request) {
                 $Csvs = $csvService->getCsvs();
 
-                /** @var $Customer \Eccube\Entity\Customer */
+                /** @var \Eccube\Entity\Customer $Customer */
                 $Customer = $entity;
 
                 $ExportCsvRow = new \Eccube\Entity\ExportCsvRow();
@@ -346,7 +353,7 @@ class CustomerController extends AbstractController
                     $ExportCsvRow->pushData();
                 }
 
-                //$row[] = number_format(memory_get_usage(true));
+                // $row[] = number_format(memory_get_usage(true));
                 // 出力.
                 $csvService->fputcsv($ExportCsvRow->getRow());
             });

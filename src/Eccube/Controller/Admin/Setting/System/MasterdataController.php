@@ -19,11 +19,11 @@ use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Eccube\Form\Type\Admin\MasterdataEditType;
 use Eccube\Form\Type\Admin\MasterdataType;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 
 class MasterdataController extends AbstractController
@@ -41,8 +41,9 @@ class MasterdataController extends AbstractController
     }
 
     /**
-     * @Route("/%eccube_admin_route%/setting/system/masterdata", name="admin_setting_system_masterdata")
-     * @Route("/%eccube_admin_route%/setting/system/masterdata/{entity}/edit", name="admin_setting_system_masterdata_view")
+     * @Route("/%eccube_admin_route%/setting/system/masterdata", name="admin_setting_system_masterdata", methods={"GET", "POST"})
+     * @Route("/%eccube_admin_route%/setting/system/masterdata/{entity}/edit", name="admin_setting_system_masterdata_view", methods={"GET", "POST"})
+     *
      * @Template("@admin/Setting/System/masterdata.twig")
      */
     public function index(Request $request, $entity = null)
@@ -123,7 +124,8 @@ class MasterdataController extends AbstractController
     }
 
     /**
-     * @Route("/%eccube_admin_route%/setting/system/masterdata/edit", name="admin_setting_system_masterdata_edit")
+     * @Route("/%eccube_admin_route%/setting/system/masterdata/edit", name="admin_setting_system_masterdata_edit", methods={"GET", "POST"})
+     *
      * @Template("@admin/Setting/System/masterdata.twig")
      */
     public function edit(Request $request)
@@ -186,8 +188,8 @@ class MasterdataController extends AbstractController
                         $request
                     );
                     $this->eventDispatcher->dispatch(
-                        EccubeEvents::ADMIN_SETTING_SYSTEM_MASTERDATA_EDIT_COMPLETE,
-                        $event
+                        $event,
+                        EccubeEvents::ADMIN_SETTING_SYSTEM_MASTERDATA_EDIT_COMPLETE
                     );
 
                     $this->addSuccess('admin.common.save_complete', 'admin');

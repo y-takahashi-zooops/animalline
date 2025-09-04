@@ -173,7 +173,7 @@ class OrderController extends AbstractController
         LoggerInterface $logger,
         EventDispatcherInterface $eventDispatcher,
         EccubeConfig $eccubeConfig,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ) {
         $this->purchaseFlow = $orderPurchaseFlow;
         $this->csvExportService = $csvExportService;
@@ -213,11 +213,12 @@ class OrderController extends AbstractController
      *   - 初期表示
      *      - 検索条件は空配列, ページ番号は1で初期化し, セッションに保存します.
      *
-     * @Route("/%eccube_admin_route%/order", name="admin_order")
-     * @Route("/%eccube_admin_route%/order/page/{page_no}", requirements={"page_no" = "\d+"}, name="admin_order_page")
+     * @Route("/%eccube_admin_route%/order", name="admin_order", methods={"GET", "POST"})
+     * @Route("/%eccube_admin_route%/order/page/{page_no}", requirements={"page_no" = "\d+"}, name="admin_order_page", methods={"GET", "POST"})
+     *
      * @Template("@admin/Order/index.twig")
      */
-    public function index(Request $request, $page_no = null, PaginatorInterface $paginator)
+    public function index(Request $request, PaginatorInterface $paginator, $page_no = null)
     {
         $builder = $this->formFactory
             ->createBuilder(SearchOrderType::class);
@@ -302,7 +303,7 @@ class OrderController extends AbstractController
                 $viewData = [];
 
                 if ($statusId = (int) $request->get('order_status_id')) {
-                    $viewData = ['status' => $statusId];
+                    $viewData = ['status' => [$statusId]];
                 }
 
                 $searchData = FormUtil::submitAndGetData($searchForm, $viewData);
@@ -324,12 +325,22 @@ class OrderController extends AbstractController
         );
 
         $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_ORDER_INDEX_SEARCH);
+        $sortKey = $searchData['sortkey'];
 
-        $pagination = $paginator->paginate(
-            $qb,
-            $page_no,
-            $page_count
-        );
+        if (empty($this->orderRepository::COLUMNS[$sortKey]) || $sortKey == 'order_status') {
+            $pagination = $paginator->paginate(
+                $qb,
+                $page_no,
+                $page_count
+            );
+        } else {
+            $pagination = $paginator->paginate(
+                $qb,
+                $page_no,
+                $page_count,
+                ['wrap-queries' => true]
+            );
+        }
 
         return [
             'searchForm' => $searchForm->createView(),
@@ -368,7 +379,7 @@ class OrderController extends AbstractController
     /**
      * 受注CSVの出力.
      *
-     * @Route("/%eccube_admin_route%/order/export/order", name="admin_order_export_order")
+     * @Route("/%eccube_admin_route%/order/export/order", name="admin_order_export_order", methods={"GET"})
      *
      * @param Request $request
      *
@@ -386,7 +397,7 @@ class OrderController extends AbstractController
     /**
      * 配送CSVの出力.
      *
-     * @Route("/%eccube_admin_route%/order/export/shipping", name="admin_order_export_shipping")
+     * @Route("/%eccube_admin_route%/order/export/shipping", name="admin_order_export_shipping", methods={"GET"})
      *
      * @param Request $request
      *
@@ -422,12 +433,12 @@ class OrderController extends AbstractController
             // CSV種別を元に初期化.
             $this->csvExportService->initCsvType($csvTypeId);
 
-            // ヘッダ行の出力.
-            $this->csvExportService->exportHeader();
-
             // 受注データ検索用のクエリビルダを取得.
             $qb = $this->csvExportService
                 ->getOrderQueryBuilder($request);
+
+            // ヘッダ行の出力.
+            $this->csvExportService->exportHeader();
 
             // データ行の出力.
             $this->csvExportService->setExportQueryBuilder($qb);
@@ -467,7 +478,7 @@ class OrderController extends AbstractController
                         $ExportCsvRow->pushData();
                     }
 
-                    //$row[] = number_format(memory_get_usage(true));
+                    // $row[] = number_format(memory_get_usage(true));
                     // 出力.
                     $csvService->fputcsv($ExportCsvRow->getRow());
                 }
@@ -592,7 +603,9 @@ class OrderController extends AbstractController
             return $this->json(['status' => 'NG'], 400);
         }
 
-        $trackingNumber = mb_convert_kana($request->get('tracking_number'), 'a', 'utf-8');
+        $trackingNumber = $request->get('tracking_number') ?? '';
+        $trackingNumber = mb_convert_kana($trackingNumber, 'a', 'utf-8');
+
         /** @var \Symfony\Component\Validator\ConstraintViolationListInterface $errors */
         $errors = $this->validator->validate(
             $trackingNumber,
@@ -630,7 +643,8 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/%eccube_admin_route%/order/export/pdf", name="admin_order_export_pdf")
+     * @Route("/%eccube_admin_route%/order/export/pdf", name="admin_order_export_pdf", methods={"GET", "POST"})
+     *
      * @Template("@admin/Order/order_pdf.twig")
      *
      * @param Request $request
@@ -678,7 +692,8 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/%eccube_admin_route%/order/export/pdf/download", name="admin_order_pdf_download")
+     * @Route("/%eccube_admin_route%/order/export/pdf/download", name="admin_order_pdf_download", methods={"POST"})
+     *
      * @Template("@admin/Order/order_pdf.twig")
      *
      * @param Request $request
@@ -720,6 +735,9 @@ class OrderController extends AbstractController
             ]);
         }
 
+        // TCPDF::Outputを実行するとプロパティが初期化されるため、ファイル名を事前に取得しておく
+        $pdfFileName = $orderPdfService->getPdfFileName();
+
         // ダウンロードする
         $response = new Response(
             $orderPdfService->outputPdf(),
@@ -731,9 +749,9 @@ class OrderController extends AbstractController
 
         // レスポンスヘッダーにContent-Dispositionをセットし、ファイル名を指定
         if ($downloadKind == 1) {
-            $response->headers->set('Content-Disposition', 'attachment; filename="'.$orderPdfService->getPdfFileName().'"');
+            $response->headers->set('Content-Disposition', 'attachment; filename="'.$pdfFileName.'"');
         } else {
-            $response->headers->set('Content-Disposition', 'inline; filename="'.$orderPdfService->getPdfFileName().'"');
+            $response->headers->set('Content-Disposition', 'inline; filename="'.$pdfFileName.'"');
         }
 
         $this->logger->info('OrderPdf download success!', ['Order ID' => implode(',', $request->get('ids', []))]);

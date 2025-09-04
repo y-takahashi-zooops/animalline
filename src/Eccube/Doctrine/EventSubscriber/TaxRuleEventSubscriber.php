@@ -16,6 +16,7 @@ namespace Eccube\Doctrine\EventSubscriber;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Event\PostLoadEventArgs;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use Eccube\Entity\ProductClass;
 use Eccube\Service\TaxRuleService;
 use Doctrine\ORM\Event\PostUpdateEventArgs;

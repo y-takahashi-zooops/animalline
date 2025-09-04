@@ -67,7 +67,7 @@ class CategoryController extends AbstractController
         EventDispatcherInterface $eventDispatcher,
         EccubeConfig $eccubeConfig,
         EntityManagerInterface $entityManager,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
     ) {
         $this->csvExportService = $csvExportService;
         $this->categoryRepository = $categoryRepository;
@@ -79,12 +79,13 @@ class CategoryController extends AbstractController
     }
 
     /**
-     * @Route("/%eccube_admin_route%/product/category", name="admin_product_category", defaults={"parent_id"=null, "id"=null})
-     * @Route("/%eccube_admin_route%/product/category/{parent_id}", requirements={"parent_id" = "\d+"}, name="admin_product_category_show", defaults={"id"=null})
-     * @Route("/%eccube_admin_route%/product/category/{id}/edit", requirements={"id" = "\d+"}, name="admin_product_category_edit", defaults={"parent_id"=null})
+     * @Route("/%eccube_admin_route%/product/category", name="admin_product_category", methods={"GET", "POST"})
+     * @Route("/%eccube_admin_route%/product/category/{parent_id}", requirements={"parent_id" = "\d+"}, name="admin_product_category_show", methods={"GET", "POST"})
+     * @Route("/%eccube_admin_route%/product/category/{id}/edit", requirements={"id" = "\d+"}, name="admin_product_category_edit", methods={"GET", "POST"})
+     *
      * @Template("@admin/Product/category.twig")
      */
-    public function index(Request $request, $parent_id = null, $id = null, CacheUtil $cacheUtil)
+    public function index(Request $request, CacheUtil $cacheUtil, $parent_id = null, $id = null)
     {
         if ($parent_id) {
             /** @var Category $Parent */
@@ -102,7 +103,7 @@ class CategoryController extends AbstractController
             }
             $Parent = $TargetCategory->getParent();
         } else {
-            $TargetCategory = new \Eccube\Entity\Category();
+            $TargetCategory = new Category();
             $TargetCategory->setParent($Parent);
             if ($Parent) {
                 $TargetCategory->setHierarchy($Parent->getHierarchy() + 1);
@@ -139,7 +140,7 @@ class CategoryController extends AbstractController
 
         if ($request->getMethod() === 'POST') {
             $form->handleRequest($request);
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 if ($this->eccubeConfig['eccube_category_nest_level'] < $TargetCategory->getHierarchy()) {
                     throw new BadRequestHttpException();
                 }
@@ -207,8 +208,10 @@ class CategoryController extends AbstractController
         }
 
         $formViews = [];
+        $formErrors = [];
         foreach ($forms as $key => $value) {
             $formViews[$key] = $value->createView();
+            $formErrors[$key]['count'] = $value->getErrors(true)->count();
         }
 
         $Ids = [];
@@ -227,6 +230,7 @@ class CategoryController extends AbstractController
             'TopCategories' => $TopCategories,
             'TargetCategory' => $TargetCategory,
             'forms' => $formViews,
+            'error_forms' => $formErrors,
         ];
     }
 
@@ -289,7 +293,7 @@ class CategoryController extends AbstractController
         if ($this->isTokenValid()) {
             $sortNos = $request->request->all();
             foreach ($sortNos as $categoryId => $sortNo) {
-                /* @var $Category \Eccube\Entity\Category */
+                /** @var Category $Category */
                 $Category = $this->categoryRepository
                     ->find($categoryId);
                 $Category->setSortNo($sortNo);
@@ -306,7 +310,7 @@ class CategoryController extends AbstractController
     /**
      * カテゴリCSVの出力.
      *
-     * @Route("/%eccube_admin_route%/product/category/export", name="admin_product_category_export")
+     * @Route("/%eccube_admin_route%/product/category/export", name="admin_product_category_export", methods={"GET"})
      *
      * @param Request $request
      *
@@ -338,7 +342,7 @@ class CategoryController extends AbstractController
             $this->csvExportService->exportData(function ($entity, $csvService) use ($request) {
                 $Csvs = $csvService->getCsvs();
 
-                /** @var $Category \Eccube\Entity\Category */
+                /** @var Category $Category */
                 $Category = $entity;
 
                 // CSV出力項目と合致するデータを取得.
@@ -360,7 +364,7 @@ class CategoryController extends AbstractController
                     $ExportCsvRow->pushData();
                 }
 
-                //$row[] = number_format(memory_get_usage(true));
+                // $row[] = number_format(memory_get_usage(true));
                 // 出力.
                 $csvService->fputcsv($ExportCsvRow->getRow());
             });

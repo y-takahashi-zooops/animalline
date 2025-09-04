@@ -48,6 +48,10 @@ class PluginPass implements CompilerPassInterface
         foreach ($definitions as $definition) {
             $class = $definition->getClass();
 
+            if (null === $class) {
+                continue;
+            }
+
             foreach ($plugins as $plugin) {
                 $namespace = 'Plugin\\'.$plugin.'\\';
 

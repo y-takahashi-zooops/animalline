@@ -13,15 +13,15 @@
 
 namespace Eccube\EventListener;
 
-use Eccube\Log\Logger;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
-use Symfony\Component\HttpKernel\Event\ResponseEvent;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\Event\TerminateEvent;
 
 /**
  * ログ出力リスナー
@@ -29,11 +29,11 @@ use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 class LogListener implements EventSubscriberInterface
 {
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     protected $logger;
 
-    public function __construct(Logger $logger)
+    public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
@@ -62,7 +62,7 @@ class LogListener implements EventSubscriberInterface
     }
 
     /**
-     * @param GetResponseEvent $event
+     * @param RequestEvent $event
      */
     public function onKernelRequestEarly(RequestEvent $event)
     {
@@ -70,11 +70,11 @@ class LogListener implements EventSubscriberInterface
             return;
         }
 
-        $this->logger->info('INIT');
+        $this->logger->debug('INIT');
     }
 
     /**
-     * @param GetResponseEvent $event
+     * @param ResponseEvent $event
      */
     public function onKernelRequest(RequestEvent $event)
     {
@@ -83,7 +83,7 @@ class LogListener implements EventSubscriberInterface
         }
 
         $route = $this->getRoute($event->getRequest());
-        $this->logger->info('PROCESS START', [$route]);
+        $this->logger->debug('PROCESS START', [$route]);
     }
 
     /**
@@ -99,7 +99,7 @@ class LogListener implements EventSubscriberInterface
     }
 
     /**
-     * @param FilterControllerEvent $event
+     * @param ControllerEvent $event
      */
     public function onKernelController(ControllerEvent $event)
     {
@@ -108,7 +108,7 @@ class LogListener implements EventSubscriberInterface
         }
 
         $route = $this->getRoute($event->getRequest());
-        $this->logger->info('LOGIC START', [$route]);
+        $this->logger->debug('LOGIC START', [$route]);
     }
 
     /**
@@ -121,20 +121,20 @@ class LogListener implements EventSubscriberInterface
         }
 
         $route = $this->getRoute($event->getRequest());
-        $this->logger->info('LOGIC END', [$route]);
+        $this->logger->debug('LOGIC END', [$route]);
     }
 
     /**
-     * @param TerminateEvent $event
+     * @param PostResponseEvent $event
      */
     public function onKernelTerminate(TerminateEvent $event)
     {
         $route = $this->getRoute($event->getRequest());
-        $this->logger->info('PROCESS END', [$route]);
+        $this->logger->debug('PROCESS END', [$route]);
     }
 
     /**
-     * @param GetResponseForExceptionEvent $event
+     * @param ExceptionEvent $event
      */
     public function onKernelException(ExceptionEvent $event)
     {

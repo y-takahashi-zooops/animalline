@@ -16,7 +16,6 @@ namespace Eccube\Doctrine\Common\CsvDataFixtures;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\Persistence\ObjectManager;
-use Doctrine\ORM\EntityManagerInterface;
 use SplFileObject;
 
 /**
@@ -38,7 +37,7 @@ class CsvFixture implements FixtureInterface
      *
      * @param \SplFileObject|null $file
      */
-    public function __construct(Connection $connection, ?SplFileObject $file = null)
+    public function __construct(Connection $connection, ?\SplFileObject $file = null)
     {
         $this->connection = $connection;
         $this->file = $file;

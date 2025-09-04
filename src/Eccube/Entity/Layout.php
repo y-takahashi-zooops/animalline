@@ -15,48 +15,52 @@ namespace Eccube\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-if (!class_exists('\Eccube\Entity\Layout')) {
+if (!class_exists(Layout::class)) {
     /**
      * Layout
      *
      * @ORM\Table(name="dtb_layout")
+     * 
      * @ORM\InheritanceType("SINGLE_TABLE")
+     * 
      * @ORM\DiscriminatorColumn(name="discriminator_type", type="string", length=255)
+     * 
      * @ORM\HasLifecycleCallbacks()
+     * 
      * @ORM\Entity(repositoryClass="Eccube\Repository\LayoutRepository")
      */
     class Layout extends AbstractEntity
     {
         // 配置ID
         /** 配置ID: 未使用 */
-        const TARGET_ID_UNUSED = 0;
-        const TARGET_ID_HEAD = 1;
-        const TARGET_ID_BODY_AFTER = 2;
-        const TARGET_ID_HEADER = 3;
-        const TARGET_ID_CONTENTS_TOP = 4;
-        const TARGET_ID_SIDE_LEFT = 5;
-        const TARGET_ID_MAIN_TOP = 6;
-        const TARGET_ID_MAIN_BOTTOM = 7;
-        const TARGET_ID_SIDE_RIGHT = 8;
-        const TARGET_ID_CONTENTS_BOTTOM = 9;
-        const TARGET_ID_FOOTER = 10;
-        const TARGET_ID_DRAWER = 11;
-        const TARGET_ID_CLOSE_BODY_BEFORE = 12;
+        public const TARGET_ID_UNUSED = 0;
+        public const TARGET_ID_HEAD = 1;
+        public const TARGET_ID_BODY_AFTER = 2;
+        public const TARGET_ID_HEADER = 3;
+        public const TARGET_ID_CONTENTS_TOP = 4;
+        public const TARGET_ID_SIDE_LEFT = 5;
+        public const TARGET_ID_MAIN_TOP = 6;
+        public const TARGET_ID_MAIN_BOTTOM = 7;
+        public const TARGET_ID_SIDE_RIGHT = 8;
+        public const TARGET_ID_CONTENTS_BOTTOM = 9;
+        public const TARGET_ID_FOOTER = 10;
+        public const TARGET_ID_DRAWER = 11;
+        public const TARGET_ID_CLOSE_BODY_BEFORE = 12;
 
         /**
          * プレビュー用レイアウト
          */
-        const DEFAULT_LAYOUT_PREVIEW_PAGE = 0;
+        public const DEFAULT_LAYOUT_PREVIEW_PAGE = 0;
 
         /**
          * トップページ用レイアウト
          */
-        const DEFAULT_LAYOUT_TOP_PAGE = 1;
+        public const DEFAULT_LAYOUT_TOP_PAGE = 1;
 
         /**
          * 下層ページ用レイアウト
          */
-        const DEFAULT_LAYOUT_UNDERLAYER_PAGE = 2;
+        public const DEFAULT_LAYOUT_UNDERLAYER_PAGE = 2;
 
         /**
          * @return string
@@ -85,7 +89,7 @@ if (!class_exists('\Eccube\Entity\Layout')) {
         }
 
         /**
-         * @param integer|null $targetId
+         * @param int|null $targetId
          *
          * @return Block[]
          */
@@ -120,7 +124,7 @@ if (!class_exists('\Eccube\Entity\Layout')) {
         }
 
         /**
-         * @param integer $targetId
+         * @param int $targetId
          *
          * @return BlockPosition[]
          */
@@ -201,7 +205,7 @@ if (!class_exists('\Eccube\Entity\Layout')) {
         /**
          * Get ColumnNum
          *
-         * @return integer
+         * @return int
          */
         public function getColumnNum()
         {
@@ -213,10 +217,12 @@ if (!class_exists('\Eccube\Entity\Layout')) {
         // -----------------------
 
         /**
-         * @var integer
+         * @var int
          *
          * @ORM\Column(name="id", type="integer", options={"unsigned":true})
+         * 
          * @ORM\Id
+         * 
          * @ORM\GeneratedValue(strategy="IDENTITY")
          */
         private $id;
@@ -253,15 +259,18 @@ if (!class_exists('\Eccube\Entity\Layout')) {
          * @var \Doctrine\Common\Collections\Collection
          *
          * @ORM\OneToMany(targetEntity="Eccube\Entity\PageLayout", mappedBy="Layout", cascade={"persist","remove"})
+         * 
          * @ORM\OrderBy({"sort_no" = "ASC"})
          */
         private $PageLayouts;
 
         /**
-         * @var \Eccube\Entity\Master\DeviceType
+         * @var Master\DeviceType
          *
          * @ORM\ManyToOne(targetEntity="Eccube\Entity\Master\DeviceType")
+         * 
          * @ORM\JoinColumns({
+         * 
          *   @ORM\JoinColumn(name="device_type_id", referencedColumnName="id")
          * })
          */
@@ -279,7 +288,7 @@ if (!class_exists('\Eccube\Entity\Layout')) {
         /**
          * Get id
          *
-         * @return integer
+         * @return int
          */
         public function getId()
         {
@@ -361,11 +370,11 @@ if (!class_exists('\Eccube\Entity\Layout')) {
         /**
          * Add blockPosition
          *
-         * @param \Eccube\Entity\BlockPosition $blockPosition
+         * @param BlockPosition $blockPosition
          *
          * @return Layout
          */
-        public function addBlockPosition(\Eccube\Entity\BlockPosition $blockPosition)
+        public function addBlockPosition(BlockPosition $blockPosition)
         {
             $this->BlockPositions[] = $blockPosition;
 
@@ -375,9 +384,9 @@ if (!class_exists('\Eccube\Entity\Layout')) {
         /**
          * Remove blockPosition
          *
-         * @param \Eccube\Entity\BlockPosition $blockPosition
+         * @param BlockPosition $blockPosition
          */
-        public function removeBlockPosition(\Eccube\Entity\BlockPosition $blockPosition)
+        public function removeBlockPosition(BlockPosition $blockPosition)
         {
             $this->BlockPositions->removeElement($blockPosition);
         }
@@ -395,11 +404,11 @@ if (!class_exists('\Eccube\Entity\Layout')) {
         /**
          * Add pageLayoutLayout
          *
-         * @param \Eccube\Entity\PageLayout $PageLayout
+         * @param PageLayout $PageLayout
          *
          * @return Layout
          */
-        public function addPageLayout(\Eccube\Entity\PageLayout $PageLayout)
+        public function addPageLayout(PageLayout $PageLayout)
         {
             $this->PageLayouts[] = $PageLayout;
 
@@ -409,9 +418,9 @@ if (!class_exists('\Eccube\Entity\Layout')) {
         /**
          * Remove pageLayoutLayout
          *
-         * @param \Eccube\Entity\PageLayout $PageLayout
+         * @param PageLayout $PageLayout
          */
-        public function removePageLayout(\Eccube\Entity\PageLayout $PageLayout)
+        public function removePageLayout(PageLayout $PageLayout)
         {
             $this->PageLayouts->removeElement($PageLayout);
         }
@@ -429,11 +438,11 @@ if (!class_exists('\Eccube\Entity\Layout')) {
         /**
          * Set deviceType
          *
-         * @param \Eccube\Entity\Master\DeviceType $deviceType
+         * @param Master\DeviceType $deviceType
          *
          * @return Layout
          */
-        public function setDeviceType(\Eccube\Entity\Master\DeviceType $deviceType = null)
+        public function setDeviceType(?Master\DeviceType $deviceType = null)
         {
             $this->DeviceType = $deviceType;
 
@@ -443,7 +452,7 @@ if (!class_exists('\Eccube\Entity\Layout')) {
         /**
          * Get deviceType
          *
-         * @return \Eccube\Entity\Master\DeviceType
+         * @return Master\DeviceType
          */
         public function getDeviceType()
         {
@@ -453,7 +462,7 @@ if (!class_exists('\Eccube\Entity\Layout')) {
         /**
          * Check layout can delete or not
          *
-         * @return boolean
+         * @return bool
          */
         public function isDeletable()
         {

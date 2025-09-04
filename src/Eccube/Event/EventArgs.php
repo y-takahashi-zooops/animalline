@@ -13,18 +13,22 @@
 
 namespace Eccube\Event;
 
-use Symfony\Component\EventDispatcher\GenericEvent;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\EventDispatcher\Event;
 
-class EventArgs extends GenericEvent
+/**
+ * Class EventArgs
+ */
+class EventArgs extends Event
 {
     /**
-     * @var Request
+     * @var Request|null
      */
     private $request;
+
     /**
-     * @var Response
+     * @var Response|null
      */
     private $response;
 
@@ -33,41 +37,39 @@ class EventArgs extends GenericEvent
      *
      * @param array $arguments
      * @param Request $request
+     * @param Response $response
      */
-    public function __construct(array $arguments = [], Request $request = null)
+    public function __construct(array $arguments = [], ?Request $request = null, ?Response $response = null)
     {
         parent::__construct(null, $arguments);
         $this->request = $request;
+        $this->response = $response;
     }
 
-    /**
-     * @param Request $request
-     */
-    public function setRequest(Request $request)
+    public function setRequest(Request $request): self
     {
         $this->request = $request;
+        return $this;
     }
 
-    /**
-     * @return Request
-     */
-    public function getRequest()
+    public function getRequest(): ?Request
     {
         return $this->request;
     }
 
     /**
-     * @param Response $response
+     * @param Response|null $response
      */
-    public function setResponse(Response $response)
+    public function setResponse(Response $response): self
     {
         $this->response = $response;
+        return $this;
     }
 
     /**
-     * @return Response
+     * @return Response|null
      */
-    public function getResponse()
+    public function getResponse(): ?Response
     {
         return $this->response;
     }
@@ -75,8 +77,8 @@ class EventArgs extends GenericEvent
     /**
      * @return bool
      */
-    public function hasResponse()
+    public function hasResponse(): bool
     {
-        return $this->response instanceof Response;
+        return $this->response !== null;
     }
 }

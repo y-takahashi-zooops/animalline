@@ -15,17 +15,21 @@ namespace Eccube\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-if (!class_exists('\Eccube\Entity\MailTemplate')) {
+if (!class_exists(MailTemplate::class)) {
     /**
      * MailTemplate
      *
      * @ORM\Table(name="dtb_mail_template")
+     * 
      * @ORM\InheritanceType("SINGLE_TABLE")
+     * 
      * @ORM\DiscriminatorColumn(name="discriminator_type", type="string", length=255)
+     * 
      * @ORM\HasLifecycleCallbacks()
+     * 
      * @ORM\Entity(repositoryClass="Eccube\Repository\MailTemplateRepository")
      */
-    class MailTemplate extends \Eccube\Entity\AbstractEntity
+    class MailTemplate extends AbstractEntity
     {
         /**
          * @return string
@@ -39,7 +43,9 @@ if (!class_exists('\Eccube\Entity\MailTemplate')) {
          * @var int
          *
          * @ORM\Column(name="id", type="integer", options={"unsigned":true})
+         * 
          * @ORM\Id
+         * 
          * @ORM\GeneratedValue(strategy="IDENTITY")
          */
         private $id;
@@ -80,14 +86,25 @@ if (!class_exists('\Eccube\Entity\MailTemplate')) {
         private $update_date;
 
         /**
-         * @var \Eccube\Entity\Member
+         * @var Member
          *
          * @ORM\ManyToOne(targetEntity="Eccube\Entity\Member")
+         * 
          * @ORM\JoinColumns({
+         * 
          *   @ORM\JoinColumn(name="creator_id", referencedColumnName="id")
          * })
          */
         private $Creator;
+
+        /**
+         * テンプレートの削除可否。
+         *
+         * @var bool
+         *
+         * @ORM\Column(name="deletable", type="boolean", options={"default":false}))
+         */
+        private bool $deletable = false;
 
         /**
          * Get id.
@@ -222,11 +239,11 @@ if (!class_exists('\Eccube\Entity\MailTemplate')) {
         /**
          * Set creator.
          *
-         * @param \Eccube\Entity\Member|null $creator
+         * @param Member|null $creator
          *
          * @return MailTemplate
          */
-        public function setCreator(\Eccube\Entity\Member $creator = null)
+        public function setCreator(?Member $creator = null)
         {
             $this->Creator = $creator;
 
@@ -236,11 +253,31 @@ if (!class_exists('\Eccube\Entity\MailTemplate')) {
         /**
          * Get creator.
          *
-         * @return \Eccube\Entity\Member|null
+         * @return Member|null
          */
         public function getCreator()
         {
             return $this->Creator;
+        }
+
+                /**
+         * @return bool
+         */
+        public function isDeletable(): bool
+        {
+            return $this->deletable;
+        }
+
+        /**
+         * @param bool $deletable
+         *
+         * @return $this
+         */
+        public function setDeletable(bool $deletable): self
+        {
+            $this->deletable = $deletable;
+
+            return $this;
         }
     }
 }

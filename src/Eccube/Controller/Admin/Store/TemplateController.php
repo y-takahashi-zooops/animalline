@@ -67,7 +67,7 @@ class TemplateController extends AbstractController
         EventDispatcherInterface $eventDispatcher,
         FormFactoryInterface $formFactory,
         EccubeConfig $eccubeConfig,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ) {
         $this->templateRepository = $templateRepository;
         $this->deviceTypeRepository = $deviceTypeRepository;
@@ -80,7 +80,8 @@ class TemplateController extends AbstractController
     /**
      * テンプレート一覧画面
      *
-     * @Route("/%eccube_admin_route%/store/template", name="admin_store_template")
+     * @Route("/%eccube_admin_route%/store/template", name="admin_store_template", methods={"GET", "POST"})
+     *
      * @Template("@admin/Store/template.twig")
      *
      * @param Request $request
@@ -126,7 +127,7 @@ class TemplateController extends AbstractController
     /**
      * テンプレート一覧からのダウンロード
      *
-     * @Route("/%eccube_admin_route%/store/template/{id}/download", name="admin_store_template_download", requirements={"id" = "\d+"})
+     * @Route("/%eccube_admin_route%/store/template/{id}/download", name="admin_store_template_download", requirements={"id" = "\d+"}, methods={"GET"})
      *
      * @param Request $request
      * @param \Eccube\Entity\Template $Template
@@ -231,7 +232,8 @@ class TemplateController extends AbstractController
     /**
      * テンプレートの追加画面.
      *
-     * @Route("/%eccube_admin_route%/store/template/install", name="admin_store_template_install")
+     * @Route("/%eccube_admin_route%/store/template/install", name="admin_store_template_install", methods={"GET", "POST"})
+     *
      * @Template("@admin/Store/template_add.twig")
      *
      * @param Request $request
@@ -240,13 +242,14 @@ class TemplateController extends AbstractController
      */
     public function install(Request $request)
     {
+        $this->addInfoOnce('admin.common.restrict_file_upload_info', 'admin');
         $form = $this->formFactory
             ->createBuilder(TemplateType::class)
             ->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var $Template \Eccube\Entity\Template */
+            /** @var \Eccube\Entity\Template $Template */
             $Template = $form->getData();
 
             $TemplateExists = $this->templateRepository->findByCode($Template->getCode());

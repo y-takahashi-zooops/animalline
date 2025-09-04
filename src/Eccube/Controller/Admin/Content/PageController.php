@@ -70,7 +70,7 @@ class PageController extends AbstractController
         DeviceTypeRepository $deviceTypeRepository,
         FormFactoryInterface $formFactory,
         EventDispatcherInterface $eventDispatcher,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ) {
         $this->pageRepository = $pageRepository;
         $this->pageLayoutRepository = $pageLayoutRepository;
@@ -81,7 +81,8 @@ class PageController extends AbstractController
     }
 
     /**
-     * @Route("/%eccube_admin_route%/content/page", name="admin_content_page")
+     * @Route("/%eccube_admin_route%/content/page", name="admin_content_page", methods={"GET"})
+     * 
      * @Template("@admin/Content/page.twig")
      */
     public function index(Request $request)
@@ -102,12 +103,15 @@ class PageController extends AbstractController
     }
 
     /**
-     * @Route("/%eccube_admin_route%/content/page/new", name="admin_content_page_new")
-     * @Route("/%eccube_admin_route%/content/page/{id}/edit", requirements={"id" = "\d+"}, name="admin_content_page_edit")
+     * @Route("/%eccube_admin_route%/content/page/new", name="admin_content_page_new", methods={"GET", "POST"})
+     * @Route("/%eccube_admin_route%/content/page/{id}/edit", requirements={"id" = "\d+"}, name="admin_content_page_edit", methods={"GET", "POST"})
+     * 
      * @Template("@admin/Content/page_edit.twig")
      */
-    public function edit(Request $request, $id = null, Environment $twig, RouterInterface $router, CacheUtil $cacheUtil)
+    public function edit(Request $request, Environment $twig, RouterInterface $router, CacheUtil $cacheUtil, $id = null)
     {
+        $this->addInfoOnce('admin.common.restrict_file_upload_info', 'admin');
+
         if (null === $id) {
             $Page = $this->pageRepository->newPage();
         } else {
@@ -268,7 +272,7 @@ class PageController extends AbstractController
     /**
      * @Route("/%eccube_admin_route%/content/page/{id}/delete", requirements={"id" = "\d+"}, name="admin_content_page_delete", methods={"DELETE"})
      */
-    public function delete(Request $request, $id = null, CacheUtil $cacheUtil)
+    public function delete(Request $request, CacheUtil $cacheUtil, $id = null)
     {
         $this->isTokenValid();
 

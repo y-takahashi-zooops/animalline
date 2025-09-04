@@ -13,7 +13,9 @@
 
 namespace Eccube\EventListener;
 
+use Detection\MobileDetect;
 use Doctrine\ORM\NoResultException;
+
 use Eccube\Common\EccubeConfig;
 use Eccube\Entity\AuthorityRole;
 use Eccube\Entity\Layout;
@@ -29,13 +31,13 @@ use Eccube\Repository\PageRepository;
 use Eccube\Repository\PageLayoutRepository;
 use Eccube\Repository\BlockPositionRepository;
 use Eccube\Request\Context;
+use Eccube\Service\SystemService;
 // use SunCat\MobileDetectBundle\DeviceDetector\MobileDetector;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
-use Detection\MobileDetect;
 use Psr\Log\LoggerInterface;
 
 class TwigInitializeListener implements EventSubscriberInterface
@@ -108,20 +110,12 @@ class TwigInitializeListener implements EventSubscriberInterface
     private $logger;
 
     /**
+     * @var SystemService
+     */
+    protected $systemService;
+
+    /**
      * TwigInitializeListener constructor.
-     *
-     * @param Environment $twig
-     * @param BaseInfoRepository $baseInfoRepository
-     * @param PageRepository $pageRepository
-     * @param PageLayoutRepository $pageLayoutRepository
-     * @param BlockPositionRepository $blockPositionRepository
-     * @param DeviceTypeRepository $deviceTypeRepository
-     * @param AuthorityRoleRepository $authorityRoleRepository
-     * @param EccubeConfig $eccubeConfig
-     * @param Context $context
-     * @param MobileDetect $mobileDetector
-     * @param UrlGeneratorInterface $router
-     * @param LayoutRepository $layoutRepository
      */
     public function __construct(
         Environment $twig,
@@ -135,8 +129,9 @@ class TwigInitializeListener implements EventSubscriberInterface
         Context $context,
         MobileDetect $mobileDetector,
         UrlGeneratorInterface $router,
-	LayoutRepository $layoutRepository,
-	LoggerInterface $logger
+	    LayoutRepository $layoutRepository,
+	    LoggerInterface $logger,
+        SystemService $systemService,
     ) {
         $this->twig = $twig;
         $this->baseInfoRepository = $baseInfoRepository;
@@ -149,8 +144,9 @@ class TwigInitializeListener implements EventSubscriberInterface
         $this->requestContext = $context;
         $this->mobileDetector = $mobileDetector;
         $this->router = $router;
-	$this->layoutRepository = $layoutRepository;
-	$this->logger = $logger;
+	    $this->layoutRepository = $layoutRepository;
+	    $this->logger = $logger;
+        $this->systemService = $systemService;
     }
 
     /**
@@ -251,6 +247,8 @@ class TwigInitializeListener implements EventSubscriberInterface
         $this->twig->addGlobal('Layout', $Layout);
         $this->twig->addGlobal('Page', $Page);
         $this->twig->addGlobal('title', $Page->getName());
+        $this->twig->addGlobal('isMaintenance', $this->systemService->isMaintenanceMode());
+        $this->twig->addGlobal('isDebugMode', env('APP_DEBUG'));
     }
 
     /**
@@ -272,6 +270,8 @@ class TwigInitializeListener implements EventSubscriberInterface
             $eccubeNav = $this->getDisplayEccubeNav($eccubeNav, $AuthorityRoles, $baseUrl);
         }
         $this->twig->addGlobal('eccubeNav', $eccubeNav);
+        $this->twig->addGlobal('isMaintenance', $this->systemService->isMaintenanceMode());
+        $this->twig->addGlobal('isDebugMode', env('APP_DEBUG'));
     }
 
     /**
@@ -285,6 +285,8 @@ class TwigInitializeListener implements EventSubscriberInterface
      */
     private function getDisplayEccubeNav($parentNav, $AuthorityRoles, $baseUrl)
     {
+        $restrictUrls = $this->eccubeConfig['eccube_restrict_file_upload_urls'];
+
         foreach ($parentNav as $key => $childNav) {
             if (array_key_exists('children', $childNav) && count($childNav['children']) > 0) {
                 // 子のメニューがある場合は子の権限チェック
@@ -305,6 +307,10 @@ class TwigInitializeListener implements EventSubscriberInterface
                         unset($parentNav[$key]);
                         break;
                     }
+                }
+
+                if ($this->eccubeConfig['eccube_restrict_file_upload'] === '1' && in_array($childNav['url'], $restrictUrls)) {
+                    unset($parentNav[$key]);
                 }
             }
         }

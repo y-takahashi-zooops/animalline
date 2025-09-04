@@ -14,15 +14,12 @@
 namespace Eccube\Controller\Install;
 
 use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\CachedReader;
-use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
-use Doctrine\DBAL\Migrations\Configuration\Configuration;
-use Doctrine\DBAL\Migrations\Migration;
-use Doctrine\DBAL\Migrations\MigrationException;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\Setup;
 use Eccube\Common\Constant;
@@ -30,19 +27,20 @@ use Eccube\Controller\AbstractController;
 use Eccube\Doctrine\DBAL\Types\UTCDateTimeType;
 use Eccube\Doctrine\DBAL\Types\UTCDateTimeTzType;
 use Eccube\Doctrine\ORM\Mapping\Driver\AnnotationDriver;
+use Eccube\Entity\Customer;
 use Eccube\Form\Type\Install\Step1Type;
 use Eccube\Form\Type\Install\Step3Type;
 use Eccube\Form\Type\Install\Step4Type;
 use Eccube\Form\Type\Install\Step5Type;
-use Eccube\Security\Core\Encoder\PasswordEncoder;
+use Eccube\Session\Session;
 use Eccube\Util\CacheUtil;
 use Eccube\Util\StringUtil;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class InstallController extends AbstractController
@@ -50,7 +48,10 @@ class InstallController extends AbstractController
     /**
      * default value of auth magic
      */
-    const DEFAULT_AUTH_MAGIC = '<change.me>';
+    public const DEFAULT_AUTH_MAGIC = '<change.me>';
+
+    /** @var string */
+    public const TRANSACTION_CHECK_FILE = '/var/.httransaction';
 
     protected $requiredModules = [
         'pdo',
@@ -67,11 +68,11 @@ class InstallController extends AbstractController
         'cURL',
         'fileinfo',
         'intl',
+        'sodium',
     ];
 
     protected $recommendedModules = [
         'hash',
-        'mcrypt',
     ];
 
     protected $eccubeDirs = [
@@ -90,26 +91,26 @@ class InstallController extends AbstractController
     ];
 
     /**
-     * @var PasswordEncoder
+     * @var UserPasswordHasherInterface
      */
-    protected $encoder;
+    protected $passwordHasher;
 
     /**
      * @var CacheUtil
      */
     protected $cacheUtil;
 
-    public function __construct(PasswordEncoder $encoder, CacheUtil $cacheUtil)
+    public function __construct(UserPasswordHasherInterface $passwordHasher, CacheUtil $cacheUtil)
     {
-        $this->encoder = $encoder;
+        $this->passwordHasher = $passwordHasher;
         $this->cacheUtil = $cacheUtil;
     }
 
     /**
      * 最初からやり直す場合、SESSION情報をクリア.
      *
-     * @Route("/", name="homepage")
-     * @Route("/install", name="install")
+     * @Route("/", name="homepage", methods={"GET"})
+     * @Route("/install", name="install", methods={"GET"})
      *
      * @Template("index.twig")
      *
@@ -129,9 +130,10 @@ class InstallController extends AbstractController
     /**
      * ようこそ.
      *
-     * @Route("/install/step1", name="install_step1")
-     * @Template("step1.twig")
+     * @Route("/install/step1", name="install_step1", methods={"GET", "POST"})
      *
+     * @Template("step1.twig")
+     * 
      * @param Request $request
      *
      * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
@@ -171,7 +173,8 @@ class InstallController extends AbstractController
     /**
      * ディレクトリとファイルの書き込み権限をチェック.
      *
-     * @Route("/install/step2", name="install_step2")
+     * @Route("/install/step2", name="install_step2", methods={"GET"})
+     * 
      * @Template("step2.twig")
      *
      * @return array
@@ -247,17 +250,16 @@ class InstallController extends AbstractController
     /**
      * サイトの設定.
      *
-     * @Route("/install/step3", name="install_step3")
+     * @Route("/install/step3", name="install_step3", methods={"GET", "POST"})
+     * 
      * @Template("step3.twig")
-     *
-     * @param Request $request
      *
      * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      *
      * @throws \Doctrine\DBAL\DBALException
      * @throws \Exception
      */
-    public function step3(Request $request)
+    public function step3(Request $request, EntityManagerInterface $entityManager)
     {
         if (!$this->isInstallEnv()) {
             throw new NotFoundHttpException();
@@ -268,7 +270,7 @@ class InstallController extends AbstractController
         // 再インストールの場合は環境変数から復旧
         if ($this->isInstalled()) {
             // ショップ名/メールアドレス
-            $conn = $this->entityManager->getConnection();
+            $conn = $entityManager->getConnection();
             $stmt = $conn->query('SELECT shop_name, email01 FROM dtb_base_info WHERE id = 1;');
             $row = $stmt->fetch();
             $sessionData['shop_name'] = $row['shop_name'];
@@ -287,7 +289,7 @@ class InstallController extends AbstractController
             $sessionData['admin_force_ssl'] = $this->getParameter('eccube_force_ssl');
 
             // メール
-            $mailerUrl = $this->getParameter('eccube_mailer_url');
+            $mailerUrl = $this->getParameter('eccube_mailer_dsn');
             $sessionData = array_merge($sessionData, $this->extractMailerUrl($mailerUrl));
         } else {
             // 初期値設定
@@ -321,10 +323,9 @@ class InstallController extends AbstractController
     /**
      * データベースの設定.
      *
-     * @Route("/install/step4", name="install_step4")
+     * @Route("/install/step4", name="install_step4", methods={"GET", "POST"})
+     * 
      * @Template("step4.twig")
-     *
-     * @param Request $request
      *
      * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      *
@@ -372,10 +373,9 @@ class InstallController extends AbstractController
     /**
      * データベースの初期化.
      *
-     * @Route("/install/step5", name="install_step5")
+     * @Route("/install/step5", name="install_step5", methods={"GET", "POST"})
+     * 
      * @Template("step5.twig")
-     *
-     * @param Request $request
      *
      * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      *
@@ -403,8 +403,7 @@ class InstallController extends AbstractController
             try {
                 $conn = $this->createConnection(['url' => $url]);
                 $em = $this->createEntityManager($conn);
-                $migration = $this->createMigration($conn);
-
+                
                 if ($noUpdate) {
                     $this->update($conn, [
                         'auth_magic' => $sessionData['authmagic'],
@@ -417,7 +416,6 @@ class InstallController extends AbstractController
                     $this->dropTables($em);
                     $this->createTables($em);
                     $this->importCsv($em);
-                    $this->migrate($migration);
                     $this->insert($conn, [
                         'auth_magic' => $sessionData['authmagic'],
                         'login_id' => $sessionData['login_id'],
@@ -458,7 +456,8 @@ class InstallController extends AbstractController
     /**
      * インストール完了
      *
-     * @Route("/install/complete", name="install_complete")
+     * @Route("/install/complete", name="install_complete", methods={"GET"})
+     *
      * @Template("complete.twig")
      */
     public function complete(Request $request)
@@ -470,18 +469,18 @@ class InstallController extends AbstractController
         $sessionData = $this->getSessionData($this->session);
         $databaseUrl = $this->createDatabaseUrl($sessionData);
         $mailerUrl = $this->createMailerUrl($sessionData);
-        $forceSSL = isset($sessionData['admin_force_ssl']) ? (bool) $sessionData['admin_force_ssl'] : false;
+        $forceSSL = isset($sessionData['admin_force_ssl']) && (bool) $sessionData['admin_force_ssl'];
         if ($forceSSL === false) {
-            $forceSSL = 'false';
+            $forceSSL = '0';
         } elseif ($forceSSL === true) {
-            $forceSSL = 'true';
+            $forceSSL = '1';
         }
         $env = file_get_contents(__DIR__.'/../../../../.env.dist');
         $replacement = [
             'APP_ENV' => 'prod',
             'APP_DEBUG' => '0',
             'DATABASE_URL' => $databaseUrl,
-            'MAILER_URL' => $mailerUrl,
+            'MAILER_DSN' => $mailerUrl,
             'ECCUBE_AUTH_MAGIC' => $sessionData['authmagic'],
             'DATABASE_SERVER_VERSION' => isset($sessionData['database_version']) ? $sessionData['database_version'] : '3',
             'ECCUBE_ADMIN_ALLOW_HOSTS' => $this->convertAdminAllowHosts($sessionData['admin_allow_hosts']),
@@ -490,6 +489,8 @@ class InstallController extends AbstractController
             'ECCUBE_COOKIE_PATH' => $request->getBasePath() ? $request->getBasePath() : '/',
             'ECCUBE_TEMPLATE_CODE' => 'default',
             'ECCUBE_LOCALE' => 'ja',
+            'TRUSTED_HOSTS' => '^'.str_replace('.', '\\.', $request->getHost()).'$',
+            'DATABASE_CHARSET' => \str_starts_with($databaseUrl, 'mysql') ? 'utf8mb4' : 'utf8',
         ];
 
         $env = StringUtil::replaceOrAddEnv($env, $replacement);
@@ -503,24 +504,30 @@ class InstallController extends AbstractController
 
         $this->removeSessionData($this->session);
 
+        // 有効化URLのトランザクションチェックファイルを生成する
+        $token = StringUtil::random(32);
+        file_put_contents($this->getParameter('kernel.project_dir').self::TRANSACTION_CHECK_FILE, time() + (60 * 10).':'.$token);
+
         $this->cacheUtil->clearCache('prod');
 
         return [
             'admin_url' => $adminUrl,
+            'is_sqlite' => strpos($databaseUrl, 'sqlite') !== false,
+            'token' => $token,
         ];
     }
 
-    protected function getSessionData(SessionInterface $session)
+    protected function getSessionData(Session $session)
     {
         return $session->get('eccube.session.install', []);
     }
 
-    protected function removeSessionData(SessionInterface $session)
+    protected function removeSessionData(Session $session)
     {
         $session->clear();
     }
 
-    protected function setSessionData(SessionInterface $session, $data = [])
+    protected function setSessionData(Session $session, $data = [])
     {
         $data = array_replace_recursive($this->getSessionData($session), $data);
         $session->set('eccube.session.install', $data);
@@ -538,11 +545,6 @@ class InstallController extends AbstractController
         }
         foreach ($this->recommendedModules as $module) {
             if (!extension_loaded($module)) {
-                if ($module == 'mcrypt' && PHP_VERSION_ID >= 70100) {
-                    //The mcrypt extension has been deprecated in PHP 7.1.x
-                    //http://php.net/manual/en/migration71.deprecated.php
-                    continue;
-                }
                 $this->addInfo(trans('install.recommend_extension_disabled', ['%module%' => $module]), 'install');
             }
         }
@@ -571,9 +573,10 @@ class InstallController extends AbstractController
     protected function createConnection(array $params)
     {
         if (strpos($params['url'], 'mysql') !== false) {
-            $params['charset'] = 'utf8';
+            $params['charset'] = 'utf8mb4';
             $params['defaultTableOptions'] = [
-                'collate' => 'utf8_general_ci',
+                'charset' => 'utf8mb4',
+                'collation' => 'utf8mb4_bin',
             ];
         }
 
@@ -581,7 +584,7 @@ class InstallController extends AbstractController
         Type::overrideType('datetimetz', UTCDateTimeTzType::class);
 
         $conn = DriverManager::getConnection($params);
-        $conn->ping();
+        $conn->executeQuery('select 1');
 
         $platform = $conn->getDatabasePlatform();
         $platform->markDoctrineTypeCommented('datetime');
@@ -597,7 +600,7 @@ class InstallController extends AbstractController
             $this->getParameter('kernel.project_dir').'/app/Customize/Entity',
         ];
         $config = Setup::createConfiguration(true);
-        $driver = new AnnotationDriver(new CachedReader(new AnnotationReader(), new ArrayCache()), $paths);
+        $driver = new AnnotationDriver(new AnnotationReader(), $paths);
         $driver->setTraitProxiesDirectory($this->getParameter('kernel.project_dir').'/app/proxy/entity');
         $config->setMetadataDriverImpl($driver);
 
@@ -607,8 +610,6 @@ class InstallController extends AbstractController
     }
 
     /**
-     * @param array $params
-     *
      * @return string
      */
     public function createDatabaseUrl(array $params)
@@ -679,15 +680,12 @@ class InstallController extends AbstractController
     }
 
     /**
-     * @param array $params
-     *
      * @return string
      *
      * @see https://github.com/symfony/swiftmailer-bundle/blob/9728097df87e76e2db71fc41fd7d211c06daea3e/DependencyInjection/SwiftmailerTransportFactory.php#L80-L142
      */
     public function createMailerUrl(array $params)
     {
-        $url = '';
         if (isset($params['transport'])) {
             $url = $params['transport'].'://';
         } else {
@@ -801,20 +799,6 @@ class InstallController extends AbstractController
         return $options;
     }
 
-    protected function createMigration(Connection $conn)
-    {
-        $config = new Configuration($conn);
-        $config->setMigrationsNamespace('DoctrineMigrations');
-        $migrationDir = $this->getParameter('kernel.project_dir').'/src/Eccube/Resource/doctrine/migration';
-        $config->setMigrationsDirectory($migrationDir);
-        $config->registerMigrationsFromDirectory($migrationDir);
-
-        $migration = new Migration($config);
-        $migration->setNoMigrationException(true);
-
-        return $migration;
-    }
-
     protected function dropTables(EntityManager $em)
     {
         $metadatas = $em->getMetadataFactory()->getAllMetadata();
@@ -849,12 +833,10 @@ class InstallController extends AbstractController
     {
         $conn->beginTransaction();
         try {
-            $salt = StringUtil::random(32);
-            $this->encoder->setAuthMagic($data['auth_magic']);
-            $password = $this->encoder->encodePassword($data['login_pass'], $salt);
+            $password = $this->passwordHasher->hashPassword(new Customer(), $data['login_pass']);
 
             $id = ('postgresql' === $conn->getDatabasePlatform()->getName())
-                ? $conn->fetchColumn("select nextval('dtb_base_info_id_seq')")
+                ? $conn->fetchOne("select nextval('dtb_base_info_id_seq')")
                 : null;
 
             $conn->insert('dtb_base_info', [
@@ -866,19 +848,19 @@ class InstallController extends AbstractController
                 'email04' => $data['email'],
                 'update_date' => new \DateTime(),
                 'discriminator_type' => 'baseinfo',
+                'option_mail_notifier' => true,
             ], [
-                'update_date' => \Doctrine\DBAL\Types\Type::DATETIME,
+                'update_date' => Types::DATETIMETZ_MUTABLE,
             ]);
 
             $member_id = ('postgresql' === $conn->getDatabasePlatform()->getName())
-                ? $conn->fetchColumn("select nextval('dtb_member_id_seq')")
+                ? $conn->fetchOne("select nextval('dtb_member_id_seq')")
                 : null;
 
             $conn->insert('dtb_member', [
                 'id' => $member_id,
                 'login_id' => $data['login_id'],
                 'password' => $password,
-                'salt' => $salt,
                 'work_id' => 1,
                 'authority_id' => 0,
                 'creator_id' => 1,
@@ -889,8 +871,8 @@ class InstallController extends AbstractController
                 'department' => $data['shop_name'],
                 'discriminator_type' => 'member',
             ], [
-                'update_date' => Type::DATETIME,
-                'create_date' => Type::DATETIME,
+                'update_date' => Types::DATETIMETZ_MUTABLE,
+                'create_date' => Types::DATETIMETZ_MUTABLE,
             ]);
             $conn->commit();
         } catch (\Exception $e) {
@@ -905,25 +887,23 @@ class InstallController extends AbstractController
         try {
             $salt = StringUtil::random(32);
             $stmt = $conn->prepare('SELECT id FROM dtb_member WHERE login_id = :login_id;');
-            $stmt->execute([':login_id' => $data['login_id']]);
-            $row = $stmt->fetch();
-            $this->encoder->setAuthMagic($data['auth_magic']);
-            $password = $this->encoder->encodePassword($data['login_pass'], $salt);
+            $stmt->bindParam(':login_id', $data['login_id']);
+            $row = $stmt->executeQuery();
+            $password = $this->passwordHasher->hashPassword(new Customer(), $data['login_pass']);
+
             if ($row) {
                 // 同一の管理者IDであればパスワードのみ更新
-                $sth = $conn->prepare('UPDATE dtb_member set password = :password, salt = :salt, update_date = current_timestamp WHERE login_id = :login_id;');
+                $sth = $conn->prepare('UPDATE dtb_member set password = :password, update_date = current_timestamp WHERE login_id = :login_id;');
                 $sth->execute([
                     ':password' => $password,
-                    ':salt' => $salt,
                     ':login_id' => $data['login_id'],
                 ]);
             } else {
                 // 新しい管理者IDが入力されたらinsert
-                $sth = $conn->prepare("INSERT INTO dtb_member (login_id, password, salt, work_id, authority_id, creator_id, sort_no, update_date, create_date,name,department,discriminator_type) VALUES (:login_id, :password , :salt , '1', '0', '1', '1', current_timestamp, current_timestamp,'管理者','EC-CUBE SHOP', 'member');");
+                $sth = $conn->prepare("INSERT INTO dtb_member (login_id, password, work_id, authority_id, creator_id, sort_no, update_date, create_date,name,department,discriminator_type) VALUES (:login_id, :password, '1', '0', '1', '1', current_timestamp, current_timestamp,'管理者','EC-CUBE SHOP', 'member');");
                 $sth->execute([
                     ':login_id' => $data['login_id'],
                     ':password' => $password,
-                    ':salt' => $salt,
                 ]);
             }
             $stmt = $conn->prepare('UPDATE dtb_base_info set
@@ -945,18 +925,8 @@ class InstallController extends AbstractController
         }
     }
 
-    public function migrate(Migration $migration)
-    {
-        try {
-            // nullを渡すと最新バージョンまでマイグレートする
-            $migration->migrate(null, false);
-        } catch (MigrationException $e) {
-        }
-    }
-
     /**
      * @param array $params
-     * @param EntityManager $em
      *
      * @return array
      */
@@ -978,7 +948,6 @@ class InstallController extends AbstractController
 
     /**
      * @param array $params
-     * @param EntityManager $em
      */
     protected function sendAppData($params, EntityManager $em)
     {
@@ -1007,8 +976,6 @@ class InstallController extends AbstractController
     }
 
     /**
-     * @param EntityManager $em
-     *
      * @return string
      */
     public function getDatabaseVersion(EntityManager $em)

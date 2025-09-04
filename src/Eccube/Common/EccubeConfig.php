@@ -13,16 +13,16 @@
 
 namespace Eccube\Common;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 
 class EccubeConfig implements \ArrayAccess
 {
     /**
-     * @var ContainerInterface
+     * @var ContainerBagInterface
      */
     protected $container;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerBagInterface $container)
     {
         $this->container = $container;
     }
@@ -34,7 +34,7 @@ class EccubeConfig implements \ArrayAccess
      */
     public function get($key)
     {
-        return $this->container->getParameter($key);
+        return $this->container->get($key);
     }
 
     /**
@@ -44,18 +44,7 @@ class EccubeConfig implements \ArrayAccess
      */
     public function has($key)
     {
-        return $this->container->hasParameter($key);
-    }
-
-    /**
-     * @param $key
-     * @param $value
-     *
-     * @return mixed
-     */
-    public function set($key, $value)
-    {
-        return $this->container->setParameter($key, $value);
+        return $this->container->has($key);
     }
 
     /**
@@ -63,7 +52,8 @@ class EccubeConfig implements \ArrayAccess
      *
      * @return bool
      */
-    public function offsetExists(mixed $offset): bool
+    #[\ReturnTypeWillChange]
+    public function offsetExists($offset)
     {
         return $this->has($offset);
     }
@@ -73,7 +63,8 @@ class EccubeConfig implements \ArrayAccess
      *
      * @return mixed
      */
-    public function offsetGet(mixed $offset): mixed
+    #[\ReturnTypeWillChange]
+    public function offsetGet($offset)
     {
         return $this->get($offset);
     }
@@ -82,18 +73,20 @@ class EccubeConfig implements \ArrayAccess
      * @param mixed $offset
      * @param mixed $value
      */
-    public function offsetSet(mixed $offset, mixed $value): void
+    #[\ReturnTypeWillChange]
+    public function offsetSet($offset, $value)
     {
-        $this->set($offset, $value);
+        throw new \LogicException();
     }
 
     /**
      * @param mixed $offset
      *
-     * @throws \Exception
+     * @throws \LogicException
      */
-    public function offsetUnset(mixed $offset): void
+    #[\ReturnTypeWillChange]
+    public function offsetUnset($offset)
     {
-        throw new \Exception();
+        throw new \LogicException();
     }
 }

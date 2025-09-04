@@ -19,8 +19,6 @@ use Eccube\Entity\Product;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Eccube\Form\Type\AddCartType;
-use Eccube\Form\Type\Master\ProductListMaxType;
-use Eccube\Form\Type\Master\ProductListOrderByType;
 use Eccube\Form\Type\SearchProductType;
 use Eccube\Repository\BaseInfoRepository;
 use Eccube\Repository\CustomerFavoriteProductRepository;
@@ -40,12 +38,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Eccube\Common\EccubeConfig;
 use Doctrine\ORM\EntityManagerInterface;
-use Eccube\Entity\Category;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
@@ -88,7 +84,7 @@ class ProductController extends AbstractController
     protected $logger;
 
     /**
-     * @var SessionInterface
+     * @var \Symfony\Component\HttpFoundation\Session\Session $session
      */
     protected SessionInterface $session;
 
@@ -124,7 +120,7 @@ class ProductController extends AbstractController
         EccubeConfig $eccubeConfig,
         TranslatorInterface $translator,
         RequestStack $requestStack,
-        RouterInterface $router
+        RouterInterface $router,
     ) {
         parent::__construct(
             $eccubeConfig,
@@ -150,7 +146,8 @@ class ProductController extends AbstractController
     /**
      * 商品一覧画面.
      *
-     * @Route("/products/list", name="product_list")
+     * @Route("/products/list", name="product_list", methods={"GET"})
+     *
      * @Template("Product/list.twig")
      */
     public function index(Request $request, PaginatorInterface $paginator)
@@ -166,7 +163,7 @@ class ProductController extends AbstractController
         }
 
         // searchForm
-        /* @var $builder \Symfony\Component\Form\FormBuilderInterface */
+        /** @var \Symfony\Component\Form\FormBuilderInterface $builder */
         $builder = $this->formFactory->createNamedBuilder('', SearchProductType::class);
 
         if ($request->getMethod() === 'GET') {
@@ -181,7 +178,7 @@ class ProductController extends AbstractController
         );
         $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_PRODUCT_INDEX_INITIALIZE);
 
-        /* @var $searchForm \Symfony\Component\Form\FormInterface */
+        /** @var \Symfony\Component\Form\FormInterface $searchForm */
         $searchForm = $builder->getForm();
 
         $searchForm->handleRequest($request);
@@ -210,7 +207,7 @@ class ProductController extends AbstractController
 
         $pagination = $paginator->paginate(
             $query,
-            !empty($searchData['pageno']) ? $searchData['pageno'] : 1,
+            !empty($searchData['pageno']) && preg_match('/^\d+$/', $searchData['pageno']) ? $searchData['pageno'] : 1,
             $dispNumberId ?: $this->productListMaxRepository->findOneBy([], ['sort_no' => 'ASC'])->getId()
         );
 
@@ -223,7 +220,7 @@ class ProductController extends AbstractController
         // addCart form
         $forms = [];
         foreach ($pagination as $Product) {
-            /* @var $builder \Symfony\Component\Form\FormBuilderInterface */
+            /** @var \Symfony\Component\Form\FormBuilderInterface $builder */
             $builder = $this->formFactory->createNamedBuilder(
                 'add_cart',
                 AddCartType::class,
@@ -237,58 +234,6 @@ class ProductController extends AbstractController
 
             $forms[$Product->getId()] = $addCartForm->createView();
         }
-
-        // 表示件数
-        $builder = $this->formFactory->createNamedBuilder(
-            'disp_number',
-            ProductListMaxType::class,
-            null,
-            [
-                'required' => false,
-                'allow_extra_fields' => true,
-            ]
-        );
-        if ($request->getMethod() === 'GET') {
-            $builder->setMethod('GET');
-        }
-
-        $event = new EventArgs(
-            [
-                'builder' => $builder,
-            ],
-            $request
-        );
-        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_PRODUCT_INDEX_DISP);
-
-        $dispNumberForm = $builder->getForm();
-
-        $dispNumberForm->handleRequest($request);
-
-        // ソート順
-        $builder = $this->formFactory->createNamedBuilder(
-            'orderby',
-            ProductListOrderByType::class,
-            null,
-            [
-                'required' => false,
-                'allow_extra_fields' => true,
-            ]
-        );
-        if ($request->getMethod() === 'GET') {
-            $builder->setMethod('GET');
-        }
-
-        $event = new EventArgs(
-            [
-                'builder' => $builder,
-            ],
-            $request
-        );
-        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_PRODUCT_INDEX_ORDER);
-
-        $orderByForm = $builder->getForm();
-
-        $orderByForm->handleRequest($request);
 
         $Category = $searchForm->get('category_id')->getData();
 
@@ -330,8 +275,6 @@ class ProductController extends AbstractController
             'subtitle' => $this->getPageTitle($searchData),
             'pagination' => $pagination,
             'search_form' => $searchForm->createView(),
-            'disp_number_form' => $dispNumberForm->createView(),
-            'order_by_form' => $orderByForm->createView(),
             'forms' => $forms,
             'Category' => $Category,
             'products_class_categories_json' => json_encode($productsClassCategories, JSON_UNESCAPED_UNICODE)
@@ -343,7 +286,9 @@ class ProductController extends AbstractController
      * 商品詳細画面.
      *
      * @Route("/products/detail/{id}", name="product_detail", methods={"GET"}, requirements={"id" = "\d+"})
+     * 
      * @Template("Product/detail.twig")
+     * 
      * @ParamConverter("Product", options={"repository_method" = "findWithSortedClassCategories"})
      *
      * @param Request $request
@@ -458,7 +403,7 @@ class ProductController extends AbstractController
     /**
      * お気に入り追加.
      *
-     * @Route("/products/add_favorite/{id}", name="product_add_favorite", requirements={"id" = "\d+"})
+     * @Route("/products/add_favorite/{id}", name="product_add_favorite", requirements={"id" = "\d+"}, methods={"GET", "POST"})
      */
     public function addFavorite(Request $request, Product $Product)
     {
@@ -474,6 +419,7 @@ class ProductController extends AbstractController
 
         if ($this->isGranted('ROLE_USER')) {
             $Customer = $this->getUser();
+            
             $this->customerFavoriteProductRepository->addFavorite($Customer, $Product);
             $this->session->getFlashBag()->set('product_detail.just_added_favorite', $Product->getId());
 
@@ -536,7 +482,7 @@ class ProductController extends AbstractController
         );
         $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_PRODUCT_CART_ADD_INITIALIZE);
 
-        /* @var $form \Symfony\Component\Form\FormInterface */
+        /** @var \Symfony\Component\Form\FormInterface $form */
         $form = $builder->getForm();
         $form->handleRequest($request);
 
@@ -629,9 +575,9 @@ class ProductController extends AbstractController
     /**
      * ページタイトルの設定
      *
-     * @param  null|array $searchData
+     * @param array|null $searchData
      *
-     * @return str
+     * @return string
      */
     protected function getPageTitle($searchData)
     {
@@ -649,7 +595,7 @@ class ProductController extends AbstractController
      *
      * @param Product $Product
      *
-     * @return boolean 閲覧可能な場合はtrue
+     * @return bool 閲覧可能な場合はtrue
      */
     protected function checkVisibility(Product $Product)
     {

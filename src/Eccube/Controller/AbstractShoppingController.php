@@ -13,19 +13,11 @@
 
 namespace Eccube\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Eccube\Common\EccubeConfig;
 use Eccube\Entity\ItemHolderInterface;
 use Eccube\Service\PurchaseFlow\PurchaseContext;
 use Eccube\Service\PurchaseFlow\PurchaseFlow;
 use Eccube\Service\PurchaseFlow\PurchaseFlowResult;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class AbstractShoppingController extends AbstractController
 {
@@ -33,35 +25,6 @@ class AbstractShoppingController extends AbstractController
      * @var PurchaseFlow
      */
     protected $purchaseFlow;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
-    public function __construct(
-        EccubeConfig $eccubeConfig,
-        EntityManagerInterface $entityManager,
-        TranslatorInterface $translator,
-        SessionInterface $session,
-        FormFactoryInterface $formFactory,
-        EventDispatcherInterface $eventDispatcher,
-        RequestStack $requestStack,
-        RouterInterface $router,
-        LoggerInterface $logger
-    ) {
-        parent::__construct(
-            $eccubeConfig,
-            $entityManager,
-            $translator,
-            $session,
-            $formFactory,
-            $eventDispatcher,
-            $requestStack,
-            $router
-        );
-        $this->logger = $logger;
-    }
 
     /**
      * @param PurchaseFlow $shoppingPurchaseFlow
@@ -75,12 +38,13 @@ class AbstractShoppingController extends AbstractController
     /**
      * @param ItemHolderInterface $itemHolder
      * @param bool $returnResponse レスポンスを返すかどうか. falseの場合はPurchaseFlowResultを返す.
-     *
-     * @return PurchaseFlowResult|\Symfony\Component\HttpFoundation\RedirectResponse
+     * 
+     * @return PurchaseFlowResult|RedirectResponse|null
      */
     protected function executePurchaseFlow(ItemHolderInterface $itemHolder, $returnResponse = true)
     {
         /** @var PurchaseFlowResult $flowResult */
+        /** @var \Eccube\Entity\Cart|\Eccube\Entity\Order $itemHolder */
         $flowResult = $this->purchaseFlow->validate($itemHolder, new PurchaseContext(clone $itemHolder, $itemHolder->getCustomer()));
         foreach ($flowResult->getWarning() as $warning) {
             $this->addWarning($warning->getMessage());
@@ -94,15 +58,17 @@ class AbstractShoppingController extends AbstractController
         }
 
         if ($flowResult->hasError()) {
-            $this->logger->info('Errorが発生したため購入エラー画面へ遷移します.', [$flowResult->getErrors()]);
+            log_info('Errorが発生したため購入エラー画面へ遷移します.', [$flowResult->getErrors()]);
 
             return $this->redirectToRoute('shopping_error');
         }
 
         if ($flowResult->hasWarning()) {
-            $this->logger->info('Warningが発生したため注文手続き画面へ遷移します.', [$flowResult->getWarning()]);
+            log_info('Warningが発生したため注文手続き画面へ遷移します.', [$flowResult->getWarning()]);
 
             return $this->redirectToRoute('shopping');
         }
+
+        return null;
     }
 }

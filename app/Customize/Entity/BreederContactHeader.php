@@ -143,10 +143,9 @@ class BreederContactHeader
         return $this->Customer;
     }
 
-    public function setCustomer(Customer $customer): self
+    public function setCustomer(?Customer $customer): self
     {
         $this->Customer = $customer;
-
         return $this;
     }
 
