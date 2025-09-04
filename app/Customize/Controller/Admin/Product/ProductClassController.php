@@ -63,7 +63,7 @@ class ProductClassController extends AbstractController
      */
     protected $taxRuleRepository;
 
-    protected FormFactoryInterface $formFactory;
+    protected $formFactory;
 
     /**
      * ProductClassController constructor.

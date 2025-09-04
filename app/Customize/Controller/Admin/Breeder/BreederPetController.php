@@ -55,11 +55,6 @@ class BreederPetController extends AbstractController
     protected $breederPetsRepository;
 
     /**
-     * @var EntityManagerInterface
-     */
-    protected EntityManagerInterface $entityManager;
-
-    /**
      * BreederPetController constructor.
      * @param BreedsRepository $breedsRepository
      * @param BreederPetImageRepository $breederPetImageRepository
@@ -67,7 +62,6 @@ class BreederPetController extends AbstractController
      * @param BreederPetsRepository $breederPetsRepository
      */
     public function __construct(
-        EntityManagerInterface $entityManager,
         BreedsRepository          $breedsRepository,
         BreederPetImageRepository $breederPetImageRepository,
         BreederQueryService       $breederQueryService,
@@ -77,7 +71,6 @@ class BreederPetController extends AbstractController
         $this->breederQueryService = $breederQueryService;
         $this->breederPetImageRepository = $breederPetImageRepository;
         $this->breederPetsRepository = $breederPetsRepository;
-        $this->translator = $translator;
     }
 
     // 廃止予定

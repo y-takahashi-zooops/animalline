@@ -22,9 +22,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Doctrine\ORM\EntityManagerInterface;
 
 class AuthorityController extends AbstractController
 {
@@ -33,24 +30,14 @@ class AuthorityController extends AbstractController
      */
     protected $authorityRoleRepository;
 
-    protected FormFactoryInterface $formFactory;
-
     /**
      * AuthorityController constructor.
      *
      * @param AuthorityRoleRepository $authorityRoleRepository
      */
-    public function __construct(
-        AuthorityRoleRepository $authorityRoleRepository,
-        FormFactoryInterface $formFactory,
-        EventDispatcherInterface $eventDispatcher,
-        EntityManagerInterface $entityManager
-    )
+    public function __construct(AuthorityRoleRepository $authorityRoleRepository)
     {
         $this->authorityRoleRepository = $authorityRoleRepository;
-        $this->formFactory = $formFactory;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->entityManager = $entityManager;
     }
 
     /**

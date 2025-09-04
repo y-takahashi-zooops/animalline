@@ -28,10 +28,6 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Form\FormFactoryInterface;
-use Psr\Log\LoggerInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use Doctrine\ORM\EntityManagerInterface;
 
 class ClassNameController extends AbstractController
 {
@@ -39,13 +35,6 @@ class ClassNameController extends AbstractController
      * @var ClassNameRepository
      */
     protected $classNameRepository;
-
-    protected FormFactoryInterface $formFactory;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
 
     /**
      * @var CsvExportService
@@ -56,22 +45,13 @@ class ClassNameController extends AbstractController
      * ClassNameController constructor.
      *
      * @param ClassNameRepository $classNameRepository
-     * @param LoggerInterface $logger
      * @param CsvExportService $csvExportService
      */
     public function __construct(
         ClassNameRepository $classNameRepository,
-        FormFactoryInterface $formFactory,
-        LoggerInterface $logger,
-        EventDispatcherInterface $eventDispatcher,
-        EntityManagerInterface $entityManager,
         CsvExportService $csvExportService,
     ) {
         $this->classNameRepository = $classNameRepository;
-        $this->formFactory = $formFactory;
-        $this->logger = $logger;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->entityManager = $entityManager;
         $this->csvExportService = $csvExportService;
     }
 
@@ -120,11 +100,11 @@ class ClassNameController extends AbstractController
         if ($request->getMethod() === 'POST') {
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
-                $this->logger->info('商品規格登録開始', [$id]);
+                log_info('商品規格登録開始', [$id]);
 
                 $this->classNameRepository->save($TargetClassName);
 
-                $this->logger->info('商品規格登録完了', [$id]);
+                log_info('商品規格登録完了', [$id]);
 
                 $event = new EventArgs(
                     [
@@ -174,7 +154,7 @@ class ClassNameController extends AbstractController
     {
         $this->isTokenValid();
 
-        $this->logger->info('商品規格削除開始', [$ClassName->getId()]);
+        log_info('商品規格削除開始', [$ClassName->getId()]);
 
         try {
             $this->classNameRepository->delete($ClassName);
@@ -184,7 +164,7 @@ class ClassNameController extends AbstractController
 
             $this->addSuccess('admin.common.delete_complete', 'admin');
 
-            $this->logger->info('商品規格削除完了', [$ClassName->getId()]);
+            log_info('商品規格削除完了', [$ClassName->getId()]);
         } catch (\Exception $e) {
             $message = trans('admin.common.delete_error_foreign_key', ['%name%' => $ClassName->getName()]);
             $this->addError($message, 'admin');

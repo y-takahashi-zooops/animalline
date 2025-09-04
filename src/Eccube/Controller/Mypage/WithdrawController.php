@@ -18,20 +18,16 @@ use Eccube\Entity\Master\CustomerStatus;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Eccube\Repository\Master\CustomerStatusRepository;
+use Eccube\Repository\PageRepository;
 use Eccube\Service\CartService;
 use Eccube\Service\MailService;
 use Eccube\Service\OrderHelper;
-use Eccube\Repository\PageRepository;
 use Eccube\Util\StringUtil;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Form\FormFactoryInterface;
-use Psr\Log\LoggerInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use Doctrine\ORM\EntityManagerInterface;
 
 class WithdrawController extends AbstractController
 {
@@ -60,13 +56,6 @@ class WithdrawController extends AbstractController
      */
     private $orderHelper;
 
-    protected FormFactoryInterface $formFactory;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
     /**
      * @var PageRepository
      */
@@ -80,7 +69,6 @@ class WithdrawController extends AbstractController
      * @param TokenStorageInterface $tokenStorage
      * @param CartService $cartService
      * @param OrderHelper $orderHelper
-     * @param LoggerInterface $logger
      * @param PageRepository $pageRepository
      */
     public function __construct(
@@ -89,10 +77,6 @@ class WithdrawController extends AbstractController
         TokenStorageInterface $tokenStorage,
         CartService $cartService,
         OrderHelper $orderHelper,
-        FormFactoryInterface $formFactory,
-        LoggerInterface $logger,
-        EventDispatcherInterface $eventDispatcher,
-        EntityManagerInterface $entityManager,
         PageRepository $pageRepository,
     ) {
         $this->mailService = $mailService;
@@ -100,10 +84,6 @@ class WithdrawController extends AbstractController
         $this->tokenStorage = $tokenStorage;
         $this->cartService = $cartService;
         $this->orderHelper = $orderHelper;
-        $this->formFactory = $formFactory;
-        $this->logger = $logger;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->entityManager = $entityManager;
         $this->pageRepository = $pageRepository;
     }
 
@@ -134,7 +114,7 @@ class WithdrawController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             switch ($request->get('mode')) {
                 case 'confirm':
-                    $this->logger->info('退会確認画面表示');
+                    log_info('退会確認画面表示');
 
                     return $this->render(
                         'Mypage/withdraw_confirm.twig',
@@ -145,7 +125,7 @@ class WithdrawController extends AbstractController
                     );
 
                 case 'complete':
-                    $this->logger->info('退会処理開始');
+                    log_info('退会処理開始');
 
                     /** @var \Eccube\Entity\Customer $Customer */
                     $Customer = $this->getUser();
@@ -158,7 +138,7 @@ class WithdrawController extends AbstractController
 
                     $this->entityManager->flush();
 
-                    $this->logger->info('退会処理完了');
+                    log_info('退会処理完了');
 
                     $event = new EventArgs(
                         [
@@ -178,7 +158,7 @@ class WithdrawController extends AbstractController
                     // ログアウト
                     $this->tokenStorage->setToken(null);
 
-                    $this->logger->info('ログアウト完了');
+                    log_info('ログアウト完了');
 
                     return $this->redirect($this->generateUrl('mypage_withdraw_complete'));
             }

@@ -22,10 +22,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class InstallerCommand extends Command
 {
@@ -46,13 +44,19 @@ class InstallerCommand extends Command
      */
     protected $databaseUrl;
 
+    /**
+     * @var \Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface
+     */
+    protected $params;
+
     private $envFileUpdater;
 
-    public function __construct(EccubeConfig $eccubeConfig)
+    public function __construct(EccubeConfig $eccubeConfig, \Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface $params)
     {
         parent::__construct();
 
         $this->eccubeConfig = $eccubeConfig;
+        $this->params = $params;
 
         /* env更新処理無名クラス */
         $this->envFileUpdater = new class {
@@ -119,8 +123,8 @@ class InstallerCommand extends Command
         $this->io->text([
             'If you prefer to not use this interactive wizard, define the environment valiables as follows:',
             '',
-            ' $ export APP_ENV=dev',
-            ' $ export APP_DEBUG=1',
+            ' $ export APP_ENV=prod',
+            ' $ export APP_DEBUG=0',
             ' $ export DATABASE_URL=database_url',
             ' $ export DATABASE_SERVER_VERSION=server_version',
             ' $ export MAILER_DSN=mailer_dsn',
@@ -164,15 +168,15 @@ class InstallerCommand extends Command
 
         // 以下環境変数に規定済の設定値があれば利用する
         // APP_ENV
-        $appEnv = env('APP_ENV', 'dev');
-        // .envが存在しない状態では規定値'install'となっているため、devに更新する
+        $appEnv = env('APP_ENV', 'prod');
+        // .envが存在しない状態では規定値'install'となっているため、prodに更新する
         if ($appEnv === 'install') {
-            $appEnv = 'dev';
+            $appEnv = 'prod';
         }
         $this->envFileUpdater->appEnv = $appEnv;
 
         // APP_DEBUG
-        $this->envFileUpdater->appDebug = env('APP_DEBUG', '1');
+        $this->envFileUpdater->appDebug = env('APP_DEBUG', '0');
 
         // ECCUBE_ADMIN_ROUTE
         $adminRoute = $this->eccubeConfig->get('eccube_admin_route');
@@ -223,7 +227,7 @@ class InstallerCommand extends Command
         if ($input->isInteractive()) {
             $envDir = $this->eccubeConfig->get('kernel.project_dir');
             if (file_exists($envDir.'/.env')) {
-               Dotenv::createUnsafeMutable($envDir)->load();
+                Dotenv::createUnsafeMutable($envDir)->load();
             }
         }
 
@@ -231,6 +235,7 @@ class InstallerCommand extends Command
         // 更新後の値が取得できないため, getenv()を使用する.
         $databaseUrl = getenv('DATABASE_URL');
         $databaseName = $this->getDatabaseName($databaseUrl);
+
         $databaseCreate = ['doctrine:database:create'];
         if ($databaseName !== 'sqlite') {
             $databaseCreate[] = '--if-not-exists';

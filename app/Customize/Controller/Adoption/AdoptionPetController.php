@@ -81,7 +81,10 @@ class AdoptionPetController extends AbstractController
      */
     protected $customerRepository;
 
-    protected FormFactoryInterface $formFactory;
+    /**
+     * @var FormFactoryInterface
+     */
+    protected $formFactory;
 
     /**
      * ConservationController constructor.

@@ -63,11 +63,6 @@ class ForgotController extends AbstractController
     protected $logger;
 
     /**
-     * @var FormFactoryInterface
-     */
-    protected FormFactoryInterface $formFactory;
-
-    /**
      * ForgotController constructor.
      *
      * @param ValidatorInterface $validator

@@ -92,7 +92,10 @@ class BreederMemberController extends AbstractController
      */
     protected $mailService;
 
-    protected FormFactoryInterface $formFactory;
+    /**
+     * @var FormFactoryInterface
+     */
+    protected $formFactory;
 
     /**
      * @var LoggerInterface

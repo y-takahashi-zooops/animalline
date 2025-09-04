@@ -94,8 +94,6 @@ class EditController extends AbstractController
      */
     private $saleTypeRepository;
 
-    protected FormFactoryInterface $formFactory;
-
     public function __construct(
         RegularOrderRepository $regularOrderRepository,
         RegularCreditService $regularCreditService,

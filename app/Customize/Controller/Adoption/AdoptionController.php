@@ -84,11 +84,9 @@ class AdoptionController extends AbstractController
     protected $mailService;
 
     /**
-     * @var EntityManagerInterface
+     * @var EventDispatcherInterface
      */
-    protected EntityManagerInterface $entityManager;
-
-    protected FormFactoryInterface $formFactory;
+    protected $eventDispatcher;
 
     /**
      * AdoptionController constructor.
@@ -129,9 +127,11 @@ class AdoptionController extends AbstractController
         $this->conservationsHousesRepository = $conservationsHousesRepository;
         $this->mailService = $mailService;
         $this->affiliateStatusRepository = $affiliateStatusRepository;
-        $this->entityManager = $entityManager;
-        $this->formFactory = $formFactory;
         $this->eventDispatcher = $eventDispatcher;
+        
+        // 親クラスのsetterメソッドを呼び出してプロパティを設定
+        $this->setEntityManager($entityManager);
+        $this->setFormFactory($formFactory);
     }
 
 

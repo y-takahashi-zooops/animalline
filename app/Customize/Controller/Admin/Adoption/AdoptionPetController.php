@@ -50,11 +50,6 @@ class AdoptionPetController extends AbstractController
     protected $adoptionQueryService;
 
     /**
-     * @var EntityManagerInterface
-     */
-    protected EntityManagerInterface $entityManager;
-
-    /**
      * AdoptionPetController constructor.
      *
      * @param BreedsRepository $breedsRepository
@@ -65,13 +60,11 @@ class AdoptionPetController extends AbstractController
     public function __construct(
         BreedsRepository               $breedsRepository,
         ConservationPetImageRepository $conservationPetImageRepository,
-        AdoptionQueryService           $adoptionQueryService,
-        EntityManagerInterface $entityManager
+        AdoptionQueryService           $adoptionQueryService
     ) {
         $this->breedsRepository = $breedsRepository;
         $this->conservationPetImageRepository = $conservationPetImageRepository;
         $this->adoptionQueryService = $adoptionQueryService;
-        $this->entityManager = $entityManager;
     }
 
     /**

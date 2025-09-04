@@ -24,11 +24,6 @@ use Doctrine\ORM\EntityManagerInterface;
 class GmoEpsilonConfigController extends AbstractController
 {
     /**
-     * @var EccubeConfig
-     */
-    protected EccubeConfig $eccubeConfig;
-
-    /**
      * @var ConfigRepository
      */
     protected $configRepository;

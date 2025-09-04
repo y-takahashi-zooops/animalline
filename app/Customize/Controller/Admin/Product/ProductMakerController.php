@@ -33,11 +33,6 @@ class ProductMakerController extends AbstractController
     protected $productMakerRepository;
 
     /**
-     * @var EntityManagerInterface
-     */
-    protected EntityManagerInterface $entityManager;
-
-    /**
      * Product maker controller constructor.
      *
      * @param ProductMakerRepository $productMakerRepository
@@ -47,9 +42,11 @@ class ProductMakerController extends AbstractController
         ProductMakerRepository $productMakerRepository,
         FormFactoryInterface $formFactory
     ) {
-        $this->entityManager = $entityManager;
         $this->productMakerRepository = $productMakerRepository;
-        $this->formFactory = $formFactory;
+        
+        // 親クラスのsetterメソッドを呼び出してプロパティを設定
+        $this->setEntityManager($entityManager);
+        $this->setFormFactory($formFactory);
     }
 
     /**

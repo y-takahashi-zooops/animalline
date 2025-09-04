@@ -29,9 +29,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Form\FormFactoryInterface;
-use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Class PaymentController
@@ -44,28 +41,13 @@ class PaymentController extends AbstractController
     protected $paymentRepository;
 
     /**
-     * @var FormFactoryInterface
-     */
-    protected FormFactoryInterface $formFactory;
-
-
-    /**
      * PaymentController constructor.
      *
      * @param PaymentRepository $paymentRepository
-     * @param FormFactoryInterface $formFactory
      */
-    public function __construct(
-        PaymentRepository $paymentRepository,
-        EventDispatcherInterface $eventDispatcher,
-        FormFactoryInterface $formFactory,
-        EntityManagerInterface $entityManager,
-    )
+    public function __construct(PaymentRepository $paymentRepository)
     {
         $this->paymentRepository = $paymentRepository;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->formFactory = $formFactory;
-        $this->entityManager = $entityManager;
     }
 
     /**
@@ -180,49 +162,6 @@ class PaymentController extends AbstractController
     }
 
     /**
-     * @Route("/%eccube_admin_route%/setting/shop/payment/image/add", name="admin_payment_image_add")
-     */
-    public function imageAdd(Request $request)
-    {
-        if (!$request->isXmlHttpRequest()) {
-            throw new BadRequestHttpException();
-        }
-
-        $images = $request->files->get('payment_register');
-        $allowExtensions = ['gif', 'jpg', 'jpeg', 'png'];
-        $filename = null;
-        if (isset($images['payment_image_file'])) {
-            $image = $images['payment_image_file'];
-
-            //ファイルフォーマット検証
-            $mimeType = $image->getMimeType();
-            if (0 !== strpos($mimeType, 'image')) {
-                throw new UnsupportedMediaTypeHttpException();
-            }
-
-            // 拡張子
-            $extension = $image->getClientOriginalExtension();
-            if (!in_array(strtolower($extension), $allowExtensions)) {
-                throw new UnsupportedMediaTypeHttpException();
-            }
-
-            $filename = date('mdHis').uniqid('_').'.'.$extension;
-            $image->move($this->getParameter('eccube_temp_image_dir'), $filename);
-        }
-        $event = new EventArgs(
-            [
-                'images' => $images,
-                'filename' => $filename,
-            ],
-            $request
-        );
-        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SHOP_PAYMENT_IMAGE_ADD_COMPLETE);
-        $filename = $event->getArgument('filename');
-
-        return $this->json(['filename' => $filename], 200);
-    }
-
-    /**
      * 画像アップロード時にリクエストされるメソッド.
      *
      * @see https://pqina.nl/filepond/docs/api/server/#process
@@ -248,11 +187,13 @@ class PaymentController extends AbstractController
             if (0 !== strpos($mimeType, 'image')) {
                 throw new UnsupportedMediaTypeHttpException();
             }
+
             // 拡張子
             $extension = $image->getClientOriginalExtension();
             if (!in_array(strtolower($extension), $allowExtensions)) {
                 throw new UnsupportedMediaTypeHttpException();
             }
+
             $filename = date('mdHis').uniqid('_').'.'.$extension;
             $image->move($this->getParameter('eccube_temp_image_dir'), $filename);
         }
@@ -268,7 +209,7 @@ class PaymentController extends AbstractController
 
         return new Response($filename);
     }
-    
+
     /**
      * アップロード画像を取得する際にコールされるメソッド.
      *

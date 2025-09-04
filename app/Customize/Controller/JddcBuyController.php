@@ -100,11 +100,6 @@ class JddcBuyController extends AbstractController
      * @var DnaSalesDetailRepository
      */
     protected $dnaSalesDetailRepository;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    protected EntityManagerInterface $entityManager;
     
 
     /**

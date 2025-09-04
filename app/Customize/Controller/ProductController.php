@@ -93,11 +93,6 @@ class ProductController extends BaseProductController
      */
     protected $logger;
 
-    /**
-     * @var SessionInterface
-     */
-    protected SessionInterface $session;
-
     private $title = '';
 
     /**

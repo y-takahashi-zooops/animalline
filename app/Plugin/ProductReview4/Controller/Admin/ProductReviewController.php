@@ -58,8 +58,6 @@ class ProductReviewController extends AbstractController
     /** @var CsvExportService */
     protected $csvExportService;
 
-    protected FormFactoryInterface $formFactory;
-
     /**
      * @var LoggerInterface
      */

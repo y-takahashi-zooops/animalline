@@ -36,15 +36,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Symfony\Component\Form\FormFactoryInterface;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use Eccube\Common\EccubeConfig;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\RouterInterface;
 
 class ProductController extends AbstractController
 {
@@ -79,17 +70,11 @@ class ProductController extends AbstractController
     protected $helper;
 
     /**
-     * @var LoggerInterface
+     * @var ProductListMaxRepository
      */
-    protected $logger;
-
-    /**
-     * @var \Symfony\Component\HttpFoundation\Session\Session $session
-     */
-    protected SessionInterface $session;
+    protected $productListMaxRepository;
 
     private $title = '';
-
 
     /**
      * ProductController constructor.
@@ -101,8 +86,6 @@ class ProductController extends AbstractController
      * @param BaseInfoRepository $baseInfoRepository
      * @param AuthenticationUtils $helper
      * @param ProductListMaxRepository $productListMaxRepository
-     * @param LoggerInterface $logger
-     * @param SessionInterface $session
      */
     public function __construct(
         PurchaseFlow $cartPurchaseFlow,
@@ -112,27 +95,7 @@ class ProductController extends AbstractController
         BaseInfoRepository $baseInfoRepository,
         AuthenticationUtils $helper,
         ProductListMaxRepository $productListMaxRepository,
-        FormFactoryInterface $formFactory,
-        LoggerInterface $logger,
-        SessionInterface $session,
-        EventDispatcherInterface $eventDispatcher,
-        EntityManagerInterface $entityManager,
-        EccubeConfig $eccubeConfig,
-        TranslatorInterface $translator,
-        RequestStack $requestStack,
-        RouterInterface $router,
     ) {
-        parent::__construct(
-            $eccubeConfig,
-            $entityManager,
-            $translator,
-            $session,
-            $formFactory,
-            $eventDispatcher,
-            $requestStack,
-            $router
-        );
-
         $this->purchaseFlow = $cartPurchaseFlow;
         $this->customerFavoriteProductRepository = $customerFavoriteProductRepository;
         $this->cartService = $cartService;
@@ -140,7 +103,6 @@ class ProductController extends AbstractController
         $this->BaseInfo = $baseInfoRepository->get();
         $this->helper = $helper;
         $this->productListMaxRepository = $productListMaxRepository;
-        $this->logger = $logger;
     }
 
     /**
@@ -201,14 +163,10 @@ class ProductController extends AbstractController
             ->useResultCache(true, $this->eccubeConfig['eccube_result_cache_lifetime_short']);
 
         /** @var SlidingPagination $pagination */
-        $dispNumberId = is_object($searchData['disp_number'] ?? null)
-            ? $searchData['disp_number']->getId()
-            : ($searchData['disp_number'] ?? null);
-
         $pagination = $paginator->paginate(
             $query,
             !empty($searchData['pageno']) && preg_match('/^\d+$/', $searchData['pageno']) ? $searchData['pageno'] : 1,
-            $dispNumberId ?: $this->productListMaxRepository->findOneBy([], ['sort_no' => 'ASC'])->getId()
+            !empty($searchData['disp_number']) ? $searchData['disp_number']->getId() : $this->productListMaxRepository->findOneBy([], ['sort_no' => 'ASC'])->getId()
         );
 
         $ids = [];
@@ -222,7 +180,7 @@ class ProductController extends AbstractController
         foreach ($pagination as $Product) {
             /** @var \Symfony\Component\Form\FormBuilderInterface $builder */
             $builder = $this->formFactory->createNamedBuilder(
-                'add_cart',
+                '',
                 AddCartType::class,
                 null,
                 [
@@ -237,58 +195,22 @@ class ProductController extends AbstractController
 
         $Category = $searchForm->get('category_id')->getData();
 
-        // JSON翻訳
-        $productsClassCategories = [];
-
-        foreach ($ProductsAndClassCategories as $Product) {
-            $id = $Product->getId();
-            $productsClassCategories[$id] = [];
-
-            foreach ($Product->getProductClasses() as $ProductClass) {
-                if (!$ProductClass->isVisible()) {
-                    continue;
-                }
-
-                $ClassCategory1 = $ProductClass->getClassCategory1();
-                $ClassCategory2 = $ProductClass->getClassCategory2();
-
-                if ($ClassCategory2 && !$ClassCategory2->isVisible()) {
-                    continue;
-                }
-
-                $id1 = $ClassCategory1 ? (string) $ClassCategory1->getId() : '__unselected';
-                $id2 = $ClassCategory2 ? (string) $ClassCategory2->getId() : '';
-
-                if (!isset($productsClassCategories[$id][$id1])) {
-                    $productsClassCategories[$id][$id1] = [];
-                }
-
-                $productsClassCategories[$id][$id1][$id2] = [
-                    'classcategory_id2' => $id2,
-                    'name' => $ClassCategory2 ? $ClassCategory2->getName() : $this->translator->trans('common.select'),
-                    'product_class_id' => (string) $ProductClass->getId(),
-                ];
-            }
-        }
-
         return [
             'subtitle' => $this->getPageTitle($searchData),
             'pagination' => $pagination,
             'search_form' => $searchForm->createView(),
             'forms' => $forms,
             'Category' => $Category,
-            'products_class_categories_json' => json_encode($productsClassCategories, JSON_UNESCAPED_UNICODE)
         ];
     }
-
 
     /**
      * 商品詳細画面.
      *
      * @Route("/products/detail/{id}", name="product_detail", methods={"GET"}, requirements={"id" = "\d+"})
-     * 
+     *
      * @Template("Product/detail.twig")
-     * 
+     *
      * @ParamConverter("Product", options={"repository_method" = "findWithSortedClassCategories"})
      *
      * @param Request $request
@@ -302,10 +224,8 @@ class ProductController extends AbstractController
             throw new NotFoundHttpException();
         }
 
-        $Product->_calc();
-
         $builder = $this->formFactory->createNamedBuilder(
-            'add_cart',
+            '',
             AddCartType::class,
             null,
             [
@@ -329,74 +249,12 @@ class ProductController extends AbstractController
             $is_favorite = $this->customerFavoriteProductRepository->isFavorite($Customer, $Product);
         }
 
-        // JSONの読み込み
-        $classCategories = [
-            '__unselected' => [
-                '__unselected' => [
-                    'name' => $this->translator->trans('common.select'),
-                    'product_class_id' => '',
-                ],
-            ],
-        ];
-
-        foreach ($Product->getProductClasses() as $ProductClass) {
-            if (!$ProductClass->isVisible()) {
-                continue;
-            }
-
-            $ClassCategory1 = $ProductClass->getClassCategory1();
-            $ClassCategory2 = $ProductClass->getClassCategory2();
-            if ($ClassCategory2 && !$ClassCategory2->isVisible()) {
-                continue;
-            }
-
-            $id1 = $ClassCategory1 ? (string) $ClassCategory1->getId() : '__unselected2';
-            $id2 = $ClassCategory2 ? (string) $ClassCategory2->getId() : '';
-
-            $name2 = $ClassCategory2
-                ? $ClassCategory2->getName() . (!$ProductClass->getStockFind() ? ' ' . $this->translator->trans('front.product.out_of_stock_label') : '')
-                : $this->translator->trans('common.select');
-
-            // 初期選択肢（セレクトボックスの「選択してください」）
-            if (!isset($classCategories[$id1][''])) {
-                $classCategories[$id1]['#'] = [
-                    'classcategory_id2' => '',
-                    'name' => $this->translator->trans('common.select'),
-                    'product_class_id' => '',
-                ];
-            }
-
-            $classCategories[$id1][$id2] = [
-                'classcategory_id2' => $id2,
-                'name' => $name2,
-                'stock_find' => $ProductClass->getStockFind(),
-                'price01' => $ProductClass->getPrice01() === null ? '' : number_format($ProductClass->getPrice01()),
-                'price02' => number_format($ProductClass->getPrice02()),
-                'price01_inc_tax' => $ProductClass->getPrice01() === null ? '' : number_format($ProductClass->getPrice01IncTax()),
-                'price02_inc_tax' => number_format($ProductClass->getPrice02IncTax()),
-                'product_class_id' => (string) $ProductClass->getId(),
-                'product_code' => $ProductClass->getCode() ?? '',
-                'sale_type' => $ProductClass->getSaleType() ? (string) $ProductClass->getSaleType()->getId() : '',
-                'item_cost' => method_exists($ProductClass, 'getItemCost') ? (float) $ProductClass->getItemCost() : 0.0,
-            ];
-        }
-
-        $classCategoriesJson = json_encode($classCategories, JSON_UNESCAPED_UNICODE);
-
-        $is_favorite = false;
-        if ($this->isGranted('ROLE_USER')) {
-            $Customer = $this->getUser();
-            $is_favorite = $this->customerFavoriteProductRepository->isFavorite($Customer, $Product);
-        }
-
-
         return [
             'title' => $this->title,
             'subtitle' => $Product->getName(),
             'form' => $builder->getForm()->createView(),
             'Product' => $Product,
             'is_favorite' => $is_favorite,
-            'class_categories_json' => $classCategoriesJson,
         ];
     }
 
@@ -419,7 +277,6 @@ class ProductController extends AbstractController
 
         if ($this->isGranted('ROLE_USER')) {
             $Customer = $this->getUser();
-            
             $this->customerFavoriteProductRepository->addFavorite($Customer, $Product);
             $this->session->getFlashBag()->set('product_detail.just_added_favorite', $Product->getId());
 
@@ -492,7 +349,7 @@ class ProductController extends AbstractController
 
         $addCartData = $form->getData();
 
-        $this->logger->info(
+        log_info(
             'カート追加処理開始',
             [
                 'product_id' => $Product->getId(),
@@ -522,7 +379,7 @@ class ProductController extends AbstractController
 
         $this->cartService->save();
 
-        $this->logger->info(
+        log_info(
             'カート追加処理完了',
             [
                 'product_id' => $Product->getId(),
@@ -548,7 +405,6 @@ class ProductController extends AbstractController
             // ajaxでのリクエストの場合は結果をjson形式で返す。
 
             // 初期化
-            $done = null;
             $messages = [];
 
             if (empty($errorMessages)) {
@@ -575,18 +431,18 @@ class ProductController extends AbstractController
     /**
      * ページタイトルの設定
      *
-     * @param array|null $searchData
+     * @param  array|null $searchData
      *
      * @return string
      */
     protected function getPageTitle($searchData)
     {
         if (isset($searchData['name']) && !empty($searchData['name'])) {
-            return $this->translator->trans('front.product.search_result');
+            return trans('front.product.search_result');
         } elseif (isset($searchData['category_id']) && $searchData['category_id']) {
             return $searchData['category_id']->getName();
         } else {
-            return $this->translator->trans('front.product.all_products');
+            return trans('front.product.all_products');
         }
     }
 

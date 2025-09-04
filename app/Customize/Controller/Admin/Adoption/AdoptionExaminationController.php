@@ -45,11 +45,6 @@ class AdoptionExaminationController extends AbstractController
     protected $mailService;
 
     /**
-     * @var EntityManagerInterface
-     */
-    protected EntityManagerInterface $entityManager;
-
-    /**
      * AdoptionExaminationController constructor.
      *
      * @param ConservationsRepository $conservationsRepository
@@ -60,13 +55,11 @@ class AdoptionExaminationController extends AbstractController
     public function __construct(
         ConservationsRepository $conservationsRepository,
         CustomerRepository      $customerRepository,
-        MailService             $mailService,
-        EntityManagerInterface $entityManager
+        MailService             $mailService
     ) {
         $this->conservationsRepository = $conservationsRepository;
         $this->customerRepository = $customerRepository;
         $this->mailService = $mailService;
-        $this->entityManager = $entityManager;
     }
 
     /**

@@ -29,7 +29,7 @@ class BreederBenefitsController extends AbstractController
     /**
      * @var EntityManagerInterface
      */
-    protected EntityManagerInterface $entityManager;
+    protected $entityManager;
 
     /**
      * BreederBenefitsController constructor.

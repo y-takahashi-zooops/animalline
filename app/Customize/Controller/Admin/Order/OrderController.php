@@ -145,17 +145,10 @@ class OrderController extends AbstractController
      */
     protected $conservationsRepository;
 
-    protected FormFactoryInterface $formFactory;
-
     /**
      * @var LoggerInterface
      */
     protected $logger;
-
-    /**
-     * @var Session
-     */
-    protected SessionInterface $session;
 
     /**
      * OrderController constructor.
@@ -195,12 +188,10 @@ class OrderController extends AbstractController
         MailService $mailService,
         BreedersRepository $breedersRepository,
         ConservationsRepository $conservationsRepository,
-        FormFactoryInterface $formFactory,
         LoggerInterface $logger,
         EventDispatcherInterface $eventDispatcher,
         EccubeConfig $eccubeConfig,
-        EntityManagerInterface $entityManager,
-        SessionInterface $session
+        EntityManagerInterface $entityManager
     ) {
         $this->purchaseFlow = $orderPurchaseFlow;
         $this->csvExportService = $csvExportService;
@@ -218,12 +209,10 @@ class OrderController extends AbstractController
         $this->mailService = $mailService;
         $this->breedersRepository = $breedersRepository;
         $this->conservationsRepository = $conservationsRepository;
-        $this->formFactory = $formFactory;
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
         $this->eccubeConfig = $eccubeConfig;
         $this->entityManager = $entityManager;
-        $this->session = $session;
     }
 
     /**

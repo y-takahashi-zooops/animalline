@@ -39,11 +39,6 @@ use Eccube\Repository\ShippingRepository;
 class SubscriptionProcess extends AbstractController
 {
     /**
-     * @var EntityManagerInterface
-     */
-    protected EntityManagerInterface $entityManager;
-
-    /**
      * @var SubscriptionContractRepository
      */
     protected $subscriptionContractRepository;

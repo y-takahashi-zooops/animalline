@@ -21,11 +21,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Form\FormFactoryInterface;
-use Eccube\Common\EccubeConfig;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class SecurityController extends AbstractController
 {
@@ -34,31 +29,14 @@ class SecurityController extends AbstractController
      */
     protected $tokenStorage;
 
-    protected FormFactoryInterface $formFactory;
-
-    /**
-     * @var Session
-     */
-    protected SessionInterface $session;
-
-
     /**
      * SecurityController constructor.
      *
      * @param TokenStorageInterface $tokenStorage
      */
-    public function __construct(
-        TokenStorageInterface $tokenStorage,
-        FormFactoryInterface $formFactory,
-        EccubeConfig $eccubeConfig,
-        EventDispatcherInterface $eventDispatcher,
-        SessionInterface $session,
-    ) {
+    public function __construct(TokenStorageInterface $tokenStorage)
+    {
         $this->tokenStorage = $tokenStorage;
-        $this->formFactory = $formFactory;
-        $this->eccubeConfig = $eccubeConfig;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->session = $session;
     }
 
     /**
@@ -94,7 +72,7 @@ class SecurityController extends AbstractController
                     return StringUtil::isNotBlank($str);
                 })
             );
-            
+
             $adminAllowHosts = \json_encode(
                 array_filter(\explode("\n", StringUtil::convertLineFeed($data['admin_allow_hosts'])), function ($str) {
                     return StringUtil::isNotBlank($str);

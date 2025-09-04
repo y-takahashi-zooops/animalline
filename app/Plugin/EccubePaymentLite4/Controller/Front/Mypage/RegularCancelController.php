@@ -38,8 +38,6 @@ class RegularCancelController extends AbstractController
      */
     private $configRepository;
 
-    protected FormFactoryInterface $formFactory;
-
     public function __construct(
         RegularStatusRepository $regularStatusRepository,
         IsMypageRegularSettingService $isMypageRegularSettingService,

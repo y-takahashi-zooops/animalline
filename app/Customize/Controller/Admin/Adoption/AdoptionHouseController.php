@@ -24,16 +24,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class AdoptionHouseController extends AbstractController
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected EntityManagerInterface $entityManager;
 
-    public function __construct(
-        EntityManagerInterface $entityManager
-    ) {
-        $this->entityManager = $entityManager;
-    }
 
     /**
      * 犬舎・猫舎情報編集保護団体管理

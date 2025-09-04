@@ -20,26 +20,11 @@ use Eccube\Event\EventArgs;
 use Eccube\Form\Type\Admin\MasterdataEditType;
 use Eccube\Form\Type\Admin\MasterdataType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\ORM\EntityManagerInterface;
 
 class MasterdataController extends AbstractController
 {
-    protected FormFactoryInterface $formFactory;
-
-    public function __construct(
-        FormFactoryInterface $formFactory,
-        EventDispatcherInterface $eventDispatcher,
-        EntityManagerInterface $entityManager
-    ) {
-        $this->formFactory = $formFactory;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->entityManager = $entityManager;
-    }
-
     /**
      * @Route("/%eccube_admin_route%/setting/system/masterdata", name="admin_setting_system_masterdata", methods={"GET", "POST"})
      * @Route("/%eccube_admin_route%/setting/system/masterdata/{entity}/edit", name="admin_setting_system_masterdata_view", methods={"GET", "POST"})

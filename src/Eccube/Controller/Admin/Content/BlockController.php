@@ -29,9 +29,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use Doctrine\ORM\EntityManagerInterface;
 
 class BlockController extends AbstractController
 {
@@ -45,26 +42,17 @@ class BlockController extends AbstractController
      */
     protected $deviceTypeRepository;
 
-    protected FormFactoryInterface $formFactory;
-
-    protected EntityManagerInterface $entityManager;
-
     public function __construct(
         BlockRepository $blockRepository,
         DeviceTypeRepository $deviceTypeRepository,
-        FormFactoryInterface $formFactory,
-        EventDispatcherInterface $eventDispatcher,
-        EntityManagerInterface $entityManager,
     ) {
         $this->blockRepository = $blockRepository;
         $this->deviceTypeRepository = $deviceTypeRepository;
-        $this->formFactory = $formFactory;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->entityManager = $entityManager;
     }
 
     /**
      * @Route("/%eccube_admin_route%/content/block", name="admin_content_block", methods={"GET"})
+     *
      * @Template("@admin/Content/block.twig")
      */
     public function index(Request $request)
@@ -91,11 +79,14 @@ class BlockController extends AbstractController
 
     /**
      * @Route("/%eccube_admin_route%/content/block/new", name="admin_content_block_new", methods={"GET", "POST"})
-     * @Route("/%eccube_admin_route%/content/block/{id}/edit", requirements={"id" = "\d+"}, name="admin_content_block_edit", methods={"GET", "POST"})     * @Template("@admin/Content/block_edit.twig")
+     * @Route("/%eccube_admin_route%/content/block/{id}/edit", requirements={"id" = "\d+"}, name="admin_content_block_edit", methods={"GET", "POST"})
+     *
+     * @Template("@admin/Content/block_edit.twig")
      */
     public function edit(Request $request, Environment $twig, Filesystem $fs, CacheUtil $cacheUtil, $id = null)
     {
         $this->addInfoOnce('admin.common.restrict_file_upload_info', 'admin');
+
         $DeviceType = $this->deviceTypeRepository
             ->find(DeviceType::DEVICE_TYPE_PC);
 

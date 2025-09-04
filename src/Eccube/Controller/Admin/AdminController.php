@@ -35,14 +35,10 @@ use Eccube\Repository\ProductRepository;
 use Eccube\Service\PluginApiService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use Eccube\Common\EccubeConfig;
-use Doctrine\ORM\EntityManagerInterface;
 
 class AdminController extends AbstractController
 {
@@ -89,13 +85,6 @@ class AdminController extends AbstractController
     /** @var PluginApiService */
     protected $pluginApiService;
 
-    protected FormFactoryInterface $formFactory;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    protected EntityManagerInterface $entityManager;
-
     /**
      * @var array 売り上げ状況用受注状況
      */
@@ -107,7 +96,7 @@ class AdminController extends AbstractController
      * @param AuthorizationCheckerInterface $authorizationChecker
      * @param AuthenticationUtils $helper
      * @param MemberRepository $memberRepository
-     * @param PasswordHasherInterface $passwordHasher
+     * @param UserPasswordHasherInterface $passwordHasher
      * @param OrderRepository $orderRepository
      * @param OrderStatusRepository $orderStatusRepository
      * @param CustomerRepository $custmerRepository
@@ -124,10 +113,6 @@ class AdminController extends AbstractController
         CustomerRepository $custmerRepository,
         ProductRepository $productRepository,
         PluginApiService $pluginApiService,
-        FormFactoryInterface $formFactory,
-        EventDispatcherInterface $eventDispatcher,
-        EccubeConfig $eccubeConfig,
-        EntityManagerInterface $entityManager
     ) {
         $this->authorizationChecker = $authorizationChecker;
         $this->helper = $helper;
@@ -138,15 +123,11 @@ class AdminController extends AbstractController
         $this->customerRepository = $custmerRepository;
         $this->productRepository = $productRepository;
         $this->pluginApiService = $pluginApiService;
-        $this->formFactory = $formFactory;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->eccubeConfig = $eccubeConfig;
-        $this->entityManager = $entityManager;
     }
 
     /**
      * @Route("/%eccube_admin_route%/login", name="admin_login", methods={"GET", "POST"})
-     * 
+     *
      * @Template("@admin/login.twig")
      */
     public function login(Request $request)
@@ -155,7 +136,6 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('admin_homepage');
         }
 
-        /* @var $form \Symfony\Component\Form\FormInterface */
         $builder = $this->formFactory->createNamedBuilder('', LoginType::class);
 
         $event = new EventArgs(
@@ -185,7 +165,7 @@ class AdminController extends AbstractController
      * @throws \Doctrine\ORM\NonUniqueResultException
      *
      * @Route("/%eccube_admin_route%/", name="admin_homepage", methods={"GET"})
-     * 
+     *
      * @Template("@admin/index.twig")
      */
     public function index(Request $request)
@@ -312,7 +292,6 @@ class AdminController extends AbstractController
             ],
             $request
         );
-
         $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_ADMIM_INDEX_SALES);
         $this->excludes = $event->getArgument('excludes');
 
@@ -338,7 +317,7 @@ class AdminController extends AbstractController
      * パスワード変更画面
      *
      * @Route("/%eccube_admin_route%/change_password", name="admin_change_password", methods={"GET", "POST"})
-     * 
+     *
      * @Template("@admin/change_password.twig")
      *
      * @param Request $request
@@ -363,14 +342,13 @@ class AdminController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $Member = $this->getUser();
-            // $salt = $Member->getSalt();
-            /** @var \Eccube\Entity\Member $Member */
+            $salt = $Member->getSalt();
             $password = $form->get('change_password')->getData();
             $password = $this->passwordHasher->hashPassword($Member, $password);
 
             $Member
-                ->setPassword($password);
-                // ->setSalt($salt);
+                ->setPassword($password)
+                ->setSalt($salt);
 
             $this->memberRepository->save($Member);
 
@@ -396,7 +374,7 @@ class AdminController extends AbstractController
     /**
      * 在庫なし商品の検索結果を表示する.
      *
-     * @Route("/%eccube_admin_route%/search_nonstock", name="admin_homepage_nonstock")
+     * @Route("/%eccube_admin_route%/search_nonstock", name="admin_homepage_nonstock", methods={"GET"})
      *
      * @param Request $request
      *
@@ -418,7 +396,7 @@ class AdminController extends AbstractController
     /**
      * 本会員の検索結果を表示する.
      *
-     * @Route("/%eccube_admin_route%/search_customer", name="admin_homepage_customer")
+     * @Route("/%eccube_admin_route%/search_customer", name="admin_homepage_customer", methods={"GET"})
      *
      * @param Request $request
      *
@@ -440,7 +418,7 @@ class AdminController extends AbstractController
      * @param \Doctrine\ORM\EntityManagerInterface $em
      * @param array $excludes
      *
-     * @return null|Request
+     * @return Request|null
      */
     protected function getOrderEachStatus(array $excludes)
     {

@@ -102,11 +102,6 @@ class JddcController extends AbstractController
     protected $dnaSalesDetailRepository;
 
     /**
-     * @var EntityManagerInterface
-     */
-    protected EntityManagerInterface $entityManager;
-
-    /**
      * VeqtaController constructor.
      *
      * @param DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository

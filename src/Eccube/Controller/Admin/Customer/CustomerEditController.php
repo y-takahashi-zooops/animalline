@@ -27,14 +27,8 @@ use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Annotation\Route;
-use Psr\Log\LoggerInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use Eccube\Common\EccubeConfig;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\Annotation\Route;
 
 class CustomerEditController extends AbstractController
 {
@@ -58,49 +52,23 @@ class CustomerEditController extends AbstractController
      */
     protected $pageMaxRepository;
 
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
-    /**
-     * @var FormFactoryInterface
-     */
-    protected FormFactoryInterface $formFactory;
-
-    /**
-     * @var Session
-     */
-    protected SessionInterface $session;
-
     public function __construct(
         CustomerRepository $customerRepository,
-        LoggerInterface $logger,
-        EventDispatcherInterface $eventDispatcher,
-        EccubeConfig $eccubeConfig,
-        EntityManagerInterface $entityManager,
-        FormFactoryInterface $formFactory,
-        SessionInterface $session,
         UserPasswordHasherInterface $passwordHasher,
         OrderRepository $orderRepository,
         PageMaxRepository $pageMaxRepository,
     ) {
         $this->customerRepository = $customerRepository;
-        $this->logger = $logger;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->eccubeConfig = $eccubeConfig;
-        $this->entityManager = $entityManager;
-        $this->formFactory = $formFactory;
-        $this->session = $session;
-        $this->passwordHasher = $passwordHasher;
         $this->orderRepository = $orderRepository;
+        $this->passwordHasher = $passwordHasher;
         $this->pageMaxRepository = $pageMaxRepository;
     }
 
     /**
      * @Route("/%eccube_admin_route%/customer/new", name="admin_customer_new", methods={"GET", "POST"})
      * @Route("/%eccube_admin_route%/customer/{id}/edit", requirements={"id" = "\d+"}, name="admin_customer_edit", methods={"GET", "POST"})
-     *      * @Template("@admin/Customer/edit.twig")
+     *
+     * @Template("@admin/Customer/edit.twig")
      */
     public function index(Request $request, PaginatorInterface $paginator, $id = null)
     {
@@ -116,7 +84,7 @@ class CustomerEditController extends AbstractController
             }
 
             $oldStatusId = $Customer->getStatus()->getId();
-            $Customer->setPlainPassword($this->eccubeConfig['eccube_default_password']);            
+            $Customer->setPlainPassword($this->eccubeConfig['eccube_default_password']);
         // 新規登録
         } else {
             $Customer = $this->customerRepository->newCustomer();
@@ -183,7 +151,7 @@ class CustomerEditController extends AbstractController
             $this->entityManager->persist($Customer);
             $this->entityManager->flush();
 
-            $this->logger->info('会員登録完了', [$Customer->getId()]);
+            log_info('会員登録完了', [$Customer->getId()]);
 
             $event = new EventArgs(
                 [

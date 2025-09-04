@@ -116,13 +116,6 @@ class CustomerController extends AbstractController
      */
     protected $customerQueryService;
 
-    protected FormFactoryInterface $formFactory;
-
-    /**
-     * @var Session
-     */
-    protected SessionInterface $session;
-
     /**
      * @var LoggerInterface
      * @param SessionInterface $session,
@@ -142,12 +135,10 @@ class CustomerController extends AbstractController
         BreederPetsRepository $breederPetsRepository,
         CustomerStatusRepository $customerStatusRepository,
         CustomerQueryService $customerQueryService,
-        FormFactoryInterface $formFactory,
         LoggerInterface $logger,
         EventDispatcherInterface $eventDispatcher,
         EccubeConfig $eccubeConfig,
         EntityManagerInterface $entityManager,
-        SessionInterface $session,
         RequestStack $requestStack
     ) {
         $this->pageMaxRepository = $pageMaxRepository;
@@ -162,12 +153,10 @@ class CustomerController extends AbstractController
         $this->breederPetsRepository = $breederPetsRepository;
         $this->customerStatusRepository = $customerStatusRepository;
         $this->customerQueryService = $customerQueryService;
-        $this->formFactory = $formFactory;
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
         $this->eccubeConfig = $eccubeConfig;
         $this->entityManager = $entityManager;
-        $this->session = $session;
         $this->requestStack = $requestStack;
     }
 

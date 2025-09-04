@@ -85,16 +85,14 @@ class ProductInstockController extends AbstractController
     protected $categoryRepository;
 
     /**
-     * @var EntityManagerInterface
-     */
-    protected EntityManagerInterface $entityManager;
-
-    protected FormFactoryInterface $formFactory;
-
-    /**
      * @var LoggerInterface
      */
     protected $logger;
+
+    /**
+     * @var EccubeConfig
+     */
+    protected $eccubeConfig;
 
     /**
      * ProductInstockController constructor.
@@ -129,10 +127,12 @@ class ProductInstockController extends AbstractController
         $this->productStockService = $productStockService;
         $this->productRepository = $productRepository;
         $this->categoryRepository = $categoryRepository;
-        $this->entityManager = $entityManager;
-        $this->formFactory = $formFactory;
         $this->logger = $logger;
         $this->eccubeConfig = $eccubeConfig;
+        
+        // 親クラスのsetterメソッドを呼び出してプロパティを設定
+        $this->setEntityManager($entityManager);
+        $this->setFormFactory($formFactory);
     }
 
     /**

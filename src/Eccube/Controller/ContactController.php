@@ -17,12 +17,11 @@ use Eccube\Entity\Customer;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Eccube\Form\Type\Front\ContactType;
+use Eccube\Repository\PageRepository;
 use Eccube\Service\MailService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ContactController extends AbstractController
 {
@@ -31,21 +30,23 @@ class ContactController extends AbstractController
      */
     protected $mailService;
 
-    protected FormFactoryInterface $formFactory;
+    /**
+     * @var PageRepository
+     */
+    private $pageRepository;
 
     /**
      * ContactController constructor.
      *
      * @param MailService $mailService
+     * @param PageRepository $pageRepository
      */
     public function __construct(
         MailService $mailService,
-        FormFactoryInterface $formFactory,
-        EventDispatcherInterface $eventDispatcher
-    ) {
+        PageRepository $pageRepository)
+    {
         $this->mailService = $mailService;
-        $this->formFactory = $formFactory;
-        $this->eventDispatcher = $eventDispatcher;
+        $this->pageRepository = $pageRepository;
     }
 
     /**
@@ -94,16 +95,12 @@ class ContactController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             switch ($request->get('mode')) {
                 case 'confirm':
-                    $form = $builder->getForm();
-                    $form->handleRequest($request);
-
                     return $this->render('Contact/confirm.twig', [
                         'form' => $form->createView(),
                         'Page' => $this->pageRepository->getPageByRoute('contact_confirm'),
                     ]);
 
                 case 'complete':
-
                     $data = $form->getData();
 
                     $event = new EventArgs(
@@ -133,7 +130,7 @@ class ContactController extends AbstractController
      * お問い合わせ完了画面.
      *
      * @Route("/contact/complete", name="contact_complete", methods={"GET"})
-     * 
+     *
      * @Template("Contact/complete.twig")
      */
     public function complete()

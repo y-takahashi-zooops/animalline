@@ -110,9 +110,9 @@ class ProductWasteController extends BaseProductController
     protected $stockWasteReasonRepository;
 
     /**
-     * @var EntityManagerInterface
+     * @var EccubeConfig
      */
-    protected EntityManagerInterface $entityManager;
+    protected $eccubeConfig;
 
     /**
      * ProductWasteController constructor.
@@ -161,9 +161,10 @@ class ProductWasteController extends BaseProductController
         $this->orderItemTypeRepository = $orderItemTypeRepository;
         $this->stockWasteRepository = $stockWasteRepository;
         $this->stockWasteReasonRepository = $stockWasteReasonRepository;
-        $this->entityManager = $entityManager;
         $this->eccubeConfig = $eccubeConfig;
-
+        
+        // 親クラスのsetterメソッドを呼び出してプロパティを設定
+        $this->setEntityManager($entityManager);
     }
 
     // public function index(Request $request, $page_no = null, PaginatorInterface $paginator)

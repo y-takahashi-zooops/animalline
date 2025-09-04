@@ -31,31 +31,28 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Form\FormFactoryInterface;
 
 class FileController extends AbstractController
 {
-    const SJIS = 'sjis-win';
-    const UTF = 'UTF-8';
+    public const SJIS = 'sjis-win';
+    public const UTF = 'UTF-8';
     private $errors = [];
     private $encode;
-    protected FormFactoryInterface $formFactory;
-    
+
     /**
      * FileController constructor.
      */
-    public function __construct(FormFactoryInterface $formFactory)
+    public function __construct()
     {
         $this->encode = self::UTF;
         if ('\\' === DIRECTORY_SEPARATOR) {
             $this->encode = self::SJIS;
         }
-        $this->formFactory = $formFactory;
     }
 
     /**
      * @Route("/%eccube_admin_route%/content/file_manager", name="admin_content_file", methods={"GET", "POST"})
-     * 
+     *
      * @Template("@admin/Content/file.twig")
      */
     public function index(Request $request)
@@ -157,12 +154,12 @@ class FileController extends AbstractController
                     new Assert\Regex([
                         'pattern' => '/[^[:alnum:]_.\\-]/',
                         'match' => false,
-                        'message' => 'file.text.error.folder_symbol',
+                        'message' => 'admin.content.file.folder_name_symbol_error',
                     ]),
                     new Assert\Regex([
                         'pattern' => "/^\.(.*)$/",
                         'match' => false,
-                        'message' => 'file.text.error.folder_period',
+                        'message' => 'admin.content.file.folder_name_period_error',
                     ]),
                 ],
             ])
@@ -195,7 +192,6 @@ class FileController extends AbstractController
 
             return;
         }
-
         try {
             $fs->mkdir($newFilePath);
             $this->addSuccess('admin.common.create_complete', 'admin');
@@ -295,6 +291,7 @@ class FileController extends AbstractController
 
         if (!$this->checkDir($nowDir, $topDir)) {
             $this->errors[] = ['message' => 'file.text.error.invalid_upload_folder'];
+
             return;
         }
 
@@ -340,7 +337,7 @@ class FileController extends AbstractController
         if ($successCount > 0) {
             $this->addSuccess(trans('admin.content.file.upload_complete', [
                 '%success%' => $successCount,
-                '%count%' => $uploadCount
+                '%count%' => $uploadCount,
             ]), 'admin');
         }
     }

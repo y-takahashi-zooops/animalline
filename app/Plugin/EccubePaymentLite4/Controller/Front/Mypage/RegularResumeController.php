@@ -36,8 +36,6 @@ class RegularResumeController extends AbstractController
      */
     private $isActiveRegularService;
 
-    protected FormFactoryInterface $formFactory;
-
     public function __construct(
         RegularStatusRepository $regularStatusRepository,
         GetNextDeliveryDateWhenResumingService $getNextDeliveryDateWhenResumingService,

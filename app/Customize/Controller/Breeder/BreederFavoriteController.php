@@ -36,7 +36,7 @@ class BreederFavoriteController extends AbstractController
     /**
      * @var EntityManagerInterface
      */
-    protected EntityManagerInterface $entityManager;
+    protected $entityManager;
 
     /**
      * BreederController constructor.

@@ -86,9 +86,12 @@ class AdoptionDnaCheck extends AbstractController
     /**
      * @var EntityManagerInterface
      */
-    protected EntityManagerInterface $entityManager;
+    protected $entityManager;
 
-    protected FormFactoryInterface $formFactory;
+    /**
+     * @var FormFactoryInterface
+     */
+    protected $formFactory;
 
     /**
      * AdoptionController constructor.

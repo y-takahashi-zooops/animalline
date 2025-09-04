@@ -51,8 +51,6 @@ class NonMemberShoppingController extends BaseNonMemberShoppingController
      */
     protected $cartService;
 
-    protected FormFactoryInterface $formFactory;
-
     /**
      * @var LoggerInterface
      */

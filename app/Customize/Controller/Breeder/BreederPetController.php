@@ -144,13 +144,6 @@ class BreederPetController extends AbstractController
     protected $petLikeRepository;
 
     /**
-     * @var EntityManagerInterface
-     */
-    protected EntityManagerInterface $entityManager;
-
-    protected FormFactoryInterface $formFactory;
-
-    /**
      * BreederController constructor.
      *
      * @param BreederContactsRepository $breederContactsRepository

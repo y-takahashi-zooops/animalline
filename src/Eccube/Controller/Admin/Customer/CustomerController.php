@@ -28,7 +28,6 @@ use Eccube\Repository\Master\SexRepository;
 use Eccube\Service\CsvExportService;
 use Eccube\Service\MailService;
 use Eccube\Util\FormUtil;
-use Knp\Component\Pager\Paginator;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,11 +35,6 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Psr\Log\LoggerInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use Eccube\Common\EccubeConfig;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CustomerController extends AbstractController
@@ -75,13 +69,6 @@ class CustomerController extends AbstractController
      */
     protected $customerRepository;
 
-    protected FormFactoryInterface $formFactory;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
     public function __construct(
         PageMaxRepository $pageMaxRepository,
         CustomerRepository $customerRepository,
@@ -89,11 +76,6 @@ class CustomerController extends AbstractController
         PrefRepository $prefRepository,
         MailService $mailService,
         CsvExportService $csvExportService,
-        FormFactoryInterface $formFactory,
-        LoggerInterface $logger,
-        EventDispatcherInterface $eventDispatcher,
-        EccubeConfig $eccubeConfig,
-        EntityManagerInterface $entityManager,
     ) {
         $this->pageMaxRepository = $pageMaxRepository;
         $this->customerRepository = $customerRepository;
@@ -101,17 +83,12 @@ class CustomerController extends AbstractController
         $this->prefRepository = $prefRepository;
         $this->mailService = $mailService;
         $this->csvExportService = $csvExportService;
-        $this->formFactory = $formFactory;
-        $this->logger = $logger;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->eccubeConfig = $eccubeConfig;
-        $this->entityManager = $entityManager;
     }
 
     /**
      * @Route("/%eccube_admin_route%/customer", name="admin_customer", methods={"GET", "POST"})
      * @Route("/%eccube_admin_route%/customer/page/{page_no}", requirements={"page_no" = "\d+"}, name="admin_customer_page", methods={"GET", "POST"})
-     * 
+     *
      * @Template("@admin/Customer/index.twig")
      */
     public function index(Request $request, PaginatorInterface $paginator, $page_no = null)
@@ -218,7 +195,6 @@ class CustomerController extends AbstractController
         if (is_null($Customer)) {
             throw new NotFoundHttpException();
         }
-
         $secretKey = $this->customerRepository->getUniqueSecretKey();
         $Customer->setSecretKey($secretKey);
         $this->entityManager->persist($Customer);
@@ -254,7 +230,7 @@ class CustomerController extends AbstractController
     {
         $this->isTokenValid();
 
-        $this->logger->info('会員削除開始', [$id]);
+        log_info('会員削除開始', [$id]);
 
         $page_no = intval($this->session->get('eccube.admin.customer.search.page_no'));
         $page_no = $page_no ? $page_no : Constant::ENABLED;
@@ -266,21 +242,21 @@ class CustomerController extends AbstractController
             $this->deleteMessage();
 
             return $this->redirect($this->generateUrl('admin_customer_page',
-                    ['page_no' => $page_no]).'?resume='.Constant::ENABLED);
+                ['page_no' => $page_no]).'?resume='.Constant::ENABLED);
         }
 
         try {
             $this->entityManager->remove($Customer);
-            $this->entityManager->flush($Customer);
+            $this->entityManager->flush();
             $this->addSuccess('admin.common.delete_complete', 'admin');
         } catch (ForeignKeyConstraintViolationException $e) {
-            log_error('会員削除失敗', [$e], 'admin');
+            log_error('会員削除失敗', [$e]);
 
             $message = trans('admin.common.delete_error_foreign_key', ['%name%' => $Customer->getName01().' '.$Customer->getName02()]);
             $this->addError($message, 'admin');
         }
 
-        $this->logger->info('会員削除完了', [$id]);
+        log_info('会員削除完了', [$id]);
 
         $event = new EventArgs(
             [
@@ -291,7 +267,7 @@ class CustomerController extends AbstractController
         $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_CUSTOMER_DELETE_COMPLETE);
 
         return $this->redirect($this->generateUrl('admin_customer_page',
-                ['page_no' => $page_no]).'?resume='.Constant::ENABLED);
+            ['page_no' => $page_no]).'?resume='.Constant::ENABLED);
     }
 
     /**
@@ -317,12 +293,12 @@ class CustomerController extends AbstractController
             // CSV種別を元に初期化.
             $this->csvExportService->initCsvType(CsvType::CSV_TYPE_CUSTOMER);
 
-            // ヘッダ行の出力.
-            $this->csvExportService->exportHeader();
-
             // 会員データ検索用のクエリビルダを取得.
             $qb = $this->csvExportService
                 ->getCustomerQueryBuilder($request);
+
+            // ヘッダ行の出力.
+            $this->csvExportService->exportHeader();
 
             // データ行の出力.
             $this->csvExportService->setExportQueryBuilder($qb);
@@ -364,9 +340,7 @@ class CustomerController extends AbstractController
         $response->headers->set('Content-Type', 'application/octet-stream');
         $response->headers->set('Content-Disposition', 'attachment; filename='.$filename);
 
-        $response->send();
-
-        $this->logger->info('会員CSVファイル名', [$filename]);
+        log_info('会員CSVファイル名', [$filename]);
 
         return $response;
     }
