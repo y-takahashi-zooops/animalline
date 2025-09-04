@@ -24,9 +24,6 @@ use Eccube\Repository\TaxRuleRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Class TaxRuleController
@@ -43,28 +40,16 @@ class TaxRuleController extends AbstractController
      */
     protected $taxRuleRepository;
 
-    protected FormFactoryInterface $formFactory;
-
-
     /**
      * TaxRuleController constructor.
      *
      * @param BaseInfoRepository $baseInfoRepository
      * @param TaxRuleRepository $taxRuleRepository
      */
-    public function __construct(
-        BaseInfoRepository $baseInfoRepository,
-        TaxRuleRepository $taxRuleRepository,
-        FormFactoryInterface $formFactory,
-        EventDispatcherInterface $eventDispatcher,
-        EntityManagerInterface $entityManager
-    )
+    public function __construct(BaseInfoRepository $baseInfoRepository, TaxRuleRepository $taxRuleRepository)
     {
         $this->BaseInfo = $baseInfoRepository->get();
         $this->taxRuleRepository = $taxRuleRepository;
-        $this->formFactory = $formFactory;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->entityManager = $entityManager;
     }
 
     /**

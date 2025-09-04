@@ -57,8 +57,6 @@ class CustomTopController extends AbstractController
      */
     private $mailService;
 
-    protected FormFactoryInterface $formFactory;
-
     public function __construct(
         NewsRepository $NewsRepository,
         ProductRepository $productRepository,

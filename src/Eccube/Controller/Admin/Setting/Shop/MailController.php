@@ -27,9 +27,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Class MailController
@@ -42,28 +39,13 @@ class MailController extends AbstractController
     protected $mailTemplateRepository;
 
     /**
-     * @var FormFactoryInterface
-     */
-    protected FormFactoryInterface $formFactory;
-
-
-    /**
      * MailController constructor.
      *
      * @param MailTemplateRepository $mailTemplateRepository
-     * @param FormFactoryInterface $formFactory
      */
-    public function __construct(
-        MailTemplateRepository $mailTemplateRepository,
-        FormFactoryInterface $formFactory,
-        EventDispatcherInterface $eventDispatcher,
-        EntityManagerInterface $entityManager
-    )
+    public function __construct(MailTemplateRepository $mailTemplateRepository)
     {
         $this->mailTemplateRepository = $mailTemplateRepository;
-        $this->formFactory = $formFactory;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->entityManager = $entityManager;
     }
 
     /**
@@ -88,8 +70,6 @@ class MailController extends AbstractController
         $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SHOP_MAIL_INDEX_INITIALIZE);
 
         $form = $builder->getForm();
-        $form['template']->setData($Mail);
-        $htmlFileName = $Mail ? $this->getHtmlFileName($Mail->getFileName()) : null;
 
         // 更新時
         if (null !== $Mail->getId()) {
@@ -243,7 +223,7 @@ class MailController extends AbstractController
     protected function getHtmlFileName($fileName)
     {
         // HTMLテンプレートファイルの取得
-        $targetTemplate = explode('.', $fileName);
+        $targetTemplate = pathinfo($fileName);
         $suffix = '.html';
 
         return $targetTemplate['dirname'].DIRECTORY_SEPARATOR.$targetTemplate['filename'].$suffix.'.'.$targetTemplate['extension'];

@@ -103,7 +103,10 @@ class AnilineEntryController extends AbstractController
      */
     protected $conservationsRepository;
 
-    protected FormFactoryInterface $formFactory;
+    /**
+     * @var FormFactoryInterface
+     */
+    protected $formFactory;
 
     /**
      * @var LoggerInterface

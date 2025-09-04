@@ -26,7 +26,7 @@ class BreederConfigrationController extends AbstractController
     /**
      * @var EntityManagerInterface
      */
-    protected EntityManagerInterface $entityManager;
+    protected $entityManager;
 
     /**
      * BreederConfigrationController constructor.

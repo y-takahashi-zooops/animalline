@@ -33,8 +33,6 @@ class ContactController extends AbstractController
      */
     protected $mailService;
 
-    protected FormFactoryInterface $formFactory;
-
     /**
      * ContactController constructor.
      *

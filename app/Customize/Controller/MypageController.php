@@ -133,8 +133,6 @@ class MypageController extends BaseMypageController
      */
     protected $dnaSalesStatusRepository;
 
-    protected FormFactoryInterface $formFactory;
-
     /**
      * MypageController constructor.
      *

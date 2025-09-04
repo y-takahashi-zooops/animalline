@@ -21,35 +21,23 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class SearchProductController extends AbstractController
 {
     /**
      * @var RequestStack
      */
-    protected RequestStack $requestStack;
-    
-    /**
-     * @var FormFactoryInterface
-     */
-    protected FormFactoryInterface $formFactory;
+    protected $requestStack;
 
-    public function __construct(
-        RequestStack $requestStack,
-        FormFactoryInterface $formFactory,
-        EventDispatcherInterface $eventDispatcher,
+    public function __construct(RequestStack $requestStack,
     ) {
         $this->requestStack = $requestStack;
-        $this->formFactory = $formFactory;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
      * @Route("/block/search_product", name="block_search_product", methods={"GET"})
      * @Route("/block/search_product_sp", name="block_search_product_sp", methods={"GET"})
-     * 
+     *
      * @Template("Block/search_product.twig")
      */
     public function index(Request $request)

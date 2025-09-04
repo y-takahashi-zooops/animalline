@@ -65,9 +65,30 @@ class AbstractController extends Controller
     protected $router;
 
     /**
-     * @param EccubeConfig $eccubeConfig
-     * @required
+     * Constructor
      */
+    public function __construct(
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator,
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher,
+        Session $session,
+        RouterInterface $router
+    ) {
+        $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
+        $this->translator = $translator;
+        $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->session = $session;
+        $this->router = $router;
+    }
+
+    /**
+     * @param EccubeConfig $eccubeConfig
+     */
+    #[Required]
     public function setEccubeConfig(EccubeConfig $eccubeConfig)
     {
         $this->eccubeConfig = $eccubeConfig;
@@ -120,6 +141,7 @@ class AbstractController extends Controller
 
     /**
      * @param RouterInterface $router
+     *
      * @return void
      */
     #[Required]

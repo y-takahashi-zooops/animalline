@@ -40,11 +40,6 @@ class NewsController extends AbstractController
     protected $newsRepository;
 
     /**
-     * @var EntityManagerInterface
-     */
-    protected EntityManagerInterface $entityManager;
-
-    /**
      * @var LoggerInterface
      */
     protected $logger;
@@ -56,7 +51,6 @@ class NewsController extends AbstractController
      * @param LoggerInterface $logger
      */
     public function __construct(
-        EntityManagerInterface $entityManager,
         NewsRepository $newsRepository,
         LoggerInterface $logger,
         EventDispatcherInterface $eventDispatcher,
@@ -64,7 +58,6 @@ class NewsController extends AbstractController
     )
     {
         $this->newsRepository = $newsRepository;
-        $this->entityManager = $entityManager;
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
         $this->eccubeConfig = $eccubeConfig;

@@ -43,7 +43,10 @@ class ProductSetController extends AbstractController
      */
     protected $categoryRepository;
 
-    protected FormFactoryInterface $formFactory;
+    /**
+     * @var EccubeConfig
+     */
+    protected $eccubeConfig;
 
     /**
      * ProductSetController constructor.
@@ -66,9 +69,11 @@ class ProductSetController extends AbstractController
         $this->productRepository = $productRepository;
         $this->productSetRepository = $productSetRepository;
         $this->categoryRepository = $categoryRepository;
-        $this->formFactory = $formFactory;
         $this->eccubeConfig = $eccubeConfig;
-        $this->entityManager = $entityManager;
+        
+        // 親クラスのsetterメソッドを呼び出してプロパティを設定
+        $this->setFormFactory($formFactory);
+        $this->setEntityManager($entityManager);
     }
 
     /**

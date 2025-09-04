@@ -29,11 +29,6 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Form\FormFactoryInterface;
-use Psr\Log\LoggerInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use Doctrine\ORM\EntityManagerInterface;
-
 
 class ClassCategoryController extends AbstractController
 {
@@ -52,13 +47,6 @@ class ClassCategoryController extends AbstractController
      */
     protected $classNameRepository;
 
-    protected FormFactoryInterface $formFactory;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
     /**
      * @var CsvExportService
      */
@@ -70,29 +58,24 @@ class ClassCategoryController extends AbstractController
      * @param ProductClassRepository $productClassRepository
      * @param ClassCategoryRepository $classCategoryRepository
      * @param ClassNameRepository $classNameRepository
-     * @param LoggerInterface $logger
+     * @param CsvExportService $csvExportService
      */
     public function __construct(
         ProductClassRepository $productClassRepository,
         ClassCategoryRepository $classCategoryRepository,
         ClassNameRepository $classNameRepository,
-        FormFactoryInterface $formFactory,
-        LoggerInterface $logger,
-        EventDispatcherInterface $eventDispatcher,
-        EntityManagerInterface $entityManager
+        CsvExportService $csvExportService,
     ) {
         $this->productClassRepository = $productClassRepository;
         $this->classCategoryRepository = $classCategoryRepository;
         $this->classNameRepository = $classNameRepository;
-        $this->formFactory = $formFactory;
-        $this->logger = $logger;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->entityManager = $entityManager;
+        $this->csvExportService = $csvExportService;
     }
 
     /**
-     * @Route("/%eccube_admin_route%/product/class_category/{class_name_id}", requirements={"class_name_id" = "\d+"}, name="admin_product_class_category")
-     * @Route("/%eccube_admin_route%/product/class_category/{class_name_id}/{id}/edit", requirements={"class_name_id" = "\d+", "id" = "\d+"}, name="admin_product_class_category_edit")
+     * @Route("/%eccube_admin_route%/product/class_category/{class_name_id}", requirements={"class_name_id" = "\d+"}, name="admin_product_class_category", methods={"GET", "POST"})
+     * @Route("/%eccube_admin_route%/product/class_category/{class_name_id}/{id}/edit", requirements={"class_name_id" = "\d+", "id" = "\d+"}, name="admin_product_class_category_edit", methods={"GET", "POST"})
+     *
      * @Template("@admin/Product/class_category.twig")
      */
     public function index(Request $request, $class_name_id, $id = null)
@@ -136,12 +119,12 @@ class ClassCategoryController extends AbstractController
 
         if ($request->getMethod() === 'POST') {
             $form->handleRequest($request);
-            if ($form->isValid()) {
-                $this->logger->info('規格分類登録開始', [$id]);
+            if ($form->isSubmitted() && $form->isValid()) {
+                log_info('規格分類登録開始', [$id]);
 
                 $this->classCategoryRepository->save($TargetClassCategory);
 
-                $this->logger->info('規格分類登録完了', [$id]);
+                log_info('規格分類登録完了', [$id]);
 
                 $event = new EventArgs(
                     [
@@ -195,7 +178,7 @@ class ClassCategoryController extends AbstractController
             throw new NotFoundHttpException();
         }
 
-        $this->logger->info('規格分類削除開始', [$id]);
+        log_info('規格分類削除開始', [$id]);
 
         $TargetClassCategory = $this->classCategoryRepository->find($id);
         if (!$TargetClassCategory || $TargetClassCategory->getClassName() != $ClassName) {
@@ -218,7 +201,7 @@ class ClassCategoryController extends AbstractController
 
             $this->addSuccess('admin.common.delete_complete', 'admin');
 
-            $this->logger->info('規格分類削除完了', [$id]);
+            log_info('規格分類削除完了', [$id]);
         } catch (\Exception $e) {
             log_error('規格分類削除エラー', [$id, $e]);
 
@@ -241,7 +224,7 @@ class ClassCategoryController extends AbstractController
             throw new NotFoundHttpException();
         }
 
-        $this->logger->info('規格分類表示変更開始', [$id]);
+        log_info('規格分類表示変更開始', [$id]);
 
         $TargetClassCategory = $this->classCategoryRepository->find($id);
         if (!$TargetClassCategory || $TargetClassCategory->getClassName() != $ClassName) {
@@ -252,7 +235,7 @@ class ClassCategoryController extends AbstractController
 
         $this->classCategoryRepository->toggleVisibility($TargetClassCategory);
 
-        $this->logger->info('規格分類表示変更完了', [$id]);
+        log_info('規格分類表示変更完了', [$id]);
 
         $event = new EventArgs(
             [
@@ -293,5 +276,77 @@ class ClassCategoryController extends AbstractController
 
             return new Response('Successful');
         }
+    }
+
+    /**
+     * 規格分類CSVの出力.
+     *
+     * @Route("/%eccube_admin_route%/product/class_category/export/{class_name_id}", name="admin_product_class_category_export", methods={"GET"})
+     *
+     * @param Request $request
+     *
+     * @return StreamedResponse
+     */
+    public function export(Request $request, $class_name_id)
+    {
+        // タイムアウトを無効にする.
+        set_time_limit(0);
+
+        // sql loggerを無効にする.
+        $em = $this->entityManager;
+        $em->getConfiguration()->setSQLLogger(null);
+
+        $response = new StreamedResponse();
+        $response->setCallback(function () use ($request, $class_name_id) {
+            // CSV種別を元に初期化.
+            $this->csvExportService->initCsvType(CsvType::CSV_TYPE_CLASS_CATEGORY);
+            // ヘッダ行の出力.
+            $this->csvExportService->exportHeader();
+
+            $qb = $this->classCategoryRepository
+                ->createQueryBuilder('cc')
+                ->where('cc.ClassName = :ClassName')
+                ->setParameter('ClassName', $class_name_id)
+                ->orderBy('cc.sort_no', 'DESC');
+
+            // データ行の出力.
+            $this->csvExportService->setExportQueryBuilder($qb);
+            $this->csvExportService->exportData(function ($entity, $csvService) use ($request) {
+                $Csvs = $csvService->getCsvs();
+
+                /** @var $ClassCategory \Eccube\Entity\ClassCategory */
+                $ClassCategory = $entity;
+
+                // CSV出力項目と合致するデータを取得.
+                $ExportCsvRow = new \Eccube\Entity\ExportCsvRow();
+                foreach ($Csvs as $Csv) {
+                    $ExportCsvRow->setData($csvService->getData($Csv, $ClassCategory));
+
+                    $event = new EventArgs(
+                        [
+                            'csvService' => $csvService,
+                            'Csv' => $Csv,
+                            'ClassCategory' => $ClassCategory,
+                            'ExportCsvRow' => $ExportCsvRow,
+                        ],
+                        $request
+                    );
+                    $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_PRODUCT_CLASS_CATEGORY_CSV_EXPORT);
+
+                    $ExportCsvRow->pushData();
+                }
+                // $row[] = number_format(memory_get_usage(true));
+                // 出力.
+                $csvService->fputcsv($ExportCsvRow->getRow());
+            });
+        });
+        $now = new \DateTime();
+        $filename = 'class_category_'.$now->format('YmdHis').'.csv';
+        $response->headers->set('Content-Type', 'application/octet-stream');
+        $response->headers->set('Content-Disposition', 'attachment; filename='.$filename);
+
+        log_info('規格分類CSV出力ファイル名', [$filename]);
+
+        return $response;
     }
 }

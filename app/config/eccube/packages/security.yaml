@@ -128,12 +128,3 @@ security:
     access_decision_manager:
         strategy: unanimous
         allow_if_all_abstain: false
-    access_control:
-        - { path: '^/adoption/member/', roles: ROLE_USER }
-        - { path: '^/breeder/member/', roles: ROLE_USER }
-        - { path: '^/%eccube_admin_route%/login', roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: '^/%eccube_admin_route%/', roles: ROLE_ADMIN }
-        - { path: '^/mypage/login', roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: '^/mypage/withdraw_complete', roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: '^/mypage/change', roles: IS_AUTHENTICATED_FULLY }
-        - { path: '^/mypage/', roles: ROLE_USER }
