@@ -13,8 +13,8 @@
 
 namespace Eccube\Repository;
 
+use Doctrine\Persistence\ManagerRegistry as RegistryInterface;
 use Eccube\Entity\BaseInfo;
-use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * BaseInfoRepository
@@ -27,9 +27,9 @@ class BaseInfoRepository extends AbstractRepository
     /**
      * BaseInfoRepository constructor.
      *
-     * @param ManagerRegistry $registry
+     * @param RegistryInterface $registry
      */
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, BaseInfo::class);
     }
