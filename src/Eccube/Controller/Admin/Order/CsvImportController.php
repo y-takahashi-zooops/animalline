@@ -23,9 +23,6 @@ use Eccube\Service\OrderStateMachine;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Form\FormFactoryInterface;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CsvImportController extends AbstractCsvImportController
 {
@@ -39,22 +36,12 @@ class CsvImportController extends AbstractCsvImportController
      */
     protected $orderStateMachine;
 
-    protected FormFactoryInterface $formFactory;
-    protected TranslatorInterface $translator;
-
-
     public function __construct(
         ShippingRepository $shippingRepository,
         OrderStateMachine $orderStateMachine,
-        FormFactoryInterface $formFactory,
-        EntityManagerInterface $entityManager,
-        TranslatorInterface $translator,
     ) {
         $this->shippingRepository = $shippingRepository;
         $this->orderStateMachine = $orderStateMachine;
-        $this->formFactory = $formFactory;
-        $this->entityManager = $entityManager;
-        $this->translator = $translator;
     }
 
     /**
@@ -113,7 +100,7 @@ class CsvImportController extends AbstractCsvImportController
         $columnConfig = $this->getColumnConfig();
 
         if ($csv === false) {
-            $errors[] = $this->translator->trans('admin.common.csv_invalid_format');
+            $errors[] = trans('admin.common.csv_invalid_format');
         }
 
         // 必須カラムの確認
@@ -124,7 +111,7 @@ class CsvImportController extends AbstractCsvImportController
         }));
         $csvColumns = $csv->getColumnHeaders();
         if (count(array_diff($requiredColumns, $csvColumns)) > 0) {
-            $errors[] = $this->translator->trans('admin.common.csv_invalid_format');
+            $errors[] = trans('admin.common.csv_invalid_format');
 
             return;
         }
@@ -132,7 +119,7 @@ class CsvImportController extends AbstractCsvImportController
         // 行数の確認
         $size = count($csv);
         if ($size < 1) {
-            $errors[] = $this->translator->trans('admin.common.csv_invalid_format');
+            $errors[] = trans('admin.common.csv_invalid_format');
 
             return;
         }
@@ -142,7 +129,7 @@ class CsvImportController extends AbstractCsvImportController
         foreach ($csv as $line => $row) {
             // 出荷IDがなければエラー
             if (!isset($row[$columnNames['id']])) {
-                $errors[] = $this->translator->trans('admin.common.csv_invalid_required', ['%line%' => $line + 1, '%name%' => $columnNames['id']]);
+                $errors[] = trans('admin.common.csv_invalid_required', ['%line%' => $line + 1, '%name%' => $columnNames['id']]);
                 continue;
             }
 
@@ -151,7 +138,7 @@ class CsvImportController extends AbstractCsvImportController
 
             // 存在しない出荷IDはエラー
             if (is_null($Shipping)) {
-                $errors[] = $this->translator->trans('admin.common.csv_invalid_not_found', ['%line%' => $line + 1, '%name%' => $columnNames['id']]);
+                $errors[] = trans('admin.common.csv_invalid_not_found', ['%line%' => $line + 1, '%name%' => $columnNames['id']]);
                 continue;
             }
 
@@ -169,7 +156,7 @@ class CsvImportController extends AbstractCsvImportController
                 // 日付フォーマットが異なる場合はエラー
                 $shippingDate = \DateTime::createFromFormat('Y-m-d', $row[$columnNames['shipping_date']]);
                 if ($shippingDate === false) {
-                    $errors[] = $this->translator->trans('admin.common.csv_invalid_date_format', ['%line%' => $line + 1, '%name%' => $columnNames['shipping_date']]);
+                    $errors[] = trans('admin.common.csv_invalid_date_format', ['%line%' => $line + 1, '%name%' => $columnNames['shipping_date']]);
                     continue;
                 }
 
@@ -193,7 +180,7 @@ class CsvImportController extends AbstractCsvImportController
                 } else {
                     $from = $Order->getOrderStatus()->getName();
                     $to = $OrderStatus->getName();
-                    $errors[] = $this->translator->trans('admin.order.failed_to_change_status', [
+                    $errors[] = trans('admin.order.failed_to_change_status', [
                         '%name%' => $Shipping->getId(),
                         '%from%' => $from,
                         '%to%' => $to,
@@ -219,18 +206,18 @@ class CsvImportController extends AbstractCsvImportController
     {
         return [
             'id' => [
-                'name' => $this->translator->trans('admin.order.shipping_csv.shipping_id_col'),
-                'description' => $this->translator->trans('admin.order.shipping_csv.shipping_id_description'),
+                'name' => trans('admin.order.shipping_csv.shipping_id_col'),
+                'description' => trans('admin.order.shipping_csv.shipping_id_description'),
                 'required' => true,
             ],
             'tracking_number' => [
-                'name' => $this->translator->trans('admin.order.shipping_csv.tracking_number_col'),
-                'description' => $this->translator->trans('admin.order.shipping_csv.tracking_number_description'),
+                'name' => trans('admin.order.shipping_csv.tracking_number_col'),
+                'description' => trans('admin.order.shipping_csv.tracking_number_description'),
                 'required' => false,
             ],
             'shipping_date' => [
-                'name' => $this->translator->trans('admin.order.shipping_csv.shipping_date_col'),
-                'description' => $this->translator->trans('admin.order.shipping_csv.shipping_date_description'),
+                'name' => trans('admin.order.shipping_csv.shipping_date_col'),
+                'description' => trans('admin.order.shipping_csv.shipping_date_description'),
                 'required' => true,
             ],
         ];

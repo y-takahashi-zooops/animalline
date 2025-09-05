@@ -11,38 +11,38 @@ use Eccube\Annotation\EntityExtension;
 trait ProductClassTrait
 {
     /**
-    * @ORM\Column(name="supplier_code",type="string", length=5, nullable=true)
+    * @ORM\Column(name="supplier_code", type="string", nullable=true)
     */
-    public $supplier_code;
+    private $supplier_code;
 
     /**
-    * @ORM\Column(name="jan_code",type="string", length=13, nullable=true)
+    * @ORM\Column(name="jan_code", type="string", length=13, nullable=true)
     */
-    public $jan_code;
+    private $jan_code;
 
     /**
-    * @ORM\Column(name="stock_code",type="string", length=5, nullable=false)
+    * @ORM\Column(name="stock_code", type="string", length=5, nullable=true)
     */
-    public $stock_code;
+    private $stock_code;
 
     /**
-    * @ORM\Column(name="item_cost", type="decimal", precision=12, scale=2, nullable=false, options={"default":0})
+    * @ORM\Column(name="item_cost", type="decimal", precision=12, scale=2, nullable=true)
     */
-    public $item_cost;
+    private $item_cost;
 
     /**
-     * @ORM\Column(name="incentive_ratio", type="integer", nullable=false, options={"default":5})
+     * @ORM\Column(name="incentive_ratio", type="decimal", precision=5, scale=2, nullable=true)
      */
     private $incentive_ratio;
 
     /**
     * Set supplier_code.
     *
-    * @param string $supplier_code
+    * @param string|null $supplier_code
     *
     * @return ProductClass
     */
-    public function setSupplierCode($supplier_code)
+    public function setSupplierCode(?string $supplier_code): self
     {
         $this->supplier_code = $supplier_code;
 
@@ -52,9 +52,9 @@ trait ProductClassTrait
     /**
     * Get supplier_code.
     *
-    * @return integer
+    * @return string|null
     */
-    public function getSupplierCode()
+    public function getSupplierCode(): ?string
     {
         return $this->supplier_code;
     }
@@ -62,13 +62,13 @@ trait ProductClassTrait
     /**
     * Set item_cost.
     *
-    * @param string $item_cost
+    * @param int|null $itemCost
     *
     * @return ProductClass
     */
-    public function setItemCost($item_cost)
+    public function setItemCost(?int $itemCost): self
     {
-        $this->item_cost = $item_cost;
+        $this->item_cost = $itemCost;
 
         return $this;
     }
@@ -76,9 +76,9 @@ trait ProductClassTrait
     /**
     * Get item_cost.
     *
-    * @return integer
+    * @return float|null
     */
-    public function getItemCost()
+    public function getItemCost(): ?float
     {
         return $this->item_cost;
     }
@@ -86,11 +86,11 @@ trait ProductClassTrait
     /**
     * Set jan_code.
     *
-    * @param string $jan_code
+    * @param string|null $jan_code
     *
     * @return ProductClass
     */
-    public function setJanCode($jan_code)
+    public function setJanCode(?string $jan_code): self
     {
         $this->jan_code = $jan_code;
 
@@ -100,9 +100,9 @@ trait ProductClassTrait
     /**
     * Get jan_code.
     *
-    * @return string
+    * @return string|null
     */
-    public function getJanCode()
+    public function getJanCode(): ?string
     {
         return $this->jan_code;
     }
@@ -110,11 +110,11 @@ trait ProductClassTrait
     /**
     * Set stock_code.
     *
-    * @param string $stock_code
+    * @param string|null $stock_code
     *
     * @return ProductClass
     */
-    public function setStockCode($stock_code)
+    public function setStockCode(?string $stock_code): self
     {
         $this->stock_code = $stock_code;
 
@@ -124,21 +124,21 @@ trait ProductClassTrait
     /**
     * Get stock_code.
     *
-    * @return string
+    * @return string|null
     */
-    public function getStockCode()
+    public function getStockCode(): ?string
     {
         return $this->stock_code;
     }
 
     /**
-    * Set stock_code.
+    * Set incentive_ratio.
     *
-    * @param string $incentive_ratio
+    * @param float|null $incentive_ratio
     *
     * @return ProductClass
     */
-    public function setIncentiveRatio($incentive_ratio)
+    public function setIncentiveRatio(?float $incentive_ratio): self
     {
         $this->incentive_ratio = $incentive_ratio;
 
@@ -148,9 +148,9 @@ trait ProductClassTrait
     /**
     * Get incentive_ratio.
     *
-    * @return string
+    * @return float|null
     */
-    public function getIncentiveRatio()
+    public function getIncentiveRatio(): ?float
     {
         return $this->incentive_ratio;
     }

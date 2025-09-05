@@ -39,11 +39,6 @@ class ProductSupplierController extends AbstractController
     protected $productClassRepository;
 
     /**
-     * @var EntityManagerInterface
-     */
-    protected EntityManagerInterface $entityManager;
-
-    /**
      * ProductController constructor.
      *
      * @param ProductClassRepository $productClassRepository
@@ -57,8 +52,10 @@ class ProductSupplierController extends AbstractController
     ) {
         $this->productClassRepository = $productClassRepository;
         $this->supplierRepository = $supplierRepository;
-        $this->entityManager = $entityManager;
-        $this->formFactory = $formFactory;
+        
+        // 親クラスのsetterメソッドを呼び出してプロパティを設定
+        $this->setEntityManager($entityManager);
+        $this->setFormFactory($formFactory);
     }
 
     /**

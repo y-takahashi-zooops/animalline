@@ -26,9 +26,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use Doctrine\ORM\EntityManagerInterface;
 
 class MailController extends AbstractController
 {
@@ -51,8 +48,6 @@ class MailController extends AbstractController
      */
     protected $twig;
 
-    protected FormFactoryInterface $formFactory;
-
     /**
      * MailController constructor.
      *
@@ -66,17 +61,11 @@ class MailController extends AbstractController
         MailHistoryRepository $mailHistoryRepository,
         OrderRepository $orderRepository,
         Environment $twig,
-        FormFactoryInterface $formFactory,
-        EventDispatcherInterface $eventDispatcher,
-        EntityManagerInterface $entityManager,
     ) {
         $this->mailService = $mailService;
         $this->mailHistoryRepository = $mailHistoryRepository;
         $this->orderRepository = $orderRepository;
         $this->twig = $twig;
-        $this->formFactory = $formFactory;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->entityManager = $entityManager;
     }
 
     /**
@@ -113,7 +102,7 @@ class MailController extends AbstractController
                 case 'change':
                     if ($form->get('template')->isValid()) {
                         $MailTemplate = $form->get('template')->getData();
-                        
+
                         if ($MailTemplate) {
                             $twig = $MailTemplate->getFileName();
                             if (!$twig) {
@@ -173,7 +162,7 @@ class MailController extends AbstractController
                             ->setOrder($Order);
 
                         $this->entityManager->persist($MailHistory);
-                        $this->entityManager->flush($MailHistory);
+                        $this->entityManager->flush();
 
                         $event = new EventArgs(
                             [
@@ -202,7 +191,7 @@ class MailController extends AbstractController
             'MailHistories' => $MailHistories,
         ];
     }
-    
+
     private function createBody($Order, $twig = 'Mail/order.twig')
     {
         $body = '';
@@ -214,6 +203,6 @@ class MailController extends AbstractController
             log_warning($e->getMessage());
         }
 
-       return $body;
+        return $body;
     }
 }

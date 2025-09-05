@@ -76,11 +76,6 @@ class AdoptionController extends AbstractController
     protected $mailService;
 
     /**
-     * @var EntityManagerInterface
-     */
-    protected EntityManagerInterface $entityManager;
-
-    /**
      * AdoptionController constructor.
      *
      * @param ConservationsRepository $conservationsRepository
@@ -101,8 +96,7 @@ class AdoptionController extends AbstractController
         AdoptionQueryService           $adoptionQueryService,
         CustomerRepository             $customerRepository,
         ConservationBankAccountRepository             $conservationBankAccountRepository,
-        MailService                    $mailService,
-        EntityManagerInterface $entityManager
+        MailService                    $mailService
     ) {
         $this->conservationsRepository = $conservationsRepository;
         $this->breedsRepository = $breedsRepository;
@@ -112,7 +106,6 @@ class AdoptionController extends AbstractController
         $this->customerRepository = $customerRepository;
         $this->conservationBankAccountRepository = $conservationBankAccountRepository;
         $this->mailService = $mailService;
-        $this->entityManager = $entityManager;
     }
 
     /**

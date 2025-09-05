@@ -20,13 +20,13 @@ if (!class_exists(CartItem::class)) {
      * CartItem
      *
      * @ORM\Table(name="dtb_cart_item")
-     * 
+     *
      * @ORM\InheritanceType("SINGLE_TABLE")
-     * 
+     *
      * @ORM\DiscriminatorColumn(name="discriminator_type", type="string", length=255)
-     * 
+     *
      * @ORM\HasLifecycleCallbacks()
-     * 
+     *
      * @ORM\Entity(repositoryClass="Eccube\Repository\CartItemRepository")
      */
     class CartItem extends AbstractEntity implements ItemInterface
@@ -34,66 +34,12 @@ if (!class_exists(CartItem::class)) {
         use PointRateTrait;
 
         /**
-         * @var bool
-         * 
-         * @ORM\Column(name="is_repeat", type="boolean", options={"default": false})
-         */
-        private $is_repeat = false;
-
-        public function getIsRepeat(): bool
-        {
-            return $this->is_repeat;
-        }
-
-        public function setIsRepeat(?bool $is_repeat): self
-        {
-            $this->is_repeat = (bool)$is_repeat;
-            return $this;
-        }
-
-        /**
-         * @var int|null
-         *
-         * @ORM\Column(name="repeat_span", type="integer", nullable=true)
-         */
-        private $repeat_span;
-
-        public function getRepeatSpan(): ?int
-        {
-            return $this->repeat_span;
-        }
-
-        public function setRepeatSpan(?int $repeat_span): self
-        {
-            $this->repeat_span = $repeat_span;
-            return $this;
-        }
-
-        /**
-         * @var string|null
-         *
-         * @ORM\Column(name="span_unit", type="string", length=10, nullable=true)
-         */
-        private $span_unit;
-
-        public function getSpanUnit(): ?string
-        {
-            return $this->span_unit;
-        }
-
-        public function setSpanUnit(?string $span_unit): self
-        {
-            $this->span_unit = $span_unit;
-            return $this;
-        }
-
-        /**
          * @var int
          *
          * @ORM\Column(name="id", type="integer", options={"unsigned":true})
-         * 
+         *
          * @ORM\Id
-         * 
+         *
          * @ORM\GeneratedValue(strategy="IDENTITY")
          */
         private $id;
@@ -116,9 +62,9 @@ if (!class_exists(CartItem::class)) {
          * @var ProductClass
          *
          * @ORM\ManyToOne(targetEntity="Eccube\Entity\ProductClass")
-         * 
+         *
          * @ORM\JoinColumns({
-         * 
+         *
          *   @ORM\JoinColumn(name="product_class_id", referencedColumnName="id")
          * })
          */
@@ -127,10 +73,10 @@ if (!class_exists(CartItem::class)) {
         /**
          * @var Cart
          *
-         * @ORM\ManyToOne(targetEntity="Eccube\Entity\Cart", inversedBy="CartItems")
-         * 
+         * @ORM\ManyToOne(targetEntity="Eccube\Entity\Cart", inversedBy="CartItems", cascade={"persist"})
+         *
          * @ORM\JoinColumns({
-         * 
+         *
          *   @ORM\JoinColumn(name="cart_id", referencedColumnName="id", onDelete="CASCADE")
          * })
          */
@@ -155,7 +101,7 @@ if (!class_exists(CartItem::class)) {
         {
             return $this->id;
         }
-        
+
         /**
          * @param  int  $price
          *
@@ -323,7 +269,7 @@ if (!class_exists(CartItem::class)) {
         public function setCart(Cart $Cart)
         {
             $this->Cart = $Cart;
-            
+
             return $this;
         }
     }

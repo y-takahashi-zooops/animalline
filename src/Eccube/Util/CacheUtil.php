@@ -13,14 +13,15 @@
 
 namespace Eccube\Util;
 
+use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpKernel\CacheClearer\Psr6CacheClearer;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -30,8 +31,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
  */
 class CacheUtil implements EventSubscriberInterface
 {
-
-    const DOCTRINE_APP_CACHE_KEY = 'doctrine.app_cache_pool';
+    public const DOCTRINE_APP_CACHE_KEY = 'doctrine.app_cache_pool';
 
     private $clearCacheAfterResponse = false;
 
@@ -110,18 +110,19 @@ class CacheUtil implements EventSubscriberInterface
 
     /**
      * Doctrineのキャッシュを削除します.
-     *
-     * @param null $env
-     *
-     * @return string
+     * 
+     * @return string|null
      *
      * @throws \Exception
      */
     public function clearDoctrineCache()
     {
-        if (!$this->container->has(self::DOCTRINE_APP_CACHE_KEY)) {
-            return;
+        /** @var Psr6CacheClearer $poolClearer */
+        $poolClearer = $this->container->get('cache.global_clearer');
+        if (!$poolClearer->hasPool(self::DOCTRINE_APP_CACHE_KEY)) {
+            return null;
         }
+
         $console = new Application($this->kernel);
         $console->setAutoExit(false);
 
@@ -160,10 +161,10 @@ class CacheUtil implements EventSubscriberInterface
      * キャッシュは $app['config']['root_dir'].'/app/cache' に生成されます.
      *
      * @param Application $app
-     * @param boolean $isAll .gitkeep を残してすべてのファイル・ディレクトリを削除する場合 true, 各ディレクトリのみを削除する場合 false
-     * @param boolean $isTwig Twigキャッシュファイルのみ削除する場合 true
+     * @param bool $isAll .gitkeep を残してすべてのファイル・ディレクトリを削除する場合 true, 各ディレクトリのみを削除する場合 false
+     * @param bool $isTwig Twigキャッシュファイルのみ削除する場合 true
      *
-     * @return boolean 削除に成功した場合 true
+     * @return bool 削除に成功した場合 true
      *
      * @deprecated CacheUtil::clearCacheを利用すること
      */

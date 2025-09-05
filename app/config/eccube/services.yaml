@@ -49,12 +49,6 @@ services:
         autoconfigure: true
         tags: ['controller.service_arguments']
 
-    Eccube\Service\Composer\ComposerApiService:
-        public: true
-        shared: true
-        autowire: true
-        autoconfigure: true
-
     Eccube\Command\GenerateProxyCommand:
         class: Eccube\Command\GenerateProxyCommand
         autowire: true
@@ -114,7 +108,31 @@ services:
         lazy: true
 
     Eccube\Service\Composer\ComposerServiceInterface:
-        factory: ['@Eccube\Service\Composer\ComposerServiceFactory', createService]
+        factory: ['Eccube\Service\Composer\ComposerServiceFactory', createService]
+        arguments:
+            $container: !service_locator
+                Eccube\Service\Composer\ComposerApiService: '@Eccube\Service\Composer\ComposerApiService'
+
+    Eccube\Service\Composer\ComposerApiService:
+        lazy: true
+        public: true
+
+    Eccube\Repository\PluginRepository:
+        lazy: true
+        public: true
+
+    Eccube\Service\PluginService:
+        arguments:
+            $container: !service_locator
+                doctrine: '@doctrine'
+                Doctrine\Common\Persistence\ManagerRegistry: '@doctrine'
+                Doctrine\Persistence\ManagerRegistry: '@doctrine'
+                doctrine.orm.default_entity_manager: '@doctrine.orm.default_entity_manager'
+                doctrine.orm.entity_manager: '@doctrine.orm.default_entity_manager'
+                Doctrine\ORM\EntityManagerInterface: '@doctrine.orm.default_entity_manager'
+                Eccube\Common\EccubeConfig: '@Eccube\Common\EccubeConfig'
+        lazy: true
+        public: true
 
     # controllers are imported separately to make sure they're public
     # and have a tag that allows actions to type-hint services
@@ -220,7 +238,7 @@ services:
 
     Monolog\Processor\IntrospectionProcessor:
         arguments:
-            - 'DEBUG'
+            - 100 # Logger::DEBUG = 100
             - ['Eccube\\Log', 'Psr\\Log']
         tags:
             - { name: monolog.processor }
@@ -267,6 +285,39 @@ services:
         arguments:
             - '@native_file_session_handler'
 
+    Eccube\DependencyInjection\Facade\AnnotationReaderFacade:
+        public: true
+
+    Detection\MobileDetect:
+        tags:
+          - { name: mobile_detect.mobile_detector.default }
+          - { name: mobile_detect.mobile_detector }
+        public: true
+
+    Eccube\Form\Extension\HTMLPurifierTextTypeExtension:
+        arguments:
+            - '@Eccube\Request\Context'
+        tags:
+            - { name: form.type_extension, priority: -99, extended_type: Symfony\Component\Form\Extension\Core\Type\TextType }
+
+    Eccube\EventListener\RateLimiterListener:
+        arguments: [ !tagged_locator { tag: 'eccube_rate_limiter' } ]
+
+    Eccube\Security\PasswordHasher\PasswordHasher:
+        arguments:
+            - '%eccube_auth_magic%'
+            - '%eccube_auth_type%'
+            - '%eccube_password_hash_algos%'
+
+    Eccube\Controller\ShoppingController:
+        arguments:
+            $serviceContainer: !tagged_locator { tag: 'eccube_payment_method' }
+        tags: [ 'controller.service_arguments' ]
+
+    Eccube\Util\CacheUtil:
+        arguments:
+            $container: !tagged_locator { tag: 'cache.pool.clearer' }
+
     Customize\Service\CartService:
         decorates: Eccube\Service\CartService
         
@@ -284,23 +335,6 @@ services:
             $prefRepository: '@Eccube\Repository\Master\PrefRepository'
             $session: '@session'
             $security: '@Symfony\Bundle\SecurityBundle\Security'
-            
-    # MobileDetect:
-    #     class: MobileDetect\MobileDetect
-
-    # MobileDetect\MobileDetect: ~
-
-    # mobile_detector:
-    #         class: MobileDetect\MobileDetect
-
-    Detection\MobileDetect: ~
-
-    mobile_detector:
-        class: Detection\MobileDetect
-
-    Eccube\EventListener\TwigInitializeListener:
-        arguments:
-            $mobileDetector: '@mobile_detector'
 
     Doctrine\Common\Annotations\AnnotationReader: ~
     
@@ -323,8 +357,8 @@ services:
     
     Plugin\GmoPaymentGateway4\Service\PaymentHelperAu:
         arguments:
-        - '%eccube.config%'
-        - '@Plugin\GmoPaymentGateway4\Service\GmoConfig'
+        - '@Eccube\Common\EccubeConfig'
+        - '@Plugin\GmoPaymentGateway4\Repository\GmoConfigRepository'
         - '@router'
     
     Plugin\ProductReview4\PluginManager:
@@ -423,14 +457,14 @@ services:
     eccube.security.failure_handler:
         class: Eccube\Security\Http\Authentication\EccubeAuthenticationFailureHandler
 
+    eccube.security.logout.success_handler:
+        class: Eccube\Security\Http\Authentication\EccubeLogoutSuccessHandler
+        arguments:
+          - '@Eccube\Request\Context'
+
     Eccube\Controller\AbstractController:
         arguments:
             $eccubeConfig: '@Eccube\Common\EccubeConfig'
-
-    Eccube\Controller\ShoppingController:
-        autowire: true
-        autoconfigure: true
-        public: true
 
     Eccube\Controller\AbstractShoppingController:
         arguments:
@@ -456,17 +490,6 @@ services:
             $em: '@doctrine.orm.entity_manager'
 
     security.user_checker.customer: '@Eccube\Security\UserChecker\PasswordRehashChecker'
-
-    App\Hasher\LegacyCustomerPasswordHasher:
-        arguments:
-            $logger: '@logger'
-        tags: ['monolog.logger']  # 任意、ログ出力用途
-
-    App\Service\LoggingUserPasswordHasher:
-        decorates: Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface
-        arguments:
-            $inner: '@App\Service\LoggingUserPasswordHasher.inner'
-            $logger: '@logger'
 
     # legacy_hasher:
     #     class: App\Hasher\LegacyCustomerPasswordHasher

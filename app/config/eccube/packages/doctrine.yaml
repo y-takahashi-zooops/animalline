@@ -15,6 +15,7 @@ doctrine:
         # for mysql only
         default_table_options:
           collate: 'utf8mb4_general_ci'
+        default_connection: 'default'
 
     orm:
         auto_generate_proxy_classes: '%kernel.debug%'

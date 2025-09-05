@@ -161,21 +161,13 @@ class OrderType extends AbstractType
                 'required' => false,
                 'constraints' => [
                     new Assert\NotBlank(),
-                    new Email(['strict' => $this->eccubeConfig['eccube_rfc_email_check']]),
+                    new Email(null, null, $this->eccubeConfig['eccube_rfc_email_check'] ? 'strict' : null),
                 ],
             ])
             ->add('phone_number', PhoneNumberType::class, [
                 'required' => false,
                 'constraints' => [
                     new Assert\NotBlank(),
-                ],
-            ])
-            ->add('company_name', TextType::class, [
-                'required' => false,
-                'constraints' => [
-                    new Assert\Length([
-                        'max' => $this->eccubeConfig['eccube_stext_len'],
-                    ]),
                 ],
             ])
             ->add('message', TextareaType::class, [
@@ -201,6 +193,10 @@ class OrderType extends AbstractType
                     new Assert\Regex([
                         'pattern' => "/^\d+$/u",
                         'message' => 'form_error.numeric_only',
+                    ]),
+                    new Assert\Range([
+                        'min' => 0,
+                        'max' => $this->eccubeConfig['eccube_price_max'],
                     ]),
                 ],
             ])
@@ -247,7 +243,7 @@ class OrderType extends AbstractType
             ->add($builder->create('Customer', HiddenType::class)
                 ->addModelTransformer(new DataTransformer\EntityToIdTransformer(
                     $this->entityManager,
-                    '\Eccube\Entity\Customer'
+                    \Eccube\Entity\Customer::class
                 )));
 
         $builder->addEventListener(FormEvents::POST_SET_DATA, [$this, 'sortOrderItems']);
@@ -393,6 +389,12 @@ class OrderType extends AbstractType
         // 新規登録時は, 新規受付ステータスで登録する.
         if (null === $Order->getOrderStatus()) {
             $Order->setOrderStatus($this->orderStatusRepository->find(OrderStatus::NEW));
+            // 会員受注の場合、会員の性別/職業/誕生日をエンティティにコピーする
+            if ($Customer = $Order->getCustomer()) {
+                $Order->setSex($Customer->getSex());
+                $Order->setJob($Customer->getJob());
+                $Order->setBirth($Customer->getBirth());
+            }
         } else {
             // 編集時は, mapped => falseで定義しているため, フォームから変更後データを取得する.
             $form = $event->getForm();

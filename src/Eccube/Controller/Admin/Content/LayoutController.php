@@ -16,26 +16,24 @@ namespace Eccube\Controller\Admin\Content;
 use Doctrine\ORM\NoResultException;
 use Eccube\Controller\AbstractController;
 use Eccube\Entity\Layout;
-use Eccube\Form\Type\Admin\LayoutType;
 use Eccube\Entity\Master\ProductStatus;
+use Eccube\Form\Type\Admin\LayoutType;
 use Eccube\Repository\BlockPositionRepository;
 use Eccube\Repository\BlockRepository;
 use Eccube\Repository\LayoutRepository;
+use Eccube\Repository\Master\DeviceTypeRepository;
 use Eccube\Repository\PageLayoutRepository;
 use Eccube\Repository\PageRepository;
 use Eccube\Repository\ProductRepository;
-use Eccube\Repository\Master\DeviceTypeRepository;
 use Eccube\Util\CacheUtil;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment as Twig;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Form\FormFactoryInterface;
-use Doctrine\ORM\EntityManagerInterface;
 
 class LayoutController extends AbstractController
 {
@@ -80,29 +78,17 @@ class LayoutController extends AbstractController
      */
     protected $isPreview = false;
 
-    protected FormFactoryInterface $formFactory;
-
     /**
      * LayoutController constructor.
      *
      * @param BlockRepository $blockRepository
      * @param LayoutRepository $layoutRepository
      * @param PageLayoutRepository $pageLayoutRepository
-     * @param pageRepository $pageRepository
+     * @param PageRepository $pageRepository
      * @param ProductRepository $productRepository
      * @param DeviceTypeRepository $deviceTypeRepository
      */
-    public function __construct(
-        BlockRepository $blockRepository,
-        BlockPositionRepository $blockPositionRepository,
-        LayoutRepository $layoutRepository,
-        PageLayoutRepository $pageLayoutRepository,
-        PageRepository $pageRepository,
-        ProductRepository $productRepository,
-        DeviceTypeRepository $deviceTypeRepository,
-        FormFactoryInterface $formFactory,
-        EntityManagerInterface $entityManager
-    )
+    public function __construct(BlockRepository $blockRepository, BlockPositionRepository $blockPositionRepository, LayoutRepository $layoutRepository, PageLayoutRepository $pageLayoutRepository, PageRepository $pageRepository, ProductRepository $productRepository, DeviceTypeRepository $deviceTypeRepository)
     {
         $this->blockRepository = $blockRepository;
         $this->blockPositionRepository = $blockPositionRepository;
@@ -111,13 +97,11 @@ class LayoutController extends AbstractController
         $this->pageRepository = $pageRepository;
         $this->productRepository = $productRepository;
         $this->deviceTypeRepository = $deviceTypeRepository;
-        $this->formFactory = $formFactory;
-        $this->entityManager = $entityManager;
     }
 
     /**
      * @Route("/%eccube_admin_route%/content/layout", name="admin_content_layout", methods={"GET"})
-     * 
+     *
      * @Template("@admin/Content/layout_list.twig")
      */
     public function index()
@@ -154,7 +138,7 @@ class LayoutController extends AbstractController
         }
 
         $this->entityManager->remove($Layout);
-        $this->entityManager->flush($Layout);
+        $this->entityManager->flush();
 
         $this->addSuccess('admin.common.delete_complete', 'admin');
 
@@ -167,6 +151,7 @@ class LayoutController extends AbstractController
     /**
      * @Route("/%eccube_admin_route%/content/layout/new", name="admin_content_layout_new", methods={"GET", "POST"})
      * @Route("/%eccube_admin_route%/content/layout/{id}/edit", requirements={"id" = "\d+"}, name="admin_content_layout_edit", methods={"GET", "POST"})
+     *
      * @Template("@admin/Content/layout.twig")
      */
     public function edit(Request $request, CacheUtil $cacheUtil, $id = null, $previewPageId = null)
@@ -197,7 +182,7 @@ class LayoutController extends AbstractController
             // Layoutの更新
             $Layout = $form->getData();
             $this->entityManager->persist($Layout);
-            $this->entityManager->flush($Layout);
+            $this->entityManager->flush();
 
             // BlockPositionの更新
             // delete/insertのため、一度削除する.
@@ -205,7 +190,7 @@ class LayoutController extends AbstractController
             foreach ($BlockPositions as $BlockPosition) {
                 $Layout->removeBlockPosition($BlockPosition);
                 $this->entityManager->remove($BlockPosition);
-                $this->entityManager->flush($BlockPosition);
+                $this->entityManager->flush();
             }
 
             // ブロックの個数分登録を行う.
@@ -224,7 +209,7 @@ class LayoutController extends AbstractController
                     throw new NotFoundHttpException();
                 }
 
-                if ($Page->getEditType() == \Eccube\Entity\Page::EDIT_TYPE_DEFAULT) {
+                if ($Page->getEditType() >= \Eccube\Entity\Page::EDIT_TYPE_DEFAULT) {
                     if ($Page->getUrl() === 'product_detail') {
                         $product = $this->productRepository->findOneBy(['Status' => ProductStatus::DISPLAY_SHOW]);
                         if (is_null($product)) {

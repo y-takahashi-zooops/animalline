@@ -41,7 +41,6 @@ use Eccube\Util\CacheUtil;
 use Eccube\Util\StringUtil;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Request;
@@ -109,8 +108,6 @@ class CsvImportController extends AbstractCsvImportController
      */
     protected $classNameRepository;
 
-    protected FormFactoryInterface $formFactory;
-
     private $errors = [];
     private \HTMLPurifier $purifier;
 
@@ -141,7 +138,6 @@ class CsvImportController extends AbstractCsvImportController
         ProductRepository $productRepository,
         ProductClassRepository $productClassRepository,
         ValidatorInterface $validator,
-        FormFactoryInterface $formFactory,
         LoggerInterface $logger,
         EccubeConfig $eccubeConfig,
         EntityManagerInterface $entityManager,
@@ -156,7 +152,6 @@ class CsvImportController extends AbstractCsvImportController
         $this->productRepository = $productRepository;
         $this->productClassRepository = $productClassRepository;
         $this->validator = $validator;
-        $this->formFactory = $formFactory;
         $this->logger = $logger;
         $this->eccubeConfig = $eccubeConfig;
         $this->entityManager = $entityManager;

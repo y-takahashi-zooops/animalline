@@ -13,6 +13,7 @@
 
 namespace Eccube\Service;
 
+use Doctrine\ORM\NonUniqueResultException;
 use Eccube\Common\EccubeConfig;
 use Eccube\Entity\BaseInfo;
 use Eccube\Entity\Customer;
@@ -28,11 +29,13 @@ use Eccube\Repository\MailHistoryRepository;
 use Eccube\Repository\MailTemplateRepository;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Address;
-use Twig\Environment;
-use Psr\Log\LoggerInterface;
+use Symfony\Component\Mime\Email;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 class MailService
 {
@@ -49,7 +52,7 @@ class MailService
     /**
      * @var MailHistoryRepository
      */
-    private $mailHistoryRepository;
+    protected $mailHistoryRepository;
 
     /**
      * @var EventDispatcher
@@ -67,26 +70,20 @@ class MailService
     protected $eccubeConfig;
 
     /**
-     * @var Environment
+     * @var \Twig\Environment
      */
     protected $twig;
 
     /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
-    /**
      * MailService constructor.
      *
-     * @param MailerInterface $mailer,
+     * @param MailerInterface $mailer
      * @param MailTemplateRepository $mailTemplateRepository
      * @param MailHistoryRepository $mailHistoryRepository
      * @param BaseInfoRepository $baseInfoRepository
      * @param EventDispatcherInterface $eventDispatcher
-     * @param Environment $twig
+     * @param \Twig\Environment $twig
      * @param EccubeConfig $eccubeConfig
-     * @param LoggerInterface $logger
      */
     public function __construct(
         MailerInterface $mailer,
@@ -94,9 +91,8 @@ class MailService
         MailHistoryRepository $mailHistoryRepository,
         BaseInfoRepository $baseInfoRepository,
         EventDispatcherInterface $eventDispatcher,
-        Environment $twig,
+        \Twig\Environment $twig,
         EccubeConfig $eccubeConfig,
-        LoggerInterface $logger
     ) {
         $this->mailer = $mailer;
         $this->mailTemplateRepository = $mailTemplateRepository;
@@ -105,7 +101,6 @@ class MailService
         $this->eventDispatcher = $eventDispatcher;
         $this->eccubeConfig = $eccubeConfig;
         $this->twig = $twig;
-        $this->logger = $logger;
     }
 
     /**
@@ -114,9 +109,9 @@ class MailService
      * @param $Customer 会員情報
      * @param string $activateUrl アクティベート用url
      */
-    public function sendCustomerConfirmMail(\Eccube\Entity\Customer $Customer, $activateUrl)
+    public function sendCustomerConfirmMail(Customer $Customer, $activateUrl)
     {
-        $this->logger->info('仮会員登録メール送信開始');
+        log_info('仮会員登録メール送信開始');
 
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_entry_confirm_mail_template_id']);
 
@@ -126,14 +121,13 @@ class MailService
             'activateUrl' => $activateUrl,
         ]);
 
-        $email = (new Email())
+        $message = (new Email())
             ->subject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
             ->from(new Address($this->BaseInfo->getEmail01(), $this->BaseInfo->getShopName()))
-            ->to(new Address($Customer->getEmail()))
+            ->to($this->convertRFCViolatingEmail($Customer->getEmail()))
             ->bcc($this->BaseInfo->getEmail01())
             ->replyTo($this->BaseInfo->getEmail03())
-            ->returnPath($this->BaseInfo->getEmail04())
-            ->text($body);
+            ->returnPath($this->BaseInfo->getEmail04());
 
         // HTMLテンプレートが存在する場合
         $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
@@ -143,11 +137,12 @@ class MailService
                 'BaseInfo' => $this->BaseInfo,
                 'activateUrl' => $activateUrl,
             ]);
-            $email
+
+            $message
                 ->text($body)
                 ->html($htmlBody);
         } else {
-            $message->setBody($body);
+            $message->text($body);
         }
 
         $event = new EventArgs(
@@ -161,11 +156,12 @@ class MailService
         );
         $this->eventDispatcher->dispatch($event, EccubeEvents::MAIL_CUSTOMER_CONFIRM);
 
-        $count = $this->mailer->send($message, $failures);
-
-        $this->logger->info('仮会員登録メール送信完了', ['count' => $count]);
-
-        return $count;
+        try {
+            $this->mailer->send($message);
+            log_info('仮会員登録メール送信完了');
+        } catch (TransportExceptionInterface $e) {
+            log_critical($e->getMessage());
+        }
     }
 
     /**
@@ -173,30 +169,24 @@ class MailService
      *
      * @param $Customer 会員情報
      */
-    public function sendCustomerCompleteMail(\Eccube\Entity\Customer $Customer)
+    public function sendCustomerCompleteMail(Customer $Customer)
     {
-        $this->logger->info('会員登録完了メール送信開始');
+        log_info('会員登録完了メール送信開始');
 
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_entry_complete_mail_template_id']);
-
-        if (is_null($MailTemplate)) {
-            log_error('会員登録完了メールテンプレートが見つかりません');
-            return null;
-        }
 
         $body = $this->twig->render($MailTemplate->getFileName(), [
             'Customer' => $Customer,
             'BaseInfo' => $this->BaseInfo,
         ]);
 
-        $email = (new Email())
-            ->subject('[' . $this->BaseInfo->getShopName() . '] ' . $MailTemplate->getMailSubject())
+        $message = (new Email())
+            ->subject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
             ->from(new Address($this->BaseInfo->getEmail01(), $this->BaseInfo->getShopName()))
-            ->to(new Address($Customer->getEmail()))
+            ->to($this->convertRFCViolatingEmail($Customer->getEmail()))
             ->bcc($this->BaseInfo->getEmail01())
             ->replyTo($this->BaseInfo->getEmail03())
-            ->returnPath($this->BaseInfo->getEmail04())
-            ->text($body);
+            ->returnPath($this->BaseInfo->getEmail04());
 
         // HTMLテンプレートが存在する場合
         $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
@@ -205,12 +195,17 @@ class MailService
                 'Customer' => $Customer,
                 'BaseInfo' => $this->BaseInfo,
             ]);
-            $email->html($htmlBody);
+
+            $message
+                ->text($body)
+                ->html($htmlBody);
+        } else {
+            $message->text($body);
         }
 
         $event = new EventArgs(
             [
-                'message' => $email,
+                'message' => $message,
                 'Customer' => $Customer,
                 'BaseInfo' => $this->BaseInfo,
             ],
@@ -219,14 +214,11 @@ class MailService
         $this->eventDispatcher->dispatch($event, EccubeEvents::MAIL_CUSTOMER_COMPLETE);
 
         try {
-            $this->mailer->send($email);
-            $this->logger->info('会員登録完了メール送信完了');
-        } catch (\Throwable $e) {
-            log_error('会員登録完了メール送信失敗', ['error' => $e->getMessage()]);
-            return false;
+            $this->mailer->send($message);
+            log_info('会員登録完了メール送信完了');
+        } catch (TransportExceptionInterface $e) {
+            log_critical($e->getMessage());
         }
-
-        return true;
     }
 
     /**
@@ -235,32 +227,24 @@ class MailService
      * @param $Customer Customer
      * @param $email string
      */
-    public function sendCustomerWithdrawMail(Customer $Customer)
+    public function sendCustomerWithdrawMail(Customer $Customer, string $email)
     {
-        $this->logger->info('退会手続き完了メール送信開始');
+        log_info('退会手続き完了メール送信開始');
 
-        $MailTemplate = $this->mailTemplateRepository->findOneBy([
-            'template_name' => '退会完了メール',
-        ]);
-
-        if (is_null($MailTemplate)) {
-            return null;
-        }
+        $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_customer_withdraw_mail_template_id']);
 
         $body = $this->twig->render($MailTemplate->getFileName(), [
             'Customer' => $Customer,
             'BaseInfo' => $this->BaseInfo,
         ]);
 
-        $email = (new Email())
-                ->subject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
-                ->from(new Address($this->BaseInfo->getEmail01(), $this->BaseInfo->getShopName()))
-                ->to(new Address($Customer->getEmail()))
-                ->bcc($this->BaseInfo->getEmail01())
-                ->replyTo($this->BaseInfo->getEmail03())
-                ->returnPath($this->BaseInfo->getEmail04())
-                ->text($body);
-
+        $message = (new Email())
+            ->subject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
+            ->from(new Address($this->BaseInfo->getEmail01(), $this->BaseInfo->getShopName()))
+            ->to($this->convertRFCViolatingEmail($email))
+            ->bcc($this->BaseInfo->getEmail01())
+            ->replyTo($this->BaseInfo->getEmail03())
+            ->returnPath($this->BaseInfo->getEmail04());
 
         // HTMLテンプレートが存在する場合
         $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
@@ -269,12 +253,17 @@ class MailService
                 'Customer' => $Customer,
                 'BaseInfo' => $this->BaseInfo,
             ]);
-            $email->html($htmlBody);
+
+            $message
+                ->text($body)
+                ->html($htmlBody);
+        } else {
+            $message->text($body);
         }
 
         $event = new EventArgs(
             [
-                'message' => $email,
+                'message' => $message,
                 'Customer' => $Customer,
                 'BaseInfo' => $this->BaseInfo,
                 'email' => $email,
@@ -284,13 +273,11 @@ class MailService
         $this->eventDispatcher->dispatch($event, EccubeEvents::MAIL_CUSTOMER_WITHDRAW);
 
         try {
-            $this->mailer->send($email);
-            $this->logger->info('退会手続き完了メール送信完了');
-        } catch (\Throwable $e) {
-            log_error('退会手続き完了メール送信失敗', ['error' => $e->getMessage()]);
+            $this->mailer->send($message);
+            log_info('退会手続き完了メール送信完了');
+        } catch (TransportExceptionInterface $e) {
+            log_critical($e->getMessage());
         }
-
-        return $email;
     }
 
     /**
@@ -300,16 +287,9 @@ class MailService
      */
     public function sendContactMail($formData)
     {
-        $this->logger->info('お問い合わせ受付メール送信開始');
+        log_info('お問い合わせ受付メール送信開始');
 
-        $MailTemplate = $this->mailTemplateRepository->find(
-            $this->eccubeConfig['eccube_contact_mail_template_id']
-        );
-
-        if (is_null($MailTemplate)) {
-            log_error('お問い合わせ受付メールテンプレートが見つかりません');
-            return null;
-        }
+        $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_contact_mail_template_id']);
 
         $body = $this->twig->render($MailTemplate->getFileName(), [
             'data' => $formData,
@@ -317,14 +297,13 @@ class MailService
         ]);
 
         // 問い合わせ者にメール送信
-        $email = (new Email())
-                ->subject('[' . $this->BaseInfo->getShopName() . '] ' . $MailTemplate->getMailSubject())
-                ->from(new Address($this->BaseInfo->getEmail02(), $this->BaseInfo->getShopName()))
-                ->to(new Address($formData['email'])) // ここでフォームデータのメールアドレスを使用
-                ->bcc($this->BaseInfo->getEmail02())
-                ->replyTo($this->BaseInfo->getEmail02())
-                ->returnPath($this->BaseInfo->getEmail04())
-                ->text($body);
+        $message = (new Email())
+            ->subject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
+            ->from(new Address($this->BaseInfo->getEmail02(), $this->BaseInfo->getShopName()))
+            ->to($this->convertRFCViolatingEmail($formData['email']))
+            ->bcc($this->BaseInfo->getEmail02())
+            ->replyTo($this->BaseInfo->getEmail02())
+            ->returnPath($this->BaseInfo->getEmail04());
 
         // HTMLテンプレートが存在する場合
         $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
@@ -333,12 +312,17 @@ class MailService
                 'data' => $formData,
                 'BaseInfo' => $this->BaseInfo,
             ]);
-            $email->html($htmlBody);
+
+            $message
+                ->text($body)
+                ->html($htmlBody);
+        } else {
+            $message->text($body);
         }
 
         $event = new EventArgs(
             [
-                'message' => $email,
+                'message' => $message,
                 'formData' => $formData,
                 'BaseInfo' => $this->BaseInfo,
             ],
@@ -346,46 +330,38 @@ class MailService
         );
         $this->eventDispatcher->dispatch($event, EccubeEvents::MAIL_CONTACT);
 
-        // メール送信
         try {
-            $this->mailer->send($email);
-            $this->logger->info('お問い合わせ受付メール送信完了');
-        } catch (\Throwable $e) {
-            log_error('お問い合わせ受付メール送信失敗', ['error' => $e->getMessage()]);
-            return false;
+            $this->mailer->send($message);
+            log_info('お問い合わせ受付メール送信完了');
+        } catch (TransportExceptionInterface $e) {
+            log_critical($e->getMessage());
         }
-
-        return true;
     }
 
     /**
      * Send order mail.
      *
-     * @param \Eccube\Entity\Order $Order 受注情報
+     * @param Order $Order 受注情報
      *
      * @return Email
      */
-    public function sendOrderMail(\Eccube\Entity\Order $Order)
+    public function sendOrderMail(Order $Order)
     {
-        $this->logger->info('受注メール送信開始');
+        log_info('受注メール送信開始');
 
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_order_mail_template_id']);
-        if (is_null($MailTemplate)) {
-            log_error('受注メールテンプレートが見つかりません');
-            return null;
-        }
 
         $body = $this->twig->render($MailTemplate->getFileName(), [
             'Order' => $Order,
         ]);
-        $email = (new Email())
-            ->subject('[' . $this->BaseInfo->getShopName() . '] ' . $MailTemplate->getMailSubject())
+
+        $message = (new Email())
+            ->subject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
             ->from(new Address($this->BaseInfo->getEmail01(), $this->BaseInfo->getShopName()))
-            ->to(new Address($Order->getEmail()))
+            ->to($this->convertRFCViolatingEmail($Order->getEmail()))
             ->bcc($this->BaseInfo->getEmail01())
             ->replyTo($this->BaseInfo->getEmail03())
-            ->returnPath($this->BaseInfo->getEmail04())
-            ->text($body);
+            ->returnPath($this->BaseInfo->getEmail04());
 
         // HTMLテンプレートが存在する場合
         $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
@@ -393,12 +369,17 @@ class MailService
             $htmlBody = $this->twig->render($htmlFileName, [
                 'Order' => $Order,
             ]);
-            $email->html($htmlBody);
+
+            $message
+                ->text($body)
+                ->html($htmlBody);
+        } else {
+            $message->text($body);
         }
 
         $event = new EventArgs(
             [
-                'message' => $email,
+                'message' => $message,
                 'Order' => $Order,
                 'MailTemplate' => $MailTemplate,
                 'BaseInfo' => $this->BaseInfo,
@@ -407,31 +388,29 @@ class MailService
         );
         $this->eventDispatcher->dispatch($event, EccubeEvents::MAIL_ORDER);
 
-        // メール送信処理
         try {
-            $count = $this->mailer->send($email);
-            $this->logger->info('受注メール送信完了', ['count' => $count]);
-        } catch (\Throwable $e) {
-            log_error('受注メール送信失敗', ['error' => $e->getMessage()]);
-            return false;
+            $this->mailer->send($message);
+        } catch (TransportExceptionInterface $e) {
+            log_critical($e->getMessage());
         }
 
         $MailHistory = new MailHistory();
-        $MailHistory->setMailSubject($email->getSubject())
-            ->setMailBody($email->getTextBody())
+        $MailHistory->setMailSubject($message->getSubject())
+            ->setMailBody($message->getTextBody())
             ->setOrder($Order)
             ->setSendDate(new \DateTime());
 
         // HTML用メールの設定
-        if ($email->getHtmlBody()) {
-            $MailHistory->setMailHtmlBody($email->getHtmlBody());
+        $htmlBody = $message->getHtmlBody();
+        if (!empty($htmlBody)) {
+            $MailHistory->setMailHtmlBody($htmlBody);
         }
 
         $this->mailHistoryRepository->save($MailHistory);
 
-        $this->logger->info('受注メール送信完了', ['count' => $count]);
+        log_info('受注メール送信完了');
 
-        return true;
+        return $message;
     }
 
     /**
@@ -440,16 +419,12 @@ class MailService
      * @param $Customer 会員情報
      * @param string $activateUrl アクティベート用url
      */
-    public function sendAdminCustomerConfirmMail(\Eccube\Entity\Customer $Customer, $activateUrl)
+    public function sendAdminCustomerConfirmMail(Customer $Customer, $activateUrl)
     {
-        $this->logger->info('仮会員登録再送メール送信開始');
+        log_info('仮会員登録再送メール送信開始');
 
-        /* @var $MailTemplate \Eccube\Entity\MailTemplate */
+        /** @var MailTemplate $MailTemplate */
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_entry_confirm_mail_template_id']);
-        if (is_null($MailTemplate)) {
-            log_error('仮会員登録確認メールテンプレートが見つかりません');
-            return null;
-        }
 
         $body = $this->twig->render($MailTemplate->getFileName(), [
             'BaseInfo' => $this->BaseInfo,
@@ -457,14 +432,13 @@ class MailService
             'activateUrl' => $activateUrl,
         ]);
 
-        $email = (new Email())
-            ->subject('[' . $this->BaseInfo->getShopName() . '] ' . $MailTemplate->getMailSubject())
-            ->from(new Address($this->BaseInfo->getEmail03(), $this->BaseInfo->getShopName()))
-            ->to(new Address($Customer->getEmail()))
+        $message = (new Email())
+            ->subject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
+            ->from(new Address($this->BaseInfo->getEmail01(), $this->BaseInfo->getShopName()))
+            ->to($this->convertRFCViolatingEmail($Customer->getEmail()))
             ->bcc($this->BaseInfo->getEmail01())
             ->replyTo($this->BaseInfo->getEmail03())
-            ->returnPath($this->BaseInfo->getEmail04())
-            ->text($body);
+            ->returnPath($this->BaseInfo->getEmail04());
 
         // HTMLテンプレートが存在する場合
         $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
@@ -474,12 +448,17 @@ class MailService
                 'Customer' => $Customer,
                 'activateUrl' => $activateUrl,
             ]);
-            $email->html($htmlBody);
+
+            $message
+                ->text($body)
+                ->html($htmlBody);
+        } else {
+            $message->text($body);
         }
 
         $event = new EventArgs(
             [
-                'message' => $email,
+                'message' => $message,
                 'Customer' => $Customer,
                 'BaseInfo' => $this->BaseInfo,
                 'activateUrl' => $activateUrl,
@@ -489,14 +468,12 @@ class MailService
         $this->eventDispatcher->dispatch($event, EccubeEvents::MAIL_ADMIN_CUSTOMER_CONFIRM);
 
         try {
-            $count = $this->mailer->send($email);
-            $this->logger->info('仮会員登録再送メール送信完了', ['count' => $count]);
-        } catch (\Throwable $e) {
-            log_error('仮会員登録再送メール送信失敗', ['error' => $e->getMessage()]);
-            return false;
-        }
+            $this->mailer->send($message);
 
-        return $count;
+            log_info('仮会員登録再送メール送信完了');
+        } catch (TransportExceptionInterface $e) {
+            log_critical($e->getMessage());
+        }
     }
 
     /**
@@ -513,12 +490,12 @@ class MailService
      */
     public function sendAdminOrderMail(Order $Order, $formData)
     {
-        $this->logger->info('受注管理通知メール送信開始');
+        log_info('受注管理通知メール送信開始');
 
-        $email = (new Email())
-            ->subject('[' . $this->BaseInfo->getShopName() . '] ' . $formData['mail_subject'])
+        $message = (new Email())
+            ->subject('['.$this->BaseInfo->getShopName().'] '.$formData['mail_subject'])
             ->from(new Address($this->BaseInfo->getEmail01(), $this->BaseInfo->getShopName()))
-            ->to(new Address($Order->getEmail()))
+            ->to($this->convertRFCViolatingEmail($Order->getEmail()))
             ->bcc($this->BaseInfo->getEmail01())
             ->replyTo($this->BaseInfo->getEmail03())
             ->returnPath($this->BaseInfo->getEmail04())
@@ -526,7 +503,7 @@ class MailService
 
         $event = new EventArgs(
             [
-                'message' => $email,
+                'message' => $message,
                 'Order' => $Order,
                 'formData' => $formData,
                 'BaseInfo' => $this->BaseInfo,
@@ -536,14 +513,13 @@ class MailService
         $this->eventDispatcher->dispatch($event, EccubeEvents::MAIL_ADMIN_ORDER);
 
         try {
-            $count = $this->mailer->send($email);
-            $this->logger->info('受注管理通知メール送信完了', ['count' => $count]);
-        } catch (\Throwable $e) {
-            log_error('受注管理通知メール送信失敗', ['error' => $e->getMessage()]);
-            return false;
+            $this->mailer->send($message);
+            log_info('受注管理通知メール送信完了');
+        } catch (TransportExceptionInterface $e) {
+            log_critical($e->getMessage());
         }
 
-        return $email;
+        return $message;
     }
 
     /**
@@ -552,16 +528,11 @@ class MailService
      * @param $Customer 会員情報
      * @param string $reset_url
      */
-    public function sendPasswordResetNotificationMail(\Eccube\Entity\Customer $Customer, $reset_url)
+    public function sendPasswordResetNotificationMail(Customer $Customer, $reset_url)
     {
-        $this->logger->info('パスワード再発行メール送信開始');
+        log_info('パスワード再発行メール送信開始');
 
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_forgot_mail_template_id']);
-        if (is_null($MailTemplate)) {
-            log_error('パスワード再発行メールテンプレートが見つかりません');
-            return null;
-        }
-
         $body = $this->twig->render($MailTemplate->getFileName(), [
             'BaseInfo' => $this->BaseInfo,
             'Customer' => $Customer,
@@ -569,17 +540,16 @@ class MailService
             'reset_url' => $reset_url,
         ]);
 
-        $email = (new Email())
-            ->subject('[' . $this->BaseInfo->getShopName() . '] ' . $MailTemplate->getMailSubject())
+        $message = (new Email())
+            ->subject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
             ->from(new Address($this->BaseInfo->getEmail01(), $this->BaseInfo->getShopName()))
-            ->to(new Address($Customer->getEmail()))
+            ->to($this->convertRFCViolatingEmail($Customer->getEmail()))
+            ->bcc($this->BaseInfo->getEmail01())
             ->replyTo($this->BaseInfo->getEmail03())
-            ->returnPath($this->BaseInfo->getEmail04())
-            ->text($body);
+            ->returnPath($this->BaseInfo->getEmail04());
 
         // HTMLテンプレートが存在する場合
         $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
-
         if (!is_null($htmlFileName)) {
             $htmlBody = $this->twig->render($htmlFileName, [
                 'BaseInfo' => $this->BaseInfo,
@@ -587,12 +557,17 @@ class MailService
                 'expire' => $this->eccubeConfig['eccube_customer_reset_expire'],
                 'reset_url' => $reset_url,
             ]);
-            $email->html($htmlBody);
+
+            $message
+                ->text($body)
+                ->html($htmlBody);
+        } else {
+            $message->text($body);
         }
 
         $event = new EventArgs(
             [
-                'message' => $email,
+                'message' => $message,
                 'Customer' => $Customer,
                 'BaseInfo' => $this->BaseInfo,
                 'resetUrl' => $reset_url,
@@ -602,14 +577,11 @@ class MailService
         $this->eventDispatcher->dispatch($event, EccubeEvents::MAIL_PASSWORD_RESET);
 
         try {
-            $count = $this->mailer->send($email);
-            $this->logger->info('パスワード再発行メール送信完了', ['count' => $count]);
-        } catch (\Throwable $e) {
-            log_error('パスワード再発行メール送信失敗', ['error' => $e->getMessage()]);
-            return false;
+            $this->mailer->send($message);
+            log_info('パスワード再発行メール送信完了');
+        } catch (TransportExceptionInterface $e) {
+            log_critical($e->getMessage());
         }
-
-        return $count;
     }
 
     /**
@@ -618,15 +590,11 @@ class MailService
      * @param $Customer 会員情報
      * @param string $password
      */
-    public function sendPasswordResetCompleteMail(\Eccube\Entity\Customer $Customer, $password)
+    public function sendPasswordResetCompleteMail(Customer $Customer, $password)
     {
-        $this->logger->info('パスワード変更完了メール送信開始');
+        log_info('パスワード変更完了メール送信開始');
 
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_reset_complete_mail_template_id']);
-        if (is_null($MailTemplate)) {
-            log_error('パスワード変更完了メールテンプレートが見つかりません');
-            return null;
-        }
 
         $body = $this->twig->render($MailTemplate->getFileName(), [
             'BaseInfo' => $this->BaseInfo,
@@ -634,14 +602,13 @@ class MailService
             'password' => $password,
         ]);
 
-        $email = (new Email())
-            ->subject('[' . $this->BaseInfo->getShopName() . '] ' . $MailTemplate->getMailSubject())
+        $message = (new Email())
+            ->subject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
             ->from(new Address($this->BaseInfo->getEmail01(), $this->BaseInfo->getShopName()))
-            ->to(new Address($Customer->getEmail()))
+            ->to($this->convertRFCViolatingEmail($Customer->getEmail()))
             ->bcc($this->BaseInfo->getEmail01())
             ->replyTo($this->BaseInfo->getEmail03())
-            ->returnPath($this->BaseInfo->getEmail04())
-            ->text($body);
+            ->returnPath($this->BaseInfo->getEmail04());
 
         // HTMLテンプレートが存在する場合
         $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
@@ -651,12 +618,17 @@ class MailService
                 'Customer' => $Customer,
                 'password' => $password,
             ]);
-            $email->html($htmlBody);
+
+            $message
+                ->text($body)
+                ->html($htmlBody);
+        } else {
+            $message->text($body);
         }
 
         $event = new EventArgs(
             [
-                'message' => $email,
+                'message' => $message,
                 'Customer' => $Customer,
                 'BaseInfo' => $this->BaseInfo,
                 'password' => $password,
@@ -666,14 +638,11 @@ class MailService
         $this->eventDispatcher->dispatch($event, EccubeEvents::MAIL_PASSWORD_RESET_COMPLETE);
 
         try {
-            $count = $this->mailer->send($email);
-            $this->logger->info('パスワード変更完了メール送信完了', ['count' => $count]);
-        } catch (\Throwable $e) {
-            log_error('パスワード変更完了メール送信失敗', ['error' => $e->getMessage()]);
-            return false;
+            $this->mailer->send($message);
+            log_info('パスワード変更完了メール送信完了');
+        } catch (TransportExceptionInterface $e) {
+            log_critical($e->getMessage());
         }
-
-        return $count;
     }
 
     /**
@@ -686,63 +655,62 @@ class MailService
      */
     public function sendShippingNotifyMail(Shipping $Shipping)
     {
-        $this->logger->info('出荷通知メール送信処理開始', ['id' => $Shipping->getId()]);
+        log_info('出荷通知メール送信処理開始', ['id' => $Shipping->getId()]);
 
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_shipping_notify_mail_template_id']);
-        if (is_null($MailTemplate)) {
-            log_error('出荷通知メールテンプレートが見つかりません');
-            return null;
-        }
 
         /** @var Order $Order */
         $Order = $Shipping->getOrder();
         $body = $this->getShippingNotifyMailBody($Shipping, $Order, $MailTemplate->getFileName());
 
-        $email = (new Email())
-            ->subject('[' . $this->BaseInfo->getShopName() . '] ' . $MailTemplate->getMailSubject())
+        $message = (new Email())
+            ->subject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
             ->from(new Address($this->BaseInfo->getEmail01(), $this->BaseInfo->getShopName()))
-            ->to(new Address($Order->getEmail()))
+            ->to($this->convertRFCViolatingEmail($Order->getEmail()))
             ->bcc($this->BaseInfo->getEmail01())
             ->replyTo($this->BaseInfo->getEmail03())
-            ->returnPath($this->BaseInfo->getEmail04())
-            ->text($body);
+            ->returnPath($this->BaseInfo->getEmail04());
 
         // HTMLテンプレートが存在する場合
         $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
-        $htmlBody = null;
         if (!is_null($htmlFileName)) {
             $htmlBody = $this->getShippingNotifyMailBody($Shipping, $Order, $htmlFileName, true);
-            $email->html($htmlBody);
+
+            $message
+                ->text($body)
+                ->html($htmlBody);
+        } else {
+            $message->text($body);
         }
 
         try {
-            $this->mailer->send($email);
-        } catch (\Throwable $e) {
-            log_error('出荷通知メール送信失敗', ['id' => $Shipping->getId(), 'error' => $e->getMessage()]);
-            return;
+            $this->mailer->send($message);
+        } catch (TransportExceptionInterface $e) {
+            log_critical($e->getMessage());
         }
 
         $MailHistory = new MailHistory();
         $MailHistory->setMailSubject($message->getSubject())
-                ->setMailBody($message->getBody())
+                ->setMailBody($message->getTextBody())
                 ->setOrder($Order)
                 ->setSendDate(new \DateTime());
 
         // HTML用メールの設定
-        if (!is_null($htmlBody)) {
+        $htmlBody = $message->getHtmlBody();
+        if (!empty($htmlBody)) {
             $MailHistory->setMailHtmlBody($htmlBody);
         }
 
         $this->mailHistoryRepository->save($MailHistory);
 
-        $this->logger->info('出荷通知メール送信処理完了', ['id' => $Shipping->getId()]);
+        log_info('出荷通知メール送信処理完了', ['id' => $Shipping->getId()]);
     }
 
     /**
      * @param Shipping $Shipping
      * @param Order $Order
      * @param string|null $templateName
-     * @param boolean $is_html
+     * @param bool $is_html
      *
      * @return string
      *
@@ -775,6 +743,91 @@ class MailService
     }
 
     /**
+     * 会員情報変更時にメール通知
+     *
+     * @param Customer $Customer
+     * @param array $userData
+     *  - userAgent
+     *  - ipAddress
+     *  - preEmail
+     * @param string $eventName
+     *
+     * @return void
+     *
+     * @throws LoaderError
+     * @throws NonUniqueResultException
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    public function sendCustomerChangeNotifyMail(Customer $Customer, array $userData, string $eventName)
+    {
+        log_info('会員情報変更通知メール送信処理開始');
+        log_info($eventName);
+
+        // メールテンプレートの取得 IDでの取得は現行環境での差異があるため
+        $tpl_name = 'Mail/customer_change_notify.twig';
+        $MailTemplate = $this->mailTemplateRepository->createQueryBuilder('mt')
+            ->where('mt.file_name = :file_name')
+            ->setParameter('file_name', $tpl_name)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        $body = $this->twig->render($MailTemplate->getFileName(), [
+            'BaseInfo' => $this->BaseInfo,
+            'Customer' => $Customer,
+            'userAgent' => $userData['userAgent'],
+            'eventName' => $eventName,
+            'ipAddress' => $userData['ipAddress'],
+        ]);
+
+        $message = (new Email())
+            ->subject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
+            ->from(new Address($this->BaseInfo->getEmail01(), $this->BaseInfo->getShopName()))
+            ->to($this->convertRFCViolatingEmail($Customer->getEmail()))
+            ->bcc($this->BaseInfo->getEmail01())
+            ->replyTo($this->BaseInfo->getEmail03())
+            ->returnPath($this->BaseInfo->getEmail04());
+
+        // HTMLテンプレートが存在する場合
+        $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
+        if (!is_null($htmlFileName)) {
+            $htmlBody = $this->twig->render($htmlFileName, [
+                'BaseInfo' => $this->BaseInfo,
+                'Customer' => $Customer,
+                'userAgent' => $userData['userAgent'],
+                'eventName' => $eventName,
+                'ipAddress' => $userData['ipAddress'],
+            ]);
+
+            $message
+                ->text($body)
+                ->html($htmlBody);
+        } else {
+            $message->text($body);
+        }
+
+        try {
+            $this->mailer->send($message);
+        } catch (TransportExceptionInterface $e) {
+            log_critical($e->getMessage());
+        }
+
+        // メールアドレスの変更があった場合、変更前のメールアドレスにも送信
+        if (isset($userData['preEmail']) && $Customer->getEmail() != $userData['preEmail']) {
+            $message->to($this->convertRFCViolatingEmail($userData['preEmail']));
+
+            // メール送信
+            try {
+                $this->mailer->send($message);
+            } catch (TransportExceptionInterface $e) {
+                log_critical($e->getMessage());
+            }
+        }
+
+        log_info('会員情報変更通知メール送信処理完了');
+    }
+
+    /**
      * [getHtmlTemplate description]
      *
      * @param  string $templateName  プレーンテキストメールのファイル名
@@ -794,5 +847,44 @@ class MailService
         } else {
             return null;
         }
+    }
+
+    /**
+     * RFC違反のメールの local part を "" で囲む.
+     *
+     * パラメータ eccube_rfc_email_check == true の場合は変換しない
+     *
+     * @param string $email
+     *
+     * @return Address
+     */
+    public function convertRFCViolatingEmail(string $email): Address
+    {
+        if ($this->eccubeConfig->get('eccube_rfc_email_check')) {
+            return new Address($email);
+        }
+
+        // see https://blog.everqueue.com/chiba/2009/03/22/163/
+        $wsp = '[\x20\x09]';
+        $vchar = '[\x21-\x7e]';
+        $quoted_pair = "\\\\(?:$vchar|$wsp)";
+        $qtext = '[\x21\x23-\x5b\x5d-\x7e]';
+        $qcontent = "(?:$qtext|$quoted_pair)";
+        $quoted_string = "\"$qcontent*\"";
+        $atext = '[a-zA-Z0-9!#$%&\'*+\-\/\=?^_`{|}~]';
+        $dot_atom = "$atext+(?:[.]$atext+)*";
+        $local_part = "(?:$dot_atom|$quoted_string)";
+        $domain = $dot_atom;
+        $addr_spec = "{$local_part}[@]$domain";
+
+        $dot_atom_loose = "$atext+(?:[.]|$atext)*";
+        $local_part_loose = "(?:$dot_atom_loose|$quoted_string)";
+
+        $regexp = "/\A{$addr_spec}\z/";
+        if (!preg_match($regexp, $email)) {
+            $email = preg_replace('/^(.*)@(.*)$/', '"$1"@$2', $email);
+        }
+
+        return new Address($email);
     }
 }

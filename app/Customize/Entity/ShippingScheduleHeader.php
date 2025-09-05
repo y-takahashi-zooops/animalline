@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Eccube\Entity\Shipping;
-use Customize\Entity\Order;
+use Eccube\Entity\Order;
 
 /**
  * @ORM\Table(name="ald_shipping_schedule_header")
@@ -429,16 +429,16 @@ class ShippingScheduleHeader
     /**
      * @return Order|null
      */
-    public function getOrder()
+    public function getOrder(): ?Order
     {
         return $this->Order;
     }
 
     /**
-     * @param Order $Order
+     * @param Order|null $Order
      * @return self
      */
-    public function setOrder($Order)
+    public function setOrder(?Order $Order): self
     {
         $this->Order = $Order;
         return $this;

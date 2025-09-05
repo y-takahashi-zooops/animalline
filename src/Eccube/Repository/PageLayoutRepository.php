@@ -13,8 +13,8 @@
 
 namespace Eccube\Repository;
 
+use Doctrine\Persistence\ManagerRegistry as RegistryInterface;
 use Eccube\Entity\PageLayout;
-use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * PageLayoutRepository
@@ -27,9 +27,9 @@ class PageLayoutRepository extends AbstractRepository
     /**
      * PageLayoutRepository constructor.
      *
-     * @param ManagerRegistry $registry
+     * @param RegistryInterface $registry
      */
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, PageLayout::class);
     }

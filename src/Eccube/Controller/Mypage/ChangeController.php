@@ -13,8 +13,6 @@
 
 namespace Eccube\Controller\Mypage;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Eccube\Common\EccubeConfig;
 use Eccube\Controller\AbstractController;
 use Eccube\Entity\Customer;
 use Eccube\Event\EccubeEvents;
@@ -24,14 +22,11 @@ use Eccube\Repository\BaseInfoRepository;
 use Eccube\Repository\CustomerRepository;
 use Eccube\Service\MailService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use Psr\Log\LoggerInterface;
 
 class ChangeController extends AbstractController
 {
@@ -50,13 +45,6 @@ class ChangeController extends AbstractController
      */
     protected $passwordHasher;
 
-    protected FormFactoryInterface $formFactory;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
     /**
      * @var MailService
      */
@@ -73,23 +61,12 @@ class ChangeController extends AbstractController
         CustomerRepository $customerRepository,
         UserPasswordHasherInterface $passwordHasher,
         TokenStorageInterface $tokenStorage,
-        FormFactoryInterface $formFactory,
-        LoggerInterface $logger,
-        EventDispatcherInterface $eventDispatcher,
-        EccubeConfig $eccubeConfig,
-        EntityManagerInterface $entityManager,
         BaseInfoRepository $baseInfoRepository,
         MailService $mailService,
-
     ) {
         $this->customerRepository = $customerRepository;
         $this->passwordHasher = $passwordHasher;
         $this->tokenStorage = $tokenStorage;
-        $this->formFactory = $formFactory;
-        $this->logger = $logger;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->eccubeConfig = $eccubeConfig;
-        $this->entityManager = $entityManager;
         $this->baseInfoRepository = $baseInfoRepository;
         $this->mailService = $mailService;
     }

@@ -18,7 +18,6 @@ use Eccube\Service\SystemService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -29,27 +28,17 @@ class MaintenanceController extends AbstractController
      */
     protected $systemService;
 
-    /**
-     * @var string
-     */
-    protected $maintenanceFilePath;
-
-    protected FormFactoryInterface $formFactory;
-
-    public function __construct(SystemService $systemService,
-        string $maintenanceFilePath,
-        FormFactoryInterface $formFactory
-    ) {
+    public function __construct(SystemService $systemService, string $maintenanceFilePath)
+    {
         $this->systemService = $systemService;
         $this->maintenanceFilePath = $maintenanceFilePath;
-        $this->formFactory = $formFactory;
     }
 
     /**
      * メンテナンス管理ページを表示
      *
      * @Route("/%eccube_admin_route%/content/maintenance", name="admin_content_maintenance", methods={"GET", "POST"})
-     * 
+     *
      * @Template("@admin/Content/maintenance.twig")
      */
     public function index(Request $request)
@@ -62,13 +51,11 @@ class MaintenanceController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $changeTo = $request->request->get('maintenance');
-            $path = $this->maintenanceFilePath;
 
             if ($isMaintenance === false && $changeTo == 'on') {
                 // 現在メンテナンスモードではない　かつ　メンテナンスモードを有効　にした場合
                 // メンテナンスモードを有効にする
                 $this->systemService->enableMaintenance('', true);
-
                 $this->addSuccess('admin.content.maintenance_switch__on_message', 'admin');
             } elseif ($isMaintenance && $changeTo == 'off') {
                 // 現在メンテナンスモード　かつ　メンテナンスモードを無効　にした場合
@@ -98,14 +85,14 @@ class MaintenanceController extends AbstractController
     public function disableMaintenance(Request $request, $mode, SystemService $systemService)
     {
         $this->isTokenValid();
+
         if (!$request->isXmlHttpRequest()) {
             throw new BadRequestHttpException();
         }
 
         if ($mode === 'manual') {
-            $path = $this->getParameter('eccube_content_maintenance_file_path');
-            if (file_exists($path)) {
-                unlink($this->getParameter('eccube_content_maintenance_file_path'));
+            if (file_exists($this->maintenanceFilePath)) {
+                unlink($this->maintenanceFilePath);
             }
         } else {
             $maintenanceMode = [
@@ -114,6 +101,7 @@ class MaintenanceController extends AbstractController
             ];
             $systemService->disableMaintenance($maintenanceMode[$mode]);
         }
+
         return $this->json(['success' => true]);
     }
 }

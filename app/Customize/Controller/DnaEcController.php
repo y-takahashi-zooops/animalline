@@ -127,11 +127,6 @@ class DnaEcController extends BaseProductController
      */
     protected $dnaSalesDetailRepository;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    protected EntityManagerInterface $entityManager;
-
     public function __construct(
         NewsRepository $NewsRepository,
         ProductRepository $productRepository,

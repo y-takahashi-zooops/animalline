@@ -83,11 +83,6 @@ class DnaController extends AbstractController
     protected $dnaSalesStatusRepository;
 
     /**
-     * @var EntityManagerInterface
-     */
-    protected EntityManagerInterface $entityManager;
-
-    /**
      * DnaController constructor
      * @param DnaQueryService $dnaQueryService
      * @param DnaCheckStatusRepository $dnaCheckStatusRepository
@@ -100,7 +95,6 @@ class DnaController extends AbstractController
      * @param DnaSalesStatusRepository $dnaSalesStatusRepository
      */
     public function __construct(
-        EntityManagerInterface $entityManager,
         DnaQueryService                $dnaQueryService,
         DnaCheckStatusRepository       $dnaCheckStatusRepository,
         BreederPetsRepository          $breederPetsRepository,
@@ -122,7 +116,6 @@ class DnaController extends AbstractController
         $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
         $this->dnaSalesHeaderRepository = $dnaSalesHeaderRepository;
         $this->dnaSalesStatusRepository = $dnaSalesStatusRepository;
-        $this->entityManager = $entityManager;
     }
 
     /**

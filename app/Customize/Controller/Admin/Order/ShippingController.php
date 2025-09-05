@@ -107,8 +107,6 @@ class ShippingController extends BaseShippingController
      */
     protected $shippingScheduleRepository;
 
-    protected FormFactoryInterface $formFactory;
-
     /**
      * @var LoggerInterface
      */
@@ -142,7 +140,6 @@ class ShippingController extends BaseShippingController
         PurchaseFlow                     $orderPurchaseFlow,
         ShippingScheduleHeaderRepository $shippingScheduleHeaderRepository,
         ShippingScheduleRepository       $shippingScheduleRepository,
-        FormFactoryInterface $formFactory,
         LoggerInterface $logger,
         EntityManagerInterface $entityManager
     ) {
@@ -157,7 +154,6 @@ class ShippingController extends BaseShippingController
         $this->purchaseFlow = $orderPurchaseFlow;
         $this->shippingScheduleHeaderRepository = $shippingScheduleHeaderRepository;
         $this->shippingScheduleRepository = $shippingScheduleRepository;
-        $this->formFactory = $formFactory;
         $this->logger = $logger;
         $this->entityManager = $entityManager;
     }

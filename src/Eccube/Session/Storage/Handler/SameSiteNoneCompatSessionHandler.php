@@ -21,35 +21,34 @@ use Symfony\Component\HttpFoundation\Session\Storage\Handler\StrictSessionHandle
 class SameSiteNoneCompatSessionHandler extends StrictSessionHandler
 {
     /** @var \SessionHandlerInterface */
-    private \SessionHandlerInterface $handler;
+    private $handler;
     /** @var bool */
-    private bool $doDestroy = false;
+    private $doDestroy;
     /** @var string */
-    private string $sessionName;
-    /** @var string|null */
-    private ?string $prefetchId = null;
-    /** @var string|null */
-    private ?string $prefetchData = null;
+    private $sessionName;
     /** @var string */
-    private string $newSessionId = '';
-    /** @var string|null */
-    private ?string $igbinaryEmptyData = null;
+    private $newSessionId;
 
     /**
      *  {@inheritdoc}
      */
     public function __construct(\SessionHandlerInterface $handler)
     {
+        parent::__construct($handler);
+
         $this->handler = $handler;
 
-        ini_set('session.cookie_secure', $this->getCookieSecure());
-        ini_set('session.cookie_samesite', $this->getCookieSameSite());
-        ini_set('session.cookie_path', $this->getCookiePath());
+        if (!headers_sent()) {
+            ini_set('session.cookie_secure', $this->getCookieSecure());
+            ini_set('session.cookie_samesite', $this->getCookieSameSite());
+            ini_set('session.cookie_path', $this->getCookiePath());
+        }
     }
 
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function open($savePath, $sessionName): bool
     {
         $this->sessionName = $sessionName;
@@ -72,6 +71,7 @@ class SameSiteNoneCompatSessionHandler extends StrictSessionHandler
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function updateTimestamp($sessionId, $data): bool
     {
         return $this->write($sessionId, $data);
@@ -87,13 +87,12 @@ class SameSiteNoneCompatSessionHandler extends StrictSessionHandler
 
     /**
      * {@inheritdoc}
+     *
      * @see https://github.com/symfony/symfony/blob/2adc85d49cbe14e346068fa7e9c2e1f08ab31de6/src/Symfony/Component/HttpFoundation/Session/Storage/Handler/AbstractSessionHandler.php#L126-L167
      */
+    #[\ReturnTypeWillChange]
     public function destroy($sessionId): bool
     {
-        if (\PHP_VERSION_ID < 70000) {
-            $this->prefetchData = null;
-        }
         if (!headers_sent() && filter_var(ini_get('session.use_cookies'), FILTER_VALIDATE_BOOLEAN)) {
             if (!$this->sessionName) {
                 throw new \LogicException(sprintf('Session name cannot be empty, did you forget to call "parent::open()" in "%s"?.', \get_class($this)));
@@ -122,20 +121,16 @@ class SameSiteNoneCompatSessionHandler extends StrictSessionHandler
                     header($h, false);
                 }
             } else {
-                if (\PHP_VERSION_ID < 70300) {
-                    setcookie($this->sessionName, '', 0, ini_get('session.cookie_path'), ini_get('session.cookie_domain'), filter_var(ini_get('session.cookie_secure'), FILTER_VALIDATE_BOOLEAN), filter_var(ini_get('session.cookie_httponly'), FILTER_VALIDATE_BOOLEAN));
-                } else {
-                    setcookie($this->sessionName, '',
-                              [
-                                  'expires' => 0,
-                                  'path' => $this->getCookiePath(),
-                                  'domain' => ini_get('session.cookie_domain'),
-                                  'secure' => filter_var(ini_get('session.cookie_secure'), FILTER_VALIDATE_BOOLEAN),
-                                  'httponly' => filter_var(ini_get('session.cookie_httponly'), FILTER_VALIDATE_BOOLEAN),
-                                  'samesite' => $this->getCookieSameSite(),
-                              ]
-                    );
-                }
+                setcookie($this->sessionName, '',
+                    [
+                        'expires' => 0,
+                        'path' => $this->getCookiePath(),
+                        'domain' => ini_get('session.cookie_domain'),
+                        'secure' => filter_var(ini_get('session.cookie_secure'), FILTER_VALIDATE_BOOLEAN),
+                        'httponly' => filter_var(ini_get('session.cookie_httponly'), FILTER_VALIDATE_BOOLEAN),
+                        'samesite' => $this->getCookieSameSite(),
+                    ]
+                );
             }
         }
 
@@ -161,8 +156,9 @@ class SameSiteNoneCompatSessionHandler extends StrictSessionHandler
     }
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function gc($maxlifetime): int|false
     {
         return $this->handler->gc($maxlifetime);
@@ -171,9 +167,9 @@ class SameSiteNoneCompatSessionHandler extends StrictSessionHandler
     /**
      * @return string
      */
-    public function getCookieSameSite(): string
+    public function getCookieSameSite()
     {
-        if ($this->shouldSendSameSiteNone() && \PHP_VERSION_ID >= 70300 && $this->getCookieSecure()) {
+        if ($this->shouldSendSameSiteNone() && $this->getCookieSecure()) {
             return Cookie::SAMESITE_NONE;
         }
 
@@ -183,31 +179,28 @@ class SameSiteNoneCompatSessionHandler extends StrictSessionHandler
     /**
      * @return string
      */
-    public function getCookiePath(): string
+    public function getCookiePath()
     {
-        $cookiePath = env('ECCUBE_COOKIE_PATH', '/');
-        if ($this->shouldSendSameSiteNone() && \PHP_VERSION_ID < 70300 && $this->getCookieSecure()) {
-            return $cookiePath.'; SameSite='.Cookie::SAMESITE_NONE;
-        }
-
-        return $cookiePath;
+        return env('ECCUBE_COOKIE_PATH', '/');
     }
 
     /**
      * @return string
      */
-    public function getCookieSecure(): string
+    public function getCookieSecure()
     {
         $request = Request::createFromGlobals();
+
         return $request->isSecure() ? '1' : '0';
     }
 
     /**
      * @return bool
      */
-    private function shouldSendSameSiteNone(): bool
+    private function shouldSendSameSiteNone()
     {
         $userAgent = array_key_exists('HTTP_USER_AGENT', $_SERVER) ? $_SERVER['HTTP_USER_AGENT'] : null;
+
         return SameSite::handle($userAgent);
     }
 }

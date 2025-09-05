@@ -103,7 +103,10 @@ class AnilineEntryController extends AbstractController
      */
     protected $conservationsRepository;
 
-    protected FormFactoryInterface $formFactory;
+    /**
+     * @var FormFactoryInterface
+     */
+    protected $formFactory;
 
     /**
      * @var LoggerInterface
@@ -327,7 +330,7 @@ class AnilineEntryController extends AbstractController
                     //     ->setRelationId($rid);
 
                     // パスワードをハッシュ化（saltは不要）
-                    $hashedPassword = $this->passwordHasher->hashPassword($Customer, $Customer->getPassword());
+                    $hashedPassword = $this->passwordHasher->hashPassword($Customer, $Customer->getPlainPassword());
 
                     $secretKey = $this->customerRepository->getUniqueSecretKey();
 

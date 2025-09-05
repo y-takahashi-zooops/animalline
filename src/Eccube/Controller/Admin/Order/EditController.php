@@ -14,7 +14,6 @@
 namespace Eccube\Controller\Admin\Order;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Criteria;
 use Eccube\Controller\AbstractController;
 use Eccube\Entity\Master\CustomerStatus;
 use Eccube\Entity\Master\OrderItemType;
@@ -53,11 +52,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Form\FormFactoryInterface;
-use Psr\Log\LoggerInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use Eccube\Common\EccubeConfig;
-use Doctrine\ORM\EntityManagerInterface;
 
 class EditController extends AbstractController
 {
@@ -131,13 +125,6 @@ class EditController extends AbstractController
      */
     private $orderHelper;
 
-    protected FormFactoryInterface $formFactory;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
     /**
      * EditController constructor.
      *
@@ -155,7 +142,6 @@ class EditController extends AbstractController
      * @param OrderStatusRepository $orderStatusRepository
      * @param OrderStateMachine $orderStateMachine
      * @param OrderHelper $orderHelper
-     * @param LoggerInterface $logger
      */
     public function __construct(
         TaxRuleService $taxRuleService,
@@ -172,11 +158,6 @@ class EditController extends AbstractController
         OrderStatusRepository $orderStatusRepository,
         OrderStateMachine $orderStateMachine,
         OrderHelper $orderHelper,
-        FormFactoryInterface $formFactory,
-        LoggerInterface $logger,
-        EventDispatcherInterface $eventDispatcher,
-        EccubeConfig $eccubeConfig,
-        EntityManagerInterface $entityManager,
     ) {
         $this->taxRuleService = $taxRuleService;
         $this->deviceTypeRepository = $deviceTypeRepository;
@@ -192,11 +173,6 @@ class EditController extends AbstractController
         $this->orderStatusRepository = $orderStatusRepository;
         $this->orderStateMachine = $orderStateMachine;
         $this->orderHelper = $orderHelper;
-        $this->formFactory = $formFactory;
-        $this->logger = $logger;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->eccubeConfig = $eccubeConfig;
-        $this->entityManager = $entityManager;
     }
 
     /**
@@ -204,14 +180,11 @@ class EditController extends AbstractController
      *
      * @Route("/%eccube_admin_route%/order/new", name="admin_order_new", methods={"GET", "POST"})
      * @Route("/%eccube_admin_route%/order/{id}/edit", requirements={"id" = "\d+"}, name="admin_order_edit", methods={"GET", "POST"})
-     * 
+     *
      * @Template("@admin/Order/edit.twig")
      */
     public function index(Request $request, RouterInterface $router, $id = null)
     {
-        $TargetOrder = null;
-        $OriginOrder = null;
-
         if (null === $id) {
             // 空のエンティティを作成.
             $TargetOrder = new Order();
@@ -285,7 +258,7 @@ class EditController extends AbstractController
             // 登録ボタン押下
             switch ($request->get('mode')) {
                 case 'register':
-                    $this->logger->info('受注登録開始', [$TargetOrder->getId()]);
+                    log_info('受注登録開始', [$TargetOrder->getId()]);
 
                     if (!$flowResult->hasError() && $form->isValid()) {
                         try {
@@ -337,7 +310,7 @@ class EditController extends AbstractController
                         // 会員の場合、購入回数、購入金額などを更新
                         if ($Customer = $TargetOrder->getCustomer()) {
                             $this->orderRepository->updateOrderSummary($Customer);
-                            $this->entityManager->flush($Customer);
+                            $this->entityManager->flush();
                         }
 
                         $event = new EventArgs(
@@ -353,7 +326,7 @@ class EditController extends AbstractController
 
                         $this->addSuccess('admin.common.save_complete', 'admin');
 
-                        $this->logger->info('受注登録完了', [$TargetOrder->getId()]);
+                        log_info('受注登録完了', [$TargetOrder->getId()]);
 
                         if ($returnLink = $form->get('return_link')->getData()) {
                             try {
@@ -444,9 +417,9 @@ class EditController extends AbstractController
      * @Template("@admin/Order/search_customer.twig")
      *
      * @param Request $request
-     * @param integer $page_no
+     * @param int $page_no
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @return array
      */
     public function searchCustomerHtml(Request $request, PaginatorInterface $paginator, $page_no = null)
     {
@@ -666,7 +639,7 @@ class EditController extends AbstractController
             foreach ($Products as $Product) {
                 /** @var \Symfony\Component\Form\FormBuilderInterface $builder */
                 $builder = $this->formFactory->createNamedBuilder('', AddCartType::class, null, [
-                    'product' => $this->productRepository->findWithSortedClassCategories($Product->getId()),
+                    'product' => $Product,
                 ]);
                 $addCartForm = $builder->getForm();
                 $forms[$Product->getId()] = $addCartForm->createView();
@@ -686,8 +659,6 @@ class EditController extends AbstractController
                 'forms' => $forms,
                 'Products' => $Products,
                 'pagination' => $pagination,
-                'is_instock' => $request->get('is_instock') ?? 0,
-                'reIndex' => $request->get('reIndex') ?? 0,
             ];
         }
     }
@@ -726,7 +697,7 @@ class EditController extends AbstractController
                 'OrderItemTypes' => $OrderItemTypes,
             ];
         }
-        
+
         throw new BadRequestHttpException();
     }
 }
