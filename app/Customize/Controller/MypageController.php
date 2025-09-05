@@ -347,7 +347,7 @@ class MypageController extends BaseMypageController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch('front.mypage.mypage.subscription.history.initialize', $event);
+        $this->eventDispatcher->dispatch($event, 'front.mypage.mypage.subscription.history.initialize');
 
         $pagination = $paginator->paginate(
             $qb,

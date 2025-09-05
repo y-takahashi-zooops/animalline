@@ -13,22 +13,18 @@
 
 namespace Eccube\Event;
 
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Contracts\EventDispatcher\Event;
+use Symfony\Component\HttpFoundation\Response;
 
-/**
- * Class EventArgs
- */
-class EventArgs extends Event
+class EventArgs extends GenericEvent
 {
     /**
-     * @var Request|null
+     * @var Request
      */
     private $request;
-
     /**
-     * @var Response|null
+     * @var Response
      */
     private $response;
 
@@ -37,39 +33,41 @@ class EventArgs extends Event
      *
      * @param array $arguments
      * @param Request $request
-     * @param Response $response
      */
-    public function __construct(array $arguments = [], ?Request $request = null, ?Response $response = null)
+    public function __construct(array $arguments = [], ?Request $request = null)
     {
         parent::__construct(null, $arguments);
         $this->request = $request;
-        $this->response = $response;
     }
 
-    public function setRequest(Request $request): self
+    /**
+     * @param Request $request
+     */
+    public function setRequest(Request $request)
     {
         $this->request = $request;
-        return $this;
     }
 
-    public function getRequest(): ?Request
+    /**
+     * @return Request
+     */
+    public function getRequest()
     {
         return $this->request;
     }
 
     /**
-     * @param Response|null $response
+     * @param Response $response
      */
-    public function setResponse(Response $response): self
+    public function setResponse(Response $response)
     {
         $this->response = $response;
-        return $this;
     }
 
     /**
-     * @return Response|null
+     * @return Response
      */
-    public function getResponse(): ?Response
+    public function getResponse()
     {
         return $this->response;
     }
@@ -77,8 +75,8 @@ class EventArgs extends Event
     /**
      * @return bool
      */
-    public function hasResponse(): bool
+    public function hasResponse()
     {
-        return $this->response !== null;
+        return $this->response instanceof Response;
     }
 }

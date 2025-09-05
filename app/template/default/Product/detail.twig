@@ -93,7 +93,11 @@ file that was distributed with this source code.
 
 {% block javascript %}
 	<script>
-		eccube.classCategories = {{ class_categories_json|raw }};
+		{% if class_categories_json is defined %}
+			eccube.classCategories = {{ class_categories_json|raw }};
+		{% else %}
+			eccube.classCategories = {};
+		{% endif %}
 
 		function waitForElement(selector, callback, retries = 10) {
 			const el = document.querySelector(selector);
