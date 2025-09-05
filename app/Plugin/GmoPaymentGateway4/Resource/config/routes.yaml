@@ -1,0 +1,9 @@
+gmo_mypage_card_edit:
+    path: /mypage/gmo_card_edit
+    controller: Plugin\GmoPaymentGateway4\Controller\MypageCardController::index
+    methods: [GET, POST]
+
+gmo_mypage_card_edit_delete:
+    path: /mypage/gmo_card_edit/delete
+    controller: Plugin\GmoPaymentGateway4\Controller\MypageCardController::delete
+    methods: [POST]

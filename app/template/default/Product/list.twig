@@ -14,7 +14,11 @@ file that was distributed with this source code.
 
 {% block javascript %}
     <script>
-        eccube.productsClassCategories = {{ products_class_categories_json|raw }};
+        {% if products_class_categories_json is defined %}
+			eccube.productsClassCategories = {{ products_class_categories_json|raw }};
+		{% else %}
+			eccube.productsClassCategories = {};
+		{% endif %}
 
 		function waitForElement(selector, callback, retries = 10) {
 			const el = document.querySelector(selector);
@@ -126,7 +130,11 @@ file that was distributed with this source code.
         });
 	</script>
     <script>
-        eccube.productsClassCategories = {{ products_class_categories_json|raw }};
+        {% if products_class_categories_json is defined %}
+			eccube.productsClassCategories = {{ products_class_categories_json|raw }};
+		{% else %}
+			eccube.productsClassCategories = {};
+		{% endif %}
 
         $(function() {
 

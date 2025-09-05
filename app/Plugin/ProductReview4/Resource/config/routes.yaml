@@ -1,0 +1,23 @@
+product_review_index:
+    path: /product_review/{id}/review
+    controller: Plugin\ProductReview4\Controller\ProductReviewController::index
+    requirements:
+        id: \d+
+    methods: [GET]
+
+product_review_confirm:
+    path: /product_review/{id}/review
+    controller: Plugin\ProductReview4\Controller\ProductReviewController::index
+    requirements:
+        id: \d+
+    methods: [POST]
+
+product_review_complete:
+    path: /product_review/{id}/complete
+    controller: Plugin\ProductReview4\Controller\ProductReviewController::complete
+    requirements:
+        id: \d+
+
+product_review_display:
+    path: /product_review/display
+    controller: Plugin\ProductReview4\Controller\ProductReviewController::display
