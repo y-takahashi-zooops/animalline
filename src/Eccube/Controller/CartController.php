@@ -33,7 +33,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Doctrine\ORM\EntityManagerInterface;
 use Eccube\Common\EccubeConfig;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Eccube\Session\Session;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -82,7 +82,7 @@ class CartController extends AbstractController
         EccubeConfig $eccubeConfig,
         EntityManagerInterface $entityManager,
         TranslatorInterface $translator,
-        SessionInterface $session,
+        Session $session,
         FormFactoryInterface $formFactory,
         EventDispatcherInterface $eventDispatcher,
         RequestStack $requestStack,
@@ -92,10 +92,9 @@ class CartController extends AbstractController
             $eccubeConfig,
             $entityManager,
             $translator,
-            $session,
             $formFactory,
             $eventDispatcher,
-            $requestStack,
+            $session,
             $router
         );
         $this->productClassRepository = $productClassRepository;

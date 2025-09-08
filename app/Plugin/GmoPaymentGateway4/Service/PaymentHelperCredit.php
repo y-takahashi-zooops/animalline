@@ -15,20 +15,68 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Eccube\Common\EccubeConfig;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Twig\Environment;
+use Eccube\Repository\Master\OrderStatusRepository;
+use Eccube\Repository\BaseInfoRepository;
+use Eccube\Repository\CustomerRepository;
+use Eccube\Repository\OrderRepository;
+use Eccube\Repository\PaymentRepository;
+use Eccube\Service\MailService;
+use Eccube\Service\PluginService;
+use Eccube\Service\PurchaseFlow\PurchaseFlow;
+use Plugin\GmoPaymentGateway4\Repository\GmoConfigRepository;
+use Plugin\GmoPaymentGateway4\Repository\GmoOrderPaymentRepository;
+use Plugin\GmoPaymentGateway4\Repository\GmoPaymentMethodRepository;
+use Plugin\GmoPaymentGateway4\Repository\GmoMemberRepository;
+use Plugin\GmoPaymentGateway4\Util\ErrorUtil;
 
 /**
  * クレジット決済処理を行うクラス
  */
 class PaymentHelperCredit extends PaymentHelper
 {
-    protected $entityManager;
-
     public function __construct(
+        ContainerInterface $container,
+        MailerInterface $mailer,
+        Environment $twig,
         EccubeConfig $eccubeConfig,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        PluginService $pluginService,
+        OrderRepository $orderRepository,
+        OrderStatusRepository $orderStatusRepository,
+        BaseInfoRepository $baseInfoRepository,
+        CustomerRepository $customerRepository,
+        PaymentRepository $paymentRepository,
+        MailService $mailService,
+        PurchaseFlow $shoppingPurchaseFlow,
+        GmoConfigRepository $gmoConfigRepository,
+        GmoOrderPaymentRepository $gmoOrderPaymentRepository,
+        GmoPaymentMethodRepository $gmoPaymentMethodRepository,
+        GmoMemberRepository $gmoMemberRepository,
+        ErrorUtil $errorUtil
     ) {
-        $this->eccubeConfig = $eccubeConfig;
-        $this->entityManager = $entityManager;
+        parent::__construct(
+            $container,
+            $mailer,
+            $twig,
+            $eccubeConfig,
+            $entityManager,
+            $pluginService,
+            $orderRepository,
+            $orderStatusRepository,
+            $baseInfoRepository,
+            $customerRepository,
+            $paymentRepository,
+            $mailService,
+            $shoppingPurchaseFlow,
+            $gmoConfigRepository,
+            $gmoOrderPaymentRepository,
+            $gmoPaymentMethodRepository,
+            $gmoMemberRepository,
+            $errorUtil
+        );
     }
 
     /**
