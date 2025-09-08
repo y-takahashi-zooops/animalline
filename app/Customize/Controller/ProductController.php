@@ -151,6 +151,115 @@ class ProductController extends BaseProductController
 
         $this->cartItemRepository = $cartItemRepository;
         $this->cartRepository = $cartRepository;
+        $this->logger = $logger;
+    }
+
+    /**
+     * 商品詳細画面.
+     *
+     * @Route("/products/detail/{id}", name="product_detail", methods={"GET"}, requirements={"id" = "\d+"})
+     *
+     * @Template("Product/detail.twig")
+     *
+     * @ParamConverter("Product", options={"repository_method" = "findWithSortedClassCategories"})
+     *
+     * @param Request $request
+     * @param Product $Product
+     *
+     * @return array
+     */
+    public function detail(Request $request, Product $Product)
+    {
+        if (!$this->checkVisibility($Product)) {
+            throw new NotFoundHttpException();
+        }
+
+        $builder = $this->formFactory->createNamedBuilder(
+            '',
+            AddCartType::class,
+            null,
+            [
+                'product' => $Product,
+                'id_add_product_id' => false,
+            ]
+        );
+
+        $event = new EventArgs(
+            [
+                'builder' => $builder,
+                'Product' => $Product,
+            ],
+            $request
+        );
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_PRODUCT_DETAIL_INITIALIZE);
+
+        $is_favorite = false;
+        if ($this->isGranted('ROLE_USER')) {
+            $Customer = $this->getUser();
+            $is_favorite = $this->customerFavoriteProductRepository->isFavorite($Customer, $Product);
+        }
+
+        // JSONの成型
+        $classCategories = [
+            '__unselected' => [
+                '__unselected' => [
+                    'name' => $this->translator->trans('common.select'),
+                    'product_class_id' => '',
+                ],
+            ],
+        ];
+
+        foreach ($Product->getProductClasses() as $ProductClass) {
+            if (!$ProductClass->isVisible()) {
+                continue;
+            }
+
+            $ClassCategory1 = $ProductClass->getClassCategory1();
+            $ClassCategory2 = $ProductClass->getClassCategory2();
+            if ($ClassCategory2 && !$ClassCategory2->isVisible()) {
+                continue;
+            }
+
+            $id1 = $ClassCategory1 ? (string) $ClassCategory1->getId() : '__unselected2';
+            $id2 = $ClassCategory2 ? (string) $ClassCategory2->getId() : '';
+
+            $name2 = $ClassCategory2
+                ? $ClassCategory2->getName() . (!$ProductClass->getStockFind() ? ' ' . $this->translator->trans('front.product.out_of_stock_label') : '')
+                : $this->translator->trans('common.select');
+
+            if (!isset($classCategories[$id1][''])) {
+                $classCategories[$id1]['#'] = [
+                    'classcategory_id2' => '',
+                    'name' => $this->translator->trans('common.select'),
+                    'product_class_id' => '',
+                ];
+            }
+
+            $classCategories[$id1][$id2] = [
+                'classcategory_id2' => $id2,
+                'name' => $name2,
+                'stock_find' => $ProductClass->getStockFind(),
+                'price01' => $ProductClass->getPrice01() === null ? '' : number_format($ProductClass->getPrice01()),
+                'price02' => number_format($ProductClass->getPrice02()),
+                'price01_inc_tax' => $ProductClass->getPrice01() === null ? '' : number_format($ProductClass->getPrice01IncTax()),
+                'price02_inc_tax' => number_format($ProductClass->getPrice02IncTax()),
+                'product_class_id' => (string) $ProductClass->getId(),
+                'product_code' => $ProductClass->getCode() ?? '',
+                'sale_type' => $ProductClass->getSaleType() ? (string) $ProductClass->getSaleType()->getId() : '',
+                'item_cost' => method_exists($ProductClass, 'getItemCost') ? (float) $ProductClass->getItemCost() : 0.0,
+            ];
+        }
+
+        $classCategoriesJson = json_encode($classCategories, JSON_UNESCAPED_UNICODE);
+
+        return [
+            'title' => $this->title,
+            'subtitle' => $Product->getName(),
+            'form' => $builder->getForm()->createView(),
+            'Product' => $Product,
+            'is_favorite' => $is_favorite,
+            'class_categories_json' => $classCategoriesJson,
+        ];
     }
 
     /**
