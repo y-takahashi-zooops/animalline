@@ -1,6 +1,16 @@
 <?php
 
-use Psr\Log\LoggerInterface;
+/*
+ * This file is part of EC-CUBE
+ *
+ * Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+ *
+ * http://www.ec-cube.co.jp/
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 use Eccube\DependencyInjection\Facade\LoggerFacade;
 
 function log_emergency($message, array $context = [])
@@ -39,24 +49,10 @@ function log_notice($message, array $context = [])
     $logger->notice($message, $context);
 }
 
-/**
- * ログ出力.
- *
- * @param string $message
- * @param array $context
- * @param string $level
- */
-function log_info($message, array $context = [], $level = 'info')
+function log_info($message, array $context = [])
 {
-    static $logger;
-
-    if (null === $logger) {
-        $container = \Eccube\Application::getInstance()->getContainer();
-        /** @var LoggerInterface $logger */
-        $logger = $container->get('monolog.logger.eccube');
-    }
-
-    $logger->log($level, $message, $context);
+    $logger = LoggerFacade::create();
+    $logger->info($message, $context);
 }
 
 function log_debug($message, array $context = [])

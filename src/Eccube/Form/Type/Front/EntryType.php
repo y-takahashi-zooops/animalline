@@ -139,7 +139,7 @@ class EntryType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Customer::class,
-            'password' => '',
+            'plain_password' => '',
             'email' => ''
         ]);
     }
@@ -155,9 +155,9 @@ class EntryType extends AbstractType
 
     public function validatePassword(FormEvent $event)
     {
-        $length = strlen($event->getForm()->getConfig()->getOptions()['password']);
+        $length = strlen($event->getForm()->getConfig()->getOptions()['data']['plain_password']);
         $form = $event->getForm();
-        if (!$event->getForm()->getConfig()->getOptions()['password']) {
+        if (!$event->getForm()->getConfig()->getOptions()['data']['plain_password']) {
             $form['passwordErrors']->addError(new FormError('入力されていません。'));
         }
         if ( $length > 32) {
@@ -171,10 +171,10 @@ class EntryType extends AbstractType
     public function validateEmail(FormEvent $event)
     {
         $form = $event->getForm();
-        if (!$event->getForm()->getConfig()->getOptions()['email']) {
+        if (!$event->getForm()->getConfig()->getOptions()['data']['email']) {
             $form['emailErrors']->addError(new FormError('入力されていません。'));
         }
-        if (!filter_var($event->getForm()->getConfig()->getOptions()['email'], FILTER_VALIDATE_EMAIL) && $event->getForm()->getConfig()->getOptions()['email']) {
+        if (!filter_var($event->getForm()->getConfig()->getOptions()['data']['email'], FILTER_VALIDATE_EMAIL) && $event->getForm()->getConfig()->getOptions()['data']['email']) {
             $form['emailErrors']->addError(new FormError('有効なメールアドレスではありません。'));
         }
     }
