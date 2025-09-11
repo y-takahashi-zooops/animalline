@@ -21,3 +21,35 @@ product_review_complete:
 product_review_display:
     path: /product_review/display
     controller: Plugin\ProductReview4\Controller\ProductReviewController::display
+
+# Admin routes
+product_review_admin_product_review:
+    path: /%eccube_admin_route%/product_review/
+    controller: Plugin\ProductReview4\Controller\Admin\ProductReviewController::index
+    methods: [GET, POST]
+
+product_review_admin_product_review_page:
+    path: /%eccube_admin_route%/product_review/page/{page_no}
+    controller: Plugin\ProductReview4\Controller\Admin\ProductReviewController::index
+    requirements:
+        page_no: \d+
+    methods: [GET, POST]
+
+product_review_admin_product_review_edit:
+    path: /%eccube_admin_route%/product_review/{id}/edit
+    controller: Plugin\ProductReview4\Controller\Admin\ProductReviewController::edit
+    requirements:
+        id: \d+
+    methods: [GET, POST]
+
+product_review_admin_product_review_delete:
+    path: /%eccube_admin_route%/product_review/{id}/delete
+    controller: Plugin\ProductReview4\Controller\Admin\ProductReviewController::delete
+    requirements:
+        id: \d+
+    methods: [DELETE]
+
+product_review_admin_product_review_download:
+    path: /%eccube_admin_route%/product_review/download
+    controller: Plugin\ProductReview4\Controller\Admin\ProductReviewController::download
+    methods: [GET]
