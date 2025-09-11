@@ -276,7 +276,7 @@ class ProductController extends BaseProductController
         }
 
         $builder = $this->formFactory->createNamedBuilder(
-            'add_cart',
+            '',
             AddCartType::class,
             null,
             [
@@ -363,13 +363,6 @@ class ProductController extends BaseProductController
                 'errors' => (string) $form->getErrors(true, false),
             ]);
 
-            // if ($request->isXmlHttpRequest()) {
-            //     return $this->json([
-            //         'done' => false,
-            //         'messages' => ['入力内容に誤りがあります！'],
-            //     ]);
-            // }
-
             return $this->render('Product/detail.twig', [
                 'form' => $form->createView(),
                 'Product' => $Product,
@@ -379,10 +372,6 @@ class ProductController extends BaseProductController
                 'class_categories_json' => $classCategoriesJson,
             ]);
         }
-
-        // if (!$form->isValid()) {
-        //     throw new NotFoundHttpException();
-        // }
 
         $addCartData = $form->getData();
 

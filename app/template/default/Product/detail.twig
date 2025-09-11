@@ -92,126 +92,26 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block javascript %}
-	<script>
-		{% if class_categories_json is defined %}
-			eccube.classCategories = {{ class_categories_json|raw }};
-		{% else %}
-			eccube.classCategories = {};
-		{% endif %}
+    <script>
+        eccube.classCategories = {{ class_categories_as_json(Product)|raw }};
 
-		function waitForElement(selector, callback, retries = 10) {
-			const el = document.querySelector(selector);
-			if (el) {
-				callback(el);
-			} else if (retries > 0) {
-				setTimeout(() => waitForElement(selector, callback, retries - 1), 100);
-			} else {
-				console.warn('Element not found:', selector);
-			}
-		}
+        // 規格2に選択肢を割り当てる。
+        function fnSetClassCategories(form, classcat_id2_selected) {
+            var $form = $(form);
+            var product_id = $form.find('input[name=product_id]').val();
+            var $sele1 = $form.find('select[name=classcategory_id1]');
+            var $sele2 = $form.find('select[name=classcategory_id2]');
+            eccube.setClassCategories($form, product_id, $sele1, $sele2, classcat_id2_selected);
+        }
 
-		function waitForTranslator(callback, retries = 10) {
-			if (typeof Translator !== 'undefined') {
-				callback();
-			} else if (retries > 0) {
-				setTimeout(() => waitForTranslator(callback, retries - 1), 100);
-			} else {
-				console.warn("Translator is not loaded yet.");
-				callback(); // fallback 実行
-			}
-		}
-
-		document.addEventListener('DOMContentLoaded', function () {
-			waitForElement('#form1', function (formElement) {
-				waitForTranslator(function () {
-					try {
-						const $form = $(formElement);
-						const product_id = $form.find('input[name="add_cart[product_id]"]').val();
-						const $sele1 = $form.find('select[name="add_cart[classcategory_id1]"]');
-						const $sele2 = $form.find('select[name="add_cart[classcategory_id2]"]');
-
-						// 初期設定
-						function fnSetClassCategories() {
-							const currentVal = $sele2.val(); // 現在の選択値を保存
-							$sele2.empty();
-							// デフォルトの「選択してください」を追加
-							$sele2.append($('<option></option>').attr('value', '__unselected').text('選択してください'));
-
-							// 規格2のオプションを追加
-							const classcat_id1 = $sele1.val();
-							const categories = eccube.classCategories?.[classcat_id1];
-							if (categories) {
-								$.each(categories, function (key, value) {
-									if (key !== '#') {
-										// 「選択してください」のオプションはスキップ
-										$sele2.append(
-											$('<option></option>').attr('value', value.classcategory_id2).text(value.name)
-										);
-									}
-								});
-							}
-
-							// 再設定（前の選択があればそれを再選択）
-							if (currentVal) {
-								$sele2.val(currentVal);
-							}
-						}
-
-						$sele1.on('change', fnSetClassCategories);
-
-						// 初期化
-						fnSetClassCategories();
-
-						{% if form.classcategory_id2 is defined %}
-							fnSetClassCategories({{ form.classcategory_id2.vars.value|json_encode|raw }});
-						{% elseif form.classcategory_id1 is defined %}
-							eccube.checkStock($form, {{ Product.id }}, {{ form.classcategory_id1.vars.value|json_encode|raw }}, null);
-						{% else %}
-							// classCategoriesがない商品に関してはデフォルト値のvalを設定する
-							// $form.find('input[name="add_cart[ProductClass]"]').val(eccube.classCategories.__unselected2[""].product_class_id);
-							if (eccube.classCategories
-                                && eccube.classCategories['__unselected']
-                                && eccube.classCategories['__unselected']['']
-							) {
-								const defaultProductClassId = eccube.classCategories['__unselected'][''].product_class_id;
-								$form.find('input[name="add_cart[ProductClass]"]').val(defaultProductClassId);
-							}
-							fnSetClassCategories('');
-						{% endif %}
-
-					} catch (e) {
-						console.error("Error setting classCategories:", e);
-					}
-				});
-			});
-		});
-	</script>
-	<script>
-		// プルダウンが選択されたときに要素を更新する
-		function updateProductClassId() {
-			const id1 = $('select[name="add_cart[classcategory_id1]"]').val();
-			const id2Element = $('select[name="add_cart[classcategory_id2]"]');
-    		const id2 = id2Element.length > 0 ? id2Element.val() : '';
-
-			if (eccube.classCategories &&
-				eccube.classCategories[id1] &&
-				eccube.classCategories[id1][id2]
-			) {
-				const productClassId = eccube.classCategories[id1][id2].product_class_id;
-				$('input[name="add_cart[ProductClass]"]').val(productClassId);
-			} else {
-				$('input[name="add_cart[ProductClass]"]').val('');
-			}
-		}
-
-		$('select[name="add_cart[classcategory_id1]"]').on('change', function () {
-			// set classcategory_id2 options...
-			updateProductClassId();
-		});
-		$('select[name="add_cart[classcategory_id2]"]').on('change', function () {
-			updateProductClassId();
-		});
-	</script>
+        {% if form.classcategory_id2 is defined %}
+        fnSetClassCategories(
+            $('#form1'), {{ form.classcategory_id2.vars.value|json_encode|raw }}
+        );
+        {% elseif form.classcategory_id1 is defined %}
+        eccube.checkStock($('#form1'), {{ Product.id }}, {{ form.classcategory_id1.vars.value|json_encode|raw }}, null);
+        {% endif %}
+    </script>
     <script>
         $(function() {
             // bfcache無効化
@@ -243,45 +143,37 @@ file that was distributed with this source code.
             $('.add-cart').on('click', function(event) {
                 {% if form.classcategory_id1 is defined %}
                 // 規格1フォームの必須チェック
-                const $cat1 = $('select[name="add_cart[classcategory_id1]"]');
-				if ($cat1.length > 0) {
-					if ($cat1.val() === '__unselected' || $cat1.val() === '') {
-						$cat1[0].setCustomValidity('{{ '項目が選択されていません'|trans }}');
-						return true;
-					} else {
-						$cat1[0].setCustomValidity('');
-					}
-				}
+                if ($('#classcategory_id1').val() == '__unselected' || $('#classcategory_id1').val() == '') {
+                    $('#classcategory_id1')[0].setCustomValidity('{{ '項目が選択されていません'|trans }}');
+                    return true;
+                } else {
+                    $('#classcategory_id1')[0].setCustomValidity('');
+                }
                 {% endif %}
 
                 {% if form.classcategory_id2 is defined %}
                 // 規格2フォームの必須チェック
-                const $cat2 = $('select[name="add_cart[classcategory_id2]"]');
-				if ($cat2.length > 0) {
-					if ($cat2.val() === '__unselected' || $cat2.val() === '') {
-						$cat2[0].setCustomValidity('{{ '項目が選択されていません'|trans }}');
-						return true;
-					} else {
-						$cat2[0].setCustomValidity('');
-					}
-				}
+                if ($('#classcategory_id2').val() == '__unselected' || $('#classcategory_id2').val() == '') {
+                    $('#classcategory_id2')[0].setCustomValidity('{{ '項目が選択されていません'|trans }}');
+                    return true;
+                } else {
+                    $('#classcategory_id2')[0].setCustomValidity('');
+                }
                 {% endif %}
 
                 // 個数フォームのチェック(通常注文)
-					const $normalQty = $('#add_cart_normal_quantity');
-					if ($normalQty.length && $normalQty.val() < 1) {
-						$normalQty[0].setCustomValidity('{{ '1以上で入力してください。'|trans }}');
+					if ($('#normal_quantity').val() < 1) {
+						$('#normal_quantity')[0].setCustomValidity('{{ '1以上で入力してください。'|trans }}');
 						return true;
 					} else {
-						$normalQty[0].setCustomValidity('');
+						$('#normal_quantity')[0].setCustomValidity('');
 					}
                 // 個数フォームのチェック(定期便)
-					const $subQty = $('#add_cart_subscription_quantity');
-					if ($subQty.length && $subQty.val() < 1) {
-						$subQty[0].setCustomValidity('{{ '1以上で入力してください。'|trans }}');
+					if ($('#subscription_quantity').val() < 1) {
+						$('#subscription_quantity')[0].setCustomValidity('{{ '1以上で入力してください。'|trans }}');
 						return true;
 					} else {
-						$subQty[0].setCustomValidity('');
+						$('#subscription_quantity')[0].setCustomValidity('');
 					}
 
                 event.preventDefault();
@@ -325,8 +217,8 @@ file that was distributed with this source code.
         });
 
 		// 通常注文が押されたときは、通常注文を活性に、定期便を非活性にする
-		$('#add_cart_order_type_0').on('click', function (e) {
-       		 if(document.getElementById("add_cart_order_type_0").checked){
+		$('#order_type_0').on('click', function (e) {
+       		 if(document.getElementById("order_type_0").checked){
             	$('.normal_block').removeClass('glay');
 	            $('.normal_readonly').removeAttr('readonly');
 
@@ -337,8 +229,8 @@ file that was distributed with this source code.
 		});
 
 		// 定期便が押されたときは、通常注文を非活性に、定期便を活性にする
-		$('#add_cart_order_type_1').on('click', function (e) {
-			if(document.getElementById("add_cart_order_type_1").checked){
+		$('#order_type_1').on('click', function (e) {
+			if(document.getElementById("order_type_1").checked){
 				$('.subscription_cycle_block').show();
 				$('.subscription_block').removeClass('glay');
 				$('.subscription_readonly').removeAttr('readonly');
@@ -354,8 +246,8 @@ file that was distributed with this source code.
 		});
 
 		{% if Product.ClassName1 %}
-			$('#add_cart_order_type_1').prop('checked', true);
-			$('#add_cart_order_type_1').click();
+			$('#order_type_1').prop('checked', true);
+			$('#order_type_1').click();
 		{% endif %}
 	</script>
 {% endblock %}
@@ -466,11 +358,7 @@ file that was distributed with this source code.
 							{% endfor %}
 						</div>
 					{% endif %}
-					{{ form_start(form, {
-						action: url('product_add_cart', {id: Product.id}),
-						method: 'post',
-						attr: { id: 'form1' }
-					}) }}
+					<form action="{{ url('product_add_cart', {id:Product.id}) }}" method="post" id="form1" name="form1">
 						{% if Product.stock_find %}
 							{# 仕様 #}
 							{% if Product.ClassName1 %}
@@ -487,18 +375,7 @@ file that was distributed with this source code.
 									{{ form_errors(form.classcategory_id2) }}
 								</div>
 							{% endif %}
-							<div class="ec-select">
-								{{ form_row(form.ProductClass) }}
-								{{ form_errors(form.ProductClass) }}
-							</div>
-							{{ form_widget(form.quantity, {
-								'attr': {
-									'value': 1,
-									'min': 1,
-									'class': 'form-control'
-								}
-							}) }}
-							{{ form_errors(form.quantity) }}
+
 							<div class="ec-productRole__order">
 								<ul class="order_list">
 									<li class="order_list_block normal_block" {% if Product.ClassName1 %}style="display: none"{% endif %}>
@@ -506,12 +383,7 @@ file that was distributed with this source code.
 											{{ form_widget(form.order_type[0]) }}
 											<div class="ec-numberInput">
 												<span>{{ '数量'|trans }}</span>
-												{{ form_widget(form.normal_quantity, {
-													'attr': {
-														'class': 'normal_readonly form-control',
-														'readonly': 'readonly'
-													}
-												}) }}
+												{{ form_widget(form.normal_quantity, {'attr': {'class': 'normal_readonly'}}) }}
 												{{ form_errors(form.normal_quantity) }}
 											</div>
 										</div>
@@ -521,12 +393,7 @@ file that was distributed with this source code.
 											{{ form_widget(form.order_type[1]) }}
 											<div class="ec-numberInput">
 												<span>{{ '数量'|trans }}</span>
-												{{ form_widget(form.subscription_quantity, {
-													'attr': {
-														'class': 'subscription_readonly form-control',
-														'readonly': 'readonly'
-													}
-												}) }}
+												{{ form_widget(form.subscription_quantity, {'attr': {'class': 'subscription_readonly', 'readonly':'readonly'}}) }}
 												{{ form_errors(form.subscription_quantity) }}
 											</div>
 										</div>
@@ -534,11 +401,11 @@ file that was distributed with this source code.
 											<li style="font-weight: bold;">お届けサイクル：</li>
 											<li class="subscription_cycle">
 												<div class="mb-2">{{ form_widget(form.cycle_type[0]) }}</div>
-												{{ form_widget(form.month) }}
+												{{ form_row(form.month) }}
 											</li>
 											<li class="subscription_cycle">
 												<div class="mb-2">{{ form_widget(form.cycle_type[1]) }}</div>
-												{{ form_widget(form.day) }}
+												{{ form_row(form.day) }}
 											</li>
 										</ul>
 									</li>
@@ -556,7 +423,8 @@ file that was distributed with this source code.
 								</button>
 							</div>
 						{% endif %}
-					{{ form_end(form) }}
+						{{ form_rest(form) }}
+					</form>
 					<div class="ec-modal">
 						<div class="ec-modal-overlay">
 							<div class="ec-modal-wrap">
