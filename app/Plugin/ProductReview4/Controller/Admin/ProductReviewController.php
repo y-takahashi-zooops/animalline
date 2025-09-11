@@ -25,7 +25,7 @@ use Plugin\ProductReview4\Form\Type\Admin\ProductReviewType;
 use Plugin\ProductReview4\Repository\ProductReviewConfigRepository;
 use Plugin\ProductReview4\Repository\ProductReviewRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
