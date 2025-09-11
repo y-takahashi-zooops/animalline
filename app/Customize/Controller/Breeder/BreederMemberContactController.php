@@ -832,7 +832,7 @@ class BreederMemberContactController extends AbstractController
             }
         }
 
-        if(!$form->get('files')->isValid()){
+        if($form->isSubmitted() && !$form->get('files')->isValid()) {
             $newFilename = "";
         }
 
