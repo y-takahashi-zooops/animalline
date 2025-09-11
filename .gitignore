@@ -7,3 +7,5 @@
 /html/upload
 /app/DoctrineMigrations/
 bin/.phpunit
+node_modules/
+.DS_Store
