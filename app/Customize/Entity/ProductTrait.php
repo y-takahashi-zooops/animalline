@@ -11,9 +11,9 @@ use Eccube\Annotation\EntityExtension;
 trait ProductTrait
 {
     /**
-     * @ORM\Column(name="item_weight", type="decimal", precision=5, scale=2, nullable=false, options={"default":0})
+     * @ORM\Column(name="item_weight", type="decimal", precision=6, scale=2, nullable=true)
      */
-    public $item_weight;
+    private $item_weight;
 
     /**
      * @ORM\Column(name="maker_id", type="integer", nullable=true)
@@ -21,18 +21,18 @@ trait ProductTrait
     public $maker_id;
 
     /**
-     * @ORM\Column(name="is_check_auth", type="smallint", nullable=true, options={"default":0})
+     * @ORM\Column(name="is_check_auth", type="boolean", nullable=true)
      */
-    public $is_check_auth = 0;
+    private $is_check_auth;
 
     /**
      * Set item_weight.
      *
-     * @param string $item_weight
+     * @param float|null $item_weight
      *
      * @return Product
      */
-    public function setItemWeight($item_weight)
+    public function setItemWeight(?float $item_weight): self
     {
         $this->item_weight = $item_weight;
 
@@ -42,9 +42,9 @@ trait ProductTrait
     /**
      * Get item_weight.
      *
-     * @return integer
+     * @return float|null
      */
-    public function getItemWeight()
+    public function getItemWeight(): ?float
     {
         return $this->item_weight;
     }
@@ -76,11 +76,11 @@ trait ProductTrait
     /**
      * Set is_check_auth.
      *
-     * @param ?int $is_check_auth
+     * @param ?bool $is_check_auth
      *
      * @return Product
      */
-    public function setIsCheckAuth(?int $is_check_auth): self
+    public function setIsCheckAuth(?bool $is_check_auth): self
     {
         $this->is_check_auth = $is_check_auth;
 
@@ -92,8 +92,8 @@ trait ProductTrait
      *
      * @return bool
      */
-    public function getIsCheckAuth(): bool
+    public function getIsCheckAuth(): ?bool
     {
-        return (bool)$this->is_check_auth;
+        return $this->is_check_auth;
     }
 }

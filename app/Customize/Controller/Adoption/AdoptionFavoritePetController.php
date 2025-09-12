@@ -37,7 +37,7 @@ class AdoptionFavoritePetController extends AbstractController
     /**
      * @var EntityManagerInterface
      */
-    protected EntityManagerInterface $entityManager;
+    protected $entityManager;
 
     /**
      * AdoptionController constructor.

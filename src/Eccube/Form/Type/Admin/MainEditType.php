@@ -59,7 +59,7 @@ class MainEditType extends AbstractType
     public function __construct(
         EntityManagerInterface $entityManager,
         DeviceTypeRepository $deviceTypeRepository,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
     ) {
         $this->entityManager = $entityManager;
         $this->deviceTypeRepository = $deviceTypeRepository;
@@ -145,11 +145,11 @@ class MainEditType extends AbstractType
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
                 ],
-            ])->add('meta_tags', TextAreaType::class, [
+            ])->add('meta_tags', TextareaType::class, [
                 'required' => false,
                 'constraints' => [
                     new Assert\Length([
-                        'max' => $this->eccubeConfig['eccube_lltext_len'],
+                        'max' => $this->eccubeConfig['eccube_ltext_len'],
                     ]),
                 ],
             ])
@@ -210,7 +210,7 @@ class MainEditType extends AbstractType
                 // urlの重複チェック
                 $qb = $this->entityManager->createQueryBuilder();
                 $qb->select('count(p)')
-                    ->from('Eccube\\Entity\\Page', 'p')
+                    ->from(Page::class, 'p')
                     ->where('p.url = :url')
                     ->setParameter('url', $Page->getUrl());
 
@@ -221,6 +221,13 @@ class MainEditType extends AbstractType
                         ->setParameter('page_id', $Page->getId());
                 }
 
+                // 確認ページの編集ページ存在している場合
+                if ($Page->getEditType() == Page::EDIT_TYPE_DEFAULT_CONFIRM && $Page->getMasterPage()) {
+                    $qb
+                        ->andWhere('p.id <> :master_page_id')
+                        ->setParameter('master_page_id', $Page->getMasterPage()->getId());
+                }
+
                 $count = $qb->getQuery()->getSingleScalarResult();
                 if ($count > 0) {
                     $form['url']->addError(new FormError(trans('admin.content.page_url_exists')));
@@ -229,7 +236,7 @@ class MainEditType extends AbstractType
                 // Page::EDIT_TYPE_USER ファイルの重複チェック
                 $qb = $this->entityManager->createQueryBuilder();
                 $qb->select('count(p)')
-                    ->from('Eccube\\Entity\\Page', 'p')
+                    ->from(Page::class, 'p')
                     ->where('p.file_name = :file_name')
                     ->andWhere('p.edit_type = :edit_type')
                     ->setParameter('file_name', $Page->getFileName())
@@ -251,7 +258,7 @@ class MainEditType extends AbstractType
                 if (Page::EDIT_TYPE_USER === $Page->getEditType()) {
                     $qb = $this->entityManager->createQueryBuilder();
                     $qb->select('count(p)')
-                        ->from('Eccube\\Entity\\Page', 'p')
+                        ->from(Page::class, 'p')
                         ->where('p.file_name = :file_name')
                         ->andWhere('p.edit_type = :edit_type')
                         ->setParameter('file_name', $Page->getFileName())

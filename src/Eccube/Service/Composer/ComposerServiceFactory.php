@@ -13,8 +13,7 @@
 
 namespace Eccube\Service\Composer;
 
-use Eccube\Entity\BaseInfo;
-use Eccube\Repository\BaseInfoRepository;
+use Psr\Container\ContainerInterface;
 
 class ComposerServiceFactory
 {
@@ -25,8 +24,8 @@ class ComposerServiceFactory
         $this->composerApiService = $composerApiService;
     }
 
-    public function createService(): ComposerApiService
+    public static function createService(ContainerInterface $container)
     {
-        return $this->composerApiService;
+        return $container->get(ComposerApiService::class);
     }
 }

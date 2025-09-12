@@ -16,10 +16,12 @@ namespace Eccube\Entity;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Inflector\Inflector;
-use Doctrine\Inflector\InflectorFactory;
+// use Doctrine\Inflector\InflectorFactory;
+use Doctrine\Inflector\NoopWordInflector;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\MappedSuperclass;
 use Doctrine\ORM\Proxy\Proxy;
+use Eccube\DependencyInjection\Facade\AnnotationReaderFacade;
 use Eccube\Util\StringUtil;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
@@ -28,12 +30,12 @@ use Symfony\Component\Serializer\Serializer;
 /** @MappedSuperclass */
 abstract class AbstractEntity implements \ArrayAccess
 {
-    private $AnnotationReader;
+    #[\ReturnTypeWillChange]
 
     public function offsetExists($offset): bool
     {
-        $inflector = InflectorFactory::create()->build();
-	$method = $inflector->classify($offset);
+        $inflector = new Inflector(new NoopWordInflector(), new NoopWordInflector());
+        $method = $inflector->classify($offset);
 
         return method_exists($this, $method)
             || method_exists($this, "get$method")
@@ -41,13 +43,15 @@ abstract class AbstractEntity implements \ArrayAccess
             || method_exists($this, "has$method");
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value): void
     {
     }
 
-    public function offsetGet($offset): mixed
+    #[\ReturnTypeWillChange]
+    public function offsetGet($offset)
     {
-        $inflector = InflectorFactory::create()->build();
+        $inflector = new Inflector(new NoopWordInflector(), new NoopWordInflector());
         $method = $inflector->classify($offset);
 
         if (method_exists($this, $method)) {
@@ -61,6 +65,7 @@ abstract class AbstractEntity implements \ArrayAccess
         }
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset): void
     {
     }
@@ -73,7 +78,7 @@ abstract class AbstractEntity implements \ArrayAccess
      * @param \ReflectionClass $parentClass 親のクラス. 本メソッドの内部的に使用します.
      * @param string[] $excludeAttribute 除外したいフィールド名の配列
      */
-    public function setPropertiesFromArray(array $arrProps, array $excludeAttribute = [], \ReflectionClass $parentClass = null)
+    public function setPropertiesFromArray(array $arrProps, array $excludeAttribute = [], ?\ReflectionClass $parentClass = null)
     {
         $objReflect = null;
         if (is_object($parentClass)) {
@@ -109,7 +114,7 @@ abstract class AbstractEntity implements \ArrayAccess
      *
      * @return array
      */
-    public function toArray(array $excludeAttribute = ['__initializer__', '__cloner__', '__isInitialized__', 'AnnotationReader'], \ReflectionClass $parentClass = null)
+    public function toArray(array $excludeAttribute = ['__initializer__', '__cloner__', '__isInitialized__'], ?\ReflectionClass $parentClass = null)
     {
         $objReflect = null;
         if (is_object($parentClass)) {
@@ -155,7 +160,7 @@ abstract class AbstractEntity implements \ArrayAccess
      *
      * @return array
      */
-    public function toNormalizedArray(array $excludeAttribute = ['__initializer__', '__cloner__', '__isInitialized__', 'AnnotationReader'])
+    public function toNormalizedArray(array $excludeAttribute = ['__initializer__', '__cloner__', '__isInitialized__'])
     {
         $arrResult = $this->toArray($excludeAttribute);
         foreach ($arrResult as &$value) {
@@ -186,7 +191,7 @@ abstract class AbstractEntity implements \ArrayAccess
      *
      * @return string
      */
-    public function toJSON(array $excludeAttribute = ['__initializer__', '__cloner__', '__isInitialized__', 'AnnotationReader'])
+    public function toJSON(array $excludeAttribute = ['__initializer__', '__cloner__', '__isInitialized__'])
     {
         return json_encode($this->toNormalizedArray($excludeAttribute));
     }
@@ -198,10 +203,10 @@ abstract class AbstractEntity implements \ArrayAccess
      *
      * @return string
      */
-    public function toXML(array $excludeAttribute = ['__initializer__', '__cloner__', '__isInitialized__', 'AnnotationReader'])
+    public function toXML(array $excludeAttribute = ['__initializer__', '__cloner__', '__isInitialized__'])
     {
         $ReflectionClass = new \ReflectionClass($this);
-        $serializer = new Serializer([new PropertyNormalizer()], [new XmlEncoder($ReflectionClass->getShortName())]);
+        $serializer = new Serializer([new PropertyNormalizer()], [new XmlEncoder([XmlEncoder::ROOT_NODE_NAME => $ReflectionClass->getShortName()])]);
 
         $xml = $serializer->serialize($this->toNormalizedArray($excludeAttribute), 'xml');
         if ('\\' === DIRECTORY_SEPARATOR) {
@@ -228,34 +233,6 @@ abstract class AbstractEntity implements \ArrayAccess
     }
 
     /**
-     * Set AnnotationReader.
-     *
-     * @param Reader $Reader
-     *
-     * @return AbstractEntity
-     */
-    public function setAnnotationReader(Reader $Reader)
-    {
-        $this->AnnotationReader = $Reader;
-
-        return $this;
-    }
-
-    /**
-     * Get AnnotationReader.
-     *
-     * @return Reader
-     */
-    public function getAnnotationReader()
-    {
-        if ($this->AnnotationReader) {
-            return $this->AnnotationReader;
-        }
-
-        return new \Doctrine\Common\Annotations\AnnotationReader();
-    }
-
-    /**
      * Convert to Entity of Identity value to associative array.
      *
      * @param AbstractEntity $Entity
@@ -273,7 +250,8 @@ abstract class AbstractEntity implements \ArrayAccess
         $Properties = $PropReflect->getProperties();
 
         foreach ($Properties as $Property) {
-            $anno = $this->getAnnotationReader()->getPropertyAnnotation($Property, Id::class);
+            $AnnotationReader = AnnotationReaderFacade::create();
+            $anno = $AnnotationReader->getPropertyAnnotation($Property, Id::class);
             if ($anno) {
                 $Property->setAccessible(true);
                 $Result[$Property->getName()] = $Property->getValue($Entity);

@@ -9,9 +9,9 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 #}
 {# ヘッダーの切り替え #}
-{% if request.get('ReturnPath') =="adoption_mypage" %}
+{% if app.request.get('ReturnPath') =="adoption_mypage" %}
     {% set base_template = 'adoption_frame.twig' %}
-{% elseif request.get('ReturnPath') =="breeder_mypage" %}
+{% elseif app.request.get('ReturnPath') =="breeder_mypage" %}
     {% set base_template = 'breeder_frame.twig' %}
 {% else %}
     {% set base_template = 'normal_frame.twig' %}
@@ -94,12 +94,12 @@ file that was distributed with this source code.
                         </dl>
                         <dl>
                             <dt>
-                                {{ form_label(form.password, 'パスワード', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                {{ form_label(form.plain_password, 'パスワード', { 'label_attr': { 'class': 'ec-label' }}) }}
                             </dt>
                             <dd>
                                 ********
-                                {{ form_widget(form.password.first, { type : 'hidden' }) }}
-                                {{ form_widget(form.password.second, { type : 'hidden' }) }}
+                                {{ form_widget(form.plain_password.first, { type : 'hidden' }) }}
+                                {{ form_widget(form.plain_password.second, { type : 'hidden' }) }}
                             </dd>
                         </dl>
                         <dl>
@@ -150,7 +150,7 @@ file that was distributed with this source code.
                     <div class="ec-registerRole__actions">
                         <div class="ec-off4Grid">
                             <div class="ec-off4Grid__cell">
-                                <input type="hidden" name="ReturnPath" value="{{request.get('ReturnPath')}}" />
+                                <input type="hidden" name="ReturnPath" value="{{app.request.get('ReturnPath')}}" />
                                 <button class="ec-blockBtn--action" type="submit" name="mode" value="complete">{{ '会員登録をする'|trans }}</button>
                             </div>
                         </div>

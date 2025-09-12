@@ -22,12 +22,7 @@ use Eccube\Util\CacheUtil;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-// use Twig_Environment;
 use Twig\Environment;
-use Symfony\Component\Form\FormFactoryInterface;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * Class ShopController
@@ -45,41 +40,20 @@ class ShopController extends AbstractController
     protected $baseInfoRepository;
 
     /**
-     * @var FormFactoryInterface
-     */
-    protected FormFactoryInterface $formFactory;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    protected EntityManagerInterface $entityManager;
-
-    /**
      * ShopController constructor.
      *
      * @param Environment $twig
      * @param BaseInfoRepository $baseInfoRepository
-     * @param FormFactoryInterface $formFactory
      */
-    public function __construct(
-        Environment $twig,
-        BaseInfoRepository $baseInfoRepository,
-        FormFactoryInterface $formFactory,
-        EntityManagerInterface $entityManager,
-        EventDispatcherInterface $eventDispatcher,
-        SessionInterface $session
-    )
+    public function __construct(Environment $twig, BaseInfoRepository $baseInfoRepository)
     {
         $this->baseInfoRepository = $baseInfoRepository;
         $this->twig = $twig;
-        $this->formFactory = $formFactory;
-        $this->entityManager = $entityManager;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->session = $session;
     }
 
     /**
-     * @Route("/%eccube_admin_route%/setting/shop", name="admin_setting_shop")
+     * @Route("/%eccube_admin_route%/setting/shop", name="admin_setting_shop", methods={"GET", "POST"})
+     *
      * @Template("@admin/Setting/Shop/shop_master.twig")
      *
      * @param Request $request

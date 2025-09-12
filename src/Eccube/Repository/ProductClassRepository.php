@@ -13,10 +13,10 @@
 
 namespace Eccube\Repository;
 
+use Doctrine\Persistence\ManagerRegistry as RegistryInterface;
 use Eccube\Doctrine\Query\Queries;
 use Eccube\Entity\ProductClass;
 use Eccube\Util\StringUtil;
-use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * ProductClassRepository
@@ -32,7 +32,7 @@ class ProductClassRepository extends AbstractRepository
     protected $queries;
 
     public function __construct(
-        ManagerRegistry $registry,
+        RegistryInterface $registry,
         Queries           $queries
     )
     {

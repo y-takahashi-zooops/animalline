@@ -20,7 +20,6 @@ use Eccube\Exception\PluginApiException;
 use Eccube\Repository\BaseInfoRepository;
 use Eccube\Repository\PluginRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Psr\Log\LoggerInterface;
 
 class PluginApiService
 {
@@ -52,11 +51,6 @@ class PluginApiService
     private $pluginRepository;
 
     /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
      * PluginApiService constructor.
      *
      * @param EccubeConfig $eccubeConfig
@@ -67,18 +61,12 @@ class PluginApiService
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function __construct(
-        EccubeConfig $eccubeConfig,
-        RequestStack $requestStack,
-        BaseInfoRepository $baseInfoRepository,
-        PluginRepository $pluginRepository,
-        LoggerInterface $logger
-    ) {
+    public function __construct(EccubeConfig $eccubeConfig, RequestStack $requestStack, BaseInfoRepository $baseInfoRepository, PluginRepository $pluginRepository)
+    {
         $this->eccubeConfig = $eccubeConfig;
         $this->requestStack = $requestStack;
         $this->baseInfoRepository = $baseInfoRepository;
         $this->pluginRepository = $pluginRepository;
-        $this->logger = $logger;
     }
 
     /**
@@ -215,7 +203,7 @@ class PluginApiService
      * @param string $pluginVersion
      * @param string $remoteVersion
      *
-     * @return boolean
+     * @return bool
      */
     private function isUpdate($pluginVersion, $remoteVersion)
     {
@@ -328,7 +316,7 @@ class PluginApiService
         $info['message'] = $message;
         curl_close($curl);
 
-        $this->logger->info('http get_info', $info);
+        log_info('http get_info', $info);
 
         if ($info['http_code'] !== 200) {
             throw new PluginApiException($info);

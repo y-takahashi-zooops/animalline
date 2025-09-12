@@ -97,9 +97,12 @@ class BreederMemberContactController extends AbstractController
     /**
      * @var EntityManagerInterface
      */
-    protected EntityManagerInterface $entityManager;
+    protected $entityManager;
 
-    protected FormFactoryInterface $formFactory;
+    /**
+     * @var FormFactoryInterface
+     */
+    protected $formFactory;
 
 
     /**
@@ -829,7 +832,7 @@ class BreederMemberContactController extends AbstractController
             }
         }
 
-        if(!$form->get('files')->isValid()){
+        if($form->isSubmitted() && !$form->get('files')->isValid()) {
             $newFilename = "";
         }
 

@@ -51,7 +51,7 @@ class ComposerRequireAlreadyInstalledPluginsCommand extends Command
     public function __construct(
         ComposerApiService $composerService,
         PluginRepository $pluginRepository,
-        PluginApiService $pluginApiService
+        PluginApiService $pluginApiService,
     ) {
         parent::__construct();
         $this->composerService = $composerService;
@@ -75,7 +75,7 @@ class ComposerRequireAlreadyInstalledPluginsCommand extends Command
         $Plugins = $this->pluginRepository->matching($criteria);
 
         foreach ($Plugins as $Plugin) {
-            $packageNames[] = 'ec-cube/'.$Plugin->getCode().':'.$Plugin->getVersion();
+            $packageNames[] = 'ec-cube/'.strtolower($Plugin->getCode()).':'.$Plugin->getVersion();
             $data = $this->pluginApiService->getPlugin($Plugin->getCode());
             if (isset($data['version_check']) && !$data['version_check']) {
                 $unSupportedPlugins[] = $Plugin;
@@ -90,12 +90,14 @@ class ComposerRequireAlreadyInstalledPluginsCommand extends Command
             ]);
             $question = new ConfirmationQuestion($message);
             if (!$this->io->askQuestion($question)) {
-                return;
+                return 1;
             }
         }
 
         if ($packageNames) {
             $this->composerService->execRequire(implode(' ', $packageNames), $this->io);
         }
+
+        return 0;
     }
 }

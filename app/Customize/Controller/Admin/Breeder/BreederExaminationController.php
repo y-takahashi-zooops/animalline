@@ -58,11 +58,6 @@ class BreederExaminationController extends AbstractController
     protected $breederHouseRepository;
 
     /**
-     * @var EntityManagerInterface
-     */
-    protected EntityManagerInterface $entityManager;
-
-    /**
      * BreederExaminationController constructor.
      * @param BreedersRepository $breedersRepository
      * @param BreederExaminationInfoRepository $breederExaminationInfoRepository
@@ -71,7 +66,6 @@ class BreederExaminationController extends AbstractController
      * @param BreederHouseRepository $breederHouseRepository
      */
     public function __construct(
-        EntityManagerInterface $entityManager,
         BreedersRepository               $breedersRepository,
         BreederExaminationInfoRepository $breederExaminationInfoRepository,
         CustomerRepository               $customerRepository,
@@ -83,7 +77,6 @@ class BreederExaminationController extends AbstractController
         $this->customerRepository = $customerRepository;
         $this->mailService = $mailService;
         $this->breederHouseRepository = $breederHouseRepository;
-        $this->entityManager = $entityManager;
     }
 
     /**

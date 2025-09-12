@@ -15,9 +15,13 @@ namespace Customize\Controller;
 
 use Eccube\Entity\BaseInfo;
 use Eccube\Entity\Product;
+use Eccube\Entity\Master\ProductStatus;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Eccube\Form\Type\AddCartType;
+use Eccube\Form\Type\SearchProductType;
+use Eccube\Form\Type\Master\ProductListMaxType;
+use Eccube\Form\Type\Master\ProductListOrderByType;
 use Eccube\Repository\BaseInfoRepository;
 use Eccube\Repository\CustomerFavoriteProductRepository;
 use Eccube\Repository\Master\ProductListMaxRepository;
@@ -40,6 +44,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Knp\Bundle\PaginatorBundle\Pagination\SlidingPagination;
 use Doctrine\ORM\EntityManagerInterface;
 use Eccube\Common\EccubeConfig;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -89,14 +94,44 @@ class ProductController extends BaseProductController
     protected $cartItemRepository;
 
     /**
+     * @var CartRepository
+     */
+    protected $cartRepository;
+
+    /**
      * @var LoggerInterface
      */
     protected $logger;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
+     * @var FormFactoryInterface
+     */
+    protected $formFactory;
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    protected $eventDispatcher;
+
+    /**
+     * @var EccubeConfig
+     */
+    protected $eccubeConfig;
+
+    /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
+
+    /**
      * @var SessionInterface
      */
-    protected SessionInterface $session;
+    protected $session;
 
     private $title = '';
 
@@ -156,6 +191,274 @@ class ProductController extends BaseProductController
 
         $this->cartItemRepository = $cartItemRepository;
         $this->cartRepository = $cartRepository;
+        $this->logger = $logger;
+        $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->eccubeConfig = $eccubeConfig;
+        $this->translator = $translator;
+        $this->session = $session;
+    }
+
+    /**
+     * 商品一覧画面.
+     *
+     * @Route("/products/list", name="product_list")
+     * @Template("Product/list.twig")
+     */
+    public function index(Request $request, PaginatorInterface $paginator)
+    {
+        // Doctrine SQLFilter
+        if ($this->BaseInfo->isOptionNostockHidden()) {
+            $this->entityManager->getFilters()->enable('option_nostock_hidden');
+        }
+
+        // handleRequestは空のqueryの場合は無視するため
+        if ($request->getMethod() === 'GET') {
+            $request->query->set('pageno', $request->query->get('pageno', ''));
+        }
+
+        // searchForm
+        /* @var $builder \Symfony\Component\Form\FormBuilderInterface */
+        $builder = $this->formFactory->createNamedBuilder('', SearchProductType::class);
+
+        if ($request->getMethod() === 'GET') {
+            $builder->setMethod('GET');
+        }
+
+        $event = new EventArgs(
+            [
+                'builder' => $builder,
+            ],
+            $request
+        );
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_PRODUCT_INDEX_INITIALIZE);
+
+        /* @var $searchForm \Symfony\Component\Form\FormInterface */
+        $searchForm = $builder->getForm();
+
+        $searchForm->handleRequest($request);
+
+        // paginator
+        $searchData = $searchForm->getData();
+        $qb = $this->productRepository->getQueryBuilderBySearchData($searchData, $this->getUser());
+
+        $event = new EventArgs(
+            [
+                'searchData' => $searchData,
+                'qb' => $qb,
+            ],
+            $request
+        );
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_PRODUCT_INDEX_SEARCH);
+        $searchData = $event->getArgument('searchData');
+
+        $query = $qb->getQuery()
+            ->useResultCache(true, $this->eccubeConfig['eccube_result_cache_lifetime_short']);
+
+        /** @var SlidingPagination $pagination */
+        $pagination = $paginator->paginate(
+            $query,
+            !empty($searchData['pageno']) ? $searchData['pageno'] : 1,
+            !empty($searchData['disp_number']) ? $searchData['disp_number']->getId() : $this->productListMaxRepository->findOneBy([], ['sort_no' => 'ASC'])->getId()
+        );
+
+        $ids = [];
+        foreach ($pagination as $Product) {
+            $ids[] = $Product->getId();
+        }
+        $ProductsAndClassCategories = $this->productRepository->findProductsWithSortedClassCategories($ids, 'p.id');
+
+        // addCart form
+        $forms = [];
+        foreach ($pagination as $Product) {
+            /* @var $builder \Symfony\Component\Form\FormBuilderInterface */
+            $builder = $this->formFactory->createNamedBuilder(
+                '',
+                AddCartType::class,
+                null,
+                [
+                    'product' => $ProductsAndClassCategories[$Product->getId()],
+                    'allow_extra_fields' => true,
+                ]
+            );
+            $addCartForm = $builder->getForm();
+
+            $forms[$Product->getId()] = $addCartForm->createView();
+        }
+
+        // 表示件数
+        $builder = $this->formFactory->createNamedBuilder(
+            'disp_number',
+            ProductListMaxType::class,
+            null,
+            [
+                'required' => false,
+                'allow_extra_fields' => true,
+            ]
+        );
+        if ($request->getMethod() === 'GET') {
+            $builder->setMethod('GET');
+        }
+
+        $event = new EventArgs(
+            [
+                'builder' => $builder,
+            ],
+            $request
+        );
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_PRODUCT_INDEX_INITIALIZE);
+
+        $dispNumberForm = $builder->getForm();
+
+        $dispNumberForm->handleRequest($request);
+
+        // ソート順
+        $builder = $this->formFactory->createNamedBuilder(
+            'orderby',
+            ProductListOrderByType::class,
+            null,
+            [
+                'required' => false,
+                'allow_extra_fields' => true,
+            ]
+        );
+        if ($request->getMethod() === 'GET') {
+            $builder->setMethod('GET');
+        }
+
+        $event = new EventArgs(
+            [
+                'builder' => $builder,
+            ],
+            $request
+        );
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_PRODUCT_INDEX_ORDER);
+
+        $orderByForm = $builder->getForm();
+
+        $orderByForm->handleRequest($request);
+
+        $Category = $searchForm->get('category_id')->getData();
+
+        return [
+            'subtitle' => $this->getPageTitle($searchData),
+            'pagination' => $pagination,
+            'search_form' => $searchForm->createView(),
+            'disp_number_form' => $dispNumberForm->createView(),
+            'order_by_form' => $orderByForm->createView(),
+            'forms' => $forms,
+            'Category' => $Category,
+        ];
+    }
+
+
+    /**
+     * 商品詳細画面.
+     *
+     * @Route("/products/detail/{id}", name="product_detail", methods={"GET"}, requirements={"id" = "\d+"})
+     *
+     * @Template("Product/detail.twig")
+     *
+     * @ParamConverter("Product", options={"repository_method" = "findWithSortedClassCategories"})
+     *
+     * @param Request $request
+     * @param Product $Product
+     *
+     * @return array
+     */
+    public function detail(Request $request, Product $Product)
+    {
+        if (!$this->checkVisibility($Product)) {
+            throw new NotFoundHttpException();
+        }
+
+        $builder = $this->formFactory->createNamedBuilder(
+            '',
+            AddCartType::class,
+            null,
+            [
+                'product' => $Product,
+                'id_add_product_id' => false,
+            ]
+        );
+
+        $event = new EventArgs(
+            [
+                'builder' => $builder,
+                'Product' => $Product,
+            ],
+            $request
+        );
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_PRODUCT_DETAIL_INITIALIZE);
+
+        $is_favorite = false;
+        if ($this->isGranted('ROLE_USER')) {
+            $Customer = $this->getUser();
+            $is_favorite = $this->customerFavoriteProductRepository->isFavorite($Customer, $Product);
+        }
+
+        // JSONの成型
+        $classCategories = [
+            '__unselected' => [
+                '__unselected' => [
+                    'name' => $this->translator->trans('common.select'),
+                    'product_class_id' => '',
+                ],
+            ],
+        ];
+
+        foreach ($Product->getProductClasses() as $ProductClass) {
+            if (!$ProductClass->isVisible()) {
+                continue;
+            }
+
+            $ClassCategory1 = $ProductClass->getClassCategory1();
+            $ClassCategory2 = $ProductClass->getClassCategory2();
+            if ($ClassCategory2 && !$ClassCategory2->isVisible()) {
+                continue;
+            }
+
+            $id1 = $ClassCategory1 ? (string) $ClassCategory1->getId() : '__unselected2';
+            $id2 = $ClassCategory2 ? (string) $ClassCategory2->getId() : '';
+
+            $name2 = $ClassCategory2
+                ? $ClassCategory2->getName() . (!$ProductClass->getStockFind() ? ' ' . $this->translator->trans('front.product.out_of_stock_label') : '')
+                : $this->translator->trans('common.select');
+
+            if (!isset($classCategories[$id1][''])) {
+                $classCategories[$id1]['#'] = [
+                    'classcategory_id2' => '',
+                    'name' => $this->translator->trans('common.select'),
+                    'product_class_id' => '',
+                ];
+            }
+
+            $classCategories[$id1][$id2] = [
+                'classcategory_id2' => $id2,
+                'name' => $name2,
+                'stock_find' => $ProductClass->getStockFind(),
+                'price01' => $ProductClass->getPrice01() === null ? '' : number_format($ProductClass->getPrice01()),
+                'price02' => number_format($ProductClass->getPrice02()),
+                'price01_inc_tax' => $ProductClass->getPrice01() === null ? '' : number_format($ProductClass->getPrice01IncTax()),
+                'price02_inc_tax' => number_format($ProductClass->getPrice02IncTax()),
+                'product_class_id' => (string) $ProductClass->getId(),
+                'product_code' => $ProductClass->getCode() ?? '',
+                'sale_type' => $ProductClass->getSaleType() ? (string) $ProductClass->getSaleType()->getId() : '',
+                'item_cost' => method_exists($ProductClass, 'getItemCost') ? (float) $ProductClass->getItemCost() : 0.0,
+            ];
+        }
+
+        $classCategoriesJson = json_encode($classCategories, JSON_UNESCAPED_UNICODE);
+
+        return [
+            'title' => $this->title,
+            'subtitle' => $Product->getName(),
+            'form' => $builder->getForm()->createView(),
+            'Product' => $Product,
+            'is_favorite' => $is_favorite,
+            'class_categories_json' => $classCategoriesJson,
+        ];
     }
 
     /**
@@ -172,7 +475,7 @@ class ProductController extends BaseProductController
         }
 
         $builder = $this->formFactory->createNamedBuilder(
-            'add_cart',
+            '',
             AddCartType::class,
             null,
             [
@@ -259,13 +562,6 @@ class ProductController extends BaseProductController
                 'errors' => (string) $form->getErrors(true, false),
             ]);
 
-            // if ($request->isXmlHttpRequest()) {
-            //     return $this->json([
-            //         'done' => false,
-            //         'messages' => ['入力内容に誤りがあります！'],
-            //     ]);
-            // }
-
             return $this->render('Product/detail.twig', [
                 'form' => $form->createView(),
                 'Product' => $Product,
@@ -275,10 +571,6 @@ class ProductController extends BaseProductController
                 'class_categories_json' => $classCategoriesJson,
             ]);
         }
-
-        // if (!$form->isValid()) {
-        //     throw new NotFoundHttpException();
-        // }
 
         $addCartData = $form->getData();
 
@@ -385,5 +677,51 @@ class ProductController extends BaseProductController
 
             return $this->redirectToRoute('cart');
         }
+    }
+
+    /**
+     * ページタイトルの設定
+     *
+     * @param  array|null $searchData
+     *
+     * @return string
+     */
+    protected function getPageTitle($searchData)
+    {
+        if (isset($searchData['name']) && !empty($searchData['name'])) {
+            return $this->translator->trans('front.product.search_result');
+        } elseif (isset($searchData['category_id']) && $searchData['category_id']) {
+            return $searchData['category_id']->getName();
+        } else {
+            return $this->translator->trans('front.product.all_products');
+        }
+    }
+
+    /**
+     * 閲覧可能な商品かどうかを判定
+     *
+     * @param Product $Product
+     *
+     * @return bool 閲覧可能な場合はtrue
+     */
+    protected function checkVisibility(Product $Product)
+    {
+        $is_admin = $this->session->has('_security_admin');
+
+        // 管理ユーザの場合はステータスやオプションにかかわらず閲覧可能.
+        if (!$is_admin) {
+            // 在庫なし商品の非表示オプションが有効な場合.
+            // if ($this->BaseInfo->isOptionNostockHidden()) {
+            //     if (!$Product->getStockFind()) {
+            //         return false;
+            //     }
+            // }
+            // 公開ステータスでない商品は表示しない.
+            if ($Product->getStatus()->getId() !== ProductStatus::DISPLAY_SHOW) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

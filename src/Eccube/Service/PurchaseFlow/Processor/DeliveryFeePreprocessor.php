@@ -64,7 +64,7 @@ class DeliveryFeePreprocessor implements ItemHolderPreprocessor
         BaseInfoRepository $baseInfoRepository,
         EntityManagerInterface $entityManager,
         TaxRuleRepository $taxRuleRepository,
-        DeliveryFeeRepository $deliveryFeeRepository
+        DeliveryFeeRepository $deliveryFeeRepository,
     ) {
         $this->BaseInfo = $baseInfoRepository->get();
         $this->entityManager = $entityManager;
@@ -127,15 +127,16 @@ class DeliveryFeePreprocessor implements ItemHolderPreprocessor
                 }
             }
 
-            /** @var DeliveryFee $DeliveryFee */
+            /** @var DeliveryFee|null $DeliveryFee */
             $DeliveryFee = $this->deliveryFeeRepository->findOneBy([
                 'Delivery' => $Shipping->getDelivery(),
                 'Pref' => $Shipping->getPref(),
             ]);
+            $fee = is_object($DeliveryFee) ? $DeliveryFee->getFee() : 0;
 
             $OrderItem = new OrderItem();
             $OrderItem->setProductName($DeliveryFeeType->getName())
-                ->setPrice($DeliveryFee->getFee() + $deliveryFeeProduct)
+                ->setPrice($fee + $deliveryFeeProduct)
                 ->setQuantity(1)
                 ->setOrderItemType($DeliveryFeeType)
                 ->setShipping($Shipping)

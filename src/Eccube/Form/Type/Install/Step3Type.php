@@ -64,7 +64,7 @@ class Step3Type extends AbstractType
                 'label' => trans('install.mail_address'),
                 'constraints' => [
                     new Assert\NotBlank(),
-                    new Email(['strict' => $this->eccubeConfig['eccube_rfc_email_check']]),
+                    new Email(null, null, $this->eccubeConfig['eccube_rfc_email_check'] ? 'strict' : null),
                 ],
             ])
             ->add('login_id', TextType::class, [
@@ -96,8 +96,8 @@ class Step3Type extends AbstractType
                         'max' => $this->eccubeConfig['eccube_password_max_len'],
                     ]),
                     new Assert\Regex([
-                        'pattern' => '/^[[:graph:][:space:]]+$/i',
-                        'message' => 'form_error.graph_only',
+                        'pattern' => $this->eccubeConfig['eccube_password_pattern'],
+                        'message' => 'form_error.password_pattern_invalid',
                     ]),
                 ],
             ])
@@ -144,15 +144,18 @@ class Step3Type extends AbstractType
                 $form = $event->getForm();
                 $data = $form->getData();
 
-                $ips = preg_split("/\R/", $data['admin_allow_hosts'], null, PREG_SPLIT_NO_EMPTY);
+                $adminAllowHosts = $data['admin_allow_hosts'] ?? '';
+                if ($adminAllowHosts !== '') {
+                    $ips = preg_split("/\R/", $adminAllowHosts, -1, PREG_SPLIT_NO_EMPTY);
 
-                foreach ($ips as $ip) {
-                    $errors = $this->validator->validate($ip, [
+                    foreach ($ips as $ip) {
+                        $errors = $this->validator->validate($ip, [
                             new Assert\Ip(),
                         ]
-                    );
-                    if ($errors->count() != 0) {
-                        $form['admin_allow_hosts']->addError(new FormError(trans('install.ip_is_invalid', ['%ip%' => $ip])));
+                        );
+                        if ($errors->count() != 0) {
+                            $form['admin_allow_hosts']->addError(new FormError(trans('install.ip_is_invalid', ['%ip%' => $ip])));
+                        }
                     }
                 }
             })

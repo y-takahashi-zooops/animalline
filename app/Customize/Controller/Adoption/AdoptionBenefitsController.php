@@ -27,13 +27,6 @@ class AdoptionBenefitsController extends AbstractController
     protected $conservationContactHeaderRepository;
 
     /**
-     * @var EntityManagerInterface
-     */
-    protected EntityManagerInterface $entityManager;
-
-    protected FormFactoryInterface $formFactory;
-
-    /**
      * BreederController constructor.
      * 
      * @param BenefitsStatusRepository $benefitsStatusRepository
@@ -47,8 +40,10 @@ class AdoptionBenefitsController extends AbstractController
     ) {
         $this->benefitsStatusRepository = $benefitsStatusRepository;
         $this->conservationContactHeaderRepository = $conservationContactHeaderRepository;
-        $this->entityManager = $entityManager;
-        $this->formFactory = $formFactory;
+        
+        // 親クラスのsetterメソッドを呼び出してプロパティを設定
+        $this->setEntityManager($entityManager);
+        $this->setFormFactory($formFactory);
     }
 
     /**

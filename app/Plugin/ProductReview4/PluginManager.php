@@ -24,7 +24,7 @@ use Eccube\Plugin\AbstractPluginManager;
 use Eccube\Repository\PageRepository;
 use Plugin\ProductReview4\Entity\ProductReviewConfig;
 use Plugin\ProductReview4\Entity\ProductReviewStatus;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 class PluginManager extends AbstractPluginManager

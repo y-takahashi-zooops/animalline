@@ -21,11 +21,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Form\FormFactoryInterface;
-use Eccube\Common\EccubeConfig;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class SecurityController extends AbstractController
 {
@@ -34,35 +29,19 @@ class SecurityController extends AbstractController
      */
     protected $tokenStorage;
 
-    protected FormFactoryInterface $formFactory;
-
-    /**
-     * @var Session
-     */
-    protected SessionInterface $session;
-
-
     /**
      * SecurityController constructor.
      *
      * @param TokenStorageInterface $tokenStorage
      */
-    public function __construct(
-        TokenStorageInterface $tokenStorage,
-        FormFactoryInterface $formFactory,
-        EccubeConfig $eccubeConfig,
-        EventDispatcherInterface $eventDispatcher,
-        SessionInterface $session,
-    ) {
+    public function __construct(TokenStorageInterface $tokenStorage)
+    {
         $this->tokenStorage = $tokenStorage;
-        $this->formFactory = $formFactory;
-        $this->eccubeConfig = $eccubeConfig;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->session = $session;
     }
 
     /**
-     * @Route("/%eccube_admin_route%/setting/system/security", name="admin_setting_system_security")
+     * @Route("/%eccube_admin_route%/setting/system/security", name="admin_setting_system_security", methods={"GET", "POST"})
+     *
      * @Template("@admin/Setting/System/security.twig")
      */
     public function index(Request $request, CacheUtil $cacheUtil)
@@ -72,7 +51,7 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            //.envファイルが存在しないときに設定は失敗する
+            // .envファイルが存在しないときに設定は失敗する
             if (file_exists($this->getParameter('kernel.project_dir').'/.env') === false) {
                 $this->addError('admin.common.save_error', 'admin');
 
@@ -83,14 +62,35 @@ class SecurityController extends AbstractController
             $envFile = $this->getParameter('kernel.project_dir').'/.env';
             $env = file_get_contents($envFile);
 
+            $frontAllowHosts = \json_encode(
+                array_filter(\explode("\n", StringUtil::convertLineFeed($data['front_allow_hosts'])), function ($str) {
+                    return StringUtil::isNotBlank($str);
+                })
+            );
+            $frontDenyHosts = \json_encode(
+                array_filter(\explode("\n", StringUtil::convertLineFeed($data['front_deny_hosts'])), function ($str) {
+                    return StringUtil::isNotBlank($str);
+                })
+            );
+
             $adminAllowHosts = \json_encode(
                 array_filter(\explode("\n", StringUtil::convertLineFeed($data['admin_allow_hosts'])), function ($str) {
                     return StringUtil::isNotBlank($str);
                 })
             );
+            $adminDenyHosts = \json_encode(
+                array_filter(\explode("\n", StringUtil::convertLineFeed($data['admin_deny_hosts'])), function ($str) {
+                    return StringUtil::isNotBlank($str);
+                })
+            );
+
             $env = StringUtil::replaceOrAddEnv($env, [
+                'ECCUBE_FRONT_ALLOW_HOSTS' => "'{$frontAllowHosts}'",
+                'ECCUBE_FRONT_DENY_HOSTS' => "'{$frontDenyHosts}'",
                 'ECCUBE_ADMIN_ALLOW_HOSTS' => "'{$adminAllowHosts}'",
-                'ECCUBE_FORCE_SSL' => $data['force_ssl'] ? 'true' : 'false',
+                'ECCUBE_ADMIN_DENY_HOSTS' => "'{$adminDenyHosts}'",
+                'ECCUBE_FORCE_SSL' => $data['force_ssl'] ? '1' : '0',
+                'TRUSTED_HOSTS' => $data['trusted_hosts'],
             ]);
 
             file_put_contents($envFile, $env);

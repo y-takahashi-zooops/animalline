@@ -27,16 +27,13 @@ use Eccube\Service\PluginService;
 use Eccube\Service\SystemService;
 use Eccube\Util\CacheUtil;
 use Eccube\Util\FormUtil;
-use Knp\Component\Pager\Paginator;
+use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Eccube\Common\EccubeConfig;
-use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * @Route("/%eccube_admin_route%/store/plugin/api")
@@ -52,6 +49,11 @@ class OwnerStoreController extends AbstractController
      * @var PluginService
      */
     protected $pluginService;
+
+    /**
+     * @var ValidatorInterface
+     */
+    protected ValidatorInterface $validator;
 
     /**
      * @var ComposerServiceInterface
@@ -76,13 +78,6 @@ class OwnerStoreController extends AbstractController
     /** @var CacheUtil */
     private $cacheUtil;
 
-    protected FormFactoryInterface $formFactory;
-
-    /**
-     * @var Session
-     */
-    protected SessionInterface $session;
-
     /**
      * OwnerStoreController constructor.
      *
@@ -93,10 +88,10 @@ class OwnerStoreController extends AbstractController
      * @param PluginApiService $pluginApiService
      * @param BaseInfoRepository $baseInfoRepository
      * @param CacheUtil $cacheUtil
+     * @param ValidatorInterface $validatorInterface
      *
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
-     * @param SessionInterface $session,
      */
     public function __construct(
         PluginRepository $pluginRepository,
@@ -106,10 +101,7 @@ class OwnerStoreController extends AbstractController
         PluginApiService $pluginApiService,
         BaseInfoRepository $baseInfoRepository,
         CacheUtil $cacheUtil,
-        FormFactoryInterface $formFactory,
-        SessionInterface $session,
-        EccubeConfig $eccubeConfig,
-        EntityManagerInterface $entityManager
+        ValidatorInterface $validatorInterface,
     ) {
         $this->pluginRepository = $pluginRepository;
         $this->pluginService = $pluginService;
@@ -117,29 +109,27 @@ class OwnerStoreController extends AbstractController
         $this->pluginApiService = $pluginApiService;
         $this->BaseInfo = $baseInfoRepository->get();
         $this->cacheUtil = $cacheUtil;
+        $this->validator = $validatorInterface;
 
         // TODO: Check the flow of the composer service below
         $this->composerService = $composerService;
-        $this->formFactory = $formFactory;
-        $this->session = $session;
-        $this->eccubeConfig = $eccubeConfig;
-        $this->entityManager = $entityManager;
     }
 
     /**
      * Owner's Store Plugin Installation Screen - Search function
      *
-     * @Route("/search", name="admin_store_plugin_owners_search")
-     * @Route("/search/page/{page_no}", name="admin_store_plugin_owners_search_page", requirements={"page_no" = "\d+"})
+     * @Route("/search", name="admin_store_plugin_owners_search", methods={"GET", "POST"})
+     * @Route("/search/page/{page_no}", name="admin_store_plugin_owners_search_page", requirements={"page_no" = "\d+"}, methods={"GET", "POST"})
+     *
      * @Template("@admin/Store/plugin_search.twig")
      *
      * @param Request     $request
-     * @param int|null  $page_no
+     * @param int $page_no
      * @param PaginatorInterface $paginator
      *
      * @return array
      */
-    public function search(Request $request, ?int $page_no = 1, PaginatorInterface $paginator)
+    public function search(Request $request, PaginatorInterface $paginator, $page_no = null)
     {
         if (empty($this->BaseInfo->getAuthenticationKey())) {
             $this->addWarning('admin.store.plugin.search.not_auth', 'admin');
@@ -236,7 +226,8 @@ class OwnerStoreController extends AbstractController
     /**
      * Do confirm page
      *
-     * @Route("/install/{id}/confirm", requirements={"id" = "\d+"}, name="admin_store_plugin_install_confirm")
+     * @Route("/install/{id}/confirm", requirements={"id" = "\d+"}, name="admin_store_plugin_install_confirm", methods={"GET"})
+     *
      * @Template("@admin/Store/plugin_confirm.twig")
      *
      * @param Request $request
@@ -280,21 +271,36 @@ class OwnerStoreController extends AbstractController
         // .maintenanceファイルを設置
         $this->systemService->switchMaintenance(true);
 
-        // TERMINATE時のイベントを設定
-        $this->systemService->disableMaintenance(SystemService::AUTO_MAINTENANCE);
-
         $this->cacheUtil->clearCache();
 
         $pluginCode = $request->get('pluginCode');
 
-        $log = null;
-        try {
-            $log = $this->composerService->execRequire('ec-cube/'.$pluginCode);
+        $errors = $this->validator->validate(
+            $pluginCode,
+            [
+                new Assert\NotBlank(),
+                new Assert\Regex(
+                    [
+                        'pattern' => '/^[a-zA-Z0-9_]+$/',
+                    ]
+                ),
+            ]
+        );
 
-            return $this->json(['success' => true, 'log' => $log]);
-        } catch (\Exception $e) {
-            $log = $e->getMessage();
-            log_error($e);
+        if ($errors->count() != 0) {
+            $log = [];
+            foreach ($errors as $error) {
+                $log[] = $error->getMessage();
+            }
+        } else {
+            try {
+                $log = $this->composerService->execRequire('ec-cube/'.$pluginCode);
+
+                return $this->json(['success' => true, 'log' => $log]);
+            } catch (\Exception $e) {
+                $log = $e->getMessage();
+                log_error($e);
+            }
         }
 
         return $this->json(['success' => false, 'log' => $log], 500);
@@ -315,9 +321,6 @@ class OwnerStoreController extends AbstractController
 
         // .maintenanceファイルを設置
         $this->systemService->switchMaintenance(true);
-
-        // TERMINATE時のイベントを設定
-        $this->systemService->disableMaintenance(SystemService::AUTO_MAINTENANCE);
 
         $this->cacheUtil->clearCache();
 
@@ -371,14 +374,53 @@ class OwnerStoreController extends AbstractController
         $pluginCode = $request->get('pluginCode');
         $version = $request->get('version');
 
-        $log = null;
-        try {
-            $log = $this->composerService->execRequire('ec-cube/'.$pluginCode.':'.$version);
+        $log = [];
 
-            return $this->json(['success' => true, 'log' => $log]);
-        } catch (\Exception $e) {
-            $log = $e->getMessage();
-            log_error($e);
+        $errors = $this->validator->validate(
+            $pluginCode,
+            [
+                new Assert\NotBlank(),
+                new Assert\Regex(
+                    [
+                        'pattern' => '/^[a-zA-Z0-9_]+$/',
+                    ]
+                ),
+            ]
+        );
+
+        if ($errors->count() != 0) {
+            foreach ($errors as $error) {
+                $log[] = $error->getMessage();
+            }
+        }
+
+        $errors = $this->validator->validate(
+            $version,
+            [
+                new Assert\NotBlank(),
+                new Assert\Regex(
+                    [
+                        'pattern' => '/^[0-9.]+$/',
+                    ]
+                ),
+            ]
+        );
+
+        if ($errors->count() != 0) {
+            foreach ($errors as $error) {
+                $log[] = $error->getMessage();
+            }
+        }
+
+        if (empty($log)) {
+            try {
+                $log = $this->composerService->execRequire('ec-cube/'.$pluginCode.':'.$version);
+
+                return $this->json(['success' => true, 'log' => $log]);
+            } catch (\Exception $e) {
+                $log = $e->getMessage();
+                log_error($e);
+            }
         }
 
         return $this->json(['success' => false, 'log' => $log], 500);
@@ -448,14 +490,10 @@ class OwnerStoreController extends AbstractController
     {
         $this->isTokenValid();
 
-        // TERMINATE時のイベントを設定
-        $this->systemService->disableMaintenance(SystemService::AUTO_MAINTENANCE_UPDATE);
-
         $this->cacheUtil->clearCache();
 
         $pluginCode = $request->get('pluginCode');
 
-        $log = null;
         try {
             $Plugin = $this->pluginRepository->findByCode($pluginCode);
             if (!$Plugin) {
@@ -482,7 +520,8 @@ class OwnerStoreController extends AbstractController
     /**
      * Do confirm update page
      *
-     * @Route("/upgrade/{id}/confirm", requirements={"id" = "\d+"}, name="admin_store_plugin_update_confirm")
+     * @Route("/upgrade/{id}/confirm", requirements={"id" = "\d+"}, name="admin_store_plugin_update_confirm", methods={"GET"})
+     *
      * @Template("@admin/Store/plugin_confirm.twig")
      *
      * @param Plugin $Plugin

@@ -22,6 +22,7 @@ use Psr\Log\LoggerInterface;
 
 /**
  * Class ComposerProcessService
+ * 
  * @deprecated Not maintained
  */
 class ComposerProcessService implements ComposerServiceInterface
@@ -35,8 +36,6 @@ class ComposerProcessService implements ComposerServiceInterface
      * @var EntityManagerInterface
      */
     protected $entityManager;
-
-    private $workingDir;
 
     /**
      * @var ComposerApiService
@@ -93,9 +92,9 @@ class ComposerProcessService implements ComposerServiceInterface
     /**
      * Run command
      *
-     * @throws PluginException
-     *
      * @param string $command
+     * 
+     * @throws PluginException
      */
     public function runCommand($commands, $output = null, $init = true)
     {
@@ -151,13 +150,13 @@ class ComposerProcessService implements ComposerServiceInterface
         return $this->composerApiService->execConfig($key, $value);
     }
 
-    public function configureRepository(BaseInfo $BaseInfo)
+    public function configureRepository(BaseInfo $BaseInfo): void
     {
-        return $this->composerApiService->configureRepository($BaseInfo);
+        $this->composerApiService->configureRepository($BaseInfo);
     }
 
-    public function foreachRequires($packageName, $version, $callback, $typeFilter = null, $level = 0)
+    public function foreachRequires($packageName, $version, $callback, $typeFilter = null, $level = 0): void
     {
-        return $this->composerApiService->foreachRequires($packageName, $version, $callback, $typeFilter, $level);
+        $this->composerApiService->foreachRequires($packageName, $version, $callback, $typeFilter, $level);
     }
 }

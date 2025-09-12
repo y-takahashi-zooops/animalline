@@ -16,8 +16,8 @@ namespace Eccube\Controller\Mypage;
 use Eccube\Controller\AbstractController;
 use Eccube\Entity\BaseInfo;
 use Eccube\Entity\Customer;
-use Eccube\Entity\Product;
 use Eccube\Entity\Order;
+use Eccube\Entity\Product;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Eccube\Exception\CartException;
@@ -29,7 +29,6 @@ use Eccube\Repository\ProductRepository;
 use Eccube\Service\CartService;
 use Eccube\Service\PurchaseFlow\PurchaseContext;
 use Eccube\Service\PurchaseFlow\PurchaseFlow;
-// use Knp\Component\Pager\Paginator;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,11 +36,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\Form\FormFactoryInterface;
-use Eccube\Common\EccubeConfig;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class MypageController extends AbstractController
 {
@@ -76,13 +70,6 @@ class MypageController extends AbstractController
     protected $purchaseFlow;
 
     /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
-    protected FormFactoryInterface $formFactory;
-
-    /**
      * MypageController constructor.
      *
      * @param OrderRepository $orderRepository
@@ -90,7 +77,6 @@ class MypageController extends AbstractController
      * @param CartService $cartService
      * @param BaseInfoRepository $baseInfoRepository
      * @param PurchaseFlow $purchaseFlow
-     * @param LoggerInterface $logger
      */
     public function __construct(
         OrderRepository $orderRepository,
@@ -98,39 +84,29 @@ class MypageController extends AbstractController
         CartService $cartService,
         BaseInfoRepository $baseInfoRepository,
         PurchaseFlow $purchaseFlow,
-        LoggerInterface $logger,
-        EventDispatcherInterface $eventDispatcher,
-        FormFactoryInterface $formFactory,
-        EccubeConfig $eccubeConfig,
-        EntityManagerInterface $entityManager
     ) {
         $this->orderRepository = $orderRepository;
         $this->customerFavoriteProductRepository = $customerFavoriteProductRepository;
         $this->BaseInfo = $baseInfoRepository->get();
         $this->cartService = $cartService;
         $this->purchaseFlow = $purchaseFlow;
-        $this->logger = $logger;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->formFactory = $formFactory;
-        $this->eccubeConfig = $eccubeConfig;
-        $this->entityManager = $entityManager;
     }
 
     /**
      * ログイン画面.
      *
-     * @Route("/mypage/login", name="mypage_login")
+     * @Route("/mypage/login", name="mypage_login", methods={"GET", "POST"})
+     *
      * @Template("Mypage/login.twig")
      */
     public function login(Request $request, AuthenticationUtils $utils)
     {
         if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
-            $this->logger->info('認証済のためログイン処理をスキップ');
+            log_info('認証済のためログイン処理をスキップ');
 
             return $this->redirectToRoute('mypage');
         }
 
-        /* @var $form \Symfony\Component\Form\FormInterface */
         $builder = $this->formFactory
             ->createNamedBuilder('', CustomerLoginType::class);
 
@@ -163,7 +139,8 @@ class MypageController extends AbstractController
     /**
      * マイページ.
      *
-     * @Route("/mypage/", name="mypage")
+     * @Route("/mypage/", name="mypage", methods={"GET"})
+     *
      * @Template("Mypage/index.twig")
      */
     public function index(Request $request, PaginatorInterface $paginator)
@@ -201,7 +178,8 @@ class MypageController extends AbstractController
     /**
      * 購入履歴詳細を表示する.
      *
-     * @Route("/mypage/history/{order_no}", name="mypage_history")
+     * @Route("/mypage/history/{order_no}", name="mypage_history", methods={"GET"})
+     *
      * @Template("Mypage/history.twig")
      */
     public function history(Request $request, $order_no)
@@ -253,11 +231,11 @@ class MypageController extends AbstractController
     {
         $this->isTokenValid();
 
-        $this->logger->info('再注文開始', [$order_no]);
+        log_info('再注文開始', [$order_no]);
 
         $Customer = $this->getUser();
 
-        /* @var $Order \Eccube\Entity\Order */
+        /** @var Order $Order */
         $Order = $this->orderRepository->findOneBy(
             [
                 'order_no' => $order_no,
@@ -275,7 +253,7 @@ class MypageController extends AbstractController
         $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_MYPAGE_MYPAGE_ORDER_INITIALIZE);
 
         if (!$Order) {
-            $this->logger->info('対象の注文が見つかりません', [$order_no]);
+            log_info('対象の注文が見つかりません', [$order_no]);
             throw new NotFoundHttpException();
         }
 
@@ -306,7 +284,7 @@ class MypageController extends AbstractController
                     $this->cartService->save();
                 }
             } catch (CartException $e) {
-                $this->logger->info($e->getMessage(), [$order_no]);
+                log_info($e->getMessage(), [$order_no]);
                 $this->addRequestError($e->getMessage());
             }
         }
@@ -328,7 +306,7 @@ class MypageController extends AbstractController
             return $event->getResponse();
         }
 
-        $this->logger->info('再注文完了', [$order_no]);
+        log_info('再注文完了', [$order_no]);
 
         return $this->redirect($this->generateUrl('cart'));
     }
@@ -336,7 +314,8 @@ class MypageController extends AbstractController
     /**
      * お気に入り商品を表示する.
      *
-     * @Route("/mypage/favorite", name="mypage_favorite")
+     * @Route("/mypage/favorite", name="mypage_favorite", methods={"GET"})
+     *
      * @Template("Mypage/favorite.twig")
      */
     public function favorite(Request $request, PaginatorInterface $paginator)
@@ -381,7 +360,7 @@ class MypageController extends AbstractController
 
         $Customer = $this->getUser();
 
-        $this->logger->info('お気に入り商品削除開始', [$Customer->getId(), $Product->getId()]);
+        log_info('お気に入り商品削除開始', [$Customer->getId(), $Product->getId()]);
 
         $CustomerFavoriteProduct = $this->customerFavoriteProductRepository->findOneBy(['Customer' => $Customer, 'Product' => $Product]);
 
@@ -399,7 +378,7 @@ class MypageController extends AbstractController
         );
         $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_MYPAGE_MYPAGE_DELETE_COMPLETE);
 
-        $this->logger->info('お気に入り商品削除完了', [$Customer->getId(), $CustomerFavoriteProduct->getId()]);
+        log_info('お気に入り商品削除完了', [$Customer->getId(), $CustomerFavoriteProduct->getId()]);
 
         return $this->redirect($this->generateUrl('mypage_favorite'));
     }

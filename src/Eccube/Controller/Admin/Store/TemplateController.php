@@ -29,10 +29,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Form\FormFactoryInterface;
-use Eccube\Common\EccubeConfig;
-use Doctrine\ORM\EntityManagerInterface;
 
 class TemplateController extends AbstractController
 {
@@ -46,41 +42,25 @@ class TemplateController extends AbstractController
      */
     protected $deviceTypeRepository;
 
-    protected EventDispatcherInterface $eventDispatcher;
-
-    /**
-     * @var FormFactoryInterface
-     */
-    protected FormFactoryInterface $formFactory;
-
-
     /**
      * TemplateController constructor.
      *
      * @param TemplateRepository $templateRepository
      * @param DeviceTypeRepository $deviceTypeRepository
-     * @param FormFactoryInterface $formFactory
      */
     public function __construct(
         TemplateRepository $templateRepository,
         DeviceTypeRepository $deviceTypeRepository,
-        EventDispatcherInterface $eventDispatcher,
-        FormFactoryInterface $formFactory,
-        EccubeConfig $eccubeConfig,
-        EntityManagerInterface $entityManager
     ) {
         $this->templateRepository = $templateRepository;
         $this->deviceTypeRepository = $deviceTypeRepository;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->formFactory = $formFactory;
-        $this->eccubeConfig = $eccubeConfig;
-        $this->entityManager = $entityManager;
     }
 
     /**
      * テンプレート一覧画面
      *
-     * @Route("/%eccube_admin_route%/store/template", name="admin_store_template")
+     * @Route("/%eccube_admin_route%/store/template", name="admin_store_template", methods={"GET", "POST"})
+     *
      * @Template("@admin/Store/template.twig")
      *
      * @param Request $request
@@ -93,7 +73,7 @@ class TemplateController extends AbstractController
 
         $Templates = $this->templateRepository->findBy(['DeviceType' => $DeviceType]);
 
-        $form = $this->createFormBuilder()
+        $form = $this->formFactory->createBuilder()
             ->add('selected', HiddenType::class)
             ->getForm();
         $form->handleRequest($request);
@@ -126,7 +106,7 @@ class TemplateController extends AbstractController
     /**
      * テンプレート一覧からのダウンロード
      *
-     * @Route("/%eccube_admin_route%/store/template/{id}/download", name="admin_store_template_download", requirements={"id" = "\d+"})
+     * @Route("/%eccube_admin_route%/store/template/{id}/download", name="admin_store_template_download", requirements={"id" = "\d+"}, methods={"GET"})
      *
      * @param Request $request
      * @param \Eccube\Entity\Template $Template
@@ -231,7 +211,8 @@ class TemplateController extends AbstractController
     /**
      * テンプレートの追加画面.
      *
-     * @Route("/%eccube_admin_route%/store/template/install", name="admin_store_template_install")
+     * @Route("/%eccube_admin_route%/store/template/install", name="admin_store_template_install", methods={"GET", "POST"})
+     *
      * @Template("@admin/Store/template_add.twig")
      *
      * @param Request $request
@@ -240,13 +221,15 @@ class TemplateController extends AbstractController
      */
     public function install(Request $request)
     {
+        $this->addInfoOnce('admin.common.restrict_file_upload_info', 'admin');
+
         $form = $this->formFactory
             ->createBuilder(TemplateType::class)
             ->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var $Template \Eccube\Entity\Template */
+            /** @var \Eccube\Entity\Template $Template */
             $Template = $form->getData();
 
             $TemplateExists = $this->templateRepository->findByCode($Template->getCode());

@@ -14,6 +14,7 @@
 namespace Eccube\DataCollector;
 
 use Eccube\Common\Constant;
+use Eccube\Common\EccubeConfig;
 use Eccube\Entity\Plugin;
 use Eccube\Repository\PluginRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,11 +29,10 @@ use Throwable;
  */
 class EccubeDataCollector extends DataCollector
 {
-
-    protected $currency;
-    protected $locale;
-    protected $enabledPlugins;
-    protected $disabledPlugins;
+    /**
+     * @var EccubeConfig
+     */
+    protected $eccubeConfig;
 
     /**
      * @var PluginRepository
@@ -40,22 +40,54 @@ class EccubeDataCollector extends DataCollector
     protected $pluginRepository;
 
     /**
-     * @param ContainerInterface $container
+     * @var string
      */
-    public function __construct(string $currency, string $locale, array $enabledPlugins, array $disabledPlugins, PluginRepository $pluginRepository)
-    {
+    protected $currency;
+
+    /**
+     * @var string
+     */
+    protected $locale;
+
+    /**
+     * @var array
+     */
+    protected $enabledPlugins;
+
+    /**
+     * @var array
+     */
+    protected $disabledPlugins;
+
+    /**
+     * @param string $currency
+     * @param string $locale
+     * @param array $enabledPlugins
+     * @param array $disabledPlugins
+     * @param EccubeConfig $eccubeConfig
+     * @param PluginRepository $pluginRepository
+     */
+    public function __construct(
+        string $currency,
+        string $locale,
+        array $enabledPlugins,
+        array $disabledPlugins,
+        EccubeConfig $eccubeConfig,
+        PluginRepository $pluginRepository
+    ) {
         $this->data = [
             'version' => Constant::VERSION,
-            'base_currency_code' => null,
-            'currency_code' => null,
-            'default_locale_code' => null,
-            'locale_code' => null,
+            'base_currency_code' => $currency,
+            'currency_code' => $currency,
+            'default_locale_code' => $locale,
+            'locale_code' => $locale,
             'plugins' => [],
         ];
         $this->currency = $currency;
         $this->locale = $locale;
         $this->enabledPlugins = $enabledPlugins;
         $this->disabledPlugins = $disabledPlugins;
+        $this->eccubeConfig = $eccubeConfig;
         $this->pluginRepository = $pluginRepository;
     }
 
@@ -110,7 +142,7 @@ class EccubeDataCollector extends DataCollector
     /**
      * {@inheritdoc}
      */
-    public function collect(Request $request, Response $response, ?Throwable $exception = null)
+    public function collect(Request $request, Response $response, ?\Throwable $exception = null)
     {
         $this->data['base_currency_code'] = $this->currency;
         $this->data['currency_code'] = $this->currency;

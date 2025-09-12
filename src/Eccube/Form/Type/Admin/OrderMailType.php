@@ -36,7 +36,7 @@ class OrderMailType extends AbstractType
      * @param EccubeConfig $eccubeConfig
      */
     public function __construct(
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
     ) {
         $this->eccubeConfig = $eccubeConfig;
     }
@@ -52,8 +52,6 @@ class OrderMailType extends AbstractType
                 'mapped' => false,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('mt')
-                        ->andWhere('mt.id = :id')
-                        ->setParameter('id', $this->eccubeConfig['eccube_order_mail_template_id'])
                         ->orderBy('mt.id', 'ASC');
                 },
             ])

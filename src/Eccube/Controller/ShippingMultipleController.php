@@ -22,22 +22,19 @@ use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Eccube\Form\Type\Front\ShoppingShippingType;
 use Eccube\Form\Type\ShippingMultipleType;
+use Eccube\Repository\BaseInfoRepository;
 use Eccube\Repository\Master\OrderItemTypeRepository;
 use Eccube\Repository\Master\PrefRepository;
 use Eccube\Repository\OrderRepository;
 use Eccube\Service\CartService;
+use Eccube\Service\MailService;
+use Eccube\Service\OrderHelper;
 use Eccube\Service\PurchaseFlow\PurchaseContext;
 use Eccube\Service\PurchaseFlow\PurchaseFlow;
-use Eccube\Service\OrderHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Form\FormFactoryInterface;
-use Psr\Log\LoggerInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use Eccube\Common\EccubeConfig;
-use Doctrine\ORM\EntityManagerInterface;
 
 class ShippingMultipleController extends AbstractShoppingController
 {
@@ -71,12 +68,15 @@ class ShippingMultipleController extends AbstractShoppingController
      */
     protected $orderRepository;
 
-    protected FormFactoryInterface $formFactory;
+    /**
+     * @var MailService
+     */
+    protected $mailService;
 
     /**
-     * @var LoggerInterface
+     * @var BaseInfoRepository
      */
-    protected $logger;
+    protected $baseInfoRepository;
 
     /**
      * ShippingMultipleController constructor.
@@ -87,7 +87,6 @@ class ShippingMultipleController extends AbstractShoppingController
      * @param OrderHelper $orderHelper
      * @param CartService $cartService
      * @param PurchaseFlow $cartPurchaseFlow
-     * @param LoggerInterface $logger
      */
     public function __construct(
         PrefRepository $prefRepository,
@@ -96,11 +95,8 @@ class ShippingMultipleController extends AbstractShoppingController
         OrderHelper $orderHelper,
         CartService $cartService,
         PurchaseFlow $cartPurchaseFlow,
-        FormFactoryInterface $formFactory,
-        LoggerInterface $logger,
-        EventDispatcherInterface $eventDispatcher,
-        EccubeConfig $eccubeConfig,
-        EntityManagerInterface $entityManager
+        BaseInfoRepository $baseInfoRepository,
+        MailService $mailService,
     ) {
         $this->prefRepository = $prefRepository;
         $this->orderRepository = $orderRepository;
@@ -108,17 +104,15 @@ class ShippingMultipleController extends AbstractShoppingController
         $this->orderHelper = $orderHelper;
         $this->cartService = $cartService;
         $this->cartPurchaseFlow = $cartPurchaseFlow;
-        $this->formFactory = $formFactory;
-        $this->logger = $logger;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->eccubeConfig = $eccubeConfig;
-        $this->entityManager = $entityManager;
+        $this->baseInfoRepository = $baseInfoRepository;
+        $this->mailService = $mailService;
     }
 
     /**
      * 複数配送処理
      *
-     * @Route("/shopping/shipping_multiple", name="shopping_shipping_multiple")
+     * @Route("/shopping/shipping_multiple", name="shopping_shipping_multiple", methods={"GET", "POST"})
+     *
      * @Template("Shopping/shipping_multiple.twig")
      */
     public function index(Request $request)
@@ -185,7 +179,7 @@ class ShippingMultipleController extends AbstractShoppingController
 
         $errors = [];
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->logger->info('複数配送設定処理開始', [$Order->getId()]);
+            log_info('複数配送設定処理開始', [$Order->getId()]);
 
             $data = $form['shipping_multiple'];
 
@@ -344,7 +338,7 @@ class ShippingMultipleController extends AbstractShoppingController
             );
             $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_SHOPPING_SHIPPING_MULTIPLE_COMPLETE);
 
-            $this->logger->info('複数配送設定処理完了', [$Order->getId()]);
+            log_info('複数配送設定処理完了', [$Order->getId()]);
 
             $this->entityManager->refresh($Order);
 
@@ -366,8 +360,11 @@ class ShippingMultipleController extends AbstractShoppingController
                     }
                 }
 
-                $this->cartPurchaseFlow->validate($Cart, new PurchaseContext());
-                $this->cartService->save();
+                $this->cartPurchaseFlow->validate($Cart, new PurchaseContext($Cart, $this->getUser()));
+
+                // 注文フローで取得されるカートの入れ替わりを防止する
+                // @see https://github.com/EC-CUBE/ec-cube/issues/4293
+                $this->cartService->setPrimary($Cart->getCartKey());
             }
 
             return $this->redirectToRoute('shopping');
@@ -387,7 +384,8 @@ class ShippingMultipleController extends AbstractShoppingController
      * 会員ログイン時は会員のお届け先に追加する
      * 非会員時はセッションに追加する
      *
-     * @Route("/shopping/shipping_multiple_edit", name="shopping_shipping_multiple_edit")
+     * @Route("/shopping/shipping_multiple_edit", name="shopping_shipping_multiple_edit", methods={"GET", "POST"})
+     *
      * @Template("Shopping/shipping_multiple_edit.twig")
      */
     public function shippingMultipleEdit(Request $request)
@@ -423,7 +421,7 @@ class ShippingMultipleController extends AbstractShoppingController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->logger->info('複数配送のお届け先追加処理開始');
+            log_info('複数配送のお届け先追加処理開始');
 
             if ($this->isGranted('ROLE_USER')) {
                 $CustomerAddresses = $Customer->getCustomerAddresses();
@@ -438,9 +436,18 @@ class ShippingMultipleController extends AbstractShoppingController
                     ];
                 }
 
+                // 会員情報変更時にメールを送信
+                if ($this->baseInfoRepository->get()->isOptionMailNotifier()) {
+                    // 情報のセット
+                    $userData['userAgent'] = $request->headers->get('User-Agent');
+                    $userData['ipAddress'] = $request->getClientIp();
+
+                    $this->mailService->sendCustomerChangeNotifyMail($Customer, $userData, trans('front.mypage.delivery.notify_title'));
+                }
+
                 $CustomerAddress->setCustomer($Customer);
                 $this->entityManager->persist($CustomerAddress);
-                $this->entityManager->flush($CustomerAddress);
+                $this->entityManager->flush();
             } else {
                 // 非会員用のセッションに追加
                 $CustomerAddresses = $this->session->get(OrderHelper::SESSION_NON_MEMBER_ADDRESSES);
@@ -458,7 +465,7 @@ class ShippingMultipleController extends AbstractShoppingController
             );
             $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_SHOPPING_SHIPPING_MULTIPLE_EDIT_COMPLETE);
 
-            $this->logger->info('複数配送のお届け先追加処理完了');
+            log_info('複数配送のお届け先追加処理完了');
 
             return $this->redirectToRoute('shopping_shipping_multiple');
         }

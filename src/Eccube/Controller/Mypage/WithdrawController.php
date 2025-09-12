@@ -18,6 +18,7 @@ use Eccube\Entity\Master\CustomerStatus;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Eccube\Repository\Master\CustomerStatusRepository;
+use Eccube\Repository\PageRepository;
 use Eccube\Service\CartService;
 use Eccube\Service\MailService;
 use Eccube\Service\OrderHelper;
@@ -27,10 +28,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Form\FormFactoryInterface;
-use Psr\Log\LoggerInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use Doctrine\ORM\EntityManagerInterface;
 
 class WithdrawController extends AbstractController
 {
@@ -59,12 +56,10 @@ class WithdrawController extends AbstractController
      */
     private $orderHelper;
 
-    protected FormFactoryInterface $formFactory;
-
     /**
-     * @var LoggerInterface
+     * @var PageRepository
      */
-    protected $logger;
+    private $pageRepository;
 
     /**
      * WithdrawController constructor.
@@ -74,7 +69,7 @@ class WithdrawController extends AbstractController
      * @param TokenStorageInterface $tokenStorage
      * @param CartService $cartService
      * @param OrderHelper $orderHelper
-     * @param LoggerInterface $logger
+     * @param PageRepository $pageRepository
      */
     public function __construct(
         MailService $mailService,
@@ -82,26 +77,22 @@ class WithdrawController extends AbstractController
         TokenStorageInterface $tokenStorage,
         CartService $cartService,
         OrderHelper $orderHelper,
-        FormFactoryInterface $formFactory,
-        LoggerInterface $logger,
-        EventDispatcherInterface $eventDispatcher,
-        EntityManagerInterface $entityManager
+        PageRepository $pageRepository,
     ) {
         $this->mailService = $mailService;
         $this->customerStatusRepository = $customerStatusRepository;
         $this->tokenStorage = $tokenStorage;
         $this->cartService = $cartService;
         $this->orderHelper = $orderHelper;
-        $this->formFactory = $formFactory;
-        $this->logger = $logger;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->entityManager = $entityManager;
+        $this->pageRepository = $pageRepository;
     }
 
     /**
      * 退会画面.
      *
-     * @Route("/mypage/withdraw", name="mypage_withdraw")
+     * @Route("/mypage/withdraw", name="mypage_withdraw", methods={"GET", "POST"})
+     * @Route("/mypage/withdraw", name="mypage_withdraw_confirm", methods={"GET", "POST"})
+     *
      * @Template("Mypage/withdraw.twig")
      */
     public function index(Request $request)
@@ -123,19 +114,20 @@ class WithdrawController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             switch ($request->get('mode')) {
                 case 'confirm':
-                    $this->logger->info('退会確認画面表示');
+                    log_info('退会確認画面表示');
 
                     return $this->render(
                         'Mypage/withdraw_confirm.twig',
                         [
                             'form' => $form->createView(),
+                            'Page' => $this->pageRepository->getPageByRoute('mypage_withdraw_confirm'),
                         ]
                     );
 
                 case 'complete':
-                    $this->logger->info('退会処理開始');
+                    log_info('退会処理開始');
 
-                    /* @var $Customer \Eccube\Entity\Customer */
+                    /** @var \Eccube\Entity\Customer $Customer */
                     $Customer = $this->getUser();
                     $email = $Customer->getEmail();
 
@@ -146,7 +138,7 @@ class WithdrawController extends AbstractController
 
                     $this->entityManager->flush();
 
-                    $this->logger->info('退会処理完了');
+                    log_info('退会処理完了');
 
                     $event = new EventArgs(
                         [
@@ -166,7 +158,7 @@ class WithdrawController extends AbstractController
                     // ログアウト
                     $this->tokenStorage->setToken(null);
 
-                    $this->logger->info('ログアウト完了');
+                    log_info('ログアウト完了');
 
                     return $this->redirect($this->generateUrl('mypage_withdraw_complete'));
             }
@@ -180,7 +172,8 @@ class WithdrawController extends AbstractController
     /**
      * 退会完了画面.
      *
-     * @Route("/mypage/withdraw_complete", name="mypage_withdraw_complete")
+     * @Route("/mypage/withdraw_complete", name="mypage_withdraw_complete", methods={"GET"})
+     *
      * @Template("Mypage/withdraw_complete.twig")
      */
     public function complete(Request $request)

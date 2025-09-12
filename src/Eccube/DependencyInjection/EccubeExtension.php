@@ -16,6 +16,7 @@ namespace Eccube\DependencyInjection;
 use Doctrine\Bundle\DoctrineBundle\DependencyInjection\Configuration as DoctrineBundleConfiguration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
+use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\Finder\Finder;
@@ -30,6 +31,18 @@ class EccubeExtension extends Extension implements PrependExtensionInterface
      */
     public function load(array $configs, ContainerBuilder $container)
     {
+        $configuration = new Configuration();
+        $this->processConfiguration($configuration, $configs);
+    }
+
+    public function getAlias(): string
+    {
+        return 'eccube';
+    }
+
+    public function getConfiguration(array $config, ContainerBuilder $container)
+    {
+        return parent::getConfiguration($config, $container);
     }
 
     /**
@@ -48,9 +61,9 @@ class EccubeExtension extends Extension implements PrependExtensionInterface
     {
         $forceSSL = $container->resolveEnvPlaceholders('%env(ECCUBE_FORCE_SSL)%', true);
         // envから取得した内容が文字列のため, booleanに変換
-        if ('true' === $forceSSL) {
+        if ('1' === $forceSSL) {
             $forceSSL = true;
-        } elseif ('false' === $forceSSL) {
+        } elseif ('0' === $forceSSL) {
             $forceSSL = false;
         }
 
@@ -77,6 +90,37 @@ class EccubeExtension extends Extension implements PrependExtensionInterface
         $container->prependExtensionConfig('security', [
           'access_control' => $accessControl,
         ]);
+
+        $configs = $container->getExtensionConfig('eccube');
+        $configs = array_reverse($configs);
+        $rateLimiterConfigs = [];
+
+        foreach ($configs as $config) {
+            if (empty($config['rate_limiter'])) {
+                continue;
+            }
+            foreach ($config['rate_limiter'] as $id => $limiter) {
+                $container->prependExtensionConfig('framework', [
+                    'rate_limiter' => [
+                        $id => [
+                            'policy' => 'fixed_window',
+                            'limit' => $limiter['limit'],
+                            'interval' => $limiter['interval'],
+                            'cache_pool' => 'rate_limiter.cache',
+                        ],
+                    ],
+                ]);
+                // Customize > Plugin > 本体
+                if (isset($limiter['route']) && !isset($rateLimiterConfigs[$limiter['route']][$id])) {
+                    $processor = new Processor();
+                    $configuration = new Configuration();
+                    $processed = $processor->processConfiguration($configuration, ['eccube' => ['rate_limiter' => [$id => $limiter]]]);
+                    $rateLimiterConfigs[$limiter['route']][$id] = $processed['rate_limiter']['limiters'][$id];
+                }
+            }
+        }
+
+        $container->setParameter('eccube_rate_limiter_configs', $rateLimiterConfigs);
     }
 
     protected function configurePlugins(ContainerBuilder $container)
@@ -102,21 +146,10 @@ class EccubeExtension extends Extension implements PrependExtensionInterface
 
         // prependのタイミングではコンテナのインスタンスは利用できない.
         // 直接dbalのconnectionを生成し, dbアクセスを行う.
-        $params = $config['dbal'] ?? [];
+        $params = $config['dbal']['connections'][$config['dbal']['default_connection']];
         // ContainerInterface::resolveEnvPlaceholders() で取得した DATABASE_URL は
         // % がエスケープされているため、環境変数から取得し直す
-
-	// 環境変数 DATABASE_URL を取得
-	$envUrl = $container->resolveEnvPlaceholders('%env(DATABASE_URL)%', true);
-	if (!empty($envUrl)) {
-           $params['url'] = $envUrl;
-        }    
-
-        // 最低限 driver か driverClass または url が必要
-        if (empty($params['url']) && empty($params['driver']) && empty($params['driverClass'])) {
-           throw new \RuntimeException('Missing database connection information. Please check DATABASE_URL or dbal config.');
-        }
-
+        $params['url'] = env('DATABASE_URL');
         $conn = DriverManager::getConnection($params);
 
         if (!$this->isConnected($conn)) {
@@ -124,7 +157,7 @@ class EccubeExtension extends Extension implements PrependExtensionInterface
         }
 
         $stmt = $conn->query('select * from dtb_plugin');
-        $plugins = $stmt->fetchAllAssociative();
+        $plugins = $stmt->fetchAll();
 
         $enabled = [];
         foreach ($plugins as $plugin) {
@@ -203,7 +236,7 @@ class EccubeExtension extends Extension implements PrependExtensionInterface
     protected function isConnected(Connection $conn)
     {
         try {
-            if (!$conn->isConnected()) {
+            if (!$conn->executeQuery('select 1')) {
                 return false;
             }
         } catch (\Exception $e) {

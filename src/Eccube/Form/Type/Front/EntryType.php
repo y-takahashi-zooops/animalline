@@ -20,10 +20,10 @@ use Eccube\Form\Type\KanaType;
 use Eccube\Form\Type\Master\JobType;
 use Eccube\Form\Type\Master\SexType;
 use Eccube\Form\Type\NameType;
-use Eccube\Form\Type\RepeatedEmailType;
-use Eccube\Form\Type\RepeatedPasswordType;
 use Eccube\Form\Type\PhoneNumberType;
 use Eccube\Form\Type\PostalType;
+use Eccube\Form\Type\RepeatedEmailType;
+use Eccube\Form\Type\RepeatedPasswordType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -76,13 +76,12 @@ class EntryType extends AbstractType
                 'required' => true,
             ])
             ->add('email', RepeatedEmailType::class)
-            ->add('password', RepeatedPasswordType::class)
+            ->add('plain_password', RepeatedPasswordType::class)
             ->add('birth', BirthdayType::class, [
                 'required' => false,
                 'input' => 'datetime',
                 'years' => range(date('Y'), date('Y') - $this->eccubeConfig['eccube_birth_max']),
                 'widget' => 'choice',
-                'format' => 'yyyy/MM/dd',
                 'placeholder' => ['year' => '----', 'month' => '--', 'day' => '--'],
                 'constraints' => [
                     new Assert\LessThanOrEqual([
@@ -110,13 +109,13 @@ class EntryType extends AbstractType
                 $form = $event->getForm();
 
                 $form->add('user_policy_check', CheckboxType::class, [
-                        'required' => true,
-                        'label' => null,
-                        'mapped' => false,
-                        'constraints' => [
-                            new Assert\NotBlank(),
-                        ],
-                    ]);
+                    'required' => true,
+                    'label' => null,
+                    'mapped' => false,
+                    'constraints' => [
+                        new Assert\NotBlank(),
+                    ],
+                ]);
             }
         }
         );
@@ -125,8 +124,8 @@ class EntryType extends AbstractType
             $form = $event->getForm();
             /** @var Customer $Customer */
             $Customer = $event->getData();
-            if ($Customer->getPassword() != '' && $Customer->getPassword() == $Customer->getEmail()) {
-                $form['password']['first']->addError(new FormError(trans('common.password_eq_email')));
+            if ($Customer->getPlainPassword() != '' && $Customer->getPlainPassword() == $Customer->getEmail()) {
+                $form['plain_password']['first']->addError(new FormError(trans('common.password_eq_email')));
             }
         });
         $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validatePassword']);
@@ -139,8 +138,8 @@ class EntryType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => 'Eccube\Entity\Customer',
-            'password' => '',
+            'data_class' => Customer::class,
+            'plain_password' => '',
             'email' => ''
         ]);
     }
@@ -156,9 +155,9 @@ class EntryType extends AbstractType
 
     public function validatePassword(FormEvent $event)
     {
-        $length = strlen($event->getForm()->getConfig()->getOptions()['password']);
+        $length = strlen($event->getForm()->getConfig()->getOptions()['data']['plain_password']);
         $form = $event->getForm();
-        if (!$event->getForm()->getConfig()->getOptions()['password']) {
+        if (!$event->getForm()->getConfig()->getOptions()['data']['plain_password']) {
             $form['passwordErrors']->addError(new FormError('入力されていません。'));
         }
         if ( $length > 32) {
@@ -172,10 +171,10 @@ class EntryType extends AbstractType
     public function validateEmail(FormEvent $event)
     {
         $form = $event->getForm();
-        if (!$event->getForm()->getConfig()->getOptions()['email']) {
+        if (!$event->getForm()->getConfig()->getOptions()['data']['email']) {
             $form['emailErrors']->addError(new FormError('入力されていません。'));
         }
-        if (!filter_var($event->getForm()->getConfig()->getOptions()['email'], FILTER_VALIDATE_EMAIL) && $event->getForm()->getConfig()->getOptions()['email']) {
+        if (!filter_var($event->getForm()->getConfig()->getOptions()['data']['email'], FILTER_VALIDATE_EMAIL) && $event->getForm()->getConfig()->getOptions()['data']['email']) {
             $form['emailErrors']->addError(new FormError('有効なメールアドレスではありません。'));
         }
     }

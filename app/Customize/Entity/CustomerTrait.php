@@ -11,19 +11,19 @@ use Eccube\Annotation\EntityExtension;
 trait CustomerTrait
 {
     /**
-     * @ORM\Column(name="is_breeder",type="smallint", options={"default" : 0})
+     * @ORM\Column(name="is_breeder", type="string", nullable=true)
      */
-    public $is_breeder;
+    private $is_breeder;
 
     /**
-     * @ORM\Column(name="is_conservation",type="smallint", options={"default" : 0})
+     * @ORM\Column(name="is_conservation", type="string", nullable=true)
      */
-    public $is_conservation;
+    private $is_conservation;
 
     /**
-     * @ORM\Column(name="regist_type",type="smallint", options={"default" : 0})
+     * @ORM\Column(name="regist_type", type="string", nullable=true)
      */
-    public $regist_type;
+    private $regist_type;
 
     /**
      * @ORM\Column(name="site_type", type="smallint", nullable=true)
@@ -36,17 +36,18 @@ trait CustomerTrait
     public $register_id;
 
     /**
-     * @ORM\Column(name="relation_id", type="integer", nullable=true, options={"default" : 0})
+     * @ORM\Column(name="relation_id", type="string", nullable=true)
      */
-    public $relation_id;
+    private $relation_id;
 
-    public function setRelationId($relation_id)
+    public function setRelationId(?string $relationId): self
     {
-        $this->relation_id = $relation_id;
+        $this->relation_id = $relationId;
 
         return $this;
     }
-    public function getRelationId()
+    
+    public function getRelationId(): ?string
     {
         return $this->relation_id;
     }
@@ -54,13 +55,13 @@ trait CustomerTrait
     /**
      * Set regist_type.
      *
-     * @param string $regist_type
+     * @param string|null $registType
      *
      * @return Customer
      */
-    public function setRegistType($regist_type)
+    public function setRegistType(?string $registType): self
     {
-        $this->regist_type = $regist_type;
+        $this->regist_type = $registType;
 
         return $this;
     }
@@ -68,9 +69,9 @@ trait CustomerTrait
     /**
      * Get regist type.
      *
-     * @return integer
+     * @return string|null
      */
-    public function getRegistType()
+    public function getRegistType(): ?string
     {
         return $this->regist_type;
     }
@@ -126,13 +127,13 @@ trait CustomerTrait
     /**
      * Set is_breeder.
      *
-     * @param string $is_breeder
+     * @param int $isBreeder
      *
      * @return Customer
      */
-    public function setIsBreeder($is_breeder)
+    public function setIsBreeder(int $isBreeder): self
     {
-        $this->is_breeder = $is_breeder;
+        $this->is_breeder = $isBreeder;
 
         return $this;
     }
@@ -140,9 +141,9 @@ trait CustomerTrait
     /**
      * Get is_breeder.
      *
-     * @return integer
+     * @return string|null
      */
-    public function getIsBreeder()
+    public function getIsBreeder(): ?string
     {
         return $this->is_breeder;
     }
@@ -150,13 +151,13 @@ trait CustomerTrait
     /**
      * Set is_conservation.
      *
-     * @param string $is_conservation
+     * @param int $isConservation
      *
      * @return Customer
      */
-    public function setIsConservation($is_conservation)
+    public function setIsConservation(int $isConservation): self
     {
-        $this->is_conservation = $is_conservation;
+        $this->is_conservation = $isConservation;
 
         return $this;
     }
@@ -164,9 +165,9 @@ trait CustomerTrait
     /**
      * Get is_conservation.
      *
-     * @return integer
+     * @return string|null
      */
-    public function getIsConservation()
+    public function getIsConservation(): ?string
     {
         return $this->is_conservation;
     }

@@ -24,9 +24,6 @@ use Eccube\Repository\TaxRuleRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Class TaxRuleController
@@ -43,35 +40,24 @@ class TaxRuleController extends AbstractController
      */
     protected $taxRuleRepository;
 
-    protected FormFactoryInterface $formFactory;
-
-
     /**
      * TaxRuleController constructor.
      *
      * @param BaseInfoRepository $baseInfoRepository
      * @param TaxRuleRepository $taxRuleRepository
      */
-    public function __construct(
-        BaseInfoRepository $baseInfoRepository,
-        TaxRuleRepository $taxRuleRepository,
-        FormFactoryInterface $formFactory,
-        EventDispatcherInterface $eventDispatcher,
-        EntityManagerInterface $entityManager
-    )
+    public function __construct(BaseInfoRepository $baseInfoRepository, TaxRuleRepository $taxRuleRepository)
     {
         $this->BaseInfo = $baseInfoRepository->get();
         $this->taxRuleRepository = $taxRuleRepository;
-        $this->formFactory = $formFactory;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->entityManager = $entityManager;
     }
 
     /**
      * 税率設定の初期表示・登録
      *
-     * @Route("/%eccube_admin_route%/setting/shop/tax", name="admin_setting_shop_tax")
-     * @Route("/%eccube_admin_route%/setting/shop/tax/new", name="admin_setting_shop_tax_new")
+     * @Route("/%eccube_admin_route%/setting/shop/tax", name="admin_setting_shop_tax", methods={"GET", "POST"})
+     * @Route("/%eccube_admin_route%/setting/shop/tax/new", name="admin_setting_shop_tax_new", methods={"GET", "POST"})
+     *
      * @Template("@admin/Setting/Shop/tax_rule.twig")
      */
     public function index(Request $request)
@@ -123,7 +109,7 @@ class TaxRuleController extends AbstractController
         $errors = [];
         /** @var TaxRule $TaxRule */
         foreach ($TaxRules as $TaxRule) {
-            /* @var $builder \Symfony\Component\Form\FormBuilderInterface */
+            /** @var \Symfony\Component\Form\FormBuilderInterface $builder */
             $builder = $this->formFactory->createBuilder(TaxRuleType::class, $TaxRule);
             if ($TaxRule->isDefaultTaxRule()) {
                 $builder->remove('apply_date');

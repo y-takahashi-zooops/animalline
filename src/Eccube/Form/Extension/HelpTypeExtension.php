@@ -52,8 +52,17 @@ class HelpTypeExtension extends AbstractTypeExtension
         ]);
     }
 
+    public function getExtendedType()
+    {
+        return FormType::class;
+    }
+
+    /**
+     * Return the class of the type being extended.
+     */
     public static function getExtendedTypes(): iterable
     {
+        // return FormType::class to modify (nearly) every field in the system
         return [FormType::class];
     }
 }

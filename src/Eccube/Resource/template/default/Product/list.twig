@@ -44,7 +44,7 @@ file that was distributed with this source code.
                 // 個数フォームのチェック
                 var $quantity = $form.parent().find('.quantity');
                 if ($quantity.val() < 1) {
-                    $quantity[0].setCustomValidity('{{ '1以上で入力してください。'|trans }}');
+                    $quantity[0].setCustomValidity('{{ 'front.product.invalid_quantity'|trans }}');
                     setTimeout(function() {
                         loadingOverlay('hide');
                     }, 100);
@@ -65,7 +65,7 @@ file that was distributed with this source code.
                 }).done(function(data) {
                     // レスポンス内のメッセージをalertで表示
                     $.each(data.messages, function() {
-                        $('#ec-modal-header').html(this);
+                        $('#ec-modal-header').text(this);
                     });
 
                     $('.ec-modal').show()
@@ -79,7 +79,7 @@ file that was distributed with this source code.
                         $('.ec-headerRole__cart').html(html);
                     });
                 }).fail(function(data) {
-                    alert('{{ 'カートへの追加に失敗しました。'|trans }}');
+                    alert('{{ 'front.product.add_cart_error'|trans }}');
                 }).always(function(data) {
                     // Buttonを有効にする
                     $('.add-cart').prop('disabled', false);
@@ -87,7 +87,11 @@ file that was distributed with this source code.
             });
         });
 
-        $('.ec-modal-overlay, .ec-modal .ec-inlineBtn--cancel').on('click', function() {
+        $('.ec-modal-wrap').on('click', function(e) {
+            // モーダル内の処理は外側にバブリングさせない
+            e.stopPropagation();
+        });
+        $('.ec-modal-overlay, .ec-modal, .ec-modal-close, .ec-inlineBtn--cancel').on('click', function() {
             $('.ec-modal').hide()
         });
     </script>
@@ -96,7 +100,7 @@ file that was distributed with this source code.
 {% block main %}
     {% if search_form.category_id.vars.errors|length > 0 %}
         <div class="ec-searchnavRole">
-            <p class="errormsg text-danger">{{ 'ご指定のカテゴリは存在しません'|trans }}</p>
+            <p class="errormsg text-danger">{{ 'front.product.search__category_not_found'|trans }}</p>
         </div>
     {% else %}
         <div class="ec-searchnavRole">
@@ -109,7 +113,7 @@ file that was distributed with this source code.
             </form>
             <div class="ec-searchnavRole__topicpath">
                 <ol class="ec-topicpath">
-                    <li class="ec-topicpath__item"><a href="{{ url('product_list') }}">{{ '全て'|trans }}</a>
+                    <li class="ec-topicpath__item"><a href="{{ url('product_list') }}">{{ 'front.product.all_category'|trans }}</a>
                     </li>
                     {% if Category is not null %}
                         {% for Path in Category.path %}
@@ -121,23 +125,23 @@ file that was distributed with this source code.
                     {% endif %}
                     {% if search_form.vars.value and search_form.vars.value.name %}
                         <li class="ec-topicpath__divider">|</li>
-                        <li class="ec-topicpath__item">{{ '「%name%」の検索結果'|trans({ '%name%': search_form.vars.value.name }) }}</li>
+                        <li class="ec-topicpath__item">{{ 'front.product.search_result__keyword'|trans({ '%name%': search_form.vars.value.name }) }}</li>
                     {% endif %}
                 </ol>
             </div>
             <div class="ec-searchnavRole__infos">
                 <div class="ec-searchnavRole__counter">
                     {% if pagination.totalItemCount > 0 %}
-                        {{ '<span class="ec-font-bold">%count%件</span><span>の商品が見つかりました</span>'|trans({ '%count%': pagination.totalItemCount })|raw }}
+                        {{ 'front.product.search_result__detail'|trans({ '%count%': pagination.totalItemCount })|raw }}
                     {% else %}
-                        <span>{{ 'お探しの商品は見つかりませんでした'|trans }}</span>
+                        <span>{{ 'front.product.search__product_not_found'|trans }}</span>
                     {% endif %}
                 </div>
                 {% if pagination.totalItemCount > 0 %}
                     <div class="ec-searchnavRole__actions">
                         <div class="ec-select">
-                            {{ form_widget(disp_number_form, {'id': '', 'attr': {'class': 'disp-number'}}) }}
-                            {{ form_widget(order_by_form, {'id': '', 'attr': {'class': 'order-by'}}) }}
+                            {{ form_widget(search_form.disp_number, {'id': '', 'attr': {'class': 'disp-number'}}) }}
+                            {{ form_widget(search_form.orderby, {'id': '', 'attr': {'class': 'order-by'}}) }}
                         </div>
                     </div>
                 {% endif %}
@@ -150,7 +154,7 @@ file that was distributed with this source code.
                         <li class="ec-shelfGrid__item">
                             <a href="{{ url('product_detail', {'id': Product.id}) }}">
                                 <p class="ec-shelfGrid__item-image">
-                                    <img src="{{ asset(Product.main_list_image|no_image_product, 'save_image') }}">
+                                    <img src="{{ asset(Product.main_list_image|no_image_product, 'save_image') }}" alt="{{ Product.name }}" {% if loop.index > 5 %} loading="lazy"{% endif %}>
                                 </p>
                                 <p>{{ Product.name }}</p>
                                 {% if Product.description_list %}
@@ -185,7 +189,7 @@ file that was distributed with this source code.
                                                 </div>
                                             {% endif %}
                                         {% endif %}
-                                        <div class="ec-numberInput"><span>{{ '数量'|trans }}</span>
+                                        <div class="ec-numberInput"><span>{{ 'common.quantity'|trans }}</span>
                                             {{ form_widget(form.quantity, {'attr': {'class': 'quantity'}}) }}
                                             {{ form_errors(form.quantity) }}
                                         </div>
@@ -194,13 +198,13 @@ file that was distributed with this source code.
                                 </form>
                                 <div class="ec-productRole__btn">
                                     <button type="submit" class="ec-blockBtn--action add-cart" data-cartid="{{ Product.id }}" form="productForm{{ Product.id }}">
-                                        {{ 'カートに入れる'|trans }}
+                                        {{ 'front.product.add_cart'|trans }}
                                     </button>
                                 </div>
                             {% else %}
                                 <div class="ec-productRole__btn">
                                     <button type="button" class="ec-blockBtn--action" disabled="disabled">
-                                        {{ 'ただいま品切れ中です。'|trans }}
+                                        {{ 'front.product.out_of_stock'|trans }}
                                     </button>
                                 </div>
                             {% endif %}
@@ -212,11 +216,11 @@ file that was distributed with this source code.
                 <div class="ec-modal-overlay">
                     <div class="ec-modal-wrap">
                         <span class="ec-modal-close"><span class="ec-icon"><img src="{{ asset('assets/icon/cross-dark.svg') }}" alt=""/></span></span>
-                        <div id="ec-modal-header" class="text-center">{{ 'カートに追加しました。'|trans }}</div>
+                        <div id="ec-modal-header" class="text-center">{{ 'front.product.add_cart_complete'|trans }}</div>
                         <div class="ec-modal-box">
                             <div class="ec-role">
-                                <span class="ec-inlineBtn--cancel">{{ 'お買い物を続ける'|trans }}</span>
-                                <a href="{{ url('cart') }}" class="ec-inlineBtn--action">{{ 'カートへ進む'|trans }}</a>
+                                <span class="ec-inlineBtn--cancel">{{ 'front.product.continue'|trans }}</span>
+                                <a href="{{ url('cart') }}" class="ec-inlineBtn--action">{{ 'common.go_to_cart'|trans }}</a>
                             </div>
                         </div>
                     </div>

@@ -42,7 +42,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Eccube\Common\EccubeConfig;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use Doctrine\ORM\EntityManagerInterface;
 
 use Customize\Repository\BreederPetsRepository;
@@ -100,8 +100,6 @@ class AdminController extends AbstractController
     /** @var ConservationPetsRepository */
     protected $conservationPetsRepository;
 
-    protected FormFactoryInterface $formFactory;
-
     /**
      * @var array 売り上げ状況用受注状況
      */
@@ -152,7 +150,9 @@ class AdminController extends AbstractController
         $this->pluginApiService = $pluginApiService;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->conservationPetsRepository = $conservationPetsRepository;
-        $this->formFactory = $formFactory;
+        
+        // 親クラスのsetFormFactoryメソッドを呼び出して$formFactoryを設定
+        $this->setFormFactory($formFactory);
         $this->eventDispatcher = $eventDispatcher;
         $this->logger = $logger;
         $this->eccubeConfig = $eccubeConfig;
