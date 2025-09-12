@@ -233,6 +233,15 @@
     "phpspec/prophecy": {
         "version": "1.7.5"
     },
+    "phpstan/phpstan": {
+        "version": "1.12",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "1.0",
+            "ref": "5e490cc197fb6bb1ae22e5abbc531ddc633b6767"
+        }
+    },
     "phpunit/php-code-coverage": {
         "version": "5.3.2"
     },
@@ -556,6 +565,18 @@
     },
     "symfony/property-access": {
         "version": "v3.4.1"
+    },
+    "symfony/property-info": {
+        "version": "7.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "7.3",
+            "ref": "dae70df71978ae9226ae915ffd5fad817f5ca1f7"
+        },
+        "files": [
+            "app/config/eccube/packages/property_info.yaml"
+        ]
     },
     "symfony/proxy-manager-bridge": {
         "version": "v3.4.4"
