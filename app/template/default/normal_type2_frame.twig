@@ -1,0 +1,288 @@
+<!doctype html>
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+<html lang="{{ eccube_config.locale }}">
+<head>
+    <script async src="https://s.yimg.jp/images/listing/tool/cv/ytag.js"></script>
+    <script>
+    window.yjDataLayer = window.yjDataLayer || [];
+    function ytag() { yjDataLayer.push(arguments); }
+    ytag({"type":"ycl_cookie"});
+    </script>
+
+    <!-- Global site tag (gtag.js) - Google Ads: 10929084835 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-10929084835"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'AW-10929084835');
+    </script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XS8V5VVPRP"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XS8V5VVPRP');
+    </script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-212594413-1"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-212594413-1');
+    </script>
+
+    <meta name=”robots” content=”noindex”>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="eccube-csrf-token" content="{{ csrf_token(constant('Eccube\\Common\\Constant::TOKEN_NAME')) }}">
+
+    {% set part_uri = path(app.request.attributes.get('_route'),app.request.attributes.get('_route_params'))[1:] %}
+    {% if part_uri == 'entry' %}
+    <title>新規会員登録｜ 犬・猫のブリーダー直販と里親募集サイトのアニマルライン</title>
+    <meta name="description" content="アニマルラインの「新規会員登録」ページです。アニマルラインではブリーダー・動物保護団体・ペットを飼われる方に寄り添うサポートを実施致しております。">
+    {# {% elseif part_uri == 'dctn' %} #}
+    {% else %}
+    <title>{{ BaseInfo.shop_name }}{% if subtitle is defined and subtitle is not empty %} / {{ subtitle }}{% elseif title is defined and title is not empty %} / {{ title }}{% endif %}</title>
+    <meta name="description" content="Animalline（アニマルライン）は、「ブリーダー直販」と「里親としてペットを迎える」という２つの方法で、ブリーダー・動物保護団体・ペットを飼われる方に寄り添うサポートを実施致しております。">
+    {% endif %}
+
+    {% if Page.author is not empty %}
+        <meta name="author" content="{{ Page.author }}">
+    {% endif %}
+    {% if Page.description is not empty %}
+        <meta name="description" content="{{ Page.description }}">
+    {% endif %}
+    {% if Page.keyword is not empty %}
+        <meta name="keywords" content="{{ Page.keyword }}">
+    {% endif %}
+    {% if Page.meta_robots is not empty %}
+        <meta name="robots" content="{{ Page.meta_robots }}">
+    {% endif %}
+    {% if Page.meta_tags is not empty %}
+        {{ include(template_from_string(Page.meta_tags)) }}
+    {% endif %}
+    <link rel="icon" href="{{ asset('assets/img/ec/favicon.png') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css">
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    {% block stylesheet %}{% endblock %}
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script>
+        $(function() {
+            $.ajaxSetup({
+                'headers': {
+                    'ECCUBE-CSRF-TOKEN': $('meta[name="eccube-csrf-token"]').attr('content')
+                }
+            });
+        });
+    </script>
+    {# Layout: HEAD #}
+    {% if Layout.Head %}
+        {{ include('block.twig', {'Blocks': Layout.Head}) }}
+    {% endif %}
+    {# プラグイン用styleseetやmetatagなど #}
+    {% if plugin_assets is defined %}{{ include('@admin/snippet.twig', { snippets: plugin_assets }) }}{% endif %}
+
+
+    <link rel="stylesheet" href="{{ asset('assets/css/base-style.css') }}">
+
+
+    <link rel="stylesheet" href="{{ asset('assets/css-spc/common.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css-spc/style.css') }}">
+
+</head>
+<body id="page_{{ app.request.get('_route') }}" class="{{ body_class|default('other_page') }}">
+
+{% set DogCategories = repository('Eccube\\Entity\\Category').findBy({'Parent': 7}) %}
+{% set CatCategories = repository('Eccube\\Entity\\Category').findBy({'Parent': 8}) %}
+{% from 'navCategory.twig' import mzSpNav %}
+
+    <div id="overlay" class="mdOverlay"></div>
+    <header id="header" class="header" itemscope="" itemtype="https://schema.org/WPHeader" style="position: fixed;">
+        <div class="header__frame">
+            <div class="wrap w1200">
+                <div class="header__topbase flex bet vcenter str">
+                    <div class="header__topleft flex vert sp-hcenter">
+                        <div class="header__desc pc">
+                            わんちゃん、ねこちゃんが、生涯幸せでいられる環境を目指してペット用品通販サイト
+                        </div>
+                        <div class="flex vcenter">
+                            <a class="headerLogo" href="{{ url('homepage') }}">
+                                <h1 class="headerLogo__in flex vcenter">
+                                    <img class="headerLogo__img" src="{{ asset('assets/img/ec/logo.png') }}" alt="アニマルライン" />
+                                </h1>
+                            </a>
+                            <span class="headerLogo__text pc">{{ BaseInfo.delivery_free_amount | number_format(0, '.', ',') }}円以上で送料無料！</span>
+                        </div>
+                    </div>
+                    <div class="header__topright flex">
+                        <form method="get" class="headerSearch flex pc" action="{{ path('product_list') }}">
+                            <input type="text" class="headerSearch__input" name="name" placeholder="検索キーワードを入力">
+                            <button type="submit" class="headerSearch__btn">
+                                <i class="icon icon-search"></i>検索
+                            </button>
+                        </form>
+                        <div class="headerTel flex vert pc">
+                            <div class="headerTel__txt">受付時間 月～土 10:00～18:00</div>
+                            <div class="headerTel__line flex vcenter">
+                                <span class="headerTel__ttl">TEL</span>
+                                <span class="headerTel__num serif">03-5969-9718</span>
+                            </div>
+                        </div>
+                        <button type="button" id="gNav-open" class="sp gNavBtn">
+                            <div class="gNavBtn__box">
+                                <div class="gNavBtn__icon">
+                                    <i class="icon icon-pawprint"></i>
+                                </div>
+                                <div class="gNavBtn__txtMenu -menu">MENU</div>
+                                <div class="gNavBtn__txtClose -close">CLOSE</div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+    <nav id="gNav" class="gNav sp-wrap" itemscope="" itemtype="https://schema.org/SiteNavigationElement" style="">
+        <div class="gNav__menu mdAcc">
+            <div class="gNav__box">
+                <form method="get" class="headerSearch flex" action="{{ path('product_list') }}">
+                    <input type="text" class="headerSearch__input" name="name" placeholder="検索キーワードを入力">
+                    <button type="submit" class="headerSearch__btn">
+                        <i class="icon icon-search"></i>検索
+                    </button>
+                </form>
+            </div>
+            <div class="gNav__box">
+                <input id="gNav1" class="mdAcc__check" type="checkbox" value="" />
+                <label for="gNav1" class="mdAcc__btn gNav__item flex vcenter hcenter -sub">
+                    <i class="icon icon-inu"></i>犬用品を買う
+                </label>
+                <div class="mdAcc__body">
+                    <div class="mdAcc__in">
+                       {{ mzSpNav(DogCategories) }}
+                    </div>
+
+                </div>
+            </div>
+            <div class="gNav__box">
+                <input id="gNav2" class="mdAcc__check" type="checkbox" value="" />
+                <label for="gNav2" class="mdAcc__btn gNav__item flex vcenter hcenter -sub">
+                    <i class="icon icon-neko"></i>猫用品を買う
+                </label>
+                <div class="mdAcc__body">
+                    <div class="acc-in">
+                        {{ mzSpNav(CatCategories) }}
+                    </div>
+                </div>
+            </div>
+            <a href="https://animalline.jp/" class="gNav__item flex vcenter hcenter gNav__item--notsub">
+                <i class="icon icon-pawprint"></i>アニマルライン | 犬・猫のブリーダー直販と里親募集サイト
+            </a>
+        </div>
+        <div class="gNav__contact">
+            <div class="gNav__contact--txt">受付時間 月～土 10:00～18:00</div>
+            <div class="gNav__contact--tel flex vcenter">
+                <span>TEL</span>
+                <span class="serif">03-5969-9718</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="headerPad"></div>
+
+    {# MAIN AREA #}
+    {% block main %}{% endblock %}
+
+    <footer id="footer" class="footer" itemscope itemtype="http://schema.org/WPFooter" >
+        <nav class="navbar sp flex hcenter">
+            {% if is_granted('ROLE_USER') == false %}
+                <a href="{{ url('aniline_entry') }}" class="navbar__item navbar__item--signup flex hcenter vert">
+                    会員登録<i class="icon icon-reg"></i>
+                </a>
+                <a href="{{ url('mypage_login') }}" class="navbar__item navbar__item--login flex hcenter vert">
+                    ログイン<i class="icon icon-login"></i>
+                </a>
+            {% else %}
+                <a href="{{ url('logout') }}" class="navbar__item navbar__item--login flex hcenter vert">
+                    ログアウト<i class="icon icon-login"></i>
+                </a>
+            {% endif %}
+            <a href="{{ url('cart') }}" class="navbar__item navbar__item--cart flex hcenter vert">
+                カートを見る<i class="icon icon-cart"></i>
+            </a>
+        </nav>
+        <div class="back2top flex break vcenter pc">
+            <img src="{{ asset('assets/img/ec/page_top.svg') }}" alt="上に戻る">
+        </div>
+
+        <div class="footerBottom">
+            <div class="footerNav flex vcenter hcenter break">
+                <a href="{{ url('help_privacy') }}" class="footerNav__link">プライバシーポリシー</a>
+                <a href="{{ url('help_tradelaw') }}" class="footerNav__link">特定商法取引法に関する表示</a>
+                <a href="{{ url('contact') }}" class="footerNav__link">お問い合わせ</a>
+            </div>
+            <div class="footerLogo flex hcenter">
+                <a href="{{ url('homepage') }}" class="footerLogo__link">
+                    <img src="{{ asset('assets/img/ec/logo.png') }}" alt="アニマルライン">
+                </a>
+            </div>
+            <div class="footerCopy flex hcenter">
+                <p class="footerCopy__txt">(C)Copyright 2002-2025 Animalline CO.,LTD All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer><!-- / #footer -->
+
+<script src="https://ajaxzip3.github.io/ajaxzip3.js?v1758768813927"></script>
+<script src="{{ asset('assets/js-spc/main.min.js') }}"></script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
+{% include('@common/lang.twig') %}
+<script src="{{ asset('assets/js/function.js') }}"></script>
+<script src="{{ asset('assets/js/eccube.js') }}"></script>
+{% block javascript %}{% endblock %}
+{# Layout: CLOSE_BODY_BEFORE #}
+{% if Layout.CloseBodyBefore %}
+    {{ include('block.twig', {'Blocks': Layout.CloseBodyBefore}) }}
+{% endif %}
+{# プラグイン用Snippet #}
+{% if plugin_snippets is defined %}
+    {{ include('snippet.twig', { snippets: plugin_snippets }) }}
+{% endif %}
+    <script src="{{ asset('assets/js/customize.js', 'user_data') }}"></script>
+
+    <script async src="https://s.yimg.jp/images/listing/tool/cv/ytag.js"></script>
+    <script>
+    window.yjDataLayer = window.yjDataLayer || [];
+    function ytag() { yjDataLayer.push(arguments); }
+    ytag({
+    "type":"yss_retargeting",
+    "config": {
+        "yahoo_ss_retargeting_id": "1001250419",
+        "yahoo_sstag_custom_params": {
+        }
+    }
+    });
+    </script>
+</body>
+</html>

@@ -1,332 +1,272 @@
 {% extends 'default_frame.twig' %}
 
 {% block stylesheet %}
-    <link rel="stylesheet" href="{{ asset('assets/css/index.css?ver=211102_2') }}">
 {% endblock %}
 {% block javascript %}
 {# カレンダー表示用スクリプト #}
 <script>
-	// 業務カレンダー表示用
-	const week = ["日", "月", "火", "水", "木", "金", "土"];
-	const today = new Date();
-	// 月末だとずれる可能性があるため、1日固定で取得
-	var showDate = new Date(today.getFullYear(), today.getMonth(), 1);
 
-	$(function(){
-		year = showDate.getFullYear();
-		month = showDate.getMonth();
-
-		// showDateの月は配列なので、11が12月、0が1月
-		if( month == 11){
-			nextyear = year + 1;
-			nextmonth = 0;
-		} else {
-			nextyear = year
-			nextmonth = month + 1;
-		}
-
-		// 当月カレンダー作成
-		$.ajax({
-			url: '{{ url('customize_calendar_index.name') }}',
-			type: 'POST',
-			dataType: 'json',
-			data: {
-				'year' : year,
-				'month' : month
-			}
-		}).done(function (data) {// 正常時
-    		calendar = createCalendar(data.year, data.month, data.dates);
-			document.querySelector('#calendar_thisMonth').innerHTML = calendar;
-		}).fail(function () { // エラー時
-			alert('読み込みエラー');
-		});
-
-		// 翌月カレンダー作成
-		$.ajax({
-			url: '{{ url('customize_calendar_index.name') }}',
-			type: 'POST',
-			dataType: 'json',
-			data: {
-				'year' : nextyear,
-				'month' : nextmonth
-			}
-		}).done(function (data) {// 正常時
-    		calendar = createCalendar(data.year, data.month, data.dates);
-			document.querySelector('#calendar_nextMonth').innerHTML = calendar;
-		}).fail(function () { // エラー時
-			alert('読み込みエラー');
-		});
-	});
-
-	// カレンダー作成
-	function createCalendar(year, month, dates) {
-
-		// 月・曜日
-		var calendar = "<table class='common-table cal'><caption>" + year + "年<span>"+ month + "月</span></caption><thead><tr>";
-		for (var i = 0; i < week.length; i++) {
-			calendar += "<th>" + week[i] + "</th>";
-		}
-		calendar += "</thead></tr>";
-
-		var count = 0;
-		var row = Math.ceil((dates.length) / week.length);
-
-		// 1行ずつ設定
-		for (var i = 0; i < row; i++) {
-			calendar += "<tr>";
-			// 1カラム単位で設定
-			for (var j = 0; j < week.length; j++) {
-				count = j + i * 7;
-				// 休日
-				if(dates[count].holiday) {
-					calendar += "<td class='holiday'>" + dates[count].day + "</td>";
-				// 前月or翌月
-				}else if(dates[count].disabled){
-					calendar += "<td class='disabled'>" + dates[count].day + "</td>";
-				} 
-				// その他
-				else{
-					calendar += "<td>" + dates[count].day + "</td>";
-				}
-			}
-			calendar += "</tr>";
-		}
-
-		return calendar;
-	}
-
-	$('.slider').slick({
-		autoplay:true,
-    	autoplaySpeed:5000,
-    	dots:true,
-		slidesToShow:1,
-    	slidesToScroll:2,
-		centerMode: true,
-    	centerPadding: '50px',
-		arrows: false,
-	});
 </script>
 
 {% endblock %}
 
 {% block main %}
-    <main role="main" id="container" style="width:100vw">
-		<h1 class="for-seo">商品販売トップ</h1>
-        <div id="contents">
-			<div class="edit-area keyvisual">
-                <div class="inner w1190">
-                    <div class="photo-box"><img src="{{ asset('assets/img/ec/top.png') }}" alt="アニマルライン"></div>
-                </div>
-
-				<div class="inner w1190 box-area">
-					<h2 class="box-title">わんちゃん、ねこちゃんが、生涯幸せでいられる環境を目指して<h2>
-					<p class="box-detail">Animalline（アニマルライン）ECサイトは、皆さまにご参加いただく、社会貢献活動を行っているサイトです。<br />
-					皆さまに購入頂いた売上金の一部を提携の保護団体・ブリーダーへ支援金としてご活用いただく仕組みを通じて、<br />
-					犬・猫の殺処分ゼロの輪に繋げ、全ての犬・猫の幸せな未来の為に、『絆』を繋げていく活動を行っています。<br /></p>
+	<div id="page-top"></div>
+	<div class="wrap sp-wrap w1200">
+		<section class="secMV">
+			<div class="slider-wrap">
+				<div class="swiper js-sliderMV secMV-slider">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide"><img src="{{ asset('assets/img/ec/mv_01.jpg') }}" alt=""></div>
+						<div class="swiper-slide"><img src="{{ asset('assets/img/ec/mv_02.jpg') }}" alt=""></div>
+						<div class="swiper-slide"><img src="{{ asset('assets/img/ec/mv_03.jpg') }}" alt=""></div>
+						<div class="swiper-slide"><img src="{{ asset('assets/img/ec/mv_04.jpg') }}" alt=""></div>
+					</div>
 				</div>
-            </div>
-            <div class="side-set">
-                <div class="main-area">
-					<div class="edit-area keyvisual">
-						<div class="row">
-							<div class="col-md-6 col-sm-12"><a href="{{ url('product_detail', {'id': '1562'}) }}"><img alt="画像1" src="{{ asset('assets/img/ec/banner_top01.png') }}" /></a></div>
-							<div class="col-md-6 col-sm-12"><a href="{{ url('product_detail', {'id': '1578'}) }}"><img alt="画像1" src="{{ asset('assets/img/ec/banner_top04.png') }}" /></a></div>
-
-							<div class="col-md-6 col-sm-12"><a href="{{ url('product_detail', {'id': '1561'}) }}" style="margin-top:1rem;"><img alt="画像2" src="{{ asset('assets/img/ec/banner_top02.png') }}" /></a></div>
-							<div class="col-md-6 col-sm-12"><a href="{{ url('product_detail', {'id': '1579'}) }}" style="margin-top:1rem;"><img alt="画像2" src="{{ asset('assets/img/ec/banner_top05.png') }}" /></a></div>
-
-							<div class="col-md-6 col-sm1-12"><a href="{{ url('product_detail', {'id': '1560'}) }}" style="margin-top:1rem;"><img alt="画像3" src="{{ asset('assets/img/ec/banner_top03.png') }}" /></a></div>
-							<div class="col-md-6 col-sm1-12"><a href="{{ url('product_detail', {'id': '1580'}) }}" style="margin-top:1rem;"><img alt="画像3" src="{{ asset('assets/img/ec/banner_top06.png') }}" /></a></div>
-
-							<div class="col-md-12 col-sm1-12"><a href="{{ url('ec_nutro') }}" style="margin-top:1rem;"><img alt="画像3" src="{{ asset('assets/img/ec/banner_nutro.png') }}" /></a></div>
-						</div>
+				<div class="swiper-button-prev productBtn productBtn-left pc">
+					<img src="{{ asset('assets/img/ec/arrow_left.svg') }}" alt="前へ">
+				</div>
+				<div class="swiper-button-next productBtn productBtn-right pc">
+					<img src="{{ asset('assets/img/ec/arrow_right.svg') }}" alt="次へ">
+				</div>
+			</div>
+			<!-- サムネイル -->
+			<div class="secMV__thumb pc">
+				<div class="swiper js-sliderMV-thumb">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide"><img src="{{ asset('assets/img/ec/mv_01.jpg') }}" alt=""></div>
+						<div class="swiper-slide"><img src="{{ asset('assets/img/ec/mv_02.jpg') }}" alt=""></div>
+						<div class="swiper-slide"><img src="{{ asset('assets/img/ec/mv_03.jpg') }}" alt=""></div>
+						<div class="swiper-slide"><img src="{{ asset('assets/img/ec/mv_04.jpg') }}" alt=""></div>
 					</div>
-					
-					<div class="edit-area keyvisual">
-						<div class="row">
-							<div class="col-md-12 col-sm1-12"><a href="{{ url('dna_ec_top') }}" style="margin-top:1rem;"><img alt="画像3" src="{{ asset('assets/img/ec/dna_ec.png') }}" /></a></div>
-						</div>
-					</div>
-					
-                    <div class="edit-area lineup new">
-                        <div class="inner">
-                            <div class="index-title type01">
-                                <h2 class="main"><span>新着商品</span></h2>
-                            </div>
-                            <ul class="lineup-list">
+				</div>
+			</div>
+			<div class="swiper-pagination sp"></div>
+		</section>
 
-								<li><a href="{{ url('dna_ec_top') }}">
-									<div class="list-photo"><img src="{{ asset('assets/img/ec/dna_ec_new.jpg') }}"></div>
-									<div class="list-title">DNA検査</div>
-								</a></li>
-								
-                                {% for product in products_new |slice(0,10) %}
-                                    <li><a href="{{ url('product_detail', {'id': product.id}) }}">
-                                        <div class="list-photo"><img src="{{ asset(product.main_list_image|no_image_product, 'save_image') }}"></div>
-                                        <div class="list-title">{{ product.name }}</div>
-                                    </a></li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </div>
 
-					<div class="edit-area lineup new">
-						<div class="inner">
-							<div class="index-title type01">
-								<h2 class="main"><span>おすすめ商品</span></h2>
-							</div>
-							<ul class="lineup-list">
-								{% for product in osusume %}
-									<li><a href="{{ url('product_detail', {'id': product.id}) }}">
-										<div class="list-photo"><img src="{{ asset(product.main_list_image|no_image_product, 'save_image') }}"></div>
-										<div class="list-title">{{ product.name }}</div>
-									</a></li>
-								{% endfor %}
-							</ul>
-						</div>
-					</div>
+		<section class="secBanner">
+			<div class="secBanner__list flex break">
+				<a href="{{ url('ec_nutro') }}" class="secBanner__item -w100">
+					<img src="{{ asset('assets/img/ec/banner_nutro.png') }}" alt="ニュートロ">
+				</a>
+				<a href="{{ url('ec_greenies') }}" class="secBanner__item -w100">
+					<img src="{{ asset('assets/img/ec/banner_greenies.jpg') }}" alt="グリニーズ">
+				</a>
+			</div>
+		</section>
 
-					<div class="edit-area lineup new">
-						<div class="inner">
-							<div class="index-title type01">
-								<h2 class="main"><span>ブランドから選ぶ</span></h2>
-							</div>
-							<ul class="lineup-list">
-								{#
-								<li><a href="{{ url('product_list') }}?category_id=37">
-									<div class="list-photo"><img src="{{ asset('assets/img/ec/maker01.jpg') }}"></div>
-								</a></li>
-								#}
-								<li><a href="{{ url('product_list') }}?category_id=41">
-									<div class="list-photo"><img src="{{ asset('assets/img/ec/maker02.png') }}"></div>
-								</a></li>
-								<li><a href="{{ url('product_list') }}?category_id=42">
-									<div class="list-photo"><img src="{{ asset('assets/img/ec/maker03.png') }}"></div>
-								</a></li>
-								<li><a href="{{ url('product_list') }}?category_id=40">
-									<div class="list-photo"><img src="{{ asset('assets/img/ec/maker04.png') }}"></div>
-								</a></li>
-							</ul>
-						</div>
-					</div>
-                </div><!-- main-area -->
-
-                <div class="side-area" style="margin-top: 3rem">
-                    <dl class="side-list">
-                        <div>
-                            <dt>⽝⽤</dt>
-                            <dd>
-                                <ul>
-                                    {% for categoryDog in categoryChildDog %}
-                                        {% if categoryDog['category'].getProductCategories is not empty %}
-                                            <li><a href="{{ url('product_list') }}?category_id={{ categoryDog['category'].id }}">{{ categoryDog['category'].name }}({{ categoryDog['count_product'] }})</a></li>
-                                        {% endif %}
-                                    {% endfor %}
-                                </ul>
-                            </dd>
-                        </div>
-                        <div>
-                            <dt>猫⽤</dt>
-                            <dd>
-                                <ul>
-                                    {% for categoryCat in categoryChildCat %}
-                                        {% if categoryCat['category'].getProductCategories is not empty %}
-                                            <li><a href="{{ url('product_list') }}?category_id={{ categoryCat['category'].id }}">{{ categoryCat['category'].name }}({{ categoryCat['count_product'] }})</a></li>
-                                        {% endif %}
-                                    {% endfor %}
-                                </ul>
-                            </dd>
-                        </div>
-                        <div>
-                            <dt>共通</dt>
-                            <dd>
-                                <ul>
-                                    {% for categoryBeside in categoryChildBeside %}
-                                        {% if categoryBeside['category'].getProductCategories is not empty %}
-                                            <li><a href="{{ url('product_list') }}?category_id={{ categoryBeside['category'].id }}">{{ categoryBeside['category'].name }}({{ categoryBeside['count_product'] }})</a></li>
-                                        {% endif %}
-                                    {% endfor %}
-                                </ul>
-                            </dd>
-                        </div>
-                    </dl>
-					{#
-					<a href="https://www.i-sedai.com/pet/lp/?shopID=a0C1000001stuj3&agntCD=IK114591&campID=70110000000fvOT" target="_blank" style="margin-bottom: 2rem;">
-						<figure>
-						<img src="{{ asset('assets/img/ec/insurance_banner01.jpg') }}" alt="ペットの家庭教師"/>
-						</figure>
-					</a>
-					#}
-					<a href="{{ url("ani_dctn_info") }}">
-						<figure>
-						<img src="{{ asset('assets/img/breeder-bnr03.png') }}" alt="ペットの家庭教師"/>
-						</figure>
-					</a>
-
-					<a href="{{url('breeder_info')}}" style="margin-top:1rem;">
-						<figure>
-						<img src="{{ asset('assets/img/ec/link01.png') }}" alt="ペットの家庭教師"/>
-						</figure>
-					</a>
-
-					<a href="{{url('adoption_info')}}" style="margin-top:1rem;">
-						<figure>
-						<img src="{{ asset('assets/img/ec/link02.png') }}" alt="ペットの家庭教師"/>
-						</figure>
-					</a>
-                </div>
-            </div><!-- side-area -->
-
-            <div class="edit-area buy">
-				<div class="inner">
-					<h2 class="buy-title">お買い物についてのお知らせ</h2>
-
-					<ul class="buy-list">
-						<li>
-							<dl>
-								<dt>お支払いについて</dt>
-								<dd>
-									お支払いは、クレジットカードがご利用いただけます。
-									<div class="notes">
-										※クレジットカードのセキュリティはSSLというシステムを利用しております。カード番号は暗号化されて安全に送信されますので、どうぞご安心ください。
+		<section class="secRecommend">
+			<h2 class="pageHead">おすすめ商品</h2>
+			<div class="slider-wrap">
+				<div class="swiper js-sliderProduct" data-slider-id="3" data-slides-per-view="4" data-slides-per-view_sp="2">
+					<div class="swiper-wrapper">
+						{% for product in osusume %}
+							<div class="swiper-slide">
+								<a href="{{ url('product_detail', {'id': product.id}) }}" class="productItem flex vert">
+									<div class="productItem__img">
+										<img src="{{ asset(product.main_list_image|no_image_product, 'save_image') }}" alt="{{ product.name }}">
 									</div>
-									<div class="photo-box"><img src="/html/template/default/assets/img/index/buy_img01.png" alt=""></div>
-								</dd>
-							</dl>
-						</li>
-						<li>
-							<dl>
-								<dt>配送について</dt>
-								<dd>
-									<ul class="dot-list">
-										<li>配送は 佐川急便でお届けいたします。</li>
-										<li>ご注文は３日以内に発送いたします。但し、在庫状況。道路事情などにより発送が遅れる倍もございますので予めご了承ください。</li>
-										{# <li>また、時間指定も承ります。指定できる時間帯は下記をご覧ください。</li> #}
-									</ul>
-									{# <div class="photo-box"><img src="/html/template/default/assets/img/index/buy_img02.png" alt=""></div> #}
-								</dd>
-							</dl>
-						</li>
-					</ul>
+									<div class="productItem__ttl">
+										{{ product.name }}
+									</div>
+									<div class="productItem__more flex vcenter">
+										{% if product.hasProductClass -%}
+											{% if product.getPrice02IncTaxMin == product.getPrice02IncTaxMax %}
+												<span class="productItem__price serif">{{ product.getPrice02IncTaxMin|price }} {{ '(税込)'|trans }}</span>
+											{% else %}
+												<span class="productItem__price serif">{{ product.getPrice02IncTaxMin|price }}
+										～
+										{{ product.getPrice02IncTaxMax|price }} {{ '(税込)'|trans }}</span>
+											{% endif %}
+										{% else %}
+											<span class="productItem__price serif">{{ product.getPrice02IncTaxMin|price }} {{ '(税込)'|trans }}</span>
+										{% endif %}
+									</div>
+								</a>
+							</div>
+						{% endfor %}
+
+					</div>
+				</div>
+				<div class="swiper-button-prev productBtn productBtn-left pc" data-slider-id="3">
+					<img src="{{ asset('assets/img/ec/arrow_left.svg') }}" alt="前へ">
+				</div>
+				<div class="swiper-button-next productBtn productBtn-right pc" data-slider-id="3">
+					<img src="{{ asset('assets/img/ec/arrow_right.svg') }}" alt="次へ">
 				</div>
 			</div>
-			<div class="edit-area time">
-				<div class="inner">
-					<h2 class="index-title type02">営業時間：平日・土　9：30～18：30<br>休業日：日・祝／年末年始</h2>
-					<link rel="stylesheet" href="{{ asset('assets/css/calendar.css') }}">
-					<ul class="time-list">
-						<li>	
-							<div id="calendar_thisMonth" class="calendar"></div>
-						</li>
-						<li>	
-							<div id="calendar_nextMonth" class="calendar"></div>
-						</li>
-					</ul>
-					<ul class="common-list cal-mark">
-						<li class="holiday">休業日</li>
-					</ul>
+			<div class="secRecommend__btn flex hcenter">
+				<a href="{{ url('product_list', {'category_id': 49}) }}" class="pageBtn flex vcenter hcenter">
+					一覧を見る<i class="icon icon-triangle"></i>
+				</a>
+			</div>
+		</section>
+
+		<section class="secProductNew">
+			<h2 class="pageHead">新着商品</h2>
+			<div class="slider-wrap">
+				<div class="swiper js-sliderProduct" data-slider-id="2" data-slides-per-view="4">
+					<div class="swiper-wrapper">
+
+						{% for product in products_new |slice(0,10) %}
+							<div class="swiper-slide">
+								<a href="{{ url('product_detail', {'id': product.id}) }}" class="productItem flex vert">
+									<div class="productItem__img">
+										<img src="{{ asset(product.main_list_image|no_image_product, 'save_image') }}" alt="{{ product.name }}" >
+									</div>
+									<div class="productItem__ttl">
+										{{ product.name }}
+									</div>
+									<div class="productItem__more flex vcenter">
+										{% if product.hasProductClass -%}
+											{% if product.getPrice02IncTaxMin == product.getPrice02IncTaxMax %}
+												<span class="productItem__price serif">{{ product.getPrice02IncTaxMin|price }} {{ '(税込)'|trans }}</span>
+											{% else %}
+												<span class="productItem__price serif">{{ product.getPrice02IncTaxMin|price }}
+										～
+										{{ product.getPrice02IncTaxMax|price }} {{ '(税込)'|trans }}</span>
+											{% endif %}
+										{% else %}
+											<span class="productItem__price serif">{{ product.getPrice02IncTaxMin|price }} {{ '(税込)'|trans }}</span>
+										{% endif %}
+									</div>
+								</a>
+							</div>
+						{% endfor %}
+
+					</div>
+				</div>
+				<div class="swiper-button-prev productBtn productBtn-left pc" data-slider-id="2">
+					<img src="{{ asset('assets/img/ec/arrow_left.svg') }}" alt="前へ">
+				</div>
+				<div class="swiper-button-next productBtn productBtn-right pc" data-slider-id="2">
+					<img src="{{ asset('assets/img/ec/arrow_right.svg') }}" alt="次へ">
 				</div>
 			</div>
-        </div><!-- contents -->
-    </main><!-- container -->
+			<div class="secProductNew__btn flex hcenter">
+				<a href="{{ url('product_list', {'category_id': 75}) }}" class="pageBtn flex vcenter hcenter">
+					一覧を見る<i class="icon icon-triangle"></i>
+				</a>
+			</div>
+		</section>
+
+		<section class="secBrand">
+			<h2 class="pageHead">ブランドから選ぶ</h2>
+
+			<div class="slider-wrap">
+				<div class="swiper js-sliderProduct" data-slider-id="4" data-slides-per-view="3" data-slides-per-view_sp="2">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide">
+							<a href="{{ url('product_list') }}?category_id=41" class="productItem flex vert">
+								<div class="productItem__img">
+									<img src="{{ asset('assets/img/ec/brand_kong.png') }}" alt="コングジャパン">
+								</div>
+								<div class="productItem__ttl">
+									コングジャパン
+								</div>
+							</a>
+						</div>
+						<div class="swiper-slide">
+							<a href="{{ url('product_list') }}?category_id=42" class="productItem flex vert">
+								<div class="productItem__img">
+									<img src="{{ asset('assets/img/ec/brand_dpc.png') }}" alt="ドッグパッドコネクト">
+								</div>
+								<div class="productItem__ttl">
+									ドッグパッドコネクト
+								</div>
+							</a>
+						</div>
+						<div class="swiper-slide">
+							<a href="{{ url('product_list') }}?category_id=40" class="productItem flex vert">
+								<div class="productItem__img">
+									<img src="{{ asset('assets/img/ec/brand_kocho.png') }}" alt="コーチョー">
+								</div>
+								<div class="productItem__ttl">
+									コーチョー
+								</div>
+							</a>
+						</div>
+						<div class="swiper-slide">
+							<a href="{{ url('product_list') }}?category_id==37" class="productItem flex vert">
+								<div class="productItem__img">
+									<img src="{{ asset('assets/img/ec/brand_inaba.jpg') }}" alt="いなば">
+								</div>
+								<div class="productItem__ttl">
+									いなば
+								</div>
+							</a>
+						</div>
+						<div class="swiper-slide">
+							<a href="{{ url('product_list') }}?category_id=76" class="productItem flex vert">
+								<div class="productItem__img">
+									<img src="{{ asset('assets/img/ec/brand_lion_pet.jpg') }}" alt="ライオンペット">
+								</div>
+								<div class="productItem__ttl">
+									ライオンペット
+								</div>
+							</a>
+						</div>
+						<div class="swiper-slide">
+							<a href="{{ url('product_list') }}?category_id=42" class="productItem flex vert">
+								<div class="productItem__img">
+									<img src="{{ asset('assets/img/ec/brand_uni_charm.jpg') }}" alt="ユニチャーム">
+								</div>
+								<div class="productItem__ttl">
+									ユニチャーム
+								</div>
+							</a>
+						</div>
+						<div class="swiper-slide">
+							<a href="{{ url('product_list') }}?category_id=36" class="productItem flex vert">
+								<div class="productItem__img">
+									<img src="{{ asset('assets/img/ec/brand_nutro.jpg') }}" alt="ニュートロ">
+								</div>
+								<div class="productItem__ttl">
+									ニュートロ
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="swiper-button-prev productBtn productBtn-left pc" data-slider-id="4">
+					<img src="{{ asset('assets/img/ec/arrow_left.svg') }}" alt="前へ">
+				</div>
+				<div class="swiper-button-next productBtn productBtn-right pc" data-slider-id="4">
+					<img src="{{ asset('assets/img/ec/arrow_right.svg') }}" alt="次へ">
+				</div>
+			</div>
+		</section>
+
+		<section class="secDNA">
+			<a href="https://animalline.jp/dna_ec" class="secDNA__link flex hcenter">
+				<img src="{{ asset('assets/img/ec/dna_ec.png') }}" alt="DNA検査">
+			</a>
+		</section>
+
+		<section class="secBtn" style="display: none;">
+			<div class="wrap sp-wrap w1200">
+				<div class="secBtn__wrap flex vcenter hcenter">
+					<div class="secBtn__item flex vcenter hcenter vert">
+						<div class="secBtn__item--pet secBtn__item--petDog">
+							<img src="{{ asset('assets/img/ec/dog.svg') }}" alt="犬用品を買う">
+						</div>
+						<a href="" class="secBtn__item--link">
+							犬用品を買う
+						</a>
+					</div>
+					<div class="secBtn__item flex vcenter hcenter vert">
+						<div class="secBtn__item--pet secBtn__item--petCat">
+							<img src="{{ asset('assets/img/ec/cat.svg') }}" alt="猫用品を買う">
+						</div>
+						<a href="" class="secBtn__item--link">
+							猫用品を買う
+						</a>
+					</div>
+				</div>
+			</div>
+		</section>
+
+	</div>
+
 {% endblock %}

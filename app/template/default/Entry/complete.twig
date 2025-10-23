@@ -14,7 +14,11 @@ file that was distributed with this source code.
 {% elseif request.get('ReturnPath') =="breeder_mypage" %}
     {% set base_template = 'breeder_frame.twig' %}
 {% else %}
-    {% set base_template = 'normal_frame.twig' %}
+    {% if app.request.query.get('ReturnPath') == '' %}
+        {% set base_template = 'normal_type2_frame.twig' %}
+    {% else%}
+        {% set base_template = 'normal_frame.twig' %}
+    {% endif %}
 {% endif %}
 
 {% extends base_template %}
