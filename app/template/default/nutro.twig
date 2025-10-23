@@ -11,37 +11,57 @@
 {% endblock %}
 
 {% block main %}
-    <main role="main" id="container" style="width:100vw">
-        <div id="contents">
-			<div class="edit-area keyvisual">
-                <div class="inner w1190">
-                    <div class="photo-box"><img alt="画像3" src="{{ asset('assets/img/ec/banner_nutro.png') }}" /></div>
+
+    <div class="page-wrap">
+        <div class="wrap sp-wrap w1200">
+            <div id="contents">
+                <div class="edit-area keyvisual">
+                    <div class="inner w1190">
+                        <div class="photo-box"><img alt="画像3" src="{{ asset('assets/img/ec/banner_nutro.png') }}" /></div>
+                    </div>
                 </div>
-            </div>
-            <div class="ec-productRole">
-                <div class="main-area">
+                <div class="ec-productRole">
+                    <div class="main-area">
 
-                    <div class="edit-area keyvisual">
-                        <div class="row">
-                            <div class="col-md-6 col-sm-12"><img alt="画像1" src="{{ asset('assets/img/ec/supremo_dog.png') }}" /></div>
-                            <div class="col-md-6 col-sm-12"><img alt="画像1" src="{{ asset('assets/img/ec/supremo_cat.png') }}" /></div>
+                        <div class="edit-area keyvisual">
+                            <div class="row">
+                                <div class="col-md-6 col-sm-12">
+                                    <img alt="画像1" src="{{ asset('assets/img/ec/supremo_dog.png') }}" />
 
-                            <div class="col-md-6 col-sm-12"><a href="{{ url('product_list') }}?category_id=52"><img alt="画像1" src="{{ asset('assets/img/ec/banner_supremo.png') }}" /></a></div>
-                            <div class="col-md-6 col-sm-12"><a href="{{ url('product_list') }}?category_id=56"><img alt="画像1" src="{{ asset('assets/img/ec/banner_wild_cat.png') }}" /></a></div>
+                                    <a href="{{ url('product_list', {'category_id': 52}) }}">
+                                        <img alt="画像1" src="{{ asset('assets/img/ec/banner_supremo.png') }}" />
+                                    </a>
+                                    <a href="{{ url('product_list', {'category_id': 53}) }}" style="margin-top:1rem;">
+                                        <img alt="画像2" src="{{ asset('assets/img/ec/banner_wild_dog.png') }}" />
+                                    </a>
+                                    <a href="{{ url('product_list', {'category_id': 54}) }}" style="margin-top:1rem;">
+                                        <img alt="画像3" src="{{ asset('assets/img/ec/banner_natural_dog.png') }}" />
+                                    </a>
+                                    <a href="{{ url('product_list', {'category_id': 55}) }}" style="margin-top:1rem;">
+                                        <img alt="画像3" src="{{ asset('assets/img/ec/banner_oyatu_dog.png') }}" /></a>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <img alt="画像1" src="{{ asset('assets/img/ec/supremo_cat.png') }}" />
 
-                            <div class="col-md-6 col-sm-12"><a href="{{ url('product_list') }}?category_id=53" style="margin-top:1rem;"><img alt="画像2" src="{{ asset('assets/img/ec/banner_wild_dog.png') }}" /></a></div>
-                            <div class="col-md-6 col-sm-12"><a href="{{ url('product_list') }}?category_id=57" style="margin-top:1rem;"><img alt="画像2" src="{{ asset('assets/img/ec/banner_natural_cat.png') }}" /></a></div>
-
-                            <div class="col-md-6 col-sm1-12"><a href="{{ url('product_list') }}?category_id=54" style="margin-top:1rem;"><img alt="画像3" src="{{ asset('assets/img/ec/banner_natural_dog.png') }}" /></a></div>
-                            <div class="col-md-6 col-sm1-12"><a href="{{ url('product_list') }}?category_id=58" style="margin-top:1rem;"><img alt="画像3" src="{{ asset('assets/img/ec/banner_dayly_cat.png') }}" /></a></div>
-
-                            <div class="col-md-6 col-sm1-12"><a href="{{ url('product_list') }}?category_id=55" style="margin-top:1rem;"><img alt="画像3" src="{{ asset('assets/img/ec/banner_oyatu_dog.png') }}" /></a></div>
-                            <div class="col-md-6 col-sm1-12"><a href="{{ url('product_list') }}?category_id=59" style="margin-top:1rem;"><img alt="画像3" src="{{ asset('assets/img/ec/banner_oyatu_cat.png') }}" /></a></div>
+                                    <a href="{{ url('product_list', {'category_id': 56}) }}">
+                                        <img alt="画像1" src="{{ asset('assets/img/ec/banner_wild_cat.png') }}" />
+                                    </a>
+                                    <a href="{{ url('product_list', {'category_id': 57}) }}" style="margin-top:1rem;">
+                                        <img alt="画像2" src="{{ asset('assets/img/ec/banner_natural_cat.png') }}" />
+                                    </a>
+                                    <a href="{{ url('product_list', {'category_id': 58}) }}" style="margin-top:1rem;">
+                                        <img alt="画像3" src="{{ asset('assets/img/ec/banner_dayly_cat.png') }}" />
+                                    </a>
+                                    <a href="{{ url('product_list', {'category_id': 59}) }}" style="margin-top:1rem;">
+                                        <img alt="画像3" src="{{ asset('assets/img/ec/banner_oyatu_cat.png') }}" />
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                
                 </div>
-            </div>
-        </div><!-- contents -->
-    </main><!-- container -->
+            </div><!-- contents -->
+        </div>
+    </div>
+
 {% endblock %}

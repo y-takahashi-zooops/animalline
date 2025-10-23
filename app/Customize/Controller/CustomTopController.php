@@ -337,7 +337,23 @@ class CustomTopController extends AbstractController
      * @Template("nutro.twig")
      */
     public function ec_nutro(){
-        return [];
+        $title = 'ニュートロ';
+
+        return ['title' => $title];
+    }
+
+    /**
+     * グリニーズ
+     *
+     * @Route("/greenies", name="ec_greenies")
+     * @Template("greenies.twig")
+     * @return array
+     */
+    public function ec_greenies()
+    {
+        $title = 'グリニーズ';
+
+        return ['title' => $title];
     }
 
     /**
