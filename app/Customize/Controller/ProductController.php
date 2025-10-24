@@ -23,8 +23,10 @@ use Eccube\Form\Type\SearchProductType;
 use Eccube\Form\Type\Master\ProductListMaxType;
 use Eccube\Form\Type\Master\ProductListOrderByType;
 use Eccube\Repository\BaseInfoRepository;
+use Eccube\Repository\CategoryRepository;
 use Eccube\Repository\CustomerFavoriteProductRepository;
 use Eccube\Repository\Master\ProductListMaxRepository;
+use Eccube\Repository\Master\ProductListOrderByRepository;
 use Eccube\Repository\ProductRepository;
 use Eccube\Service\CartService;
 use Eccube\Service\PurchaseFlow\PurchaseContext;
@@ -87,6 +89,16 @@ class ProductController extends BaseProductController
      * @var ProductListMaxRepository
      */
     protected $productListMaxRepository;
+
+    /**
+     * @var ProductListOrderByRepository
+     */
+    protected $productListOrderByRepository;
+
+    /**
+     * @var CategoryRepository
+     */
+    protected $categoryRepository;
 
     /**
      * @var CartItemRepository
@@ -158,6 +170,8 @@ class ProductController extends BaseProductController
         BaseInfoRepository $baseInfoRepository,
         AuthenticationUtils $helper,
         ProductListMaxRepository $productListMaxRepository,
+        CategoryRepository $categoryRepository,
+        ProductListOrderByRepository $productListOrderByRepository,
         CartItemRepository $cartItemRepository,
         CartRepository $cartRepository,
         FormFactoryInterface $formFactory,
@@ -189,6 +203,8 @@ class ProductController extends BaseProductController
             $router
         );
 
+        $this->productListOrderByRepository = $productListOrderByRepository;
+        $this->categoryRepository = $categoryRepository;
         $this->cartItemRepository = $cartItemRepository;
         $this->cartRepository = $cartRepository;
         $this->logger = $logger;
@@ -451,6 +467,20 @@ class ProductController extends BaseProductController
 
         $classCategoriesJson = json_encode($classCategories, JSON_UNESCAPED_UNICODE);
 
+        //新着
+        $searchData["category_id"] = null;
+        $searchData['orderby'] = $this->productListOrderByRepository->find(2);
+        $qb = $this->productRepository->getQueryBuilderBySearchData($searchData);
+        $query = $qb->getQuery();
+        $products_new = $query->getResult();
+
+        //おすすめ
+        $searchData["category_id"] = $this->categoryRepository->find(49);
+        //$searchData['orderby'] = $this->productListOrderByRepository->find(2);
+        $qb = $this->productRepository->getQueryBuilderBySearchData($searchData);
+        $query = $qb->getQuery();
+        $osusume = $query->getResult();
+
         return [
             'title' => $this->title,
             'subtitle' => $Product->getName(),
@@ -458,6 +488,8 @@ class ProductController extends BaseProductController
             'Product' => $Product,
             'is_favorite' => $is_favorite,
             'class_categories_json' => $classCategoriesJson,
+            'products_new' => $products_new,
+            'osusume' => $osusume
         ];
     }
 
@@ -562,6 +594,19 @@ class ProductController extends BaseProductController
                 'errors' => (string) $form->getErrors(true, false),
             ]);
 
+            //新着
+            $searchData["category_id"] = null;
+            $searchData['orderby'] = $this->productListOrderByRepository->find(2);
+            $qb = $this->productRepository->getQueryBuilderBySearchData($searchData);
+            $query = $qb->getQuery();
+            $products_new = $query->getResult();
+
+            //おすすめ
+            $searchData["category_id"] = $this->categoryRepository->find(49);
+            $qb = $this->productRepository->getQueryBuilderBySearchData($searchData);
+            $query = $qb->getQuery();
+            $osusume = $query->getResult();
+
             return $this->render('Product/detail.twig', [
                 'form' => $form->createView(),
                 'Product' => $Product,
@@ -569,6 +614,8 @@ class ProductController extends BaseProductController
                 'errorMessages' => ['入力内容に誤りがあります。'],
                 'is_favorite' => $is_favorite,
                 'class_categories_json' => $classCategoriesJson,
+                'products_new' => $products_new,
+                'osusume' => $osusume
             ]);
         }
 

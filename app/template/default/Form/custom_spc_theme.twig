@@ -1,0 +1,44 @@
+{#
+ Mizuki Custom Form
+#}
+{%- extends 'form_div_layout.html.twig' -%}
+
+{%- block form_errors -%}
+    {%- if errors|length > 0 -%}
+        {%- for error in errors -%}
+            <p class="ec-errorMessage">{{ error.message|trans({}, translation_domain) }}</p>
+        {%- endfor -%}
+    {%- endif -%}
+{%- endblock form_errors -%}
+
+{%- block form_label -%}
+    {{ parent() }}
+    {%- if required -%}
+        <span class="ec-required">{{ '必須'|trans }}</span>
+    {%- endif -%}
+{%- endblock form_label -%}
+
+{%- block radio_widget -%}
+    {% if type is defined and type == 'hidden' %}
+        {{ block('form_widget_simple') }}
+    {% else %}
+        {# {{ parent() }} #}
+        {# <label for="{{ id }}">
+            <span>{{ label is not same as(false) ? (translation_domain is same as(false) ? label : label|trans({}, translation_domain)) }}</span>
+        </label> #}
+        <div id="{{ id }}" >
+
+                {# {{ parent() }} #}
+                {# {{ label is not same as(false) ? (translation_domain is same as(false) ? label : label|trans({}, translation_domain)) }} #}
+                {% for child in form %}
+                {# {{ form_widget(child, {'attr': attr}) }} #}
+                {# {{ form_label(child) }} #}
+
+
+                {% endfor %}
+                {{ label is not same as(false) ? (translation_domain is same as(false) ? label : label|trans({}, translation_domain)) }}
+                {# <input type="radio" class="e-form__radio-input" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} /> #}
+
+        </div>
+    {% endif %}
+{%- endblock radio_widget -%}

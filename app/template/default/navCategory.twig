@@ -1,0 +1,62 @@
+
+
+{% macro mzNav(navCategories) %}
+    {# 第1：イヌ(7),ネコ(8) 第2カテゴリ：parent、第3カテゴリ:child まで #}
+    {% for SecondCategory in navCategories %}
+        {% set class_name = "" %}
+        {% if SecondCategory.children|length > 0 %}
+            {% set class_name = "parent" %}
+        {% endif %}
+        <li class="{{ class_name }}">
+            <a href="{{ url('product_list') }}?category_id={{ SecondCategory.id }}">
+                {{ SecondCategory.name }}
+            </a>
+            {% if SecondCategory.children|length > 0 %}
+                <ul class="child">
+                    {% for ThirdCategory in SecondCategory.children %}
+                        <li><a href="{{ url('product_list', {'category_id': ThirdCategory.id}) }}">{{ ThirdCategory.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </li>
+    {% endfor %}
+{% endmacro %}
+
+{% macro mzSpNav(navCategories) %}
+    {# SP用 第1：イヌ(7),ネコ(8) 第2カテゴリ：parent、第3カテゴリ:child まで #}
+    {% set id_no = 1 %}
+    {% for SecondCategory in navCategories %}
+        {% set class_name = "" %}
+        {% if SecondCategory.children|length > 0 %}
+            {% set class_name = "parent" %}
+        {% endif %}
+
+        {% if SecondCategory.children|length > 0 %}
+            {# 第3カテゴリあり #}
+            <div class="gNav__subbox">
+                <input id="gNav1-{{ id_no }}" class="mdAcc__check" type="checkbox" value="" />
+                <label for="gNav1-{{ id_no }}" class="mdAcc__btn acc-hide gNav__item gNav__item--sub flex vcenter bet">
+                    {{ SecondCategory.name }}
+                    <span class="gNav__icon gNav__icon--plus"><i class="icon-plus"></i></span>
+                    <span class="gNav__icon gNav__icon--minus"><i class="icon-minus"></i></span>
+                </label>
+                <div class="mdAcc__body">
+                    <div class="mdAcc__in">
+                        {% for ThirdCategory in SecondCategory.children %}
+                            <a href="{{ url('product_list', {'category_id': ThirdCategory.id}) }}" class="acc-hide gNav__item gNav__item--sub flex vcenter bet -level2">
+                                {{ ThirdCategory.name }}<i class="icon-small icon-right"></i>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+        {% else %}
+            <a href="{{ url('product_list', {'category_id': SecondCategory.id}) }}" class="acc-hide gNav__item gNav__item--sub flex vcenter bet">
+                {{ SecondCategory.name }}<i class="icon-small icon-right"></i></a>
+
+        {% endif %}
+
+        {% set id_no = id_no + 1 %}
+    {% endfor %}
+{% endmacro %}
