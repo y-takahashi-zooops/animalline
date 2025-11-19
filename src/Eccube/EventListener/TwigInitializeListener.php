@@ -39,6 +39,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class TwigInitializeListener implements EventSubscriberInterface
 {
@@ -285,6 +286,11 @@ class TwigInitializeListener implements EventSubscriberInterface
      */
     private function getDisplayEccubeNav($parentNav, $AuthorityRoles, $baseUrl)
     {
+        try {
+            $url = $this->router->generate('admin_zooops_subscription_view');
+        } catch (RouteNotFoundException $e) {
+            $url = null; // ルートが無ければ null にする
+        }
         $restrictUrls = $this->eccubeConfig['eccube_restrict_file_upload_urls'];
 
         foreach ($parentNav as $key => $childNav) {
