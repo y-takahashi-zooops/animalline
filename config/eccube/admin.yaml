@@ -3,7 +3,3 @@ admin:
     resource: ../../app/Customize/Controller/Admin/
     type: annotation
     # prefix: /%eccube_admin_route%
-
-admin_zooops_subscription_view:
-    path: /%env(resolve:ADMIN_ROUTE)%/zooops/subscription
-    controller: Plugin\ZooopsSubscription\Controller\Admin\SubscriptionController::index
