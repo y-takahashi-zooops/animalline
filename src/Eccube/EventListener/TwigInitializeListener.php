@@ -300,7 +300,13 @@ class TwigInitializeListener implements EventSubscriberInterface
             } elseif (array_key_exists('url', $childNav)) {
                 // 子のメニューがなく、URLが設定されている場合は権限があるURLか確認
                 $param = array_key_exists('param', $childNav) ? $childNav['param'] : [];
-                $url = $this->router->generate($childNav['url'], $param);
+                // $url = $this->router->generate($childNav['url'], $param);
+                try {
+                    $url = $this->router->generate($childNav['url'], $param);
+                } catch (RouteNotFoundException $e) {
+                    // ルートが存在しない場合は null にして無視
+                    $url = null;
+                }
                 foreach ($AuthorityRoles as $AuthorityRole) {
                     $denyUrl = str_replace('/', '\/', $baseUrl.$AuthorityRole->getDenyUrl());
                     if (preg_match("/^({$denyUrl})/i", $url)) {
