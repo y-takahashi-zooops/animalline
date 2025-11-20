@@ -27,15 +27,15 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class PaymentHelperAdmin extends PaymentHelper
 {
-    protected $entityManager;
+    // protected $entityManager;
     
-    public function __construct(
-        EccubeConfig $eccubeConfig,
-        EntityManagerInterface $entityManager
-    ) {
-        $this->eccubeConfig = $eccubeConfig;
-        $this->entityManager = $entityManager;
-    }
+    // public function __construct(
+    //     EccubeConfig $eccubeConfig,
+    //     EntityManagerInterface $entityManager
+    // ) {
+    //     $this->eccubeConfig = $eccubeConfig;
+    //     $this->entityManager = $entityManager;
+    // }
 
     /**
      * GMO-PG 支払方法別のクラス名称を取得する
