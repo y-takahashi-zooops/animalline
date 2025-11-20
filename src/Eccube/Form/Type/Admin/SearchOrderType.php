@@ -14,17 +14,21 @@
 namespace Eccube\Form\Type\Admin;
 
 use Eccube\Common\EccubeConfig;
-use Eccube\Entity\Master\OrderStatus;
-use Eccube\Form\Type\ToggleSwitchType;
-use Eccube\Repository\Master\CustomerOrderStatusRepository;
-use Eccube\Repository\Master\OrderStatusColorRepository;
+use Eccube\Entity\Shipping;
+use Eccube\Form\Type\Master\OrderStatusType;
+use Eccube\Form\Type\Master\PaymentType;
+use Eccube\Form\Type\PhoneNumberType;
+use Eccube\Form\Type\PriceType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ColorType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class SearchOrderType extends AbstractType
@@ -73,7 +77,8 @@ class SearchOrderType extends AbstractType
                         ]),
                     ],
                 ])
-                ->addEventSubscriber(new \Eccube\Form\EventListener\ConvertKanaListener('CV')
+                ->addEventSubscriber(
+                    new \Eccube\Form\EventListener\ConvertKanaListener('CV')
                 ))
             ->add('company_name', TextType::class, [
                 'label' => 'admin.order.orderer_company_name',
@@ -125,7 +130,7 @@ class SearchOrderType extends AbstractType
                 ],
                 'attr' => [
                     'class' => 'datetimepicker-input',
-                    'data-target' => '#'.$this->getBlockPrefix().'_order_date_start',
+                    'data-target' => '#' . $this->getBlockPrefix() . '_order_date_start',
                     'data-toggle' => 'datetimepicker',
                 ],
             ])
@@ -140,10 +145,9 @@ class SearchOrderType extends AbstractType
                         'minMessage' => 'form_error.out_of_range',
                     ]),
                 ],
-                'html5' => false,
                 'attr' => [
                     'class' => 'datetimepicker-input',
-                    'data-target' => '#'.$this->getBlockPrefix().'_order_datetime_start',
+                    'data-target' => '#' . $this->getBlockPrefix() . '_order_datetime_start',
                     'data-toggle' => 'datetimepicker',
                 ],
             ])
@@ -161,7 +165,7 @@ class SearchOrderType extends AbstractType
                 ],
                 'attr' => [
                     'class' => 'datetimepicker-input',
-                    'data-target' => '#'.$this->getBlockPrefix().'_order_date_end',
+                    'data-target' => '#' . $this->getBlockPrefix() . '_order_date_end',
                     'data-toggle' => 'datetimepicker',
                 ],
             ])
@@ -176,10 +180,9 @@ class SearchOrderType extends AbstractType
                         'minMessage' => 'form_error.out_of_range',
                     ]),
                 ],
-                'html5' => false,
                 'attr' => [
                     'class' => 'datetimepicker-input',
-                    'data-target' => '#'.$this->getBlockPrefix().'_order_datetime_end',
+                    'data-target' => '#' . $this->getBlockPrefix() . '_order_datetime_end',
                     'data-toggle' => 'datetimepicker',
                 ],
             ])
@@ -197,7 +200,7 @@ class SearchOrderType extends AbstractType
                 ],
                 'attr' => [
                     'class' => 'datetimepicker-input',
-                    'data-target' => '#'.$this->getBlockPrefix().'_payment_date_start',
+                    'data-target' => '#' . $this->getBlockPrefix() . '_payment_date_start',
                     'data-toggle' => 'datetimepicker',
                 ],
             ])
@@ -212,10 +215,9 @@ class SearchOrderType extends AbstractType
                         'minMessage' => 'form_error.out_of_range',
                     ]),
                 ],
-                'html5' => false,
                 'attr' => [
                     'class' => 'datetimepicker-input',
-                    'data-target' => '#'.$this->getBlockPrefix().'_payment_datetime_start',
+                    'data-target' => '#' . $this->getBlockPrefix() . '_payment_datetime_start',
                     'data-toggle' => 'datetimepicker',
                 ],
             ])
@@ -233,7 +235,7 @@ class SearchOrderType extends AbstractType
                 ],
                 'attr' => [
                     'class' => 'datetimepicker-input',
-                    'data-target' => '#'.$this->getBlockPrefix().'_payment_date_end',
+                    'data-target' => '#' . $this->getBlockPrefix() . '_payment_date_end',
                     'data-toggle' => 'datetimepicker',
                 ],
             ])
@@ -248,10 +250,9 @@ class SearchOrderType extends AbstractType
                         'minMessage' => 'form_error.out_of_range',
                     ]),
                 ],
-                'html5' => false,
                 'attr' => [
                     'class' => 'datetimepicker-input',
-                    'data-target' => '#'.$this->getBlockPrefix().'_payment_datetime_end',
+                    'data-target' => '#' . $this->getBlockPrefix() . '_payment_datetime_end',
                     'data-toggle' => 'datetimepicker',
                 ],
             ])
@@ -269,7 +270,7 @@ class SearchOrderType extends AbstractType
                 ],
                 'attr' => [
                     'class' => 'datetimepicker-input',
-                    'data-target' => '#'.$this->getBlockPrefix().'_update_date_start',
+                    'data-target' => '#' . $this->getBlockPrefix() . '_update_date_start',
                     'data-toggle' => 'datetimepicker',
                 ],
             ])
@@ -284,10 +285,9 @@ class SearchOrderType extends AbstractType
                         'minMessage' => 'form_error.out_of_range',
                     ]),
                 ],
-                'html5' => false,
                 'attr' => [
                     'class' => 'datetimepicker-input',
-                    'data-target' => '#'.$this->getBlockPrefix().'_update_datetime_start',
+                    'data-target' => '#' . $this->getBlockPrefix() . '_update_datetime_start',
                     'data-toggle' => 'datetimepicker',
                 ],
             ])
@@ -305,7 +305,7 @@ class SearchOrderType extends AbstractType
                 ],
                 'attr' => [
                     'class' => 'datetimepicker-input',
-                    'data-target' => '#'.$this->getBlockPrefix().'_update_date_end',
+                    'data-target' => '#' . $this->getBlockPrefix() . '_update_date_end',
                     'data-toggle' => 'datetimepicker',
                 ],
             ])
@@ -320,10 +320,9 @@ class SearchOrderType extends AbstractType
                         'minMessage' => 'form_error.out_of_range',
                     ]),
                 ],
-                'html5' => false,
                 'attr' => [
                     'class' => 'datetimepicker-input',
-                    'data-target' => '#'.$this->getBlockPrefix().'_update_datetime_end',
+                    'data-target' => '#' . $this->getBlockPrefix() . '_update_datetime_end',
                     'data-toggle' => 'datetimepicker',
                 ],
             ])
@@ -341,7 +340,7 @@ class SearchOrderType extends AbstractType
                 ],
                 'attr' => [
                     'class' => 'datetimepicker-input',
-                    'data-target' => '#'.$this->getBlockPrefix().'_shipping_delivery_date_start',
+                    'data-target' => '#' . $this->getBlockPrefix() . '_shipping_delivery_date_start',
                     'data-toggle' => 'datetimepicker',
                 ],
             ])
@@ -356,10 +355,9 @@ class SearchOrderType extends AbstractType
                         'minMessage' => 'form_error.out_of_range',
                     ]),
                 ],
-                'html5' => false,
                 'attr' => [
                     'class' => 'datetimepicker-input',
-                    'data-target' => '#'.$this->getBlockPrefix().'_shipping_delivery_datetime_start',
+                    'data-target' => '#' . $this->getBlockPrefix() . '_shipping_delivery_datetime_start',
                     'data-toggle' => 'datetimepicker',
                 ],
             ])
@@ -377,7 +375,7 @@ class SearchOrderType extends AbstractType
                 ],
                 'attr' => [
                     'class' => 'datetimepicker-input',
-                    'data-target' => '#'.$this->getBlockPrefix().'_shipping_delivery_date_end',
+                    'data-target' => '#' . $this->getBlockPrefix() . '_shipping_delivery_date_end',
                     'data-toggle' => 'datetimepicker',
                 ],
             ])
@@ -392,10 +390,9 @@ class SearchOrderType extends AbstractType
                         'minMessage' => 'form_error.out_of_range',
                     ]),
                 ],
-                'html5' => false,
                 'attr' => [
                     'class' => 'datetimepicker-input',
-                    'data-target' => '#'.$this->getBlockPrefix().'_shipping_delivery_datetime_end',
+                    'data-target' => '#' . $this->getBlockPrefix() . '_shipping_delivery_datetime_end',
                     'data-toggle' => 'datetimepicker',
                 ],
             ])
