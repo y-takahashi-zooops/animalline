@@ -32,8 +32,8 @@
 <script src="{{ asset('assets/js/breeder_pets.js') }}"></script>
 <script>
     $("[type='file']").each(function(){
-        if ($(this).attr("id") !== 'breeder_pets_thumbnail_path') {
-            $(this).attr('disabled', true);
+    if ($(this).attr("id") !== 'breeder_pets_thumbnail_path') {
+            $(this).addClass("d-none");
         }
     });
     var inputImageId = '';
@@ -98,7 +98,7 @@
                     data: {image: base64data},
                     success: function (data) {
                         bs_modal.modal('hide');
-                        $(`#${ inputImageId }`).parent().parent().next().find("input[type='file']").attr('disabled', false);
+                        $(`#${ inputImageId }`).parent().parent().next().find("input[type='file']").removeClass('d-none');
                         $(`#${ inputImageId }`).hide();
                         $(`#${ inputImageId }`).parent().find('.img_preview').attr('src', '/' + data)
                         $(`#${ inputImageId }`).parent().find('.img_preview').show();
@@ -140,7 +140,7 @@
             $(this).parent().parent().find('.form-control-file').show();
             $(`input.${ e.target.classList[1] }`).val('');
 
-            $(this).parent().parent().next().find("input[type='file']").attr('disabled', true);
+            $(this).parent().parent().next().find("input[type='file']").addClass('d-none');
         } else {
             imageArr.forEach((p) => {
                 $(`#${ p.class }`).parent().parent().prev().find(".img_preview").attr('src', p.src);
@@ -154,7 +154,7 @@
             $(`#${ lastItem.class }`).parent().parent().find("button").hide();
              $(`input.${ lastItem.class }`).val('');
             if (lastItem.class !== inputFileIds.pop()) {
-                $(`#${ lastItem.class }`).parent().parent().next().find("input[type='file']").attr('disabled', true);
+                $(`#${ lastItem.class }`).parent().parent().next().find("input[type='file']").addClass('d-none');
             }
         }
     });
