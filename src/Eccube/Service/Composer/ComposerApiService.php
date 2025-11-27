@@ -23,7 +23,6 @@ use Eccube\Service\SchemaService;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * Class ComposerApiService
@@ -54,23 +53,16 @@ class ComposerApiService implements ComposerServiceInterface
      */
     private $pluginContext;
 
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
     public function __construct(
         EccubeConfig $eccubeConfig,
         BaseInfoRepository $baseInfoRepository,
         SchemaService $schemaService,
         PluginContext $pluginContext,
-        LoggerInterface $logger
     ) {
         $this->eccubeConfig = $eccubeConfig;
         $this->schemaService = $schemaService;
         $this->baseInfoRepository = $baseInfoRepository;
         $this->pluginContext = $pluginContext;
-        $this->logger = $logger;
     }
 
     /**
@@ -113,6 +105,9 @@ class ComposerApiService implements ComposerServiceInterface
     public function execRequire($packageName, $output = null, $from = null)
     {
         $packageName = explode(' ', trim($packageName));
+
+        $this->init(null, $packageName, $from);
+        $this->execConfig('allow-plugins.symfony/flex', ['false']);
 
         try {
             return $this->runCommand([
@@ -232,7 +227,7 @@ class ComposerApiService implements ComposerServiceInterface
      * @param string $callback
      * @param null $typeFilter
      * @param int $level
-     * 
+     *
      * @return void
      *
      * @throws PluginException
@@ -359,7 +354,7 @@ class ComposerApiService implements ComposerServiceInterface
                 log_error($log);
                 throw new PluginException($log);
             }
-            $this->logger->info($log, $commands);
+            log_info($log, $commands);
 
             return $log;
         } elseif ($exitCode) {
@@ -390,22 +385,25 @@ class ComposerApiService implements ComposerServiceInterface
         ini_set('memory_limit', $composerMemory);
 
         // Config for some environment
-        putenv('COMPOSER_HOME='.$this->eccubeConfig['plugin_realdir'].'/.composer');
+        putenv('COMPOSER_HOME=' . $this->eccubeConfig['plugin_realdir'] . '/.composer');
         $this->initConsole();
         $this->workingDir = $this->workingDir ? $this->workingDir : $this->eccubeConfig['kernel.project_dir'];
+        $url = $this->eccubeConfig['eccube_package_api_url'];
         $config = $this->getConfig();
         $eccube_repository = [
             'type' => 'composer',
             'url' => $url,
             'options' => [
                 'http' => [
-                    'header' => ['X-ECCUBE-KEY: '.$BaseInfo->getAuthenticationKey()],
+                    'header' => ['X-ECCUBE-KEY: ' . $BaseInfo->getAuthenticationKey()],
                 ],
             ],
         ];
         $exclude = [];
-        if (array_key_exists('eccube', $config['repositories'])
-            && array_key_exists('exclude', $config['repositories']['eccube'])) {
+        if (
+            array_key_exists('eccube', $config['repositories'])
+            && array_key_exists('exclude', $config['repositories']['eccube'])
+        ) {
             $exclude = array_map(
                 function ($package) {
                     return trim($package);
@@ -416,7 +414,7 @@ class ComposerApiService implements ComposerServiceInterface
 
         if ($from !== null) {
             $exclude = array_unique(array_merge($exclude, [trim(current($packageName))]));
-            $this->execConfig('repositories.'.str_replace(['.', '/'], '', strtolower($from)), [json_encode([
+            $this->execConfig('repositories.' . str_replace(['.', '/'], '', strtolower($from)), [json_encode([
                 'type' => 'path',
                 'url' => $from,
             ])]);
@@ -426,8 +424,9 @@ class ComposerApiService implements ComposerServiceInterface
             $eccube_repository['exclude'] = $exclude;
         }
 
-        $this->execConfig('platform.php', [PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION.'.'.PHP_RELEASE_VERSION]);
+        $this->execConfig('platform.php', [PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION . '.' . PHP_RELEASE_VERSION]);
         $this->execConfig('repositories.eccube', [json_encode($eccube_repository)]);
+
         if (strpos($url, 'http://') === 0) {
             $this->execConfig('secure-http', ['false']);
         }
@@ -444,9 +443,9 @@ class ComposerApiService implements ComposerServiceInterface
 
     /**
      * @param BaseInfo $BaseInfo
-     * 
+     *
      * @return void
-     * 
+     *
      * @throws PluginException
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
@@ -463,14 +462,14 @@ class ComposerApiService implements ComposerServiceInterface
         foreach (explode(' ', trim($packageNames)) as $packageName) {
             $pluginCode = null;
             // 大文字小文字を区別するファイルシステムを考慮して, ディレクトリ名からプラグインコードを取得する
-            foreach (glob($projectRoot.'/app/Plugin/*', GLOB_ONLYDIR) as $dir) {
+            foreach (glob($projectRoot . '/app/Plugin/*', GLOB_ONLYDIR) as $dir) {
                 if (strtolower(basename($dir)) === strtolower(basename($packageName))) {
                     $pluginCode = basename($dir);
                     break;
                 }
             }
             if ($pluginCode === null) {
-                throw new PluginException($packageName.' not found');
+                throw new PluginException($packageName . ' not found');
             }
 
             $this->pluginContext->setCode($pluginCode);
