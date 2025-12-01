@@ -81,7 +81,7 @@ class ShoppingController extends AbstractShoppingController
     /**
      * @var TradeLawRepository
      */
-    protected $tradeLawRepository;
+    protected TradeLawRepository $tradeLawRepository;
 
     protected RateLimiterFactory $shoppingConfirmIpLimiter;
 
