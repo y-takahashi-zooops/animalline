@@ -95,13 +95,13 @@ class ShoppingController extends AbstractShoppingController
 
     // protected TradeLawRepository $tradeLawRepository;
 
-    protected RateLimiterFactory $shoppingConfirmIpLimiter;
+    // protected RateLimiterFactory $shoppingConfirmIpLimiter;
 
-    protected RateLimiterFactory $shoppingConfirmCustomerLimiter;
+    // protected RateLimiterFactory $shoppingConfirmCustomerLimiter;
 
-    protected RateLimiterFactory $shoppingCheckoutIpLimiter;
+    // protected RateLimiterFactory $shoppingCheckoutIpLimiter;
 
-    protected RateLimiterFactory $shoppingCheckoutCustomerLimiter;
+    // protected RateLimiterFactory $shoppingCheckoutCustomerLimiter;
 
     public function __construct(
         CartService $cartService,
@@ -120,10 +120,10 @@ class ShoppingController extends AbstractShoppingController
         RouterInterface $router,
         ContainerInterface $serviceContainer,
         // TradeLawRepository $tradeLawRepository,
-        RateLimiterFactory $shoppingConfirmIpLimiter,
-        RateLimiterFactory $shoppingConfirmCustomerLimiter,
-        RateLimiterFactory $shoppingCheckoutIpLimiter,
-        RateLimiterFactory $shoppingCheckoutCustomerLimiter,
+        // RateLimiterFactory $shoppingConfirmIpLimiter,
+        // RateLimiterFactory $shoppingConfirmCustomerLimiter,
+        // RateLimiterFactory $shoppingCheckoutIpLimiter,
+        // RateLimiterFactory $shoppingCheckoutCustomerLimiter,
         BaseInfoRepository $baseInfoRepository
     ) {
         parent::__construct(
@@ -147,10 +147,10 @@ class ShoppingController extends AbstractShoppingController
         //$this->security = $security;
         $this->serviceContainer = $serviceContainer;
         // $this->tradeLawRepository = $tradeLawRepository;
-        $this->shoppingConfirmIpLimiter = $shoppingConfirmIpLimiter;
-        $this->shoppingConfirmCustomerLimiter = $shoppingConfirmCustomerLimiter;
-        $this->shoppingCheckoutIpLimiter = $shoppingCheckoutIpLimiter;
-        $this->shoppingCheckoutCustomerLimiter = $shoppingCheckoutCustomerLimiter;
+        // $this->shoppingConfirmIpLimiter = $shoppingConfirmIpLimiter;
+        // $this->shoppingConfirmCustomerLimiter = $shoppingConfirmCustomerLimiter;
+        // $this->shoppingCheckoutIpLimiter = $shoppingCheckoutIpLimiter;
+        // $this->shoppingCheckoutCustomerLimiter = $shoppingCheckoutCustomerLimiter;
         $this->baseInfoRepository = $baseInfoRepository;        
     }
 
@@ -334,7 +334,12 @@ class ShoppingController extends AbstractShoppingController
      * 
      * @Template("Shopping/confirm.twig")
      */
-    public function confirm(Request $request)
+    public function confirm(
+        Request $request,
+        TradeLawRepository $tradeLawRepository,
+        RateLimiterFactory $shoppingConfirmIpLimiter,
+        RateLimiterFactory $shoppingConfirmCustomerLimiter
+    )
     {
         // ログイン状態のチェック.
         if ($this->orderHelper->isLoginRequired()) {
@@ -369,7 +374,8 @@ class ShoppingController extends AbstractShoppingController
             }
 
             log_info('[注文確認] IPベースのスロットリングを実行します.');
-            $ipLimiter = $this->shoppingConfirmIpLimiter->create($request->getClientIp());
+            // $ipLimiter = $this->shoppingConfirmIpLimiter->create($request->getClientIp());
+            $ipLimiter = $shoppingConfirmIpLimiter->create($request->getClientIp());
             if (!$ipLimiter->consume()->isAccepted()) {
                 log_info('[注文確認] 試行回数制限を超過しました(IPベース)');
                 throw new TooManyRequestsHttpException();
@@ -378,7 +384,8 @@ class ShoppingController extends AbstractShoppingController
             $Customer = $this->getUser();
             if ($Customer instanceof Customer) {
                 log_info('[注文確認] 会員ベースのスロットリングを実行します.');
-                $customerLimiter = $this->shoppingConfirmCustomerLimiter->create($Customer->getId());
+                // $customerLimiter = $this->shoppingConfirmCustomerLimiter->create($Customer->getId());
+                $customerLimiter = $shoppingConfirmCustomerLimiter->create($Customer->getId());
                 if (!$customerLimiter->consume()->isAccepted()) {
                     log_info('[注文確認] 試行回数制限を超過しました(会員ベース)');
                     throw new TooManyRequestsHttpException();
@@ -446,7 +453,11 @@ class ShoppingController extends AbstractShoppingController
      * 
      * @Template("Shopping/confirm.twig")
      */
-    public function checkout(Request $request)
+    public function checkout(
+        Request $request,
+        RateLimiterFactory $shoppingCheckoutIpLimiter,
+        RateLimiterFactory $shoppingCheckoutCustomerLimiter
+    )
     {
         // ログイン状態のチェック.
         if ($this->orderHelper->isLoginRequired()) {
@@ -487,7 +498,8 @@ class ShoppingController extends AbstractShoppingController
                 }
 
                 log_info('[注文完了] IPベースのスロットリングを実行します.');
-                $ipLimiter = $this->shoppingCheckoutIpLimiter->create($request->getClientIp());
+                // $ipLimiter = $this->shoppingCheckoutIpLimiter->create($request->getClientIp());
+                $ipLimiter = $shoppingCheckoutIpLimiter->create($request->getClientIp());
                 if (!$ipLimiter->consume()->isAccepted()) {
                     log_info('[注文完了] 試行回数制限を超過しました(IPベース)');
                     throw new TooManyRequestsHttpException();
@@ -496,7 +508,8 @@ class ShoppingController extends AbstractShoppingController
                 $Customer = $this->getUser();
                 if ($Customer instanceof Customer) {
                     log_info('[注文完了] 会員ベースのスロットリングを実行します.');
-                    $customerLimiter = $this->shoppingCheckoutCustomerLimiter->create($Customer->getId());
+                    // $customerLimiter = $this->shoppingCheckoutCustomerLimiter->create($Customer->getId());
+                    $customerLimiter = $shoppingCheckoutCustomerLimiter->create($Customer->getId());
                     if (!$customerLimiter->consume()->isAccepted()) {
                         log_info('[注文完了] 試行回数制限を超過しました(会員ベース)');
                         throw new TooManyRequestsHttpException();
