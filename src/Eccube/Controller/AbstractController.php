@@ -26,7 +26,6 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Service\Attribute\Required;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Eccube\Repository\TradeLawRepository;
 
 class AbstractController extends Controller
 {
@@ -66,11 +65,6 @@ class AbstractController extends Controller
     protected $router;
 
     /**
-     * @var TradeLawRepository
-     */
-    protected TradeLawRepository $tradeLawRepository;
-
-    /**
      * Constructor
      */
     public function __construct(
@@ -80,8 +74,7 @@ class AbstractController extends Controller
         FormFactoryInterface $formFactory,
         EventDispatcherInterface $eventDispatcher,
         Session $session,
-        RouterInterface $router,
-        TradeLawRepository $tradeLawRepository
+        RouterInterface $router
     ) {
         $this->eccubeConfig = $eccubeConfig;
         $this->entityManager = $entityManager;
@@ -90,7 +83,6 @@ class AbstractController extends Controller
         $this->eventDispatcher = $eventDispatcher;
         $this->session = $session;
         $this->router = $router;
-        $this->tradeLawRepository = $tradeLawRepository;
     }
 
     /**
