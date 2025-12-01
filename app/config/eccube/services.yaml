@@ -337,6 +337,10 @@ services:
         tags:
             - { name: 'console.command' }
     
+    Eccube\Controller\Admin\Content\MaintenanceController:
+        arguments:
+            $maintenanceFilePath: '%kernel.project_dir%/app/config/eccube/.maintenance'
+    
     Eccube\DataCollector\EccubeDataCollector:
         arguments:
             $currency: '%currency%'
