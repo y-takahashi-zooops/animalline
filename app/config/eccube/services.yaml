@@ -20,7 +20,7 @@ parameters:
     eccube_content_maintenance_file_path: '%kernel.project_dir%/app/config/eccube/.maintenance'
 
 services:
-        # default configuration for services in *this* file
+    # default configuration for services in *this* file
     _defaults:
         # automatically injects dependencies in your services
         autowire: true
@@ -35,29 +35,6 @@ services:
           $shoppingPurchaseFlow: '@eccube.purchase.flow.shopping'
           $orderPurchaseFlow: '@eccube.purchase.flow.order'
           $_orderStateMachine: '@state_machine.order'
-          string $projectDir: '%kernel.project_dir%'
-          array $enabledPlugins: ["GmoPaymentGateway4","ProductReview4","ZooopsSendmail","ZooopsSubscription"]
-
-    # Eccube\Controller\Block\SearchProductController:
-    #     autowire: true
-    #     autoconfigure: true
-    #     tags: ['controller.service_arguments']
-
-    Eccube\Controller\Block\:
-        resource: '../../../src/Eccube/Controller/Block'
-        autowire: true
-        autoconfigure: true
-        tags: ['controller.service_arguments']
-
-    Eccube\Command\GenerateProxyCommand:
-        class: Eccube\Command\GenerateProxyCommand
-        autowire: true
-        autoconfigure: true
-        arguments:
-            - '@Eccube\Service\EntityProxyService'
-            - '%kernel.project_dir%'
-            - '%eccube.plugins.enabled%'
-        tags: ['console.command']
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -65,21 +42,7 @@ services:
         resource: '../../../src/Eccube/*'
         # you can exclude directories or files
         # but if a service is unused, it's removed anyway
-        exclude:
-        - '../../../src/Eccube/{Annotation,Common,Entity,Exception,Log,Plugin,ServiceProvider,Resource,Doctrine/ORM/tools/}'
-
-    Customize\Controller\:
-        resource: '../../Customize/Controller'
-        # resource: ../../Customize/Controller/
-        # resource: '%kernel.project_dir%/app/Customize/Controller'
-        tags: ['controller.service_arguments']
-        autowire: true
-        autoconfigure: true
-
-    Eccube\Log\Logger:
-        autowire: true
-        autoconfigure: true
-        public: false
+        exclude: '../../../src/Eccube/{Annotation,Common,Entity,Exception,Log,Plugin,ServiceProvider,Resource,Doctrine/ORM/tools/}'
 
     Eccube\Common\EccubeConfig:
         public: true
@@ -97,13 +60,8 @@ services:
     Eccube\Service\SystemService:
         lazy: true
         public: true
-        arguments:
-            $maintenanceFilePath: '%eccube_content_maintenance_file_path%'
 
     Eccube\Service\Composer\ComposerProcessService:
-        lazy: true
-
-    Eccube\Service\OrderHelper:
         lazy: true
 
     Eccube\Service\Composer\ComposerServiceInterface:
@@ -137,11 +95,7 @@ services:
     # and have a tag that allows actions to type-hint services
     Eccube\Controller\:
         resource: '../../../src/Eccube/Controller'
-        # resource: ../../Customize/Controller/
-        # resource: '%kernel.project_dir%/src/Eccube/Controller'
         tags: ['controller.service_arguments']
-        autowire: true
-        autoconfigure: true
 
     Eccube\Twig\Extension\EccubeBlockExtension:
         tags: ['twig.extension']
@@ -154,24 +108,11 @@ services:
 
     Customize\:
         resource: '../../../app/Customize/*'
-        exclude:
-        - '../../../app/Customize/{Entity,Resource,Tests}'
+        exclude: '../../../app/Customize/{Entity,Resource,Tests}'
 
-    # Animalline拡張
-    Customize\EventListener\LogoutListener:
-        tags:
-            - { name: kernel.event_subscriber }
-    
-    Customize\Form\Extension\AddCartTypeCustomizer:
-        class: Customize\Form\Extension\AddCartTypeCustomizer
-        arguments:
-            $doctrine: '@doctrine'
-            $config: '@Eccube\Common\EccubeConfig'
-        tags:
-            - { name: form.type_extension }
-        autowire: false
-        autoconfigure: false
-        public: false
+    Customize\Controller\:
+        resource: '../../../app/Customize/Controller'
+        tags: ['controller.service_arguments']
 
     twig.extension.stringloader:
         class: Twig\Extension\StringLoaderExtension
@@ -187,6 +128,17 @@ services:
             $pluginRepository: '@Eccube\Repository\PluginRepository'
         tags:
           - { name: 'data_collector', template: '@toolbar/eccube.html.twig', id: 'eccube_core', priority: -512 }
+
+    eccube.security.success_handler:
+        class: Eccube\Security\Http\Authentication\EccubeAuthenticationSuccessHandler
+
+    eccube.security.failure_handler:
+        class: Eccube\Security\Http\Authentication\EccubeAuthenticationFailureHandler
+
+    eccube.security.logout.success_handler:
+        class: Eccube\Security\Http\Authentication\EccubeLogoutSuccessHandler
+        arguments:
+          - '@Eccube\Request\Context'
 
     # Autowiring can't guess the constructor arguments that are not type-hinted with
     # classes (e.g. container parameters) so you must define those arguments explicitly
@@ -236,7 +188,7 @@ services:
 
     Monolog\Processor\IntrospectionProcessor:
         arguments:
-            - 100 # Logger::DEBUG = 100
+            - 100               # Logger::DEBUG = 100
             - ['Eccube\\Log', 'Psr\\Log']
         tags:
             - { name: monolog.processor }
