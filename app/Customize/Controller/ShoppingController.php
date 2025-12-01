@@ -40,6 +40,7 @@ use Psr\Log\LoggerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 
 
 class ShoppingController extends BaseShoppingController
