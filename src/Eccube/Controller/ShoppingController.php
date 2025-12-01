@@ -27,6 +27,7 @@ use Eccube\Form\Type\Shopping\OrderType;
 use Eccube\Repository\BaseInfoRepository;
 use Eccube\Repository\OrderRepository;
 use Eccube\Repository\TradeLawRepository;
+use Eccube\Entity\TradeLaw;
 use Eccube\Service\CartService;
 use Eccube\Service\MailService;
 use Eccube\Service\OrderHelper;
