@@ -404,14 +404,6 @@ services:
 
     app.eccube.security.success_handler: '@Customize\Security\Http\Authentication\EccubeLoginSuccessHandler'
 
-    eccube.security.failure_handler:
-        class: Eccube\Security\Http\Authentication\EccubeAuthenticationFailureHandler
-
-    eccube.security.logout.success_handler:
-        class: Eccube\Security\Http\Authentication\EccubeLogoutSuccessHandler
-        arguments:
-          - '@Eccube\Request\Context'
-
     Eccube\Controller\AbstractController:
         arguments:
             $eccubeConfig: '@Eccube\Common\EccubeConfig'
