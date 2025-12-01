@@ -78,11 +78,6 @@ class ShoppingController extends AbstractShoppingController
      */
     protected $baseInfoRepository;
 
-    /**
-     * @var TradeLawRepository
-     */
-    protected TradeLawRepository $tradeLawRepository;
-
     protected RateLimiterFactory $shoppingConfirmIpLimiter;
 
     protected RateLimiterFactory $shoppingConfirmCustomerLimiter;
@@ -97,7 +92,7 @@ class ShoppingController extends AbstractShoppingController
         OrderRepository $orderRepository,
         OrderHelper $orderHelper,
         ContainerInterface $serviceContainer,
-        TradeLawRepository $tradeLawRepository,
+        // TradeLawRepository $tradeLawRepository,
         RateLimiterFactory $shoppingConfirmIpLimiter,
         RateLimiterFactory $shoppingConfirmCustomerLimiter,
         RateLimiterFactory $shoppingCheckoutIpLimiter,
@@ -109,7 +104,7 @@ class ShoppingController extends AbstractShoppingController
         $this->orderRepository = $orderRepository;
         $this->orderHelper = $orderHelper;
         $this->serviceContainer = $serviceContainer;
-        $this->tradeLawRepository = $tradeLawRepository;
+        // $this->tradeLawRepository = $tradeLawRepository;
         $this->shoppingConfirmIpLimiter = $shoppingConfirmIpLimiter;
         $this->shoppingConfirmCustomerLimiter = $shoppingConfirmCustomerLimiter;
         $this->shoppingCheckoutIpLimiter = $shoppingCheckoutIpLimiter;
@@ -182,7 +177,10 @@ class ShoppingController extends AbstractShoppingController
             $this->entityManager->flush();
         }
 
-        $activeTradeLaws = $this->tradeLawRepository->findBy(['displayOrderScreen' => true], ['sortNo' => 'ASC']);
+        // $activeTradeLaws = $this->tradeLawRepository->findBy(['displayOrderScreen' => true], ['sortNo' => 'ASC']);
+        $activeTradeLaws = $this->entityManager
+            ->getRepository(TradeLaw::class)
+            ->findBy(['displayOrderScreen' => true], ['sortNo' => 'ASC']);
 
         $form = $this->createForm(OrderType::class, $Order);
 
@@ -271,7 +269,10 @@ class ShoppingController extends AbstractShoppingController
             }
         }
 
-        $activeTradeLaws = $this->tradeLawRepository->findBy(['displayOrderScreen' => true], ['sortNo' => 'ASC']);
+        // $activeTradeLaws = $this->tradeLawRepository->findBy(['displayOrderScreen' => true], ['sortNo' => 'ASC']);
+        $activeTradeLaws = $this->entityManager
+            ->getRepository(TradeLaw::class)
+            ->findBy(['displayOrderScreen' => true], ['sortNo' => 'ASC']);
 
         log_info('[リダイレクト] フォームエラーのため, 注文手続き画面を表示します.', [$Order->getId()]);
 
@@ -311,7 +312,10 @@ class ShoppingController extends AbstractShoppingController
             return $this->redirectToRoute('shopping_error');
         }
 
-        $activeTradeLaws = $this->tradeLawRepository->findBy(['displayOrderScreen' => true], ['sortNo' => 'ASC']);
+        // $activeTradeLaws = $this->tradeLawRepository->findBy(['displayOrderScreen' => true], ['sortNo' => 'ASC']);
+        $activeTradeLaws = $this->entityManager
+            ->getRepository(TradeLaw::class)
+            ->findBy(['displayOrderScreen' => true], ['sortNo' => 'ASC']);
         $form = $this->createForm(OrderType::class, $Order);
         $form->handleRequest($request);
 
