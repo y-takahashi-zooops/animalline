@@ -104,8 +104,11 @@ class ShoppingController extends BaseShoppingController
      * @Route("/shopping/checkout", name="shopping_checkout", methods={"POST"})
      * @Template("Shopping/confirm.twig")
      */
-    public function checkout(Request $request)
-    {
+    public function checkout(
+        Request $request,
+        RateLimiterFactory $shoppingCheckoutIpLimiter,
+        RateLimiterFactory $shoppingCheckoutCustomerLimiter
+    ) {
         // ログイン状態のチェック.
         if ($this->orderHelper->isLoginRequired()) {
             $this->logger->info('[注文処理] 未ログインもしくはRememberMeログインのため, ログイン画面に遷移します.');
