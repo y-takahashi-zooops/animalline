@@ -322,6 +322,7 @@ services:
         tags: [ 'app.payment_method' ]
 
     Plugin\GmoPaymentGateway4\Service\Method\CreditCard:
+        class: Plugin\GmoPaymentGateway4\Service\Method\CreditCard
         public: true
         tags: [ 'app.payment_method' ]
 
