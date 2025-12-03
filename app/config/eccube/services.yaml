@@ -313,11 +313,9 @@ services:
         tags: [ 'controller.service_arguments' ]
     
     Eccube\Service\Payment\Method\Cash:
-        public: true
         tags: ['app.payment_method']
 
     Plugin\GmoPaymentGateway4\Service\Method\CreditCard:
-        public: true
         tags: ['app.payment_method']
 
     Eccube\Util\CacheUtil:
