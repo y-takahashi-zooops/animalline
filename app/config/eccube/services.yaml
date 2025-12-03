@@ -322,9 +322,15 @@ services:
         tags: [ 'app.payment_method' ]
 
     Plugin\GmoPaymentGateway4\Service\Method\CreditCard:
-        class: Plugin\GmoPaymentGateway4\Service\Method\CreditCard
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $orderStatusRepository: '@Eccube\Repository\Master\OrderStatusRepository'
+            $shoppingPurchaseFlow: '@Eccube\Service\PurchaseFlow\PurchaseFlow'
+            $paymentHelperCredit: '@Plugin\GmoPaymentGateway4\Service\PaymentHelperCredit'
+            $paymentHelperMember: '@Plugin\GmoPaymentGateway4\Service\PaymentHelperMember'
         public: true
-        tags: [ 'app.payment_method' ]
+        autowire: false
+        tags: ['app.payment_method']
 
     Eccube\Util\CacheUtil:
         arguments:
