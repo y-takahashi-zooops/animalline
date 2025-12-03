@@ -104,7 +104,6 @@ class ShoppingController extends AbstractShoppingController
     // protected RateLimiterFactory $shoppingCheckoutCustomerLimiter;
 
     public function __construct(
-        CartService $cartService,
         MailService $mailService,
         OrderRepository $orderRepository,
         OrderHelper $orderHelper,
@@ -124,6 +123,7 @@ class ShoppingController extends AbstractShoppingController
         // RateLimiterFactory $shoppingConfirmCustomerLimiter,
         // RateLimiterFactory $shoppingCheckoutIpLimiter,
         // RateLimiterFactory $shoppingCheckoutCustomerLimiter,
+        CartService $cartService,
         BaseInfoRepository $baseInfoRepository
     ) {
         parent::__construct(
@@ -136,7 +136,6 @@ class ShoppingController extends AbstractShoppingController
             $requestStack,
             $router
         );
-        $this->cartService = $cartService;
         $this->mailService = $mailService;
         $this->orderRepository = $orderRepository;
         $this->orderHelper = $orderHelper;
@@ -151,6 +150,7 @@ class ShoppingController extends AbstractShoppingController
         // $this->shoppingConfirmCustomerLimiter = $shoppingConfirmCustomerLimiter;
         // $this->shoppingCheckoutIpLimiter = $shoppingCheckoutIpLimiter;
         // $this->shoppingCheckoutCustomerLimiter = $shoppingCheckoutCustomerLimiter;
+        $this->cartService = $cartService;
         $this->baseInfoRepository = $baseInfoRepository;        
     }
 
