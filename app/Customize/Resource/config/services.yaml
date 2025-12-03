@@ -1,0 +1,7 @@
+services:
+    # GMOクレジットカード決済を app.payment_method に登録
+    Plugin\GmoPaymentGateway4\Service\Method\CreditCard:
+        class: Plugin\GmoPaymentGateway4\Service\Method\CreditCard
+        public: true
+        tags:
+            - { name: 'app.payment_method' }
