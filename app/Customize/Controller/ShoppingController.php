@@ -111,9 +111,7 @@ class ShoppingController extends BaseShoppingController
         RateLimiterFactory $shoppingConfirmCustomerLimiter,
         RateLimiterFactory $shoppingCheckoutIpLimiter,
         RateLimiterFactory $shoppingCheckoutCustomerLimiter,
-        BaseInfoRepository $baseInfoRepository,
-        SubscriptionProcess $subscriptionProcess,
-        iterable $paymentMethods
+        BaseInfoRepository $baseInfoRepository
     ) {
         $this->cartService = $cartService;
         $this->mailService = $mailService;
@@ -127,10 +125,6 @@ class ShoppingController extends BaseShoppingController
         $this->shoppingCheckoutCustomerLimiter = $shoppingCheckoutCustomerLimiter;
         $this->baseInfoRepository = $baseInfoRepository;
         $this->subscriptionProcess = $subscriptionProcess;
-        $this->paymentMethods = [];
-        foreach ($paymentMethods as $service) {
-            $this->paymentMethods[get_class($service)] = $service;
-        }
     }
 
     /**
@@ -259,13 +253,7 @@ class ShoppingController extends BaseShoppingController
      */
     private function createPaymentMethod(Order $Order, FormInterface $form)
     {
-        $class = $Order->getPayment()->getMethodClass();
-
-        if (!isset($this->paymentMethods[$class])) {
-            throw new \RuntimeException("$class is not injected in ShoppingController.");
-        }
-
-        $PaymentMethod = $this->paymentMethods[$class];
+        $PaymentMethod = $this->serviceContainer->get($Order->getPayment()->getMethodClass());
         $PaymentMethod->setOrder($Order);
         $PaymentMethod->setFormType($form);
 
