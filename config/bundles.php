@@ -16,4 +16,5 @@ return [
     Knp\Bundle\PaginatorBundle\KnpPaginatorBundle::class => ['all' => true],
     Twig\Extra\TwigExtraBundle\TwigExtraBundle::class => ['all' => true],
     Eccube\EccubeBundle::class => ['all' => true],
+    Customize\CustomizeBundle::class => ['all' => true],
 ];
