@@ -9,10 +9,8 @@ use Symfony\Component\Config\FileLocator;
 
 class CustomizeBundle extends Bundle
 {
-    public function build(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container)
     {
-        parent::build($container);
-
         $loader = new YamlFileLoader(
             $container,
             new FileLocator(__DIR__ . '/Resource/config')
