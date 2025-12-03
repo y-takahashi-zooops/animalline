@@ -243,6 +243,117 @@ class ShoppingController extends BaseShoppingController
         return $this->redirectToRoute('shopping_error');
     }
 
+        /**
+     * 注文確認画面を表示する.
+     *
+     * ここではPaymentMethod::verifyがコールされます.
+     * PaymentMethod::verifyではクレジットカードの有効性チェック等, 注文手続きを進められるかどうかのチェック処理を行う事を想定しています.
+     * PaymentMethod::verifyでエラーが発生した場合は, 注文手続き画面へリダイレクトします.
+     *
+     * @Route("/shopping/confirm", name="shopping_confirm", methods={"POST"})
+     *
+     * @Template("Shopping/confirm.twig")
+     */
+    public function confirm(Request $request)
+    {
+        // ログイン状態のチェック.
+        if ($this->orderHelper->isLoginRequired()) {
+            log_info('[注文確認] 未ログインもしくはRememberMeログインのため, ログイン画面に遷移します.');
+
+            return $this->redirectToRoute('shopping_login');
+        }
+
+        // 受注の存在チェック
+        $preOrderId = $this->cartService->getPreOrderId();
+        $Order = $this->orderHelper->getPurchaseProcessingOrder($preOrderId);
+        if (!$Order) {
+            log_info('[注文確認] 購入処理中の受注が存在しません.', [$preOrderId]);
+
+            return $this->redirectToRoute('shopping_error');
+        }
+
+        $activeTradeLaws = $this->tradeLawRepository->findBy(['displayOrderScreen' => true], ['sortNo' => 'ASC']);
+        $form = $this->createForm(OrderType::class, $Order);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            log_info('[注文確認] 集計処理を開始します.', [$Order->getId()]);
+            $response = $this->executePurchaseFlow($Order);
+            $this->entityManager->flush();
+
+            if ($response) {
+                return $response;
+            }
+
+            log_info('[注文確認] IPベースのスロットリングを実行します.');
+            $ipLimiter = $this->shoppingConfirmIpLimiter->create($request->getClientIp());
+            if (!$ipLimiter->consume()->isAccepted()) {
+                log_info('[注文確認] 試行回数制限を超過しました(IPベース)');
+                throw new TooManyRequestsHttpException();
+            }
+
+            $Customer = $this->getUser();
+            if ($Customer instanceof Customer) {
+                log_info('[注文確認] 会員ベースのスロットリングを実行します.');
+                $customerLimiter = $this->shoppingConfirmCustomerLimiter->create($Customer->getId());
+                if (!$customerLimiter->consume()->isAccepted()) {
+                    log_info('[注文確認] 試行回数制限を超過しました(会員ベース)');
+                    throw new TooManyRequestsHttpException();
+                }
+            }
+
+            log_info('[注文確認] PaymentMethod::verifyを実行します.', [$Order->getPayment()->getMethodClass()]);
+            $paymentMethod = $this->createPaymentMethod($Order, $form);
+            $PaymentResult = $paymentMethod->verify();
+
+            if ($PaymentResult) {
+                if (!$PaymentResult->isSuccess()) {
+                    $this->entityManager->rollback();
+                    foreach ($PaymentResult->getErrors() as $error) {
+                        $this->addError($error);
+                    }
+
+                    log_info('[注文確認] PaymentMethod::verifyのエラーのため, 注文手続き画面へ遷移します.', [$PaymentResult->getErrors()]);
+
+                    return $this->redirectToRoute('shopping');
+                }
+
+                $response = $PaymentResult->getResponse();
+                if ($response instanceof Response && ($response->isRedirection() || $response->isSuccessful())) {
+                    $this->entityManager->flush();
+
+                    log_info('[注文確認] PaymentMethod::verifyが指定したレスポンスを表示します.');
+
+                    return $response;
+                }
+            }
+
+            $this->entityManager->flush();
+
+            log_info('[注文確認] 注文確認画面を表示します.');
+
+            return [
+                'form' => $form->createView(),
+                'Order' => $Order,
+                'activeTradeLaws' => $activeTradeLaws,
+            ];
+        }
+
+        log_info('[注文確認] フォームエラーのため, 注文手続画面を表示します.', [$Order->getId()]);
+
+        $template = new Template([
+            'owner' => [$this, 'confirm'],
+            'template' => 'Shopping/index.twig',
+        ]);
+        $request->attributes->set('_template', $template);
+
+        return [
+            'form' => $form->createView(),
+            'Order' => $Order,
+            'activeTradeLaws' => $activeTradeLaws,
+        ];
+    }
+
     /**
      * PaymentMethodをコンテナから取得する.
      *
