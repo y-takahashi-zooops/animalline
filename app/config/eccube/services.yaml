@@ -331,7 +331,8 @@ services:
         autowire: true
         autoconfigure: true
 
-    Plugin\GmoPaymentGateway4\Service\Method\CreditCard:
+    Plugin\GmoPaymentGateway4\Service\Method\CreditCardCustom:
+        class: Plugin\GmoPaymentGateway4\Service\Method\CreditCard
         public: true
         autowire: true
         tags:
