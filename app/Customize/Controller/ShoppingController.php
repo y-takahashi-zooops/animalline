@@ -366,7 +366,6 @@ class ShoppingController extends BaseShoppingController
     private function createPaymentMethod(Order $Order, FormInterface $form)
     {
         $PaymentMethod = $this->serviceContainer->get($Order->getPayment()->getMethodClass());
-        $PaymentMethod = $this->paymentMethods[$class];
         $PaymentMethod->setOrder($Order);
         $PaymentMethod->setFormType($form);
 
