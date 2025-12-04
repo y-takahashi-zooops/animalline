@@ -46,6 +46,8 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Eccube\Controller\ShoppingController as BaseShoppingController;
 use Customize\Service\SubscriptionProcess;
+use Symfony\Component\ProxyManager\Proxy\ProxyInterface;
+use Doctrine\Common\Util\ClassUtils;
 
 
 
@@ -123,7 +125,8 @@ class ShoppingController extends BaseShoppingController
         $this->subscriptionProcess = $subscriptionProcess;
         $this->paymentMethods = [];
         foreach ($paymentMethods as $service) {
-            $this->paymentMethods[get_class($service)] = $service;
+            $className = $service instanceof ProxyInterface ? ClassUtils::getRealClass(get_class($service)) : get_class($service);
+            $this->paymentMethods[$className] = $service;
         }
     }
 
