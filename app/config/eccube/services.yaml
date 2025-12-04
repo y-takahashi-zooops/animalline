@@ -335,8 +335,7 @@ services:
         class: Plugin\GmoPaymentGateway4\Service\Method\CreditCard
         public: true
         autowire: true
-        tags:
-            - { name: 'app.payment_method' }
+        tags: [ 'app.payment_method' ]
 
     Eccube\Util\CacheUtil:
         arguments:
