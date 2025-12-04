@@ -174,18 +174,3 @@ parameters:
     eccube_login_throttling_max_attempts: 5
     eccube_login_throttling_interval: '30 minutes'
     eccube_max_number_new_items_get: 5
-
-services:
-
-    Plugin\GmoPaymentGateway4\Service\Method\CreditCard:
-        class: Plugin\GmoPaymentGateway4\Service\Method\CreditCard
-        arguments:
-            $entityManager: '@doctrine.orm.entity_manager'
-            $orderStatusRepository: '@Eccube\Repository\Master\OrderStatusRepository'
-            $shoppingPurchaseFlow: '@Eccube\Service\PurchaseFlow\PurchaseFlow'
-            $paymentHelperCredit: '@Plugin\GmoPaymentGateway4\Service\PaymentHelperCredit'
-            $paymentHelperMember: '@Plugin\GmoPaymentGateway4\Service\PaymentHelperMember'
-        public: true
-        autowire: false
-        tags:
-            - { name: 'app.payment_method' }
