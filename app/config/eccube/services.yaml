@@ -321,6 +321,10 @@ services:
         public: true
         tags: [ 'app.payment_method' ]
 
+    Eccube\Service\Payment\Method\CreditCard:
+        public: true
+        tags: [ 'app.payment_method' ]
+
     Plugin\GmoPaymentGateway4\Service\PaymentHelperCredit:
         public: true
         autowire: true
