@@ -134,7 +134,6 @@ if (typeof Ladda !== 'undefined') {
 // data-message : 確認ダイアログを出す際のメッセージをデフォルトから変更する
 //
 $(function() {
-    console.log("function.js loaded2");
     var createForm = function(action, data) {
         var $form = $('<form action="' + action + '" method="post"></form>');
         for (input in data) {
