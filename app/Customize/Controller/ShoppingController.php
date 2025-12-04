@@ -34,7 +34,6 @@ use Eccube\Service\Payment\PaymentDispatcher;
 use Eccube\Service\Payment\PaymentMethodInterface;
 use Eccube\Service\PurchaseFlow\PurchaseContext;
 use Eccube\Service\PurchaseFlow\PurchaseFlow;
-use Psr\Container\ContainerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -73,11 +72,6 @@ class ShoppingController extends BaseShoppingController
     protected $orderRepository;
 
     /**
-     * @var ContainerInterface
-     */
-    protected $serviceContainer;
-
-    /**
      * @var BaseInfoRepository
      */
     protected $baseInfoRepository;
@@ -100,12 +94,13 @@ class ShoppingController extends BaseShoppingController
      */
     protected $subscriptionProcess;
 
+    private array $paymentMethods;
+
     public function __construct(
         CartService $cartService,
         MailService $mailService,
         OrderRepository $orderRepository,
         OrderHelper $orderHelper,
-        ContainerInterface $serviceContainer,
         TradeLawRepository $tradeLawRepository,
         RateLimiterFactory $shoppingConfirmIpLimiter,
         RateLimiterFactory $shoppingConfirmCustomerLimiter,
@@ -113,12 +108,12 @@ class ShoppingController extends BaseShoppingController
         RateLimiterFactory $shoppingCheckoutCustomerLimiter,
         BaseInfoRepository $baseInfoRepository,
         SubscriptionProcess $subscriptionProcess,
+        iterable $paymentMethods
     ) {
         $this->cartService = $cartService;
         $this->mailService = $mailService;
         $this->orderRepository = $orderRepository;
         $this->orderHelper = $orderHelper;
-        $this->serviceContainer = $serviceContainer;
         $this->tradeLawRepository = $tradeLawRepository;
         $this->shoppingConfirmIpLimiter = $shoppingConfirmIpLimiter;
         $this->shoppingConfirmCustomerLimiter = $shoppingConfirmCustomerLimiter;
@@ -126,6 +121,10 @@ class ShoppingController extends BaseShoppingController
         $this->shoppingCheckoutCustomerLimiter = $shoppingCheckoutCustomerLimiter;
         $this->baseInfoRepository = $baseInfoRepository;
         $this->subscriptionProcess = $subscriptionProcess;
+        $this->paymentMethods = [];
+        foreach ($paymentMethods as $service) {
+            $this->paymentMethods[get_class($service)] = $service;
+        }
     }
 
     /**
@@ -365,7 +364,11 @@ class ShoppingController extends BaseShoppingController
      */
     private function createPaymentMethod(Order $Order, FormInterface $form)
     {
-        $PaymentMethod = $this->serviceContainer->get($Order->getPayment()->getMethodClass());
+        $class = $Order->getPayment()->getMethodClass();
+        if (!isset($this->paymentMethods[$class])) {
+            throw new \RuntimeException("PaymentMethod $class not found");
+        }
+        $PaymentMethod = $this->paymentMethods[$class];
         $PaymentMethod->setOrder($Order);
         $PaymentMethod->setFormType($form);
 

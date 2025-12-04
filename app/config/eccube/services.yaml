@@ -256,6 +256,8 @@ services:
 
     Symfony\Component\HttpFoundation\ParameterBag:
 
+    Symfony\Component\DependencyInjection\ContainerInterface: '@service_container'
+
     Symfony\Component\Translation\TranslatorInterface: '@translator'
 
     Symfony\Component\HttpFoundation\Session\SessionInterface: '@session'
@@ -309,6 +311,26 @@ services:
         arguments:
             $serviceContainer: !tagged_locator { tag: 'eccube_payment_method' }
         tags: [ 'controller.service_arguments' ]
+
+    Customize\Controller\ShoppingController:
+        arguments:
+            $paymentMethods: !tagged_iterator app.payment_method
+        tags: [ 'controller.service_arguments' ]
+
+    Eccube\Service\Payment\Method\Cash:
+        public: true
+        tags: [ 'app.payment_method' ]
+
+    Plugin\GmoPaymentGateway4\Service\Method\CreditCard:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $orderStatusRepository: '@Eccube\Repository\Master\OrderStatusRepository'
+            $shoppingPurchaseFlow: '@Eccube\Service\PurchaseFlow\PurchaseFlow'
+            $paymentHelperCredit: '@Plugin\GmoPaymentGateway4\Service\PaymentHelperCredit'
+            $paymentHelperMember: '@Plugin\GmoPaymentGateway4\Service\PaymentHelperMember'
+        public: true
+        autowire: false
+        tags: ['app.payment_method']
 
     Eccube\Util\CacheUtil:
         arguments:
