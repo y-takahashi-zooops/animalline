@@ -66,12 +66,6 @@ services:
         arguments:
             - "[%%datetime%%] %%level_name%% [%%extra.session_id%%] [%%extra.user_id%%] [%%extra.http_method%%, %%extra.url%%, %%extra.ip%%, %%extra.referrer%%, %%extra.user_agent%%]\n--------------------------------------------------------------------------------\n%%message%%\n--------------------------------------------------------------------------------\n"
 
-    Plugin\GmoPaymentGateway4\Service\Method\CreditCard:
-        class: Plugin\GmoPaymentGateway4\Service\Method\CreditCard
-        public: true
-        tags:
-            - { name: app.payment_method }
-
 # ログ定義
 monolog:
     channels: ['GmoPaymentGateway4']
