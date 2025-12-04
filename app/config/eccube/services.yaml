@@ -256,8 +256,6 @@ services:
 
     Symfony\Component\HttpFoundation\ParameterBag:
 
-    Symfony\Component\DependencyInjection\ContainerInterface: '@service_container'
-
     Symfony\Component\Translation\TranslatorInterface: '@translator'
 
     Symfony\Component\HttpFoundation\Session\SessionInterface: '@session'
