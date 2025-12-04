@@ -1,1 +1,17 @@
-{"name":"ec-cube\/gmopaymentgateway4","version":"1.0.18","description":"PG\u30de\u30eb\u30c1\u30da\u30a4\u30e1\u30f3\u30c8\u30b5\u30fc\u30d3\u30b9\u6c7a\u6e08\u30d7\u30e9\u30b0\u30a4\u30f3","type":"eccube-plugin","require":{"ec-cube\/plugin-installer":"~0.0.6 || ^2.0"},"extra":{"code":"GmoPaymentGateway4","id":1797}}
+{
+    "name":"ec-cube/GmoPaymentGateway4",
+    "version":"1.0.9",
+    "description":"GMO決済モジュール",
+    "type":"eccube-plugin",
+    "require":{
+        "ec-cube/plugin-installer":"~0.0.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Plugin\\GmoPaymentGateway4\\": "" 
+        }
+    },
+    "extra":{
+        "code":"GmoPaymentGateway4"
+    }
+}
