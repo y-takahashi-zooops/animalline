@@ -6,11 +6,6 @@
     "require":{
         "ec-cube/plugin-installer":"~0.0.6"
     },
-    "autoload": {
-        "psr-4": {
-            "Plugin\\GmoPaymentGateway4\\": "" 
-        }
-    },
     "extra":{
         "code":"GmoPaymentGateway4"
     }
