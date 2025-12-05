@@ -64,10 +64,11 @@
         }
     });
 
-    modalEl.addEventListener('shown.bs.modal', function () {
+    bs_modal._element.addEventListener('shown.bs.modal', function () {
         console.log('shown.bs.modal 発火');
         if (cropper) {
             cropper.destroy();
+            cropper = null;
         }
         
         cropper = new Cropper(image, {
@@ -80,7 +81,7 @@
         console.log('Cropper initialized');
     });
 
-    modalEl.addEventListener('hidden.bs.modal', function () {
+    bs_modal._element.addEventListener('hidden.bs.modal', function () {
         cropper.destroy();
         cropper = null;
         $(`#${ inputImageId }`).val('');
