@@ -109,11 +109,11 @@
                     success: function (data) {
                         bs_modal.hide();
                         $(`#${ inputImageId }`).parent().parent().next().find("input[type='file']").removeClass('d-none');
-                        $(`#${ inputImageId }`).hide();
-                        $(`#${ inputImageId }`).parent().find('.img_preview').attr('src', '/' + data)
-                        $(`#${ inputImageId }`).parent().find('.img_preview').show();
+                        $(`#${ inputImageId }`).addClass('d-none');
+                        $(`#${ inputImageId }`).parent().find('.img_preview').attr('src', '/' + data) .removeClass('d-none');
                         $(`#${ inputImageId }`).parent().find('.img_preview').removeClass('d-none');
-                        $(`#${ inputImageId }`).parent().parent().find('button').show();
+                        $(`#${ inputImageId }`).parent().find('.img_preview').removeClass('d-none');
+                        $(`#${ inputImageId }`).parent().parent().find('button').removeClass('d-none');
                         $(`input.${ inputImageId }`).val('/' + data);
                     }
                 });
