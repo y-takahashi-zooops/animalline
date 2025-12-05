@@ -31,7 +31,7 @@
     integrity="sha256-AFAYEOkzB6iIKnTYZOdUf9FFje6lOTYdwRJKwTN5mks=" crossorigin="anonymous"></script>
 <script src="{{ asset('assets/js/breeder_pets.js') }}"></script>
 <script>
-    $(document).ready(function () {
+    $(function () {
         $("[type='file']").each(function(){
         if ($(this).attr("id") !== 'breeder_pets_thumbnail_path') {
                 $(this).addClass("d-none");
@@ -198,5 +198,5 @@
             $(`#breeder_pets_image4`).parent().find('.img_preview').attr('src', `{{ image4 }}`);
         });
     });
-    </script>
+</script>
 {% endblock %}
