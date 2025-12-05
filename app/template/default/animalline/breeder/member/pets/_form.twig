@@ -38,7 +38,7 @@
     <div class="form_img_inline">
         <div class="images mb-3">
             <div class="preview_box mr-4 mb-3">
-                {{ form_widget(form.thumbnail_path) }}
+                {{ form_widget(form.thumbnail_path, { 'label': false }) }}
                 {{ form_errors(form.thumbnail_path) }}
                 <img id="img_thumbnail" class="img_preview" src="{{ image0 }}"/>
             </div>
@@ -48,7 +48,7 @@
         </div>
         <div class="images mb-3">
             <div class="preview_box mr-4 mb-3">
-                {{ form_widget(form.image1) }}
+                {{ form_widget(form.image1, { 'label': false }) }}
                 <img class="img_preview" src="" />
             </div>
             <div style="display: grid">
@@ -58,7 +58,7 @@
         </div>
         <div class="images mb-3">
             <div class="preview_box mr-4 mb-3">
-                {{ form_widget(form.image2) }}
+                {{ form_widget(form.image2, { 'label': false }) }}
                 <img class="img_preview" src="" />
             </div>
             <div style="display: grid">
@@ -68,7 +68,7 @@
         </div>
         <div class="images mb-3">
             <div class="preview_box mr-4 mb-3">
-                {{ form_widget(form.image3) }}
+                {{ form_widget(form.image3, { 'label': false }) }}
                 <img class="img_preview" src="" />
             </div>
             <div style="display: grid">
@@ -78,7 +78,7 @@
         </div>
         <div class="images mb-3">
             <div class="preview_box mr-4 mb-3">
-                {{ form_widget(form.image4) }}
+                {{ form_widget(form.image4, { 'label': false }) }}
                 <img class="img_preview" src="" />
             </div>
             <div style="display: grid">
