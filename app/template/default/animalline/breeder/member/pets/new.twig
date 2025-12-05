@@ -37,15 +37,16 @@
         }
     });
     var inputImageId = '';
-    var bs_modal = $('#modal');
+    var modalEl = document.getElementById('modal');
+    var bs_modal = new bootstrap.Modal(modalEl);
     var image = document.getElementById('image');
     var cropper, reader, file, size;
-    $(".form-control-file").change(function (e) {
+    $("input[type='file']").change(function (e) {
         inputImageId = e.target.id;
         var files = e.target.files;
         var done = function (url) {
             image.src = url;
-            bs_modal.modal('show');
+            bs_modal.show();
         };
 
         if (files && files.length > 0) {
