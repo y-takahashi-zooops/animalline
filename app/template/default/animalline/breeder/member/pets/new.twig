@@ -31,7 +31,7 @@
     integrity="sha256-AFAYEOkzB6iIKnTYZOdUf9FFje6lOTYdwRJKwTN5mks=" crossorigin="anonymous"></script>
 <script src="{{ asset('assets/js/breeder_pets.js') }}"></script>
 <script>
-    $(function () {
+    $(document).on('change', "input[type='file']", function (e) {
         $("[type='file']").each(function(){
         if ($(this).attr("id") !== 'breeder_pets_thumbnail_path') {
                 $(this).addClass("d-none");
