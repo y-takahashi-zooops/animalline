@@ -65,7 +65,6 @@
     });
 
     modalEl.addEventListener('shown.bs.modal', function () {
-        console.log('shown.bs.modal 発火');
         if (cropper) {
             cropper.destroy();
             cropper = null;
@@ -78,7 +77,6 @@
             dragMode: 'none',
             autoCropArea: 1
         });
-        console.log('Cropper initialized');
     });
 
     modalEl.addEventListener('hidden.bs.modal', function () {
