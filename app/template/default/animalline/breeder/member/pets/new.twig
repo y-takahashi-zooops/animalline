@@ -108,6 +108,7 @@
                     data: {image: base64data},
                     success: function (data) {
                         bs_modal.hide();
+                        console.log("inputImageId:", inputImageId);
                         $(`#${ inputImageId }`).parent().parent().next().find("input[type='file']").removeClass('d-none');
                         $(`#${ inputImageId }`).addClass('d-none');
                         $(`#${ inputImageId }`).parent().find('.img_preview').attr('src', '/' + data) .removeClass('d-none');
