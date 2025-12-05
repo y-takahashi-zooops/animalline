@@ -93,27 +93,40 @@
             height: size,
         });
 
-        canvas.toBlob(function (blob) {
-            url = URL.createObjectURL(blob);
-            var reader = new FileReader();
+        // inputImageId は 'breeder_pets_thumbnail_path' など
+        function showFileInputAndPreview(inputImageId, imageUrl) {
+            const $input = $(`#${inputImageId}`);
+            const $previewBox = $input.closest('.preview_box');
+            const $imagesDiv = $previewBox.closest('.images');
+
+            // input[type="file"] を表示
+            $input.removeClass('d-none');
+
+            // プレビュー画像を更新
+            $previewBox.find('.img_preview').attr('src', imageUrl).removeClass('d-none').show();
+
+            // 削除ボタンを表示
+            $imagesDiv.find('button.btn_remove').show();
+
+            // hidden input に値をセット（サーバに送る用）
+            $(`input.${inputImageId}`).val(imageUrl);
+        }
+
+        // Ajax でアップロード後に呼び出す
+        canvas.toBlob(function(blob) {
+            const url = URL.createObjectURL(blob);
+            const reader = new FileReader();
             reader.readAsDataURL(blob);
-            reader.onloadend = function () {
-                var base64data = reader.result;
+            reader.onloadend = function() {
+                const base64data = reader.result;
                 $.ajax({
                     type: "POST",
                     dataType: "json",
                     url: "/breeder/configration/pets/upload",
-                    data: {image: base64data},
-                    success: function (data) {
+                    data: { image: base64data },
+                    success: function(data) {
                         bs_modal.hide();
-                        console.log("inputImageId:", inputImageId);
-                        $(`#${ inputImageId }`).parent().parent().next().find("input[type='file']").removeClass('d-none');
-                        $(`#${ inputImageId }`).addClass('d-none');
-                        $(`#${ inputImageId }`).parent().find('.img_preview').attr('src', '/' + data) .removeClass('d-none');
-                        $(`#${ inputImageId }`).parent().find('.img_preview').removeClass('d-none');
-                        $(`#${ inputImageId }`).parent().find('.img_preview').removeClass('d-none');
-                        $(`#${ inputImageId }`).parent().parent().find('button').removeClass('d-none');
-                        $(`input.${ inputImageId }`).val('/' + data);
+                        showFileInputAndPreview('breeder_pets_thumbnail_path', '/' + data);
                     }
                 });
             };
