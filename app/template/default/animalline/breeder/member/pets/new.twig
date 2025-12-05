@@ -64,7 +64,7 @@
         }
     });
 
-    bs_modal.on('shown.bs.modal', function () {
+    modalEl.addEventListener('shown.bs.modal', function () {
         cropper = new Cropper(image, {
             aspectRatio: 1,
             viewMode: 2,
@@ -72,7 +72,9 @@
             dragMode: 'none',
             autoCropArea: 1
         });
-    }).on('hidden.bs.modal', function () {
+    });
+
+    modalEl.addEventListener('hidden.bs.modal', function () {
         cropper.destroy();
         cropper = null;
         $(`#${ inputImageId }`).val('');
@@ -98,7 +100,7 @@
                     url: "/breeder/configration/pets/upload",
                     data: {image: base64data},
                     success: function (data) {
-                        bs_modal.modal('hide');
+                        bs_modal.hide();
                         $(`#${ inputImageId }`).parent().parent().next().find("input[type='file']").removeClass('d-none');
                         $(`#${ inputImageId }`).hide();
                         $(`#${ inputImageId }`).parent().find('.img_preview').attr('src', '/' + data)
