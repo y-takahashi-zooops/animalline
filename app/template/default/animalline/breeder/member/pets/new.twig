@@ -65,6 +65,11 @@
     });
 
     modalEl.addEventListener('shown.bs.modal', function () {
+        console.log('shown.bs.modal 発火');
+        if (cropper) {
+            cropper.destroy();
+        }
+        
         cropper = new Cropper(image, {
             aspectRatio: 1,
             viewMode: 2,
@@ -72,6 +77,7 @@
             dragMode: 'none',
             autoCropArea: 1
         });
+        console.log('Cropper initialized');
     });
 
     modalEl.addEventListener('hidden.bs.modal', function () {
