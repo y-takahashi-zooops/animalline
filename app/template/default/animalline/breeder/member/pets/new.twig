@@ -31,23 +31,6 @@
     integrity="sha256-AFAYEOkzB6iIKnTYZOdUf9FFje6lOTYdwRJKwTN5mks=" crossorigin="anonymous"></script>
 <script src="{{ asset('assets/js/breeder_pets.js') }}"></script>
 <script>
-    $(document).on('change', "#img_thumbnail", function (e) {
-        console.log("1");
-        console.log(image);
-    });
-    $(document).on('change', "input[type='file']", function (e) {
-        console.log("2");
-        console.log(image);
-    });
-    $(function () {
-        console.log("3");
-        console.log(image);
-    });
-    document.addEventListener('DOMContentLoaded', function () {
-        console.log("4");
-        console.log(image);
-    });
-
     $("[type='file']").each(function(){
         if ($(this).attr("id") !== 'breeder_pets_thumbnail_path') {
             $(this).addClass("d-none");
@@ -81,7 +64,7 @@
         }
     });
 
-    bs_modal._element.addEventListener('shown.bs.modal', function () {
+    modalEl.addEventListener('shown.bs.modal', function () {
         console.log('shown.bs.modal 発火');
         if (cropper) {
             cropper.destroy();
@@ -98,7 +81,7 @@
         console.log('Cropper initialized');
     });
 
-    bs_modal._element.addEventListener('hidden.bs.modal', function () {
+    modalEl.addEventListener('hidden.bs.modal', function () {
         cropper.destroy();
         cropper = null;
         $(`#${ inputImageId }`).val('');
