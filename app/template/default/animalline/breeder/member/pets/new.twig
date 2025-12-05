@@ -31,172 +31,187 @@
     integrity="sha256-AFAYEOkzB6iIKnTYZOdUf9FFje6lOTYdwRJKwTN5mks=" crossorigin="anonymous"></script>
 <script src="{{ asset('assets/js/breeder_pets.js') }}"></script>
 <script>
+    $(document).on('change', "#img_thumbnail", function (e) {
+        console.log("1");
+        console.log(image);
+    });
     $(document).on('change', "input[type='file']", function (e) {
-        $("[type='file']").each(function(){
+        console.log("2");
+        console.log(image);
+    });
+    $(function () {
+        console.log("3");
+        console.log(image);
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log("4");
+        console.log(image);
+    });
+
+    $("[type='file']").each(function(){
         if ($(this).attr("id") !== 'breeder_pets_thumbnail_path') {
-                $(this).addClass("d-none");
+            $(this).addClass("d-none");
+        }
+    });
+    var inputImageId = '';
+    var modalEl = document.getElementById('modal');
+    var bs_modal = new bootstrap.Modal(modalEl);
+    var image = document.getElementById('image');
+    var cropper, reader, file, size;
+    $("input[type='file']").change(function (e) {
+        inputImageId = e.target.id;
+        var files = e.target.files;
+        var done = function (url) {
+            image.src = url;
+            bs_modal.show();
+        };
+
+        if (files && files.length > 0) {
+            file = files[0];
+
+            if (URL) {
+                done(URL.createObjectURL(file));
+            } else if (FileReader) {
+                reader = new FileReader();
+                reader.onload = function (e) {
+                    done(reader.result);
+                };
+                reader.readAsDataURL(file);
             }
-        });
-        var inputImageId = '';
-        var modalEl = document.getElementById('modal');
-        var bs_modal = new bootstrap.Modal(modalEl);
-        var image = document.getElementById('image');
-        var cropper, reader, file, size;
-        $("input[type='file']").change(function (e) {
-            inputImageId = e.target.id;
-            var files = e.target.files;
-            var done = function (url) {
-                image.src = url;
-                bs_modal.show();
-            };
+        }
+    });
 
-            if (files && files.length > 0) {
-                file = files[0];
-
-                if (URL) {
-                    done(URL.createObjectURL(file));
-                } else if (FileReader) {
-                    reader = new FileReader();
-                    reader.onload = function (e) {
-                        done(reader.result);
-                    };
-                    reader.readAsDataURL(file);
-                }
-            }
-        });
-
-        bs_modal._element.addEventListener('shown.bs.modal', function () {
-            console.log('shown.bs.modal 発火');
-            if (cropper) {
-                cropper.destroy();
-                cropper = null;
-            }
-            
-            cropper = new Cropper(image, {
-                aspectRatio: 1,
-                viewMode: 2,
-                preview: '.preview',
-                dragMode: 'none',
-                autoCropArea: 1
-            });
-            console.log('Cropper initialized');
-        });
-
-        bs_modal._element.addEventListener('hidden.bs.modal', function () {
+    bs_modal._element.addEventListener('shown.bs.modal', function () {
+        console.log('shown.bs.modal 発火');
+        if (cropper) {
             cropper.destroy();
             cropper = null;
-            $(`#${ inputImageId }`).val('');
+        }
+        
+        cropper = new Cropper(image, {
+            aspectRatio: 1,
+            viewMode: 2,
+            preview: '.preview',
+            dragMode: 'none',
+            autoCropArea: 1
+        });
+        console.log('Cropper initialized');
+    });
+
+    bs_modal._element.addEventListener('hidden.bs.modal', function () {
+        cropper.destroy();
+        cropper = null;
+        $(`#${ inputImageId }`).val('');
+    });
+
+    $("#crop").click(function () {
+        size = cropper.imageData.naturalHeight < cropper.imageData.naturalWidth ? cropper.imageData.naturalHeight : cropper.imageData.naturalWidth;
+        size = size < 1000 ? size : 1000;
+        canvas = cropper.getCroppedCanvas({
+            width: size,
+            height: size,
         });
 
-        $("#crop").click(function () {
-            size = cropper.imageData.naturalHeight < cropper.imageData.naturalWidth ? cropper.imageData.naturalHeight : cropper.imageData.naturalWidth;
-            size = size < 1000 ? size : 1000;
-            canvas = cropper.getCroppedCanvas({
-                width: size,
-                height: size,
-            });
-
-            canvas.toBlob(function (blob) {
-                url = URL.createObjectURL(blob);
-                var reader = new FileReader();
-                reader.readAsDataURL(blob);
-                reader.onloadend = function () {
-                    var base64data = reader.result;
-                    $.ajax({
-                        type: "POST",
-                        dataType: "json",
-                        url: "/breeder/configration/pets/upload",
-                        data: {image: base64data},
-                        success: function (data) {
-                            bs_modal.hide();
-                            $(`#${ inputImageId }`).parent().parent().next().find("input[type='file']").removeClass('d-none');
-                            $(`#${ inputImageId }`).hide();
-                            $(`#${ inputImageId }`).parent().find('.img_preview').attr('src', '/' + data)
-                            $(`#${ inputImageId }`).parent().find('.img_preview').show();
-                            $(`#${ inputImageId }`).parent().find('.img_preview').removeClass('d-none');
-                            $(`#${ inputImageId }`).parent().parent().find('button').show();
-                            $(`input.${ inputImageId }`).val('/' + data);
-                        }
-                    });
-                };
-            });
-        });
-
-        $(document).on('click', '.btn_remove', function(e) {
-            e.preventDefault();
-            var inputFileIds = [];
-            $("[type='file']").each(function(){
-                inputFileIds.push($(this).attr("id"));
-            });
-            const index = inputFileIds.findIndex(p => p === e.target.classList[1]);
-            const sortArr = inputFileIds.slice(index + 1);
-            const imageArr = [];
-            sortArr.forEach((p) => {
-                const src = $(`input#${p}`).parent().find('.img_preview').attr('src');
-                if (src) {
-                    imageArr.push({
-                        class: p,
-                        src: $(`input#${p}`).parent().find('.img_preview').attr('src')
-                    });
-                } else {
-                    return ;
-                }
-            });
-            if (imageArr.length === 0) {
-                $(this).hide();
-                $(this).parent().find('.btn_set_thumbnail').hide();
-                $(this).parent().parent().find('.img_preview').hide();
-                $(this).parent().parent().find('.img_preview').attr('src', '');
-                $(this).parent().parent().find('.img_preview').addClass('d-none');
-                $(this).parent().parent().find('.form-control-file').show();
-                $(`input.${ e.target.classList[1] }`).val('');
-
-                $(this).parent().parent().next().find("input[type='file']").addClass('d-none');
-            } else {
-                imageArr.forEach((p) => {
-                    $(`#${ p.class }`).parent().parent().prev().find(".img_preview").attr('src', p.src);
-                    const inputClass = $(`#${ p.class }`).parent().parent().prev().find("input[type='file']").attr('id');
-                    $(`input.${ inputClass }`).val(p.src);
+        canvas.toBlob(function (blob) {
+            url = URL.createObjectURL(blob);
+            var reader = new FileReader();
+            reader.readAsDataURL(blob);
+            reader.onloadend = function () {
+                var base64data = reader.result;
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: "/breeder/configration/pets/upload",
+                    data: {image: base64data},
+                    success: function (data) {
+                        bs_modal.hide();
+                        $(`#${ inputImageId }`).parent().parent().next().find("input[type='file']").removeClass('d-none');
+                        $(`#${ inputImageId }`).hide();
+                        $(`#${ inputImageId }`).parent().find('.img_preview').attr('src', '/' + data)
+                        $(`#${ inputImageId }`).parent().find('.img_preview').show();
+                        $(`#${ inputImageId }`).parent().find('.img_preview').removeClass('d-none');
+                        $(`#${ inputImageId }`).parent().parent().find('button').show();
+                        $(`input.${ inputImageId }`).val('/' + data);
+                    }
                 });
-                lastItem = imageArr.pop();
-                $(`#${ lastItem.class }`).show();
-                $(`#${ lastItem.class }`).parent().find(".img_preview").attr('src', '');
-                $(`#${ lastItem.class }`).parent().find(".img_preview").addClass('d-none');
-                $(`#${ lastItem.class }`).parent().parent().find("button").hide();
-                $(`input.${ lastItem.class }`).val('');
-                if (lastItem.class !== inputFileIds.pop()) {
-                    $(`#${ lastItem.class }`).parent().parent().next().find("input[type='file']").addClass('d-none');
+            };
+        });
+    });
+
+    $(document).on('click', '.btn_remove', function(e) {
+        e.preventDefault();
+        var inputFileIds = [];
+        $("[type='file']").each(function(){
+            inputFileIds.push($(this).attr("id"));
+        });
+        const index = inputFileIds.findIndex(p => p === e.target.classList[1]);
+        const sortArr = inputFileIds.slice(index + 1);
+        const imageArr = [];
+        sortArr.forEach((p) => {
+            const src = $(`input#${p}`).parent().find('.img_preview').attr('src');
+            if (src) {
+                imageArr.push({
+                    class: p,
+                    src: $(`input#${p}`).parent().find('.img_preview').attr('src')
+                });
+            } else {
+                return ;
+            }
+        });
+        if (imageArr.length === 0) {
+            $(this).hide();
+            $(this).parent().find('.btn_set_thumbnail').hide();
+            $(this).parent().parent().find('.img_preview').hide();
+            $(this).parent().parent().find('.img_preview').attr('src', '');
+            $(this).parent().parent().find('.img_preview').addClass('d-none');
+            $(this).parent().parent().find('.form-control-file').show();
+            $(`input.${ e.target.classList[1] }`).val('');
+
+            $(this).parent().parent().next().find("input[type='file']").addClass('d-none');
+        } else {
+            imageArr.forEach((p) => {
+                $(`#${ p.class }`).parent().parent().prev().find(".img_preview").attr('src', p.src);
+                const inputClass = $(`#${ p.class }`).parent().parent().prev().find("input[type='file']").attr('id');
+                $(`input.${ inputClass }`).val(p.src);
+            });
+            lastItem = imageArr.pop();
+            $(`#${ lastItem.class }`).show();
+            $(`#${ lastItem.class }`).parent().find(".img_preview").attr('src', '');
+            $(`#${ lastItem.class }`).parent().find(".img_preview").addClass('d-none');
+            $(`#${ lastItem.class }`).parent().parent().find("button").hide();
+            $(`input.${ lastItem.class }`).val('');
+            if (lastItem.class !== inputFileIds.pop()) {
+                $(`#${ lastItem.class }`).parent().parent().next().find("input[type='file']").addClass('d-none');
+            }
+        }
+    });
+
+    $(document).on('click', '.btn_set_thumbnail', function(e) {
+        e.preventDefault();
+        const currentId = e.target.classList[1];
+        const currentSrc = $(this).parent().parent().find('.img_preview').attr('src');
+        const thumbnailSrc  = $('#img_thumbnail').attr('src');
+        $(this).parent().parent().find('.img_preview').attr('src', thumbnailSrc);
+        $(`input.${ e.target.classList[1] }`).val(thumbnailSrc);
+
+        $('#img_thumbnail').attr('src', currentSrc);
+        $(`input.breeder_pets_thumbnail_path`).val(currentSrc);
+    });
+    $(document).ready(function() {
+        $("#breeder_pets_breeds_type").select2({
+            theme: 'bootstrap4',
+            language: {
+                "noResults": function () {
+                    return "結果が見つかりません。";
                 }
             }
         });
 
-        $(document).on('click', '.btn_set_thumbnail', function(e) {
-            e.preventDefault();
-            const currentId = e.target.classList[1];
-            const currentSrc = $(this).parent().parent().find('.img_preview').attr('src');
-            const thumbnailSrc  = $('#img_thumbnail').attr('src');
-            $(this).parent().parent().find('.img_preview').attr('src', thumbnailSrc);
-            $(`input.${ e.target.classList[1] }`).val(thumbnailSrc);
-
-            $('#img_thumbnail').attr('src', currentSrc);
-            $(`input.breeder_pets_thumbnail_path`).val(currentSrc);
-        });
-        $(document).ready(function() {
-            $("#breeder_pets_breeds_type").select2({
-                theme: 'bootstrap4',
-                language: {
-                    "noResults": function () {
-                        return "結果が見つかりません。";
-                    }
-                }
-            });
-
-            $('#breeder_pets_thumbnail_path').parent().find('img').attr('src', `{{ image0 }}`);
-            $('#breeder_pets_image1').parent().find('.img_preview').attr('src', `{{ image1 }}`);
-            $(`#breeder_pets_image2`).parent().find('.img_preview').attr('src', `{{ image2 }}`);
-            $(`#breeder_pets_image3`).parent().find('.img_preview').attr('src', `{{ image3 }}`);
-            $(`#breeder_pets_image4`).parent().find('.img_preview').attr('src', `{{ image4 }}`);
-        });
+        $('#breeder_pets_thumbnail_path').parent().find('img').attr('src', `{{ image0 }}`);
+        $('#breeder_pets_image1').parent().find('.img_preview').attr('src', `{{ image1 }}`);
+        $(`#breeder_pets_image2`).parent().find('.img_preview').attr('src', `{{ image2 }}`);
+        $(`#breeder_pets_image3`).parent().find('.img_preview').attr('src', `{{ image3 }}`);
+        $(`#breeder_pets_image4`).parent().find('.img_preview').attr('src', `{{ image4 }}`);
     });
 </script>
 {% endblock %}
