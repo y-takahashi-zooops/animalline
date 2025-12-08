@@ -257,7 +257,7 @@
             $(this).parent().parent().find('.form-control-file').show();
             $(`input.${ e.target.classList[1] }`).val('');
 
-            $(this).parent().parent().next().find("input[type='file']").attr('disabled', true);
+            $(this).parent().parent().next().find("input[type='file']").addClass('d-none');
         } else {
             imageArr.forEach((p) => {
                 $(`#${ p.class }`).parent().parent().prev().find(".img_preview").attr('src', p.src);
