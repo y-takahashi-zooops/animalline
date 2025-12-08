@@ -41,6 +41,12 @@
     var bs_modal = new bootstrap.Modal(modalEl);
     var image = document.getElementById('image');
     var cropper, reader, file, size;
+
+    let currentInputImageId = null;
+    $('.preview_box').on('click', function () {
+        currentInputImageId = $(this).data('input-id');
+    });
+
     $("input[type='file']").change(function (e) {
         inputImageId = e.target.id;
         var files = e.target.files;
@@ -86,6 +92,11 @@
     });
 
     $("#crop").click(function () {
+        if (!currentInputImageId) {
+            alert('画像の挿入先が選択されていません');
+            return;
+        }
+
         size = cropper.imageData.naturalHeight < cropper.imageData.naturalWidth ? cropper.imageData.naturalHeight : cropper.imageData.naturalWidth;
         size = size < 1000 ? size : 1000;
         canvas = cropper.getCroppedCanvas({
@@ -126,7 +137,7 @@
                     data: { image: base64data },
                     success: function(data) {
                         bs_modal.hide();
-                        showFileInputAndPreview('breeder_pets_thumbnail_path', '/' + data);
+                        showFileInputAndPreview(currentInputImageId, '/' + data);
                     }
                 });
             };
