@@ -88,6 +88,7 @@ file that was distributed with this source code.
         }
 
         var prototype = $collectionHolder.data('prototype');
+        var index = Number(localStorage.getItem("index")) || 0;
         index = reIndex ? ($collectionHolder.data('next-index') ? $collectionHolder.data('next-index') : localStorage.getItem("index")) : index + 1;
         var newForm = prototype.replace(/__name__/g, index);
         $collectionHolder.children('tbody').append(newForm);

@@ -19,13 +19,13 @@ file that was distributed with this source code.
 <script>
     localStorage.setItem("index", {{ count }});
     $(function(){
-    // 商品検索
-    $('#search').on('click', function () {
-        var list = $('#searchProductModalList');
-        list.children().remove();
+        // 商品検索
+        $('#search').on('click', function () {
+            var list = $('#searchProductModalList');
+            list.children().remove();
 
-        $.ajax({
-            url: "{{ url('admin_instock_search_product') }}",
+            $.ajax({
+                url: "{{ url('admin_instock_search_product') }}",
                 type: 'POST',
                 dataType: 'html',
                 data: {
