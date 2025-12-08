@@ -90,15 +90,31 @@
 
     function setImageToBox(image, key) {
         const id = 'breeder_pets_image' + key;
-        $(`#${ id }`).attr('disabled', disabledFlag);
-        if (image.length > 0) {
-            $(`#${ id }`).hide();
-            $(`#${ id }`).parent().find('img').attr('src', image);
-            $(`#${ id }`).parent().find('img').show();
-            $(`#${ id }`).parent().parent().find('button').show();
-            $(`input.${ id }`).val(image);
-        } else {
-            disabledFlag = true;
+
+        const $input = $(`#${id}`);
+        const $box   = $input.closest('.preview_box');
+        const $images = $box.closest('.images');
+
+        $input.prop('disabled', disabledFlag);
+
+        if (image && image.length > 0) {
+
+            // input 非表示
+            $input.hide();
+
+            // ✅ 正しい preview 取得
+            $box.find('.img_preview')
+                .attr('src', image)
+                .removeClass('d-none')
+                .show();
+
+            // ✅ 削除・メイン画像ボタン表示
+            $images.find('button').show();
+
+            // hidden input に値セット
+            $(`input.${id}`).val(image);
+
+            disabledFlag = false;
         }
     }
 
