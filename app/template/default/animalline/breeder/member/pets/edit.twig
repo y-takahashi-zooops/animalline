@@ -54,14 +54,13 @@
         });
 
         if (thumbnailPath !== '' && thumbnailPath !== null && thumbnailPath !== undefined) {
-
             const $input = $('#breeder_pets_thumbnail_path');
             const $box   = $input.closest('.preview_box');
 
             // input 非表示
             $input.hide();
 
-            // ✅ 正しい img 取得ルート
+            // 正しい img 取得ルート
             $box.find('.img_preview')
                 .attr('src', thumbnailPath)
                 .removeClass('d-none')
@@ -75,12 +74,16 @@
 
             disabledFlag = false;
         }
+
         if (`{{ image0 }}`) {
             disabledFlag = false;
         }
+
         petImages.forEach((p) => {
             setImageToBox(p.image_uri, p.sort_order - 1)
         });
+
+        updateInputDisableState();
     });
     var inputImageId = '';
     var modalEl = document.getElementById('modal');
@@ -115,6 +118,36 @@
             $(`input.${id}`).val(image);
 
             disabledFlag = false;
+        }
+    }
+
+    function updateInputDisableState() {
+        const inputIds = [
+            'breeder_pets_thumbnail_path',
+            'breeder_pets_image1',
+            'breeder_pets_image2',
+            'breeder_pets_image3',
+            'breeder_pets_image4'
+        ];
+
+        let lastFilledIndex = -1;
+
+        inputIds.forEach((id, index) => {
+            const src = $(`#${id}`).closest('.preview_box').find('.img_preview').attr('src');
+            if (src && src.length > 0) {
+                lastFilledIndex = index;
+            }
+        });
+
+        // 一旦すべて disabled
+        inputIds.forEach((id) => {
+            $(`#${id}`).prop('disabled', true);
+        });
+
+        // 次の1個だけ enabled
+        const nextIndex = lastFilledIndex + 1;
+        if (nextIndex < inputIds.length) {
+            $(`#${inputIds[nextIndex]}`).prop('disabled', false);
         }
     }
 
@@ -284,6 +317,8 @@
                 $(`#${ lastItem.class }`).parent().parent().next().find("input[type='file']").attr('disabled', true);
             }
         }
+
+        updateInputDisableState();
     });
 
     $(document).on('click', '.btn_set_thumbnail', function(e) {
