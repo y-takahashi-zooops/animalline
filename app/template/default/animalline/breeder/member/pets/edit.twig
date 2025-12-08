@@ -42,7 +42,6 @@
     var subSrc = '{{ constant("Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE") }}';
     var thumbnailPath = `{{ thumbnailPath }}`;
     var petImages = {{ pet_mages | json_encode | raw }};
-    let disabledFlag = true;
     $(document).ready(function() {
         $("#breeder_pets_breeds_type").select2({
             theme: 'bootstrap4',
@@ -71,19 +70,11 @@
 
             // hidden input に値セット
             $(`input.breeder_pets_thumbnail_path`).val(thumbnailPath);
-
-            disabledFlag = false;
-        }
-
-        if (`{{ image0 }}`) {
-            disabledFlag = false;
         }
 
         petImages.forEach((p) => {
             setImageToBox(p.image_uri, p.sort_order - 1)
         });
-
-        updateInputDisableState();
     });
     var inputImageId = '';
     var modalEl = document.getElementById('modal');
@@ -97,8 +88,6 @@
         const $input = $(`#${id}`);
         const $box   = $input.closest('.preview_box');
         const $images = $box.closest('.images');
-
-        $input.prop('disabled', disabledFlag);
 
         if (image && image.length > 0) {
 
@@ -116,38 +105,6 @@
 
             // hidden input に値セット
             $(`input.${id}`).val(image);
-
-            disabledFlag = false;
-        }
-    }
-
-    function updateInputDisableState() {
-        const inputIds = [
-            'breeder_pets_thumbnail_path',
-            'breeder_pets_image1',
-            'breeder_pets_image2',
-            'breeder_pets_image3',
-            'breeder_pets_image4'
-        ];
-
-        let lastFilledIndex = -1;
-
-        inputIds.forEach((id, index) => {
-            const src = $(`#${id}`).closest('.preview_box').find('.img_preview').attr('src');
-            if (src && src.length > 0) {
-                lastFilledIndex = index;
-            }
-        });
-
-        // 一旦すべて disabled
-        inputIds.forEach((id) => {
-            $(`#${id}`).prop('disabled', true);
-        });
-
-        // 次の1個だけ enabled
-        const nextIndex = lastFilledIndex + 1;
-        if (nextIndex < inputIds.length) {
-            $(`#${inputIds[nextIndex]}`).prop('disabled', false);
         }
     }
 
@@ -312,13 +269,11 @@
             $(`#${ lastItem.class }`).parent().find(".img_preview").attr('src', '');
             $(`#${ lastItem.class }`).parent().find(".img_preview").addClass('d-none');
             $(`#${ lastItem.class }`).parent().parent().find("button").hide();
-             $(`input.${ lastItem.class }`).val('');
+            $(`input.${ lastItem.class }`).val('');
             if (lastItem.class !== inputFileIds.pop()) {
-                $(`#${ lastItem.class }`).parent().parent().next().find("input[type='file']").attr('disabled', true);
+                $(`#${ lastItem.class }`).parent().parent().next().find("input[type='file']").addClass('d-none');
             }
         }
-
-        updateInputDisableState();
     });
 
     $(document).on('click', '.btn_set_thumbnail', function(e) {
