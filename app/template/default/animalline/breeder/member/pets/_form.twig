@@ -619,6 +619,15 @@ $(document).ready(function() {
         $('#modal-contact-status-message').text(modalMsg);
         $('#modal-contact-status').modal('show');
     });
+
+    // すべての file input を操作不能にする（＋だけ有効）
+    $("input[type='file']").each(function () {
+        $(this).css({
+            "pointer-events": "none",
+            "opacity": "0",
+            "height": "0"
+        });
+    });
 });
 
 $('#btn-delete-pet').on('click', function () {
