@@ -43,6 +43,7 @@
     var thumbnailPath = `{{ thumbnailPath }}`;
     var petImages = {{ pet_mages | json_encode | raw }};
     let disabledFlag = true;
+    console.log('thumbnailPath(Twig):', '{{ thumbnailPath }}');
     $(document).ready(function() {
         $("#breeder_pets_breeds_type").select2({
             theme: 'bootstrap4',
