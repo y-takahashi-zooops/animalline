@@ -620,13 +620,12 @@ $(document).ready(function() {
         $('#modal-contact-status').modal('show');
     });
 
-    // すべての file input を操作不能にする（＋だけ有効）
-    $("input[type='file']").each(function () {
-        $(this).css({
-            "pointer-events": "none",
-            "opacity": "0",
-            "height": "0"
-        });
+    // 見た目だけ完全に消す（SVGだけ残す）
+    $(".custom-file").css({
+        "pointer-events": "none",
+        "height": "0",
+        "overflow": "hidden",
+        "opacity": "0"
     });
 });
 
