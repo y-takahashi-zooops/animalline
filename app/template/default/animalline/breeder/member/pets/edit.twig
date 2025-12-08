@@ -102,13 +102,13 @@
             // input 非表示
             $input.hide();
 
-            // ✅ 正しい preview 取得
+            // 正しい preview 取得
             $box.find('.img_preview')
                 .attr('src', image)
                 .removeClass('d-none')
                 .show();
 
-            // ✅ 削除・メイン画像ボタン表示
+            // 削除・メイン画像ボタン表示
             $images.find('button').show();
 
             // hidden input に値セット
@@ -207,6 +207,11 @@
 
             // 削除ボタンを表示
             $imagesDiv.find('button.btn_remove').show();
+
+            // サムネ以外なら「メイン画像に設定」ボタンも表示
+            if (inputImageId !== 'breeder_pets_thumbnail_path') {
+                $imagesDiv.find('button.btn_set_thumbnail').show();
+            }
 
             // hidden input に値をセット（サーバに送る用）
             $(`input.${inputImageId}`).val(imageUrl);
