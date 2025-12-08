@@ -74,11 +74,6 @@
     var image = document.getElementById('image');
     var cropper, reader, file, size;
 
-    let currentInputImageId = null;
-    $('.preview_box').on('click', function () {
-        currentInputImageId = $(this).data('input-id');
-    });
-
     function setImageToBox(image, key) {
         const id = 'breeder_pets_image' + key;
         $(`#${ id }`).attr('disabled', disabledFlag);
@@ -93,7 +88,7 @@
         }
     }
 
-    $(".form-control-file").change(function (e) {
+    $("input[type='file']").change(function (e) {
         inputImageId = e.target.id;
         var files = e.target.files;
 
@@ -161,11 +156,6 @@
     });
 
     $("#crop").click(function () {
-        if (!currentInputImageId) {
-            alert('画像の挿入先が選択されていません');
-            return;
-        }
-
         size = cropper.imageData.naturalHeight < cropper.imageData.naturalWidth ? cropper.imageData.naturalHeight : cropper.imageData.naturalWidth;
         size = size < 1000 ? size : 1000;
         canvas = cropper.getCroppedCanvas({
@@ -206,7 +196,7 @@
                     data: { image: base64data },
                     success: function(data) {
                         bs_modal.hide();
-                        showFileInputAndPreview(currentInputImageId, '/' + data);
+                        showFileInputAndPreview(inputImageId, '/' + data);
                     }
                 });
             };

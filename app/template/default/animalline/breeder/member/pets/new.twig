@@ -92,11 +92,6 @@
     });
 
     $("#crop").click(function () {
-        if (!currentInputImageId) {
-            alert('画像の挿入先が選択されていません');
-            return;
-        }
-
         size = cropper.imageData.naturalHeight < cropper.imageData.naturalWidth ? cropper.imageData.naturalHeight : cropper.imageData.naturalWidth;
         size = size < 1000 ? size : 1000;
         canvas = cropper.getCroppedCanvas({
