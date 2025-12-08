@@ -555,8 +555,7 @@ class BreederPetController extends AbstractController
      */
     public function breeder_pets_new(Request $request, $kind = 0,$breeder_id = ""): Response
     {
-        // $barcode = "";
-        $barcode = $request->barcode;
+        $barcode = property_exists($request, 'barcode') ? $request->barcode : "";
 
         if($breeder_id != ""){
             //breeder_id指定がある場合はログインユーザーチェックを行い、許可ユーザーであれば指定のブリーダーをシミュレート
