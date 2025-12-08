@@ -43,7 +43,6 @@
     var thumbnailPath = `{{ thumbnailPath }}`;
     var petImages = {{ pet_mages | json_encode | raw }};
     let disabledFlag = true;
-    console.log('thumbnailPath(Twig):', '{{ thumbnailPath }}');
     $(document).ready(function() {
         $("#breeder_pets_breeds_type").select2({
             theme: 'bootstrap4',
@@ -54,12 +53,26 @@
             }
         });
 
-        if (thumbnailPath) {
-            $('#breeder_pets_thumbnail_path').hide();
-            $('#breeder_pets_thumbnail_path').parent().find('img').attr('src',thumbnailPath);
-            $('#breeder_pets_thumbnail_path').parent().find('img').show();
-            $('#breeder_pets_thumbnail_path').parent().parent().find('button').show();
+        if (thumbnailPath !== '' && thumbnailPath !== null && thumbnailPath !== undefined) {
+
+            const $input = $('#breeder_pets_thumbnail_path');
+            const $box   = $input.closest('.preview_box');
+
+            // input 非表示
+            $input.hide();
+
+            // ✅ 正しい img 取得ルート
+            $box.find('.img_preview')
+                .attr('src', thumbnailPath)
+                .removeClass('d-none')
+                .show();
+
+            // 削除ボタン表示
+            $box.closest('.images').find('button.btn_remove').show();
+
+            // hidden input に値セット
             $(`input.breeder_pets_thumbnail_path`).val(thumbnailPath);
+
             disabledFlag = false;
         }
         if (`{{ image0 }}`) {
