@@ -455,7 +455,7 @@ class ProductInstockController extends AbstractController
      * @Route("/%eccube_admin_route%/instock/search/product/page/{page_no}", requirements={"page_no" = "\d+"}, name="admin_instock_search_product_page")
      * @Template("@admin/Product/search_product.twig")
      */
-    public function searchProduct(Request $request, ?int $page_no = 1, Paginator $paginator)
+    public function searchProduct(Request $request, ?int $page_no = 1, PaginatorInterface $paginator)
     {
         if ($request->isXmlHttpRequest() && $this->isTokenValid()) {
             log_debug('search product start.');
