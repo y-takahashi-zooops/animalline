@@ -820,7 +820,10 @@ class BreederPetController extends AbstractController
             ['sort_order' => 'ASC']
         );
 
-        $request->request->set('thumbnail_path', $breederPet->getThumbnailPath() ? '/' . AnilineConf::ANILINE_IMAGE_URL_BASE . $breederPet->getThumbnailPath() : '');
+        // $request->request->set('thumbnail_path', $breederPet->getThumbnailPath() ? '/' . AnilineConf::ANILINE_IMAGE_URL_BASE . $breederPet->getThumbnailPath() : '');
+        $thumbnailPath = $breederPet->getThumbnailPath()
+            ? '/' . AnilineConf::ANILINE_IMAGE_URL_BASE . $breederPet->getThumbnailPath()
+            : '';
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             $request->request->set('thumbnail_path', $image0);
@@ -881,7 +884,7 @@ class BreederPetController extends AbstractController
             'breeder_pet' => $breederPet,
             'breeder' => $breederPet->getBreeder(),
             'pet_mages' => $petImages,
-            'thumbnailPath' => $request->get('thumbnail_path'),
+            'thumbnailPath' => $thumbnailPath,
             'form' => $form->createView(),
             'petInfoTemplate' => $petInfoTemplate,
             'image0' => $image0,
