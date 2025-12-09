@@ -514,31 +514,6 @@ class ProductInstockController extends AbstractController
                 $forms[$Product->getId()] = $addCartForm->createView();
             }
 
-            // 金額をセットしたAddCartフォームを作成
-            // $forms = [];
-            // foreach ($Products as $Product) {
-            //     $ProductWithClasses = $this->productRepository->findWithSortedClassCategories($Product->getId());
-
-            //     // 先に CartItem を作る
-            //     $cartItem = new CartItem();
-
-            //     // 価格をここで確定させる
-            //     // ProductClass がある場合だけ価格をセット
-            //     if ($ProductWithClasses->hasProductClass()) {
-            //         $firstClass = $ProductWithClasses->getProductClasses()->first();
-            //         $cartItem->setProductClass($firstClass);
-            //         $cartItem->setPrice($firstClass->getPrice02IncTax());
-            //     }
-
-            //     // 値が入った状態でフォーム生成
-            //     $addCartForm = $this->createForm(AddCartType::class, $cartItem, [
-            //         'product' => $ProductWithClasses,
-            //     ]);
-
-            //     // 表示用に view 化
-            //     $forms[$Product->getId()] = $addCartForm->createView();
-            // }
-
             return [
                 'forms' => $forms,
                 'Products' => $Products,
