@@ -518,11 +518,6 @@ class ProductInstockController extends AbstractController
             foreach ($Products as $Product) {
                 $ProductWithClasses = $this->productRepository->findWithSortedClassCategories($Product->getId());
 
-                $builder = $this->formFactory->createNamedBuilder('', AddCartType::class, null, [
-                    'product' => $ProductWithClasses,
-                ]);
-                $addCartForm = $builder->getForm();
-
                 $cartItem = $addCartForm->getData(); // 新規 CartItem インスタンス
                 // ProductClass がある場合だけ価格をセット
                 if ($ProductWithClasses->hasProductClass()) {
@@ -530,6 +525,11 @@ class ProductInstockController extends AbstractController
                     $cartItem->setProductClass($firstClass);
                     $cartItem->setPrice($firstClass->getPrice02IncTax());
                 }
+
+                // 値が入った状態でフォーム生成
+                $addCartForm = $this->createForm(AddCartType::class, $cartItem, [
+                    'product' => $ProductWithClasses,
+                ]);
 
                 $forms[$Product->getId()] = $addCartForm->createView();
             }
