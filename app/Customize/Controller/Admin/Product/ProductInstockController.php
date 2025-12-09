@@ -530,9 +530,12 @@ class ProductInstockController extends AbstractController
                 }
 
                 // 値が入った状態でフォーム生成
-                $addCartForm = $this->createForm(AddCartType::class, $cartItem, [
+                /* @var $builder \Symfony\Component\Form\FormBuilderInterface */
+                $builder = $this->createForm(AddCartType::class, $cartItem, [
                     'product' => $ProductWithClasses,
                 ]);
+
+                $addCartForm = $builder->getForm();
 
                 // 表示用に view 化
                 $forms[$Product->getId()] = $addCartForm->createView();
