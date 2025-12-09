@@ -111,32 +111,23 @@ class InstockScheduleType extends AbstractType
                 )));
 
         // 受注明細フォームの税率を補完する
-        // $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
-        //     $InstockSchedule = $event->getData();
-        //     if (empty($InstockSchedule['tax_rate'])) $InstockSchedule['tax_rate'] = 0;
-        //     $event->setData($InstockSchedule);
-        // });
-
-        // 受注明細フォームの税率を補完する
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
-            $data = $event->getData();
-
-            if (empty($data['tax_rate'])) {
-                $data['tax_rate'] = 0;
-            }
+            $InstockSchedule = $event->getData();
+            if (empty($InstockSchedule['tax_rate'])) $InstockSchedule['tax_rate'] = 0;
 
             // JSから来た price が空扱いされているのを防ぐ
-            if (!empty($data['ProductClass']) && empty($data['price'])) {
+            if (!empty($InstockSchedule['ProductClass']) && empty($InstockSchedule['price'])) {
                 $ProductClass = $this->entityManager
                     ->getRepository(ProductClass::class)
-                    ->find($data['ProductClass']);
+                    ->find($InstockSchedule['ProductClass']);
 
                 if ($ProductClass) {
-                    $data['price'] = $ProductClass->getPrice02();
+                    $InstockSchedule['price'] = $ProductClass->getItemCost();
+                    // $InstockSchedule['price'] = $ProductClass->getPrice02();
                 }
             }
 
-            $event->setData($data);
+            $event->setData($InstockSchedule);
         });
 
         // 商品追加後、price が null で送られてきた場合に自動で商品価格を補完
@@ -148,7 +139,8 @@ class InstockScheduleType extends AbstractType
             }
 
             if ($data->getProductClass() && $data->getPrice() === null) {
-                $data->setPrice($data->getProductClass()->getPrice02());
+                $data->setPrice($data->getProductClass()->getItemCost());
+                // $data->setPrice($data->getProductClass()->getPrice02());
             }
         });
     }
