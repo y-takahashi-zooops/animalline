@@ -39,6 +39,7 @@ use Eccube\Form\Type\AddCartType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Eccube\Common\EccubeConfig;
+use Eccube\Entity\CartItem;
 
 use Psr\Log\LoggerInterface;
 
@@ -530,12 +531,9 @@ class ProductInstockController extends AbstractController
                 }
 
                 // 値が入った状態でフォーム生成
-                /* @var $builder \Symfony\Component\Form\FormBuilderInterface */
-                $builder = $this->createForm(AddCartType::class, $cartItem, [
+                $addCartForm = $this->createForm(AddCartType::class, $cartItem, [
                     'product' => $ProductWithClasses,
                 ]);
-
-                $addCartForm = $builder->getForm();
 
                 // 表示用に view 化
                 $forms[$Product->getId()] = $addCartForm->createView();
