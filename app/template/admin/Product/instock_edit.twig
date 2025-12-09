@@ -274,7 +274,7 @@ file that was distributed with this source code.
                                             <td class="align-middle">
                                                 <div class="col mt-3">
                                                     {# ポイント値引きは価格変更できない #}
-                                                    {{ form_widget(instockScheduleForm.price, {'attr': { 'class': 'pointPrice' } }) }}
+                                                    {{ form_widget(instockScheduleForm.price, {'attr': { 'readonly': 'readonly', 'class': 'pointPrice' } }) }}
                                                     <div class="text-right small">(税抜)</div>
                                                     {{ form_errors(instockScheduleForm.price) }}
                                                 </div>
