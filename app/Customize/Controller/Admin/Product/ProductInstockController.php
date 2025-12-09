@@ -518,7 +518,10 @@ class ProductInstockController extends AbstractController
             foreach ($Products as $Product) {
                 $ProductWithClasses = $this->productRepository->findWithSortedClassCategories($Product->getId());
 
-                $cartItem = $addCartForm->getData(); // 新規 CartItem インスタンス
+                // 先に CartItem を作る
+                $cartItem = new CartItem();
+
+                // 価格をここで確定させる
                 // ProductClass がある場合だけ価格をセット
                 if ($ProductWithClasses->hasProductClass()) {
                     $firstClass = $ProductWithClasses->getProductClasses()->first();
@@ -531,6 +534,7 @@ class ProductInstockController extends AbstractController
                     'product' => $ProductWithClasses,
                 ]);
 
+                // 表示用に view 化
                 $forms[$Product->getId()] = $addCartForm->createView();
             }
 
