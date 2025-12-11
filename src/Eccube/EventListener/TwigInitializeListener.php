@@ -15,7 +15,6 @@ namespace Eccube\EventListener;
 
 use Detection\MobileDetect;
 use Doctrine\ORM\NoResultException;
-
 use Eccube\Common\EccubeConfig;
 use Eccube\Entity\AuthorityRole;
 use Eccube\Entity\Layout;
@@ -25,21 +24,18 @@ use Eccube\Entity\Page;
 use Eccube\Entity\PageLayout;
 use Eccube\Repository\AuthorityRoleRepository;
 use Eccube\Repository\BaseInfoRepository;
+use Eccube\Repository\BlockPositionRepository;
 use Eccube\Repository\LayoutRepository;
 use Eccube\Repository\Master\DeviceTypeRepository;
-use Eccube\Repository\PageRepository;
 use Eccube\Repository\PageLayoutRepository;
-use Eccube\Repository\BlockPositionRepository;
+use Eccube\Repository\PageRepository;
 use Eccube\Request\Context;
 use Eccube\Service\SystemService;
-// use SunCat\MobileDetectBundle\DeviceDetector\MobileDetector;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class TwigInitializeListener implements EventSubscriberInterface
 {
@@ -108,8 +104,6 @@ class TwigInitializeListener implements EventSubscriberInterface
      */
     private $layoutRepository;
 
-    private $logger;
-
     /**
      * @var SystemService
      */
@@ -130,8 +124,7 @@ class TwigInitializeListener implements EventSubscriberInterface
         Context $context,
         MobileDetect $mobileDetector,
         UrlGeneratorInterface $router,
-	    LayoutRepository $layoutRepository,
-	    LoggerInterface $logger,
+        LayoutRepository $layoutRepository,
         SystemService $systemService,
     ) {
         $this->twig = $twig;
@@ -145,14 +138,11 @@ class TwigInitializeListener implements EventSubscriberInterface
         $this->requestContext = $context;
         $this->mobileDetector = $mobileDetector;
         $this->router = $router;
-	    $this->layoutRepository = $layoutRepository;
-	    $this->logger = $logger;
+        $this->layoutRepository = $layoutRepository;
         $this->systemService = $systemService;
     }
 
     /**
-     * @param RequestEvent $event
-     *
      * @throws NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
@@ -174,8 +164,6 @@ class TwigInitializeListener implements EventSubscriberInterface
     }
 
     /**
-     * @param RequestEvent $event
-     *
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function setFrontVariables(RequestEvent $event)
@@ -190,8 +178,6 @@ class TwigInitializeListener implements EventSubscriberInterface
         }
 
         $type = DeviceType::DEVICE_TYPE_PC;
-        // $detect = new MobileDetect();
-
         if ($this->mobileDetector->isMobile()) {
             $type = DeviceType::DEVICE_TYPE_MB;
         }
@@ -214,7 +200,7 @@ class TwigInitializeListener implements EventSubscriberInterface
 
         // Pageに紐づくLayoutにDeviceTypeが一致するLayoutがない場合はPCのレイアウトを探す
         if (!$Layout) {
-	    $this->logger->info('fallback to PC layout');
+            log_info('fallback to PC layout');
             foreach ($PageLayouts as $PageLayout) {
                 if ($PageLayout->getDeviceTypeId() == DeviceType::DEVICE_TYPE_PC) {
                     $Layout = $PageLayout->getLayout();
@@ -252,9 +238,6 @@ class TwigInitializeListener implements EventSubscriberInterface
         $this->twig->addGlobal('isDebugMode', env('APP_DEBUG'));
     }
 
-    /**
-     * @param RequestEvent $event
-     */
     public function setAdminGlobals(RequestEvent $event)
     {
         // メニュー表示用配列.
@@ -300,13 +283,7 @@ class TwigInitializeListener implements EventSubscriberInterface
             } elseif (array_key_exists('url', $childNav)) {
                 // 子のメニューがなく、URLが設定されている場合は権限があるURLか確認
                 $param = array_key_exists('param', $childNav) ? $childNav['param'] : [];
-                // $url = $this->router->generate($childNav['url'], $param);
-                try {
-                    $url = $this->router->generate($childNav['url'], $param);
-                } catch (RouteNotFoundException $e) {
-                    // ルートが存在しない場合は null にして無視
-                    $url = null;
-                }
+                $url = $this->router->generate($childNav['url'], $param);
                 foreach ($AuthorityRoles as $AuthorityRole) {
                     $denyUrl = str_replace('/', '\/', $baseUrl.$AuthorityRole->getDenyUrl());
                     if (preg_match("/^({$denyUrl})/i", $url)) {
