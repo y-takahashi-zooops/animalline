@@ -2,8 +2,6 @@
 
 namespace Plugin\ZooopsSubscription;
 
-use Eccube\Plugin\AbstractPlugin;
-
-class Plugin extends AbstractPlugin
+class Plugin extends \Eccube\Plugin\AbstractPlugin
 {
 }
