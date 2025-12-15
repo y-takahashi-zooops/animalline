@@ -1,0 +1,4 @@
+services:
+    Plugin\ZooopsSubscription\Controller\:
+        resource: '../../Controller'
+        tags: ['controller.service_arguments']

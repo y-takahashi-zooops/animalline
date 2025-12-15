@@ -1,0 +1,3 @@
+zooops_subscription:
+    resource: "../../Controller/"
+    type: annotation
