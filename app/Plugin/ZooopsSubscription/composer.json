@@ -1,12 +1,15 @@
 {
-  "name": "ec-cube/ZooopsSubscription",
+  "name": "ec-cube/zooops-subscription",
   "version": "1.0.0",
   "description": "Zooops Subscription Plugin",
   "type": "eccube-plugin",
   "require": {
-    "ec-cube/plugin-installer": "~0.0.7"
+    "ec-cube/ec-cube": "^4.3"
   },
   "extra": {
-    "code": "ZooopsSubscription"
+    "eccube-plugin": {
+      "code": "ZooopsSubscription",
+      "plugin-class": "Plugin\\ZooopsSubscription\\Plugin"
+    }
   }
 }
