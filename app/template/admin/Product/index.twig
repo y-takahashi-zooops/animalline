@@ -455,7 +455,7 @@ file that was distributed with this source code.
                                                                         <h5 class="modal-title font-weight-bold">
                                                                             {{ 'admin.product.copy__confirm_title'|trans }}</h5>
                                                                         <button class="close" type="button"
-                                                                                data-dismiss="modal"
+                                                                                data-bs-dismiss="modal"
                                                                                 aria-label="Close"><span
                                                                                     aria-hidden="true">×</span>
                                                                         </button>
@@ -466,7 +466,7 @@ file that was distributed with this source code.
                                                                     </div>
                                                                     <div class="modal-footer">
                                                                         <button class="btn btn-ec-sub" type="button"
-                                                                                data-dismiss="modal">{{ 'admin.common.cancel'|trans }}
+                                                                                data-bs-dismiss="modal">{{ 'admin.common.cancel'|trans }}
                                                                         </button>
                                                                         <a
                                                                                 href="{{ url('admin_product_product_copy', {'id' : Product.id}) }}"
@@ -520,7 +520,7 @@ file that was distributed with this source code.
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title font-weight-bold">{{ 'admin.product.permanently_delete__confirm_title'|trans }}</h5>
-                            <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                         </div>
                         <div class="modal-body text-left">
                             <p class="text-left">{{ 'admin.product.permanently_delete__confirm_message'|trans }}</p>
@@ -530,9 +530,9 @@ file that was distributed with this source code.
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-ec-sub" type="button" data-dismiss="modal">{{ 'admin.common.cancel'|trans }}</button>
+                            <button class="btn btn-ec-sub" type="button" data-bs-dismiss="modal">{{ 'admin.common.cancel'|trans }}</button>
                             <button class="btn btn-ec-delete" type="button" id="bulkDelete">{{ 'admin.product.permanently_delete' | trans }}</button>
-                            <button class="btn btn-ec-regular" id="bulkDeleteDone" style="display: none" type="button" data-dismiss="modal">{{ 'admin.product.permanently_delete__complete'|trans }}</button>
+                            <button class="btn btn-ec-regular" id="bulkDeleteDone" style="display: none" type="button" data-bs-dismiss="modal">{{ 'admin.product.permanently_delete__complete'|trans }}</button>
                         </div>
                     </div>
                 </div>
@@ -546,14 +546,14 @@ file that was distributed with this source code.
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title font-weight-bold">{# Title #}</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     {# Append data list #}
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-v-sub" type="button" data-dismiss="modal">
+                    <button class="btn btn-v-sub" type="button" data-bs-dismiss="modal">
                         {{ 'admin.common.cancel'|trans }}
                     </button>
                     <a class="btn btn-ec-conversion"
