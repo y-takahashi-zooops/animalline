@@ -321,7 +321,7 @@ file that was distributed with this source code.
                                     <button {{ csrf_token_for_anchor() }} data-action="{{ url('admin_product_bulk_product_status', {id: constant('Eccube\\Entity\\Master\\ProductStatus::DISPLAY_ABOLISHED')}) }}" class="btn btn-ec-regular mr-2 action-submit">
                                         {{ 'admin.product.display_status__abolished'|trans }}
                                     </button>
-                                    <button type="button" data-toggle="modal" data-target="#bulkDeleteModal" class="btn btn-ec-delete">{{ 'admin.product.permanently_delete'|trans }}</button>
+                                    <button type="button" data-bs-toggle="modal" data-bs-target="#bulkDeleteModal" class="btn btn-ec-delete">{{ 'admin.product.permanently_delete'|trans }}</button>
                                 </div>
                             </div>
                             <div class="col-5 text-right">
@@ -442,8 +442,8 @@ file that was distributed with this source code.
                                                          data-placement="top"
                                                          title="{{ 'admin.common.copy'|trans }}">
                                                         <a href="#" class="btn btn-ec-actionIcon"
-                                                           data-toggle="modal"
-                                                           data-target="#confirmModal-{{ Product.id }}">
+                                                           data-bs-toggle="modal"
+                                                           data-bs-target="#confirmModal-{{ Product.id }}">
                                                             <i class="fa fa-files-o fa-lg text-secondary"
                                                                aria-hidden="true"></i></a>
                                                         <div class="modal fade" id="confirmModal-{{ Product.id }}" tabindex="-1"

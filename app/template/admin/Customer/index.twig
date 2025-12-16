@@ -101,7 +101,7 @@ file that was distributed with this source code.
                             {{ form_widget(searchForm.multi) }}
                             {{ form_errors(searchForm.multi) }}
                         </div>
-                        <div class="d-inline-block mb-3 collapsed" data-toggle="collapse" href="#searchDetail" aria-expanded="false" aria-controls="searchDetail"><a><i class="fa font-weight-bold mr-1 fa-plus-square-o"></i><span class="font-weight-bold">{{ 'admin.common.search_detail'|trans }}</span></a></div>
+                        <div class="d-inline-block mb-3 collapsed" data-bs-toggle="collapse" href="#searchDetail" aria-expanded="false" aria-controls="searchDetail"><a><i class="fa font-weight-bold mr-1 fa-plus-square-o"></i><span class="font-weight-bold">{{ 'admin.common.search_detail'|trans }}</span></a></div>
                     </div>
                 </div>
             </div>
@@ -404,7 +404,7 @@ file that was distributed with this source code.
                                                         </div>
                                                     {% endif %}
                                                     <div class="px-1 d-inline-block" data-tooltip="true" data-placement="top" title="{{ 'admin.common.delete'|trans }}">
-                                                        <a class="btn btn-ec-actionIcon" data-toggle="modal" data-target="#discontinuance-{{ Customer.id }}">
+                                                        <a class="btn btn-ec-actionIcon" data-bs-toggle="modal" data-bs-target="#discontinuance-{{ Customer.id }}">
                                                             <i class="fa fa-close fa-lg text-secondary" aria-hidden="true"></i>
                                                         </a>
                                                     </div>
