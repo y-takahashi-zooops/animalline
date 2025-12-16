@@ -150,7 +150,12 @@ services:
 
     Plugin\:
         resource: '../../../app/Plugin/*'
-        exclude: '../../../app/Plugin/*/{Entity,ServiceProvider,Tests,Codeception,DoctrineMigrations}'
+        exclude:
+                - '../../../app/Plugin/*/Entity'
+                - '../../../app/Plugin/*/ServiceProvider'
+                - '../../../app/Plugin/*/Tests'
+                - '../../../app/Plugin/*/Codeception'
+                - '../../../app/Plugin/*/DoctrineMigrations'
 
     Customize\:
         resource: '../../../app/Customize/*'
