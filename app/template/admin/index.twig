@@ -310,12 +310,12 @@ file that was distributed with this source code.
                                 {% for plugin in recommendedPlugins %}
                                     <div class="row py-3 border border-bottom-0 border-left-0 border-right-0">
                                         <div class="col-5 col-md-4">
-                                            <a href="#" data-toggle="modal" data-target="#searchPluginModal-{{ plugin.id }}">
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#searchPluginModal-{{ plugin.id }}">
                                                 <img src="{{ plugin.image }}" class="w-100" alt="{{ plugin.name }}">
                                             </a>
                                         </div>
                                         <div class="col-7 col-md-8 pl-0">
-                                            <a href="#" data-toggle="modal" data-target="#searchPluginModal-{{ plugin.id }}">{{ plugin.name }}</a>
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#searchPluginModal-{{ plugin.id }}">{{ plugin.name }}</a>
                                             <p class="m-0 pt-2">
                                                 {{ plugin.short_description }}
                                             </p>
