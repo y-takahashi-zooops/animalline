@@ -9,3 +9,4 @@
 bin/.phpunit
 node_modules/
 .DS_Store
+/app/Plugin/ProductReview42/.github/
