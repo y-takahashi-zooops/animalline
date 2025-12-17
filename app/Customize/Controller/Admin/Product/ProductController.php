@@ -411,12 +411,8 @@ class ProductController extends BaseProductController
         $allowExtensions = ['gif', 'jpg', 'jpeg', 'png'];
         $files = [];
 
-        if (is_array($images) && count($images) > 0) {
+        if (count($images) > 0) {
             foreach ($images as $img) {
-                if (!is_array($img)) {
-                    continue;
-                }
-
                 foreach ($img as $image) {
                     if (!$image instanceof UploadedFile) {
                         continue;
