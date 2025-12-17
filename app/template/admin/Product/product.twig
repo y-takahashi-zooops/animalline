@@ -343,7 +343,7 @@ file that was distributed with this source code.
                                                 {{ 'admin.common.drag_and_drop_image_description'|trans }}
                                                 {{ form_widget(form.product_image, { attr : { accept : 'image/*', style : 'display:none;' } }) }}
                                                 {{ form_errors(form.product_image) }}
-                                                <a class="btn btn-ec-regular mr-2" onclick="$('#admin_product_product_image').click()">
+                                                <a id="file_upload" class="btn btn-ec-regular mr-2">
                                                     {{ 'admin.common.file_select'|trans }}
                                                 </a>
                                             </div><!-- /.media-body -->
