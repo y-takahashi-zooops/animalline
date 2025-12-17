@@ -406,44 +406,39 @@ class ProductController extends BaseProductController
             throw new BadRequestHttpException();
         }
 
-        $images = $request->files->get('admin_product');
-
-        if (
-            !$images ||
-            !isset($images['product_image']) ||
-            !is_array($images['product_image'])
-        ) {
-            return $this->json(['files' => []], 200);
-        }
+        $images = $request->files->get('admin_product', []);
 
         $allowExtensions = ['gif', 'jpg', 'jpeg', 'png'];
         $files = [];
 
-        foreach ($images['product_image'] as $image) {
-            // ★ ここが超重要
-            if (!$image instanceof UploadedFile) {
-                continue;
-            }
+        if (is_array($images) && count($images) > 0) {
+            foreach ($images as $img) {
+                if (!is_array($img)) {
+                    continue;
+                }
 
-            if (!$image->isValid()) {
-                continue;
-            }
+                foreach ($img as $image) {
+                    if (!$image instanceof UploadedFile) {
+                        continue;
+                    }
 
-            // ファイルフォーマット検証
-            $mimeType = $image->getMimeType();
-            if (0 !== strpos($mimeType, 'image')) {
-                throw new UnsupportedMediaTypeHttpException();
-            }
+                    // ファイルフォーマット検証
+                    $mimeType = $image->getMimeType();
+                    if (0 !== strpos($mimeType, 'image')) {
+                        throw new UnsupportedMediaTypeHttpException();
+                    }
 
-            // 拡張子
-            $extension = $image->getClientOriginalExtension();
-            if (!in_array(strtolower($extension), $allowExtensions)) {
-                throw new UnsupportedMediaTypeHttpException();
-            }
+                    // 拡張子チェック
+                    $extension = $image->getClientOriginalExtension();
+                    if (!in_array(strtolower($extension), $allowExtensions, true)) {
+                        throw new UnsupportedMediaTypeHttpException();
+                    }
 
-            $filename = date('mdHis') . uniqid('_') . '.' . $extension;
-            $image->move($this->eccubeConfig['eccube_temp_image_dir'], $filename);
-            $files[] = $filename;
+                    $filename = date('mdHis') . uniqid('_') . '.' . $extension;
+                    $image->move($this->eccubeConfig['eccube_temp_image_dir'],$filename);
+                    $files[] = $filename;
+                }
+            }
         }
 
         $event = new EventArgs(
