@@ -120,6 +120,10 @@ file that was distributed with this source code.
             });
             var count_add = {{ form.add_images|length|default(0) }};
             $('#{{ form.product_image.vars.id }}').on('change', function (e) {
+                const files = e.target.files;
+                if (!files || files.length === 0) {
+                    return;
+                }
                 const formData = new FormData();
                 for (let i = 0; i < files.length; i++) {
                     formData.append('images[]', files[i]);
