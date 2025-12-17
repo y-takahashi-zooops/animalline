@@ -176,7 +176,7 @@ file that was distributed with this source code.
             });
             // 画像アップロード
             $('#file_upload').on('click', function() {
-                $('#{{ form.product_image.vars.id }}').click();
+                document.getElementById('{{ form.product_image.vars.id }}').click();
             });
 
             var mainTags = $('#allTags');
