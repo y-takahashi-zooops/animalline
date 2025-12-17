@@ -128,7 +128,9 @@ file that was distributed with this source code.
                 for (let i = 0; i < files.length; i++) {
                     formData.append('admin_product[product_image][]', files[i]);
                 }
-                console.log(formData);
+                for (const pair of formData.entries()) {
+                    console.log(pair[0], pair[1]);
+                }
 
                 $.ajax({
                     url: "{{ url('admin_product_image_add') }}",
