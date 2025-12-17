@@ -35,12 +35,15 @@ file that was distributed with this source code.
     </style>
 {% endblock stylesheet %}
 
-{% block javascript_inner %}
+{% block javascript %}
     <script src="{{ asset('assets/js/vendor/fileupload/vendor/jquery.ui.widget.js', 'admin') }}"></script>
     <script src="{{ asset('assets/js/vendor/fileupload/jquery.fileupload.js', 'admin') }}"></script>
     <script src="{{ asset('assets/js/vendor/fileupload/jquery.fileupload-process.js', 'admin') }}"></script>
     <script src="{{ asset('assets/js/vendor/fileupload/jquery.fileupload-validate.js', 'admin') }}"></script>
     <script>var bootstrapTooltip = $.fn.tooltip.noConflict();</script>
+{% endblock %}
+
+{% block javascript_inner %}
     <script>
         $.fn.tooltip = bootstrapTooltip;
         $(document).on('drop dragover', function(e) {
