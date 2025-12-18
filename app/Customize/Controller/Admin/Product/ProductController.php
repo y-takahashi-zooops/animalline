@@ -429,6 +429,13 @@ class ProductController extends BaseProductController
                     if (!in_array(strtolower($extension), $allowExtensions, true)) {
                         throw new UnsupportedMediaTypeHttpException();
                     }
+                    $this->logger->info('Image upload debug', [
+                        'tmp_pathname' => $image->getPathname(),
+                        'original_name' => $image->getClientOriginalName(),
+                        'extension_name' => $image->getClientOriginalExtension(),
+                        'mime_type' => $image->getMimeType(),
+                        'temp_image_dir' => $this->eccubeConfig['eccube_temp_image_dir'],
+                    ]);
 
                     $filename = date('mdHis') . uniqid('_') . '.' . $extension;
                     $image->move($this->eccubeConfig['eccube_temp_image_dir'],$filename);
