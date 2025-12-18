@@ -119,11 +119,53 @@ file that was distributed with this source code.
                 count_del++;
             });
             var count_add = {{ form.add_images|length|default(0) }};
+
+            // ファイル選択発火
+            $('#file_upload').on('click', function() {
+                $('#{{ form.product_image.vars.id }}').click();
+            });
+\
+            // ファイル選択からアップロード
             $('#{{ form.product_image.vars.id }}').on('change', function (e) {
-                const files = e.target.files;
+                uploadFiles(e.target.files);
+
+                // 同じファイルを再選択できるようにする
+                $(this).val('');
+            });
+
+            // ドラッグ&ドロップ
+            const uploadZone = document.getElementById('upload-zone');
+
+            // dragover（必須）
+            uploadZone.addEventListener('dragover', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(this).addClass('dragover'); // 見た目用（任意）
+            });
+
+            // dragleave（任意）
+            uploadZone.addEventListener('dragleave', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(this).removeClass('dragover');
+            });
+
+            // drop（ここで Ajax 実行）
+            uploadZone.addEventListener('drop', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(this).removeClass('dragover');
+
+                const files = e.dataTransfer.files;
+                uploadFiles(files);
+            });
+
+            // ファイルアップロード共通化関数
+            function uploadFiles(files) {
                 if (!files || files.length === 0) {
                     return;
                 }
+
                 const formData = new FormData();
                 for (let i = 0; i < files.length; i++) {
                     formData.append('admin_product[product_image][]', files[i]);
@@ -136,36 +178,23 @@ file that was distributed with this source code.
                     processData: false,
                     contentType: false,
                     dataType: 'json',
-
                     success: function (data) {
                         data.files.forEach(function (file) {
                             var path = '{{ asset('', 'temp_image') }}' + file;
-
                             var $img = $(proto_img.replace(/__path__/g, path));
                             var $new_img = $(proto_add.replace(/__name__/g, count_add));
                             $new_img.val(file);
-
                             $('#thumb').append($img.append($new_img));
                             count_add++;
                         });
-
                         hideThumbnail();
                         updateSortNo();
                     },
-
                     error: function () {
                         alert("{{ 'admin.common.upload_error'|trans }}");
                     }
                 });
-
-                // 同じファイルを再選択できるようにする
-                $(this).val('');
-            });
-
-            // 画像アップロード
-            $('#file_upload').on('click', function() {
-                $('#{{ form.product_image.vars.id }}').click();
-            });
+            }
 
             var mainTags = $('#allTags');
             var adminProductTag = $('#admin_product_Tag');
