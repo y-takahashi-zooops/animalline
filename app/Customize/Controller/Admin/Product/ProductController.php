@@ -410,7 +410,10 @@ class ProductController extends BaseProductController
 
         $allowExtensions = ['gif', 'jpg', 'jpeg', 'png'];
         $files = [];
-
+        $this->logger->info('FILES BAG DEBUG', [
+            'all_files' => $request->files->all(),
+            'admin_product' => $request->files->get('admin_product'),
+        ]);
         if (count($images) > 0) {
             foreach ($images as $img) {
                 foreach ($img as $image) {
