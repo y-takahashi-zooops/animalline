@@ -402,10 +402,6 @@ class ProductController extends BaseProductController
      */
     public function addImage(Request $request)
     {
-        if (!$request->isXmlHttpRequest()) {
-            throw new BadRequestHttpException();
-        }
-
         $images = $request->files->get('admin_product', []);
 
         $allowExtensions = ['gif', 'jpg', 'jpeg', 'png'];
@@ -417,6 +413,11 @@ class ProductController extends BaseProductController
         if (count($images) > 0) {
             foreach ($images as $img) {
                 foreach ($img as $image) {
+                    $this->logger->info('UPLOAD DEBUG', [
+                        'error' => $image->getError(),
+                        'error_message' => $image->getErrorMessage(),
+                        'tmp' => $image->getPathname(),
+                    ]);
                     if (!$image instanceof UploadedFile) {
                         continue;
                     }
@@ -432,17 +433,15 @@ class ProductController extends BaseProductController
                     if (!in_array(strtolower($extension), $allowExtensions, true)) {
                         throw new UnsupportedMediaTypeHttpException();
                     }
-                    $this->logger->info('Image upload debug', [
-                        'tmp_pathname' => $image->getPathname(),
-                        'original_name' => $image->getClientOriginalName(),
-                        'extension_name' => $image->getClientOriginalExtension(),
-                        'mime_type' => $image->getMimeType(),
-                        'temp_image_dir' => $this->eccubeConfig['eccube_temp_image_dir'],
-                    ]);
 
                     $filename = date('mdHis') . uniqid('_') . '.' . $extension;
                     $image->move($this->eccubeConfig['eccube_temp_image_dir'],$filename);
                     $files[] = $filename;
+
+                    $this->logger->info('UPLOAD PATH', [
+                        'tmp' => $image->getPathname(),
+                        'exists' => file_exists($image->getPathname()),
+                    ]);
                 }
             }
         }
