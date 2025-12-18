@@ -402,26 +402,18 @@ class ProductController extends BaseProductController
      */
     public function addImage(Request $request)
     {
+        if (!$request->isXmlHttpRequest()) {
+            throw new BadRequestHttpException();
+        }
+
         $images = $request->files->get('admin_product', []);
 
         $allowExtensions = ['gif', 'jpg', 'jpeg', 'png'];
         $files = [];
-        $this->logger->info('FILES BAG DEBUG', [
-            'all_files' => $request->files->all(),
-            'admin_product' => $request->files->get('admin_product'),
-        ]);
+
         if (count($images) > 0) {
             foreach ($images as $img) {
                 foreach ($img as $image) {
-                    $this->logger->info('UPLOAD DEBUG', [
-                        'error' => $image->getError(),
-                        'error_message' => $image->getErrorMessage(),
-                        'tmp' => $image->getPathname(),
-                    ]);
-                    if (!$image instanceof UploadedFile) {
-                        continue;
-                    }
-
                     // ファイルフォーマット検証
                     $mimeType = $image->getMimeType();
                     if (0 !== strpos($mimeType, 'image')) {
@@ -435,7 +427,18 @@ class ProductController extends BaseProductController
                     }
 
                     $filename = date('mdHis') . uniqid('_') . '.' . $extension;
-                    $image->move($this->eccubeConfig['eccube_temp_image_dir'],$filename);
+
+                    $targetDir = rtrim($this->eccubeConfig['eccube_temp_image_dir'], '/');
+                    $targetPath = $targetDir . '/' . $filename;
+
+                    if (!copy($image->getPathname(), $targetPath)) {
+                        $this->logger->error('IMAGE COPY FAILED', [
+                            'from' => $image->getPathname(),
+                            'to' => $targetPath,
+                        ]);
+                        continue;
+                    }
+
                     $files[] = $filename;
 
                     $this->logger->info('UPLOAD PATH', [
