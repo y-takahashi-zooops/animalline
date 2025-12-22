@@ -1,0 +1,3 @@
+zooops_sendmail_routes:
+    resource: '../../Controller/Admin/'
+    type: attribute
