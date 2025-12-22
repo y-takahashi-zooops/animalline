@@ -1,3 +1,0 @@
-product_review42_admin:
-    resource: '../../Controller/Admin/'
-    type: attribute
