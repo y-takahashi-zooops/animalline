@@ -1,4 +1,11 @@
 services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
     Plugin\ZooopsSubscription\Controller\:
         resource: '../../Controller'
         tags: ['controller.service_arguments']
+
+    Plugin\ZooopsSubscription\Repository\:
+        resource: '../../Repository'
