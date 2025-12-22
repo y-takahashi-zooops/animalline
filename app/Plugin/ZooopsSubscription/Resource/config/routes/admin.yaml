@@ -1,3 +1,0 @@
-zooops_subscription_admin:
-    resource: '../../Controller/Admin/'
-    type: annotation
