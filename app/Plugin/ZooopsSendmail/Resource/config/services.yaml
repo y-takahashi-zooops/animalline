@@ -1,0 +1,11 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Plugin\ZooopsSendmail\Controller\:
+        resource: '../../Controller'
+        tags: ['controller.service_arguments']
+
+    Plugin\ZooopsSendmail\Repository\:
+        resource: '../../Repository'
