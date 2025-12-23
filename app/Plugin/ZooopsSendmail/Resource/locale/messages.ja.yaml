@@ -1,0 +1,8 @@
+admin.customer.customer_template: メールテンプレート管理
+
+admin.customer.template_selector: メールテンプレート選択
+admin.customer.template_name : メールテンプレート名
+admin.customer.template_title : メールテンプレートタイトル
+admin.customer.template_detail : メールテンプレート詳細
+
+admin.customer.customer_all_mail_send: 一括メール送信
