@@ -1,0 +1,13 @@
+parameters:
+    product_review_display_count_min: 1
+    product_review_display_count_max: 30
+
+services:
+    Plugin\ProductReview42\:
+        resource: '../../*'
+        exclude:
+            - '../../Entity'
+            - '../../Resource'
+            - '../../Tests'
+        autowire: true
+        autoconfigure: true
