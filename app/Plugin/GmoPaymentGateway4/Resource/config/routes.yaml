@@ -27,3 +27,8 @@ gmo_payment_gateway_admin_payment_status_bulk_action:
     requirements:
         id: \d+
     methods: [POST]
+
+gmo_payment_gateway4_admin_config:
+    path: /%eccube_admin_route%/gmo_payment_gateway4/config
+    controller: Plugin\GmoPaymentGateway4\Controller\Admin\ConfigController::index
+    methods: [GET, POST]

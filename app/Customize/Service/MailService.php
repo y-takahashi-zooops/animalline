@@ -416,7 +416,7 @@ class MailService
         );
         $this->eventDispatcher->dispatch($event, EccubeEvents::MAIL_ORDER);
 
-        $count = $this->mailer->send($message);
+        $count = $this->mailer->send($emailMessage);
 
         $MailHistory = new MailHistory();
         $MailHistory->setMailSubject($emailMessage->getSubject())
@@ -433,7 +433,7 @@ class MailService
 
         $this->logger->info('受注メール送信完了', ['count' => $count]);
 
-        return $message;
+        return $emailMessage;
     }
 
     /**
@@ -538,7 +538,7 @@ class MailService
 
         $this->logger->info('受注管理通知メール送信完了', ['count' => $count]);
 
-        return $message;
+        return $email;
     }
 
     /**
@@ -691,7 +691,7 @@ class MailService
 
         $MailHistory = new MailHistory();
         $MailHistory->setMailSubject($email->getSubject())
-                ->setMailBody($message->getBody())
+                ->setMailBody($body)
                 ->setOrder($Order)
                 ->setSendDate(new \DateTime());
 
