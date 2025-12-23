@@ -28,6 +28,6 @@ gmo_payment_gateway_admin_payment_status_bulk_action:
         id: \d+
     methods: [POST]
 
-gmo_payment_gateway_admin_payment_routes:
+gmo_payment_gateway_routes:
     resource: '../../Controller/Admin/'
     type: attribute
