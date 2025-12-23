@@ -61,7 +61,7 @@ class FraudDetectionController extends AbstractController
      * @Template("@GmoPaymentGateway4/admin/fraud_detection_index.twig")
      */
     public function index
-        (Request $request, PaginatorInterface $paginator, $page_no = null)
+        (Request $request, PaginatorInterface $paginator, ?int $page_no = null)
     {
         $session = $this->session;
         $builder = $this->formFactory
