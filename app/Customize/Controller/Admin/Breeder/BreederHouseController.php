@@ -30,7 +30,18 @@ class BreederHouseController extends AbstractController
      */
     protected $breederHouseRepository;
 
+    /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
 
+    public function __construct(
+        BreederHouseRepository $breederHouseRepository,
+        EntityManagerInterface $entityManager
+    ) {
+        $this->breederHouseRepository = $breederHouseRepository;
+        $this->entityManager = $entityManager;
+    }
 
     /**
      * 犬舎・猫舎情報編集ブリーダー管理
