@@ -27,3 +27,7 @@ gmo_payment_gateway_admin_payment_status_bulk_action:
     requirements:
         id: \d+
     methods: [POST]
+
+gmo_payment_gateway_admin_payment_routes:
+    resource: '../../Controller/Admin/'
+    type: attribute
