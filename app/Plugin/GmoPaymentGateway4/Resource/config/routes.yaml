@@ -32,3 +32,8 @@ gmo_payment_gateway4_admin_config:
     path: /%eccube_admin_route%/gmo_payment_gateway4/config
     controller: Plugin\GmoPaymentGateway4\Controller\Admin\ConfigController::index
     methods: [GET, POST]
+
+gmo_payment_gateway_receive:
+    path: /gmo_payment_gateway/receive
+    controller: Plugin\GmoPaymentGateway4\Controller\ReceiveController::index
+    methods: [POST]
