@@ -315,7 +315,7 @@ class AdoptionMemberController extends AbstractController
 
         /* @var $builder \Symfony\Component\Form\FormBuilderInterface */
         $builder = $this->formFactory->createBuilder(EntryType::class, $customer, [
-            'password' => $request->get('entry')['password']['first'] ?? '',
+            'plain_password' => $request->get('entry')['password']['first'] ?? '',
             'email' => $request->get('entry')['email']['first'] ?? '',
         ]);
 

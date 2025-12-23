@@ -37,8 +37,8 @@
     </div>
     <div class="form_img_inline">
         <div class="images mb-3">
-            <div class="preview_box mr-4 mb-3">
-                {{ form_widget(form.thumbnail_path) }}
+            <div class="preview_box mr-4 mb-3" data-input-id="breeder_pets_thumbnail_path">
+                {{ form_widget(form.thumbnail_path, { 'attr': {'class': 'form-control d-none'} }) }}
                 {{ form_errors(form.thumbnail_path) }}
                 <img id="img_thumbnail" class="img_preview" src="{{ image0 }}"/>
             </div>
@@ -47,8 +47,8 @@
             </div>
         </div>
         <div class="images mb-3">
-            <div class="preview_box mr-4 mb-3">
-                {{ form_widget(form.image1) }}
+            <div class="preview_box mr-4 mb-3" data-input-id="breeder_pets_image1">
+                {{ form_widget(form.image1, { 'attr': {'class': 'form-control d-none'} }) }}
                 <img class="img_preview" src="" />
             </div>
             <div style="display: grid">
@@ -57,8 +57,8 @@
             </div>
         </div>
         <div class="images mb-3">
-            <div class="preview_box mr-4 mb-3">
-                {{ form_widget(form.image2) }}
+            <div class="preview_box mr-4 mb-3" data-input-id="breeder_pets_image2">
+                {{ form_widget(form.image2, { 'attr': {'class': 'form-control d-none'} }) }}
                 <img class="img_preview" src="" />
             </div>
             <div style="display: grid">
@@ -67,8 +67,8 @@
             </div>
         </div>
         <div class="images mb-3">
-            <div class="preview_box mr-4 mb-3">
-                {{ form_widget(form.image3) }}
+            <div class="preview_box mr-4 mb-3" data-input-id="breeder_pets_image3">
+                {{ form_widget(form.image3, { 'attr': {'class': 'form-control d-none'} }) }}
                 <img class="img_preview" src="" />
             </div>
             <div style="display: grid">
@@ -77,8 +77,8 @@
             </div>
         </div>
         <div class="images mb-3">
-            <div class="preview_box mr-4 mb-3">
-                {{ form_widget(form.image4) }}
+            <div class="preview_box mr-4 mb-3" data-input-id="breeder_pets_image4">
+                {{ form_widget(form.image4, { 'attr': {'class': 'form-control d-none'} }) }}
                 <img class="img_preview" src="" />
             </div>
             <div style="display: grid">
@@ -378,9 +378,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" id="modalLabel">画像切り抜き</h3>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="img-container row">
@@ -396,7 +394,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">キャンセル</button>
                 <button type="button" class="btn btn-primary" id="crop">切り抜き</button>
             </div>
         </div>
@@ -412,15 +410,13 @@
                 <h5 class="modal-title font-weight-bold">
                     確認ダイアログ
                 </h5>
-                <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body text-left">
                 <p class="text-left" id="modal-change-status-message">ペット情報を公開しますか？</p>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     いいえ
                 </button>
                 <a class="btn btn-primary" href="{{ url('breeder_pets_edit_change_status', {'id': id}) }}">
@@ -439,15 +435,13 @@
                 <h5 class="modal-title font-weight-bold">
                     確認ダイアログ
                 </h5>
-                <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body text-left">
                 <p class="text-left" id="modal-contact-status-message">ペット情報を商談中にしますか？</p>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     いいえ
                 </button>
                 <a class="btn btn-primary" href="{{ url('breeder_pets_edit_contact_status', {'id': id}) }}">
@@ -465,15 +459,13 @@
                 <h5 class="modal-title font-weight-bold">
                     確認ダイアログ
                 </h5>
-                <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body text-left">
                 <p class="text-left">このペット情報を成約済みにしますか？</p>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     いいえ
                 </button>
                 <a class="btn btn-primary" href="{{ url('breeder_pets_delete', {'id': id}) }}">
@@ -626,6 +618,14 @@ $(document).ready(function() {
         const modalMsg = $(this).data('is-contact') ? 'ペット情報の商談中を解除しますか？' : 'ペット情報を商談中にしますか？';
         $('#modal-contact-status-message').text(modalMsg);
         $('#modal-contact-status').modal('show');
+    });
+
+    // 見た目だけ完全に消す（SVGだけ残す）
+    $(".custom-file").css({
+        "pointer-events": "none",
+        "height": "0",
+        "overflow": "hidden",
+        "opacity": "0"
     });
 });
 

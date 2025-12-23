@@ -10,7 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Plugin\ZooopsSubscription\Form\Type\Admin\SearchSubscriptionType;
 use Symfony\Component\HttpFoundation\Request;
-use Knp\Component\Pager\Paginator;
+use Knp\Component\Pager\PaginatorInterface;
 use Eccube\Util\FormUtil;
 use Eccube\Common\EccubeConfig;
 
@@ -55,7 +55,7 @@ class SubscriptionController extends AbstractController
      * @Route("/%eccube_admin_route%/zooops_subscription_view/page/{page_no}", requirements={"page_no" = "\d+"}, name="admin_zooops_subscription_view_page")
      * @Template("@ZooopsSubscription/admin/subscription_view.twig")
      */
-    public function index(Request $request, $page_no = null, Paginator $paginator)
+    public function index(Request $request, PaginatorInterface $paginator, ?int $page_no = null)
     {
         // DBデータの取得
         $pageMaxis = $this->pageMaxRepository->findAll();
@@ -122,7 +122,7 @@ class SubscriptionController extends AbstractController
                 // セッション中の検索条件, ページ番号を初期化.
                 $this->session->set('eccube.admin.subscription.search', FormUtil::getViewData($searchForm));
                 $this->session->set('eccube.admin.subscription.search.page_no', $page_no);
- 
+
             }
         }
 

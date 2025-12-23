@@ -1,4 +1,5 @@
-var bs_modal = $('#modal');
+var modalEl = document.getElementById('modal');
+var bs_modal = new bootstrap.Modal(modalEl);
 var image = document.getElementById('image');
 var cropper, reader, file, size;
 
@@ -8,7 +9,7 @@ $("body").on("change", "#form_image", function (e) {
     var files = e.target.files;
     var done = function (url) {
         image.src = url;
-        bs_modal.modal('show');
+        bs_modal.show();
     };
 
 
@@ -27,19 +28,21 @@ $("body").on("change", "#form_image", function (e) {
     }
 });
 
-bs_modal.on('shown.bs.modal', function () {
-    cropper = new Cropper(image, {
-        aspectRatio: 1,
-        viewMode: 2,
-        preview: '.preview',
-        dragMode: 'none',
-        background: false,
+    modalEl.addEventListener('shown.bs.modal', function () {
+        cropper = new Cropper(image, {
+            aspectRatio: 1,
+            viewMode: 2,
+            preview: '.preview',
+            dragMode: 'none',
+            background: false,
+        });
     });
-}).on('hidden.bs.modal', function () {
-    cropper.destroy();
-    cropper = null;
-    $("#form_image").val('');
-});
+
+    modalEl.addEventListener('hidden.bs.modal', function () {
+        cropper.destroy();
+        cropper = null;
+        $("#form_image").val('');
+    });
 
 $("#crop").click(function () {
     size = cropper.imageData.naturalHeight < cropper.imageData.naturalWidth ? cropper.imageData.naturalHeight : cropper.imageData.naturalWidth;
@@ -61,7 +64,7 @@ $("#crop").click(function () {
                 url: "/test/upload_image",
                 data: {image: base64data},
                 success: function (data) {
-                    bs_modal.modal('hide');
+                    bs_modal.hide();
                     alert("success upload image");
                 }
             });

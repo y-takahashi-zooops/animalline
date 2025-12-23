@@ -150,7 +150,12 @@ services:
 
     Plugin\:
         resource: '../../../app/Plugin/*'
-        exclude: '../../../app/Plugin/*/{Entity,Resource,ServiceProvider,Tests,Codeception,DoctrineMigrations}'
+        exclude:
+                - '../../../app/Plugin/*/Entity'
+                - '../../../app/Plugin/*/ServiceProvider'
+                - '../../../app/Plugin/*/Tests'
+                - '../../../app/Plugin/*/Codeception'
+                - '../../../app/Plugin/*/DoctrineMigrations'
 
     Customize\:
         resource: '../../../app/Customize/*'
@@ -311,6 +316,30 @@ services:
         arguments:
             $serviceContainer: !tagged_locator { tag: 'eccube_payment_method' }
         tags: [ 'controller.service_arguments' ]
+
+    Customize\Controller\ShoppingController:
+        arguments:
+            $paymentMethods: !tagged_iterator app.payment_method
+        tags: [ 'controller.service_arguments' ]
+
+    Eccube\Service\Payment\Method\Cash:
+        public: true
+        tags: [ 'app.payment_method' ]
+
+    Plugin\GmoPaymentGateway4\Service\PaymentHelperCredit:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    Plugin\GmoPaymentGateway4\Service\PaymentHelperMember:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    Plugin\GmoPaymentGateway4\Service\Method\CreditCard:
+        public: true
+        autowire: true
+        tags: [ 'app.payment_method' ]
 
     Eccube\Util\CacheUtil:
         arguments:

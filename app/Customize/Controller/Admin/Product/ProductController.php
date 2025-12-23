@@ -406,28 +406,45 @@ class ProductController extends BaseProductController
             throw new BadRequestHttpException();
         }
 
-        $images = $request->files->get('admin_product');
+        $images = $request->files->get('admin_product', []);
 
         $allowExtensions = ['gif', 'jpg', 'jpeg', 'png'];
         $files = [];
+
         if (count($images) > 0) {
             foreach ($images as $img) {
                 foreach ($img as $image) {
-                    //ファイルフォーマット検証
+                    // ファイルフォーマット検証
                     $mimeType = $image->getMimeType();
                     if (0 !== strpos($mimeType, 'image')) {
                         throw new UnsupportedMediaTypeHttpException();
                     }
 
-                    // 拡張子
+                    // 拡張子チェック
                     $extension = $image->getClientOriginalExtension();
-                    if (!in_array(strtolower($extension), $allowExtensions)) {
+                    if (!in_array(strtolower($extension), $allowExtensions, true)) {
                         throw new UnsupportedMediaTypeHttpException();
                     }
 
                     $filename = date('mdHis') . uniqid('_') . '.' . $extension;
-                    $image->move($this->eccubeConfig['eccube_temp_image_dir'], $filename);
+
+                    $targetDir = rtrim($this->eccubeConfig['eccube_temp_image_dir'], '/');
+                    $targetPath = $targetDir . '/' . $filename;
+
+                    if (!copy($image->getPathname(), $targetPath)) {
+                        $this->logger->error('IMAGE COPY FAILED', [
+                            'from' => $image->getPathname(),
+                            'to' => $targetPath,
+                        ]);
+                        continue;
+                    }
+
                     $files[] = $filename;
+
+                    $this->logger->info('UPLOAD PATH', [
+                        'tmp' => $image->getPathname(),
+                        'exists' => file_exists($image->getPathname()),
+                    ]);
                 }
             }
         }

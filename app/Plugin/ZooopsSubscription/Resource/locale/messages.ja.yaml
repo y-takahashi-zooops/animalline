@@ -2,6 +2,7 @@
 admin.order.subscription: 定期購入
 
 # ラベル
+admin.order.orderer_id: 注文者ID
 admin.order.contract_date: 契約日
 admin.order.next_delivery_date: 次回配送日
 admin.order.next_delivery_date_start: 次回配送日(開始)

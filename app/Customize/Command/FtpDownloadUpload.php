@@ -46,9 +46,9 @@ class FtpDownloadUpload extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $HOST = env('FTP_HOST', 'test.rebex.net');
-        $USERNAME = env('FTP_USERNAME', 'demo');
-        $PASSWORD = env('FTP_PASSWORD', 'password');
+        $HOST = $_ENV['FTP_HOST'] ?? getenv('FTP_HOST');
+        $USERNAME = $_ENV['FTP_USERNAME'] ?? getenv('FTP_USERNAME');
+        $PASSWORD = $_ENV['FTP_PASSWORD'] ?? getenv('FTP_PASSWORD');
 
         $download_dir_remote = "/OUT/";
         $download_dir_local = 'var/tmp/wms/receive/';
@@ -123,10 +123,10 @@ class FtpDownloadUpload extends Command
     {
         $localDir = $this->tmpWmsDir . $directory;
 
-         // create new folder on local to save moved files from old folder
-         if (!file_exists($localDir) && !mkdir($localDir, 0777, true)) {
-             throw new Exception("Can't create directory.");
-         }
+        // create new folder on local to save moved files from old folder
+        if (!file_exists($localDir) && !mkdir($localDir, 0777, true)) {
+            throw new Exception("Can't create directory.");
+        }
 
         // scan local files
         $fileNames = [];
