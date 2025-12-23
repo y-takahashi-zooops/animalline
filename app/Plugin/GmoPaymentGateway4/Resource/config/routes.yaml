@@ -1,0 +1,29 @@
+gmo_mypage_card_edit:
+    path: /mypage/gmo_card_edit
+    controller: Plugin\GmoPaymentGateway4\Controller\MypageCardController::index
+    methods: [GET, POST]
+
+gmo_mypage_card_edit_delete:
+    path: /mypage/gmo_card_edit/delete
+    controller: Plugin\GmoPaymentGateway4\Controller\MypageCardController::delete
+    methods: [POST]
+
+# Admin routes
+gmo_payment_gateway_admin_payment_status:
+    path: /%eccube_admin_route%/gmo_payment_gateway/payment_status
+    controller: Plugin\GmoPaymentGateway4\Controller\Admin\PaymentStatusController::index
+    methods: [GET, POST]
+
+gmo_payment_gateway_admin_payment_status_pageno:
+    path: /%eccube_admin_route%/gmo_payment_gateway/payment_status/{page_no}
+    controller: Plugin\GmoPaymentGateway4\Controller\Admin\PaymentStatusController::index
+    requirements:
+        page_no: \d+
+    methods: [GET, POST]
+
+gmo_payment_gateway_admin_payment_status_bulk_action:
+    path: /%eccube_admin_route%/gmo_payment_gateway/payment_status/bulk_action/{id}
+    controller: Plugin\GmoPaymentGateway4\Controller\Admin\PaymentStatusController::bulkAction
+    requirements:
+        id: \d+
+    methods: [POST]
