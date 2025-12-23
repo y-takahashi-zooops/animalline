@@ -1,0 +1,276 @@
+{#
+Copyright(c) 2022 GMO Payment Gateway, Inc. All rights reserved.
+http://www.gmo-pg.com/
+#}
+
+{% extends '@admin/default_frame.twig' %}
+
+{% set menus = ['customer', 'gmo_payment_gateway_admin_fraud_detection'] %}
+
+{% block title %}{{ 'gmo_payment_gateway.admin.nav.fraud_detection_list'|trans }}{% endblock %}
+{% block sub_title %}{{ 'admin.customer.customer_management'|trans }}{% endblock %}
+
+{% form_theme searchForm '@admin/Form/bootstrap_4_horizontal_layout.html.twig' %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/tempusdominus-bootstrap-4.min.css', 'admin') }}">
+    <style type="text/css">
+        .datepicker-days th.dow:first-child,
+        .datepicker-days td:first-child {
+            color: #f00;
+        }
+
+        .datepicker-days th.dow:last-child,
+        .datepicker-days td:last-child {
+            color: #00f;
+        }
+    </style>
+{% endblock stylesheet %}
+
+{% block javascript %}
+    <script>
+        $(function() {
+            if ($('[type="date"]').prop('type') != 'date') {
+                // input type属性でdateが利用できるかどうか(カレンダー表示できないブラウザ対応)
+                $.when(
+                    $.getScript("{{ asset('assets/js/vendor/moment.min.js', 'admin') }}"),
+                    $.getScript("{{ asset('assets/js/vendor/moment-with-locales.min.js', 'admin') }}"),
+                    $.getScript("{{ asset('assets/js/vendor/tempusdominus-bootstrap-4.min.js', 'admin') }}")
+                ).done(function() {
+                    $('input[id$=_time_start]').datetimepicker({
+                        locale: '{{ eccube_config.locale }}',
+                        format: 'YYYY-MM-DD',
+                        useCurrent: false,
+                        buttons: {
+                            showToday: true,
+                            showClose: true
+                        }
+                    });
+
+                    $('input[id$=_time_end]').datetimepicker({
+                        locale: '{{ eccube_config.locale }}',
+                        format: 'YYYY-MM-DD',
+                        useCurrent: false,
+                        buttons: {
+                            showToday: true,
+                            showClose: true
+                        }
+                    });
+
+                    $('input[id$=_date_start]').datetimepicker({
+                        locale: '{{ eccube_config.locale }}',
+                        format: 'YYYY-MM-DD',
+                        useCurrent: false,
+                        buttons: {
+                            showToday: true,
+                            showClose: true
+                        }
+                    });
+
+                    $('input[id$=_date_end]').datetimepicker({
+                        locale: '{{ eccube_config.locale }}',
+                        format: 'YYYY-MM-DD',
+                        useCurrent: false,
+                        buttons: {
+                            showToday: true,
+                            showClose: true
+                        }
+                    });
+                });
+            }
+
+            // ロック解除リンク
+            $('a[name=unlock]').on('click', function (event) {
+                event.preventDefault();
+                var data = $(this).data();
+                $('#form_bulk').attr('action', data.url).submit();
+                return false;
+            });
+        });
+    </script>
+{% endblock javascript %}
+
+{% block main %}
+    <!--検索条件設定テーブルここから-->
+    <div class="c-outsideBlock">
+        <form name="search_form" id="search_form" method="post" action="">
+            {{ form_widget(searchForm._token) }}
+            <div class="c-outsideBlock">
+                <div class="c-outsideBlock__contents">
+                    <div class="row justify-content-start">
+                        <div class="col-6">
+                            <div class="mb-2">
+                                <label class="col-form-label" data-tooltip="true" data-placement="top" title="{{ 'tooltip.customer.multi_search_label'|trans }}">{{ 'gmo_payment_gateway.admin.fraud_detection.search.cond.ip_address'|trans }}<i class="fa fa-question-circle fa-lg ml-1"></i></label>
+				{{ form_widget(searchForm.ip_address) }}
+				{{ form_errors(searchForm.ip_address) }}
+                            </div>
+                            <div class="d-inline-block mb-3 collapsed" data-toggle="collapse" href="#searchDetail" aria-expanded="false" aria-controls="searchDetail"><a><i class="fa font-weight-bold mr-1 fa-plus-square-o"></i><span class="font-weight-bold">{{ 'admin.common.search_detail'|trans }}</span></a></div>
+			</div>
+                    </div>
+		</div>
+		<div class="c-subContents ec-collapse collapse{{ has_errors ? ' show' }}" id="searchDetail">
+                    <div class="row mb-2">
+			<div class="col">
+                            <div>
+                                <label>{{ 'gmo_payment_gateway.admin.fraud_detection.search.cond.occur_time'|trans }}</label>
+				<div class="form-row align-items-center">
+                                    <div class="col">
+                                        {{ form_widget(searchForm.occur_time_start) }}
+					{{ form_errors(searchForm.occur_time_start) }}
+                                    </div>
+                                    <div class="col-auto text-center"><span>{{ 'admin.common.separator__range'|trans }}</span></div>
+                                    <div class="col">
+                                        {{ form_widget(searchForm.occur_time_end) }}
+					{{ form_errors(searchForm.occur_time_end) }}
+                                    </div>
+				</div>
+                            </div>
+			</div>
+			<div class="col">
+                            <div>
+                                <label>{{ 'gmo_payment_gateway.admin.fraud_detection.search.cond.error_count'|trans }}</label>
+				<div class="form-row align-items-center">
+                                    <div class="col">
+                                        {{ form_widget(searchForm.error_count_start) }}
+					{{ form_errors(searchForm.error_count_start) }}
+                                    </div>
+                                    <div class="col-auto text-center"><span>{{ 'admin.common.separator__range'|trans }}</span></div>
+                                    <div class="col">
+                                        {{ form_widget(searchForm.error_count_end) }}
+					{{ form_errors(searchForm.error_count_end) }}
+                                    </div>
+				</div>
+                            </div>
+			</div>
+                    </div>
+                    <div class="row mb-2">
+			<div class="col">
+                            <div>
+                                <label>{{ 'admin.common.create_date'|trans }}</label>
+				<div class="form-row align-items-center">
+                                    <div class="col">
+                                        {{ form_widget(searchForm.create_date_start) }}
+					{{ form_errors(searchForm.create_date_start) }}
+                                    </div>
+                                    <div class="col-auto text-center"><span>{{ 'admin.common.separator__range'|trans }}</span></div>
+                                    <div class="col">
+                                        {{ form_widget(searchForm.create_date_end) }}
+					{{ form_errors(searchForm.create_date_end) }}
+                                    </div>
+				</div>
+                            </div>
+			</div>
+			<div class="col">
+                            <div>
+                                <label>{{ 'admin.common.update_date'|trans }}</label>
+				<div class="form-row align-items-center">
+                                    <div class="col">
+                                        {{ form_widget(searchForm.update_date_start) }}
+					{{ form_errors(searchForm.update_date_start) }}
+                                    </div>
+                                    <div class="col-auto text-center"><span>{{ 'admin.common.separator__range'|trans }}</span></div>
+                                    <div class="col">
+                                        {{ form_widget(searchForm.update_date_end) }}
+					{{ form_errors(searchForm.update_date_end) }}
+                                    </div>
+				</div>
+                            </div>
+			</div>
+                    </div>
+		</div>
+            </div>
+            <div class="c-outsideBlock__contents mb-5">
+                <button type="submit" class="btn btn-ec-conversion px-5">{{ 'admin.common.search'|trans }}</button>
+		{% if pagination %}
+                <span class="font-weight-bold ml-2">{{ 'admin.common.search_result'|trans({'%count%':pagination.totalItemCount}) }}</span>
+		{% endif %}
+            </div>
+            <div class="c-outsideBlock__contents mb-5">
+                {{ include('@admin/search_items.twig', { 'form': searchForm }, ignore_missing = true) }}
+            </div>
+        </form>
+    </div>
+    <!--検索条件設定テーブルここまで-->
+
+    <div class="c-contentsArea__cols">
+        <div class="c-contentsArea__primaryCol">
+            <div class="c-primaryCol">
+                {% if pagination and pagination.totalItemCount %}
+                    <form id="form_bulk" method="post" action="">
+                        <input type="hidden" name="{{ constant('Eccube\\Common\\Constant::TOKEN_NAME') }}" value="{{ csrf_token(constant('Eccube\\Common\\Constant::TOKEN_NAME')) }}" />
+                        <div class="row justify-content-between mb-2">
+                            <div class="col-6"></div>
+
+                            <div class="col-6 text-right">
+                                {#Dropdown page count#}
+                                <div class="d-inline-block mr-2">
+                                    <select class="custom-select" onchange="location = this.value;">
+                                        {% for pageMax in pageMaxis %}
+                                            <option {% if pageMax.name == page_count %} selected {% endif %}
+                                                    value="{{ path('gmo_payment_gateway_admin_fraud_detection_page', {'page_no': 1, 'page_count': pageMax.name }) }}">
+                                                {{ 'admin.common.count'|trans({ '%count%': pageMax.name }) }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="d-inline-block">
+                                    <div class="btn-group" role="group">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card rounded border-0 mb-4 d-block">
+                            <div class="card-body p-0">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th class="border-top-0 pt-2 pb-3 pl-3 align-middle text-left text-nowrap">{{ 'gmo_payment_gateway.admin.fraud_detection.col1'|trans }}</th>
+                                        <th class="border-top-0 pt-2 pb-3 align-middle text-left">{{ 'gmo_payment_gateway.admin.fraud_detection.col2'|trans }}<br/>{{ 'gmo_payment_gateway.admin.fraud_detection.col3'|trans }}</th>
+                                        <th class="border-top-0 pt-2 pb-3 align-middle text-right">{{ 'gmo_payment_gateway.admin.fraud_detection.col4'|trans }}</th>
+                                        <th class="border-top-0 pt-2 pb-3 align-middle text-center">{{ 'gmo_payment_gateway.admin.fraud_detection.col5'|trans }}</th>
+                                        <th class="border-top-0 pt-2 pb-3 align-middle text-center">{{ 'gmo_payment_gateway.admin.fraud_detection.col6'|trans }}</th>
+                                        <th class="border-top-0 pt-2 pb-3 align-middle text-left">{{ 'admin.common.create_date'|trans }}<br/>{{ 'admin.common.update_date'|trans }}</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for GmoFraudDetection in pagination %}
+                                        {% set ip_address = GmoFraudDetection.getIpAddress %}
+                                        <tr id="ex-customer-{{ GmoFraudDetection.id }}">
+                                            <td class="align-middle text-left pl-3">{{ ip_address }}</td>
+                                            <td class="align-middle text-left">{{ GmoFraudDetection.getOccurTime|date('Y-m-d H:i:s') }}<br/>{{ FraudDetector.getReleaseTime(ip_address)|date('Y-m-d H:i:s') }}</td>
+                                            <td class="align-middle text-right">{{ GmoFraudDetection.getErrorCount }}</td>
+                                            <td class="align-middle text-center">{{ FraudDetector.getStatus(ip_address) }}</td>
+                                            <td class="align-middle text-center">{% if FraudDetector.isLock(ip_address) %}<a name="unlock" class="action-edit" data-url="{{ url('gmo_payment_gateway_admin_fraud_detection_unlock', { ipAddr: ip_address }) }}">{{ 'gmo_payment_gateway.admin.fraud_detection.unlock'|trans }}</a>{% endif %}</td>
+                                            <td class="align-middle text-left">{{ GmoFraudDetection.getCreateDate|date('Y-m-d H:i:s') }}<br/>{{ GmoFraudDetection.getUpdateDate|date('Y-m-d H:i:s') }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                                <div class="row justify-content-md-center mb-4">
+                                    {% if pagination.totalItemCount > 0 %}
+                                        {% include "@admin/pager.twig" with { 'pages' : pagination.paginationData, 'routes' : 'gmo_payment_gateway_admin_fraud_detection_page' } %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                {% elseif has_errors %}
+                    <div class="card rounded border-0">
+                        <div class="card-body p-4">
+                            <div class="text-center text-muted mb-4 h5">{{ 'admin.common.search_invalid_condition'|trans }}</div>
+                            <div class="text-center text-muted">{{ 'admin.common.search_try_change_condition'|trans }}</div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="card rounded border-0">
+                        <div class="card-body p-4">
+                          <div class="text-center text-muted mb-4 h5">{{ 'admin.common.search_no_result'|trans }}</div>
+                          <div class="text-center text-muted">{{ 'admin.common.search_try_change_condition'|trans }}</div>
+                          <div class="text-center text-muted">{{ 'admin.common.search_try_advanced_search'|trans }}</div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
