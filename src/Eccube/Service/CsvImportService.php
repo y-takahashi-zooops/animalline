@@ -13,6 +13,9 @@
 
 namespace Eccube\Service;
 
+use Eccube\Stream\Filter\ConvertLineFeedFilter;
+use Eccube\Stream\Filter\SjisToUtf8EncodingFilter;
+
 /**
  * Copyright (C) 2012-2014 David de Boer <david@ddeboer.nl>
  *
@@ -36,13 +39,13 @@ namespace Eccube\Service;
  */
 class CsvImportService implements \Iterator, \SeekableIterator, \Countable
 {
-    const DUPLICATE_HEADERS_INCREMENT = 1;
-    const DUPLICATE_HEADERS_MERGE = 2;
+    public const DUPLICATE_HEADERS_INCREMENT = 1;
+    public const DUPLICATE_HEADERS_MERGE = 2;
 
     /**
      * Number of the row that contains the column names
      *
-     * @var integer
+     * @var int
      */
     protected $headerRowNumber;
 
@@ -65,14 +68,14 @@ class CsvImportService implements \Iterator, \SeekableIterator, \Countable
      *
      * In case of duplicate headers, this is always the number of unmerged headers.
      *
-     * @var integer
+     * @var int
      */
     protected $headersCount;
 
     /**
      * Total number of rows in the CSV file
      *
-     * @var integer
+     * @var int
      */
     protected $count;
 
@@ -86,7 +89,7 @@ class CsvImportService implements \Iterator, \SeekableIterator, \Countable
     /**
      * How to handle duplicate headers
      *
-     * @var integer
+     * @var int
      */
     protected $duplicateHeadersFlag;
 
@@ -98,14 +101,22 @@ class CsvImportService implements \Iterator, \SeekableIterator, \Countable
      */
     public function __construct(\SplFileObject $file, $delimiter = ',', $enclosure = '"', $escape = '\\')
     {
-        ini_set('auto_detect_line_endings', true);
+        // stream filter を適用して文字エンコーディングと改行コードの変換を行う
+        // see https://github.com/EC-CUBE/ec-cube/issues/5252
+        $filters = [
+            ConvertLineFeedFilter::class,
+        ];
 
-        $this->file = $file;
+        if (!\mb_check_encoding($file->current(), 'UTF-8')) {
+            // UTF-8 が検出できなかった場合は SJIS-win の stream filter を適用する
+            $filters[] = SjisToUtf8EncodingFilter::class;
+        }
+
+        $this->file = self::applyStreamFilter($file, ...$filters);
         $this->file->setFlags(
             \SplFileObject::READ_CSV |
             \SplFileObject::SKIP_EMPTY |
-            \SplFileObject::READ_AHEAD |
-            \SplFileObject::DROP_NEW_LINE
+            \SplFileObject::READ_AHEAD
         );
         $this->file->setCsvControl(
             $delimiter,
@@ -119,8 +130,9 @@ class CsvImportService implements \Iterator, \SeekableIterator, \Countable
      *
      * If a header row has been set, an associative array will be returned
      *
-     * @return array
+     * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         // If the CSV has no column headers just return the line
@@ -131,7 +143,6 @@ class CsvImportService implements \Iterator, \SeekableIterator, \Countable
         // Since the CSV has column headers use them to construct an associative array for the columns in this line
         if ($this->valid()) {
             $current = $this->file->current();
-            $current = $this->convertEncodingRows($current);
 
             $line = $current;
 
@@ -168,7 +179,6 @@ class CsvImportService implements \Iterator, \SeekableIterator, \Countable
      */
     public function setColumnHeaders(array $columnHeaders)
     {
-        $columnHeaders = $this->convertEncodingRows($columnHeaders);
         $this->columnHeaders = array_count_values($columnHeaders);
         $this->headersCount = count($columnHeaders);
     }
@@ -176,15 +186,15 @@ class CsvImportService implements \Iterator, \SeekableIterator, \Countable
     /**
      * Set header row number
      *
-     * @param integer $rowNumber Number of the row that contains column header names
-     * @param integer $duplicates How to handle duplicates (optional). One of:
+     * @param int $rowNumber Number of the row that contains column header names
+     * @param int $duplicates How to handle duplicates (optional). One of:
      *                        - CsvReader::DUPLICATE_HEADERS_INCREMENT;
      *                        increments duplicates (dup, dup1, dup2 etc.)
      *                        - CsvReader::DUPLICATE_HEADERS_MERGE; merges
      *                        values for duplicate headers into an array
      *                        (dup => [value1, value2, value3])
      *
-     * @return boolean
+     * @return bool
      */
     public function setHeaderRowNumber($rowNumber, $duplicates = null)
     {
@@ -206,7 +216,10 @@ class CsvImportService implements \Iterator, \SeekableIterator, \Countable
      * If a header row has been set, the pointer is set just below the header
      * row. That way, when you iterate over the rows, that header row is
      * skipped.
+     *
+     * @return void
      */
+    #[\ReturnTypeWillChange]
     public function rewind()
     {
         $this->file->rewind();
@@ -218,6 +231,7 @@ class CsvImportService implements \Iterator, \SeekableIterator, \Countable
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         if (null === $this->count) {
@@ -234,6 +248,7 @@ class CsvImportService implements \Iterator, \SeekableIterator, \Countable
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function next()
     {
         $this->file->next();
@@ -242,6 +257,7 @@ class CsvImportService implements \Iterator, \SeekableIterator, \Countable
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function valid()
     {
         return $this->file->valid();
@@ -250,6 +266,7 @@ class CsvImportService implements \Iterator, \SeekableIterator, \Countable
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return $this->file->key();
@@ -258,6 +275,7 @@ class CsvImportService implements \Iterator, \SeekableIterator, \Countable
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function seek($pointer)
     {
         $this->file->seek($pointer);
@@ -274,7 +292,7 @@ class CsvImportService implements \Iterator, \SeekableIterator, \Countable
     /**
      * Get a row
      *
-     * @param integer $number Row number
+     * @param int $number Row number
      *
      * @return array
      */
@@ -304,7 +322,7 @@ class CsvImportService implements \Iterator, \SeekableIterator, \Countable
     /**
      * Does the reader contain any invalid rows?
      *
-     * @return boolean
+     * @return bool
      */
     public function hasErrors()
     {
@@ -312,9 +330,39 @@ class CsvImportService implements \Iterator, \SeekableIterator, \Countable
     }
 
     /**
+     * Stream filter を適用し, 新たな SplFileObject を返す.
+     *
+     * @param \SplFileObject $file Stream filter を適用する SplFileObject
+     * @param \php_user_filter $filters 適用する stream filter のクラス名
+     *
+     * @return \SplFileObject 適用後の SplFileObject
+     */
+    public static function applyStreamFilter(\SplFileObject $file, string ...$filters): \SplFileObject
+    {
+        foreach ($filters as $filter) {
+            \stream_filter_register($filter, $filter);
+        }
+
+        $tempFile = tmpfile();
+        try {
+            foreach ($filters as $filter) {
+                \stream_filter_append($tempFile, $filter);
+            }
+            foreach ($file as $line) {
+                fwrite($tempFile, $line);
+            }
+            $meta = \stream_get_meta_data($tempFile);
+
+            return new \SplFileObject($meta['uri'], 'r');
+        } finally {
+            fclose($tempFile);
+        }
+    }
+
+    /**
      * Read header row from CSV file
      *
-     * @param integer $rowNumber Row number
+     * @param int $rowNumber Row number
      *
      * @return array
      */
@@ -394,9 +442,12 @@ class CsvImportService implements \Iterator, \SeekableIterator, \Countable
      *
      * Windows 版 PHP7 環境では、ファイルエンコーディングが CP932 になるため UTF-8 に変換する.
      * それ以外の環境では何もしない。
+     *
+     * @deprecated 使用していないため削除予定
      */
     protected function convertEncodingRows($row)
     {
+        @trigger_error('The '.__METHOD__.' method is deprecated.', E_USER_DEPRECATED);
         if ('\\' === DIRECTORY_SEPARATOR && PHP_VERSION_ID >= 70000) {
             foreach ($row as &$col) {
                 $col = mb_convert_encoding($col, 'UTF-8', 'SJIS-win');

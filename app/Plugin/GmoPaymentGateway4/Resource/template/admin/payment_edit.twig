@@ -54,7 +54,7 @@ http://www.gmo-pg.com/
     {# auかんたん決済 #}
     {{ include('@GmoPaymentGateway4/admin/payment_edit_methods/carrier_au.twig', ignore_missing=true) }}
   {% elseif Payment.getMethodClass == 'Plugin\\GmoPaymentGateway4\\Service\\Method\\CarDocomo' %}
-    {# d払い #}
+    {# ドコモケータイ払い #}
     {{ include('@GmoPaymentGateway4/admin/payment_edit_methods/carrier_docomo.twig', ignore_missing=true) }}
   {% elseif Payment.getMethodClass == 'Plugin\\GmoPaymentGateway4\\Service\\Method\\CarSoftbank' %}
     {# ソフトバンクまとめて支払い #}
@@ -62,9 +62,6 @@ http://www.gmo-pg.com/
   {% elseif Payment.getMethodClass == 'Plugin\\GmoPaymentGateway4\\Service\\Method\\RakutenPay' %}
     {# 楽天ペイ #}
     {{ include('@GmoPaymentGateway4/admin/payment_edit_methods/rakuten_pay.twig', ignore_missing=true) }}
-  {% elseif Payment.getMethodClass == 'Plugin\\GmoPaymentGateway4\\Service\\Method\\Ganb' %}
-    {# 銀行振込（バーチャル口座 あおぞら） #}
-    {{ include('@GmoPaymentGateway4/admin/payment_edit_methods/ganb.twig', ignore_missing=true) }}
   {% endif %}
 </div>
 {% endif %}

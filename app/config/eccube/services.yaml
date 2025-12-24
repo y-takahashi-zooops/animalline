@@ -12,8 +12,15 @@ parameters:
     timezone: '%env(ECCUBE_TIMEZONE)%'
     currency: '%env(ECCUBE_CURRENCY)%'
 
+    # eccube_admin_route: admin
+    eccube_admin_route: aniconfig
+
+    session.save_path: '%env(SESSION_SAVE_PATH)%'
+
+    eccube_content_maintenance_file_path: '%kernel.project_dir%/app/config/eccube/.maintenance'
+
 services:
-    # default configuration for services in *this* file
+        # default configuration for services in *this* file
     _defaults:
         # automatically injects dependencies in your services
         autowire: true
@@ -28,7 +35,29 @@ services:
           $shoppingPurchaseFlow: '@eccube.purchase.flow.shopping'
           $orderPurchaseFlow: '@eccube.purchase.flow.order'
           $_orderStateMachine: '@state_machine.order'
+          string $projectDir: '%kernel.project_dir%'
+          array $enabledPlugins: ["GmoPaymentGateway4","ProductReview4","ZooopsSendmail","ZooopsSubscription"]
 
+    # Eccube\Controller\Block\SearchProductController:
+    #     autowire: true
+    #     autoconfigure: true
+    #     tags: ['controller.service_arguments']
+
+    Eccube\Controller\Block\:
+        resource: '../../../src/Eccube/Controller/Block'
+        autowire: true
+        autoconfigure: true
+        tags: ['controller.service_arguments']
+
+    Eccube\Command\GenerateProxyCommand:
+        class: Eccube\Command\GenerateProxyCommand
+        autowire: true
+        autoconfigure: true
+        arguments:
+            - '@Eccube\Service\EntityProxyService'
+            - '%kernel.project_dir%'
+            - '%eccube.plugins.enabled%'
+        tags: ['console.command']
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -36,7 +65,21 @@ services:
         resource: '../../../src/Eccube/*'
         # you can exclude directories or files
         # but if a service is unused, it's removed anyway
-        exclude: '../../../src/Eccube/{Annotation,Common,Entity,Exception,Log,Plugin,ServiceProvider,Resource,Doctrine/ORM/tools/}'
+        exclude:
+        - '../../../src/Eccube/{Annotation,Common,Entity,Exception,Log,Plugin,ServiceProvider,Resource,Doctrine/ORM/tools/}'
+
+    Customize\Controller\:
+        resource: '../../Customize/Controller'
+        # resource: ../../Customize/Controller/
+        # resource: '%kernel.project_dir%/app/Customize/Controller'
+        tags: ['controller.service_arguments']
+        autowire: true
+        autoconfigure: true
+
+    Eccube\Log\Logger:
+        autowire: true
+        autoconfigure: true
+        public: false
 
     Eccube\Common\EccubeConfig:
         public: true
@@ -54,18 +97,51 @@ services:
     Eccube\Service\SystemService:
         lazy: true
         public: true
+        arguments:
+            $maintenanceFilePath: '%eccube_content_maintenance_file_path%'
 
     Eccube\Service\Composer\ComposerProcessService:
         lazy: true
 
+    Eccube\Service\OrderHelper:
+        lazy: true
+
     Eccube\Service\Composer\ComposerServiceInterface:
         factory: ['Eccube\Service\Composer\ComposerServiceFactory', createService]
+        arguments:
+            $container: !service_locator
+                Eccube\Service\Composer\ComposerApiService: '@Eccube\Service\Composer\ComposerApiService'
+
+    Eccube\Service\Composer\ComposerApiService:
+        lazy: true
+        public: true
+
+    Eccube\Repository\PluginRepository:
+        lazy: true
+        public: true
+
+    Eccube\Service\PluginService:
+        arguments:
+            $container: !service_locator
+                doctrine: '@doctrine'
+                Doctrine\Common\Persistence\ManagerRegistry: '@doctrine'
+                Doctrine\Persistence\ManagerRegistry: '@doctrine'
+                doctrine.orm.default_entity_manager: '@doctrine.orm.default_entity_manager'
+                doctrine.orm.entity_manager: '@doctrine.orm.default_entity_manager'
+                Doctrine\ORM\EntityManagerInterface: '@doctrine.orm.default_entity_manager'
+                Eccube\Common\EccubeConfig: '@Eccube\Common\EccubeConfig'
+        lazy: true
+        public: true
 
     # controllers are imported separately to make sure they're public
     # and have a tag that allows actions to type-hint services
     Eccube\Controller\:
         resource: '../../../src/Eccube/Controller'
+        # resource: ../../Customize/Controller/
+        # resource: '%kernel.project_dir%/src/Eccube/Controller'
         tags: ['controller.service_arguments']
+        autowire: true
+        autoconfigure: true
 
     Eccube\Twig\Extension\EccubeBlockExtension:
         tags: ['twig.extension']
@@ -74,35 +150,48 @@ services:
 
     Plugin\:
         resource: '../../../app/Plugin/*'
-        exclude: '../../../app/Plugin/*/{Entity,Resource,ServiceProvider,Tests,Codeception,DoctrineMigrations}'
+        exclude:
+                - '../../../app/Plugin/*/Entity'
+                - '../../../app/Plugin/*/ServiceProvider'
+                - '../../../app/Plugin/*/Tests'
+                - '../../../app/Plugin/*/Codeception'
+                - '../../../app/Plugin/*/DoctrineMigrations'
 
     Customize\:
         resource: '../../../app/Customize/*'
-        exclude: '../../../app/Customize/{Entity,Resource,Tests}'
+        exclude:
+        - '../../../app/Customize/{Entity,Resource,Tests}'
 
-    Customize\Controller\:
-        resource: '../../../app/Customize/Controller'
-        tags: ['controller.service_arguments']
+    # Animalline拡張
+    Customize\EventListener\LogoutListener:
+        tags:
+            - { name: kernel.event_subscriber }
+    
+    Customize\Form\Extension\AddCartTypeCustomizer:
+        class: Customize\Form\Extension\AddCartTypeCustomizer
+        arguments:
+            $doctrine: '@doctrine'
+            $config: '@Eccube\Common\EccubeConfig'
+        tags:
+            - { name: form.type_extension }
+        autowire: false
+        autoconfigure: false
+        public: false
 
     twig.extension.stringloader:
-        class: Twig_Extension_StringLoader
+        class: Twig\Extension\StringLoaderExtension
         tags: ['twig.extension']
 
     eccube.collector.core:
         class: Eccube\DataCollector\EccubeDataCollector
+        arguments:
+            $locale: '%locale%'
+            $currency: '%currency%'
+            $enabledPlugins: '%eccube.plugins.enabled%'
+            $disabledPlugins: '%eccube.plugins.disabled%'
+            $pluginRepository: '@Eccube\Repository\PluginRepository'
         tags:
           - { name: 'data_collector', template: '@toolbar/eccube.html.twig', id: 'eccube_core', priority: -512 }
-
-    #Animalline用にカスタマイズ
-    eccube.security.success_handler:
-        class: Customize\Security\Http\Authentication\EccubeLoginSuccessHandler
-
-    eccube.security.failure_handler:
-        class: Eccube\Security\Http\Authentication\EccubeAuthenticationFailureHandler
-
-    # Animalline拡張
-    eccube.security.logout_success_handler:
-        class: Customize\Security\Http\Authentication\EccubeLogoutSuccessHandler
 
     # Autowiring can't guess the constructor arguments that are not type-hinted with
     # classes (e.g. container parameters) so you must define those arguments explicitly
@@ -152,7 +241,7 @@ services:
 
     Monolog\Processor\IntrospectionProcessor:
         arguments:
-            - '!php/const:Monolog\Logger::DEBUG'
+            - 100 # Logger::DEBUG = 100
             - ['Eccube\\Log', 'Psr\\Log']
         tags:
             - { name: monolog.processor }
@@ -172,6 +261,14 @@ services:
 
     Symfony\Component\HttpFoundation\ParameterBag:
 
+    Symfony\Component\DependencyInjection\ContainerInterface: '@service_container'
+
+    Symfony\Component\Translation\TranslatorInterface: '@translator'
+
+    Symfony\Component\HttpFoundation\Session\SessionInterface: '@session'
+
+    # Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface: '@security.encoder_factory'
+
     Eccube\Twig\Extension\IgnoreRoutingNotFoundExtension:
         # Symfony\Bridge\Twig\Extension\RoutingExtensionの後に登録するため,
         # autoconfigureはfalseにし, CompilerPassで追加する.
@@ -181,13 +278,251 @@ services:
         class: Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler
         arguments:
             - '%session.save_path%'
+    
+    session.handler:
+        class: Symfony\Component\HttpFoundation\Session\Storage\Handler\StrictSessionHandler
+        arguments:
+            - '@native_file_session_handler'
 
     Eccube\Session\Storage\Handler\SameSiteNoneCompatSessionHandler:
         arguments:
             - '@native_file_session_handler'
+
+    Eccube\DependencyInjection\Facade\AnnotationReaderFacade:
+        public: true
+
+    Detection\MobileDetect:
+        tags:
+          - { name: mobile_detect.mobile_detector.default }
+          - { name: mobile_detect.mobile_detector }
+        public: true
+
+    Eccube\Form\Extension\HTMLPurifierTextTypeExtension:
+        arguments:
+            - '@Eccube\Request\Context'
+        tags:
+            - { name: form.type_extension, priority: -99, extended_type: Symfony\Component\Form\Extension\Core\Type\TextType }
+
+    Eccube\EventListener\RateLimiterListener:
+        arguments: [ !tagged_locator { tag: 'eccube_rate_limiter' } ]
+
+    Eccube\Security\PasswordHasher\PasswordHasher:
+        arguments:
+            - '%eccube_auth_magic%'
+            - '%eccube_auth_type%'
+            - '%eccube_password_hash_algos%'
+
+    Eccube\Controller\ShoppingController:
+        arguments:
+            $serviceContainer: !tagged_locator { tag: 'eccube_payment_method' }
+        tags: [ 'controller.service_arguments' ]
+
+    Customize\Controller\ShoppingController:
+        arguments:
+            $paymentMethods: !tagged_iterator app.payment_method
+        tags: [ 'controller.service_arguments' ]
+
+    Eccube\Service\Payment\Method\Cash:
+        public: true
+        tags: [ 'app.payment_method' ]
+
+    Plugin\GmoPaymentGateway4\Service\PaymentHelperCredit:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    Plugin\GmoPaymentGateway4\Service\PaymentHelperMember:
+        public: true
+        autowire: true
+        autoconfigure: true
+
+    Plugin\GmoPaymentGateway4\Service\Method\CreditCard:
+        public: true
+        autowire: true
+        tags: [ 'app.payment_method' ]
+
+    Eccube\Util\CacheUtil:
+        arguments:
+            $container: !tagged_locator { tag: 'cache.pool.clearer' }
 
     Customize\Service\CartService:
         decorates: Eccube\Service\CartService
         
     Customize\Service\OrderHelper:
         decorates: Eccube\Service\OrderHelper
+        arguments:
+            $container: '@service_container'
+            $entityManager: '@doctrine.orm.entity_manager'
+            $orderRepository: '@Eccube\Repository\OrderRepository'
+            $orderItemTypeRepository: '@Eccube\Repository\Master\OrderItemTypeRepository'
+            $orderStatusRepository: '@Eccube\Repository\Master\OrderStatusRepository'
+            $deliveryRepository: '@Eccube\Repository\DeliveryRepository'
+            $paymentRepository: '@Eccube\Repository\PaymentRepository'
+            $deviceTypeRepository: '@Eccube\Repository\Master\DeviceTypeRepository'
+            $prefRepository: '@Eccube\Repository\Master\PrefRepository'
+            $session: '@session'
+            $security: '@Symfony\Bundle\SecurityBundle\Security'
+
+    Doctrine\Common\Annotations\AnnotationReader: ~
+    
+    Eccube\Form\Extension\DoctrineOrmExtension:
+        autoconfigure: false
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@Doctrine\Common\Annotations\AnnotationReader'
+        tags:
+            - { name: 'form.type_extension' }
+
+    session:
+        class: Symfony\Component\HttpFoundation\Session\Session
+        factory: ['@session.factory', 'createSession']
+    
+    Plugin\GmoPaymentGateway4\PluginManager:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $eccubeConfig: '@Eccube\Common\EccubeConfig'
+    
+    Plugin\GmoPaymentGateway4\Service\PaymentHelperAu:
+        arguments:
+        - '@Eccube\Common\EccubeConfig'
+        - '@Plugin\GmoPaymentGateway4\Repository\GmoConfigRepository'
+        - '@router'
+    
+    Plugin\ProductReview4\PluginManager:
+        bind:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $pageRepository: '@Eccube\Repository\PageRepository'
+            $eccubeThemeFrontDir: '%eccube_theme_front_dir%'
+        public: true
+
+    Eccube\Command\DeleteCartsCommand:
+        arguments:
+            $locale: '%locale%'
+            $timezoneId: '%timezone%'
+        tags:
+            - { name: 'console.command' }
+    
+    Eccube\Command\InstallerCommand:
+        arguments:
+            $params: '@parameter_bag'
+        tags:
+            - { name: 'console.command' }
+
+    Eccube\Command\PluginGenerateCommand:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+        tags:
+            - { name: 'console.command' }
+    
+    Eccube\Controller\Admin\Content\MaintenanceController:
+        arguments:
+            $maintenanceFilePath: '%eccube_content_maintenance_file_path%'
+    
+    Eccube\DataCollector\EccubeDataCollector:
+        arguments:
+            $currency: '%currency%'
+            $locale: '%locale%'
+            $enabledPlugins: '%eccube.plugins.enabled%'
+            $disabledPlugins: '%eccube.plugins.disabled%'
+            $pluginRepository: '@Eccube\Repository\PluginRepository'
+        tags:
+            - { name: data_collector, template: '@Eccube/admin/collector/eccube.html.twig', id: 'eccube_core' }
+    
+    Eccube\Doctrine\EventSubscriber\TaxRuleEventSubscriber:
+        arguments:
+            $taxRuleService: '@Eccube\Service\TaxRuleService'
+        tags:
+            - { name: doctrine.event_subscriber }
+    
+    Eccube\Form\Type\PriceType:
+        arguments:
+            $eccubeConfig: '@Eccube\Common\EccubeConfig'
+            $currency: '%currency%'
+        tags:
+            - { name: form.type }
+    
+    Eccube\Repository\PageRepository:
+        arguments:
+            $userDataRealDir: '%eccube_theme_user_data_dir%'
+            $templateRealDir: '%eccube_theme_app_dir%'
+            $templateDefaultRealDir: '%eccube_theme_src_dir%'
+    
+    Eccube\Service\EntityProxyService:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+    
+    Eccube\Service\Composer\ComposerServiceFactory:
+        arguments:
+            $composerApiService: '@Eccube\Service\Composer\ComposerApiService'
+
+    Customize\Service\MailService:
+        autowire: true
+        autoconfigure: true
+        public: true
+    
+    #Animalline用にカスタマイズ
+    # app.eccube.security.success_handler:
+    #     parent: security.authentication.success_handler
+    #     class: Customize\Security\Http\Authentication\EccubeLoginSuccessHandler
+    #     public: true
+    #     arguments:
+    #         - '@security.http_utils'
+    #         - { default_target_path: '/%eccube_admin_route%/' }
+    #         - '@security.user_password_hasher'      # 追加: パスワードハッシュサービス
+    #         - '@doctrine.orm.entity_manager'         # 追加: DB永続化のためのEntityManager
+    Customize\Security\Http\Authentication\EccubeLoginSuccessHandler:
+        public: true
+        arguments:
+            $httpUtils: '@security.http_utils'
+            $options:
+                default_target_path: '/%eccube_admin_route%/'
+            $hasher: '@security.user_password_hasher' # 追加: パスワードハッシュサービス
+            $em: '@doctrine.orm.entity_manager' # 追加: DB永続化のためのEntityManager
+
+    app.eccube.security.success_handler: '@Customize\Security\Http\Authentication\EccubeLoginSuccessHandler'
+
+    eccube.security.failure_handler:
+        class: Eccube\Security\Http\Authentication\EccubeAuthenticationFailureHandler
+
+    eccube.security.logout.success_handler:
+        class: Eccube\Security\Http\Authentication\EccubeLogoutSuccessHandler
+        arguments:
+          - '@Eccube\Request\Context'
+
+    Eccube\Controller\AbstractController:
+        arguments:
+            $eccubeConfig: '@Eccube\Common\EccubeConfig'
+
+    Eccube\Controller\AbstractShoppingController:
+        arguments:
+            $formFactory: '@form.factory'
+
+    Customize\Form\Extension\ProductTypeExtension:
+        autowire: true
+        autoconfigure: false  # ← これを false に
+        public: false
+        tags:
+            - { name: form.type_extension }
+
+    Customize\Form\Extension\ProductClassTypeExtension:
+            autowire: true
+            autoconfigure: false
+            public: false
+            tags:
+                - { name: form.type_extension }
+
+    Eccube\Security\UserChecker\PasswordRehashChecker:
+        arguments:
+            $hasher: '@security.user_password_hasher'
+            $em: '@doctrine.orm.entity_manager'
+
+    security.user_checker.customer: '@Eccube\Security\UserChecker\PasswordRehashChecker'
+
+    # legacy_hasher:
+    #     class: App\Hasher\LegacyCustomerPasswordHasher
+    #     arguments:
+    #         $logger: '@logger'
+
+    # App\Security\Authenticator\CustomFormLoginAuthenticator:
+    #     arguments:
+    #         $loginUrl: '/adoption/login'

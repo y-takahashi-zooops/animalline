@@ -15,20 +15,27 @@ namespace Eccube\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\LegacyPasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 
-if (!class_exists('\Eccube\Entity\Member')) {
+if (!class_exists(Member::class)) {
     /**
      * Member
      *
      * @ORM\Table(name="dtb_member")
+     * 
      * @ORM\InheritanceType("SINGLE_TABLE")
+     * 
      * @ORM\DiscriminatorColumn(name="discriminator_type", type="string", length=255)
+     * 
      * @ORM\HasLifecycleCallbacks()
+     * 
      * @ORM\Entity(repositoryClass="Eccube\Repository\MemberRepository")
      */
-    class Member extends \Eccube\Entity\AbstractEntity implements UserInterface
+    class Member extends AbstractEntity implements UserInterface, PasswordAuthenticatedUserInterface, LegacyPasswordAuthenticatedUserInterface, \Serializable
     {
         public static function loadValidatorMetadata(ClassMetadata $metadata)
         {
@@ -49,7 +56,7 @@ if (!class_exists('\Eccube\Entity\Member')) {
         /**
          * {@inheritdoc}
          */
-        public function getRoles()
+        public function getRoles(): array
         {
             return ['ROLE_ADMIN'];
         }
@@ -65,7 +72,7 @@ if (!class_exists('\Eccube\Entity\Member')) {
         /**
          * {@inheritdoc}
          */
-        public function eraseCredentials()
+        public function eraseCredentials(): void
         {
         }
 
@@ -73,7 +80,9 @@ if (!class_exists('\Eccube\Entity\Member')) {
          * @var int
          *
          * @ORM\Column(name="id", type="integer", options={"unsigned":true})
+         * 
          * @ORM\Id
+         * 
          * @ORM\GeneratedValue(strategy="IDENTITY")
          */
         private $id;
@@ -100,6 +109,13 @@ if (!class_exists('\Eccube\Entity\Member')) {
         private $login_id;
 
         /**
+         * @Assert\NotBlank()
+         *
+         * @Assert\Length(max=4096)
+         */
+        private $plainPassword;
+
+        /**
          * @var string
          *
          * @ORM\Column(name="password", type="string", length=255)
@@ -119,6 +135,20 @@ if (!class_exists('\Eccube\Entity\Member')) {
          * @ORM\Column(name="sort_no", type="smallint", options={"unsigned":true})
          */
         private $sort_no;
+
+        /**
+         * @var string
+         *
+         * @ORM\Column(name="two_factor_auth_key",type="string",length=255,nullable=true,options={"fixed":false})
+         */
+        private $two_factor_auth_key;
+
+        /**
+         * @ORM\Column(name="two_factor_auth_enabled",type="boolean",nullable=false,options={"default":false})
+         *
+         * @var int
+         */
+        private $two_factor_auth_enabled = false;
 
         /**
          * @var \DateTime
@@ -142,30 +172,36 @@ if (!class_exists('\Eccube\Entity\Member')) {
         private $login_date;
 
         /**
-         * @var \Eccube\Entity\Master\Work
+         * @var Master\Work
          *
          * @ORM\ManyToOne(targetEntity="Eccube\Entity\Master\Work")
+         * 
          * @ORM\JoinColumns({
+         * 
          *   @ORM\JoinColumn(name="work_id", referencedColumnName="id")
          * })
          */
         private $Work;
 
         /**
-         * @var \Eccube\Entity\Master\Authority
+         * @var Master\Authority
          *
          * @ORM\ManyToOne(targetEntity="Eccube\Entity\Master\Authority")
+         * 
          * @ORM\JoinColumns({
+         * 
          *   @ORM\JoinColumn(name="authority_id", referencedColumnName="id")
          * })
          */
         private $Authority;
 
         /**
-         * @var \Eccube\Entity\Member
+         * @var Member
          *
          * @ORM\ManyToOne(targetEntity="Eccube\Entity\Member")
+         * 
          * @ORM\JoinColumns({
+         * 
          *   @ORM\JoinColumn(name="creator_id", referencedColumnName="id")
          * })
          */
@@ -254,13 +290,33 @@ if (!class_exists('\Eccube\Entity\Member')) {
         }
 
         /**
+         * @return string|null
+         */
+        public function getPlainPassword(): ?string
+        {
+            return $this->plainPassword;
+        }
+
+        /**
+         * @param string $password
+         *
+         * @return $this
+         */
+        public function setPlainPassword(?string $password): self
+        {
+            $this->plainPassword = $password;
+
+            return $this;
+        }
+
+        /**
          * Set password.
          *
          * @param string $password
          *
          * @return Member
          */
-        public function setPassword($password)
+        public function setPassword(?string $password): self
         {
             $this->password = $password;
 
@@ -272,7 +328,7 @@ if (!class_exists('\Eccube\Entity\Member')) {
          *
          * @return string
          */
-        public function getPassword()
+        public function getPassword(): ?string
         {
             return $this->password;
         }
@@ -296,7 +352,7 @@ if (!class_exists('\Eccube\Entity\Member')) {
          *
          * @return string
          */
-        public function getSalt()
+        public function getSalt(): ?string
         {
             return $this->salt;
         }
@@ -323,6 +379,54 @@ if (!class_exists('\Eccube\Entity\Member')) {
         public function getSortNo()
         {
             return $this->sort_no;
+        }
+
+        /**
+         * Set twoFactorAuthKey.
+         *
+         * @param string $two_factor_auth_key
+         *
+         * @return Member
+         */
+        public function setTwoFactorAuthKey($two_factor_auth_key)
+        {
+            $this->two_factor_auth_key = $two_factor_auth_key;
+
+            return $this;
+        }
+
+        /**
+         * Get twoFactorAuthKey.
+         *
+         * @return string
+         */
+        public function getTwoFactorAuthKey()
+        {
+            return $this->two_factor_auth_key;
+        }
+
+        /**
+         * Set twoFactorAuthEnabled.
+         *
+         * @param bool $two_factor_auth_enabled
+         *
+         * @return Member
+         */
+        public function setTwoFactorAuthEnabled($two_factor_auth_enabled)
+        {
+            $this->two_factor_auth_enabled = $two_factor_auth_enabled;
+
+            return $this;
+        }
+
+        /**
+         * Get twoFactorAuthEnabled.
+         *
+         * @return bool
+         */
+        public function isTwoFactorAuthEnabled()
+        {
+            return $this->two_factor_auth_enabled;
         }
 
         /**
@@ -400,11 +504,11 @@ if (!class_exists('\Eccube\Entity\Member')) {
         /**
          * Set Work
          *
-         * @param \Eccube\Entity\Master\Work
+         * @param Master\Work
          *
          * @return Member
          */
-        public function setWork(\Eccube\Entity\Master\Work $work = null)
+        public function setWork(?Master\Work $work = null)
         {
             $this->Work = $work;
 
@@ -414,7 +518,7 @@ if (!class_exists('\Eccube\Entity\Member')) {
         /**
          * Get work.
          *
-         * @return \Eccube\Entity\Master\Work|null
+         * @return Master\Work|null
          */
         public function getWork()
         {
@@ -424,11 +528,11 @@ if (!class_exists('\Eccube\Entity\Member')) {
         /**
          * Set authority.
          *
-         * @param \Eccube\Entity\Master\Authority|null $authority
+         * @param Master\Authority|null $authority
          *
          * @return Member
          */
-        public function setAuthority(\Eccube\Entity\Master\Authority $authority = null)
+        public function setAuthority(?Master\Authority $authority = null)
         {
             $this->Authority = $authority;
 
@@ -438,7 +542,7 @@ if (!class_exists('\Eccube\Entity\Member')) {
         /**
          * Get authority.
          *
-         * @return \Eccube\Entity\Master\Authority|null
+         * @return Master\Authority|null
          */
         public function getAuthority()
         {
@@ -448,11 +552,11 @@ if (!class_exists('\Eccube\Entity\Member')) {
         /**
          * Set creator.
          *
-         * @param \Eccube\Entity\Member|null $creator
+         * @param Member|null $creator
          *
          * @return Member
          */
-        public function setCreator(\Eccube\Entity\Member $creator = null)
+        public function setCreator(?Member $creator = null)
         {
             $this->Creator = $creator;
 
@@ -462,11 +566,60 @@ if (!class_exists('\Eccube\Entity\Member')) {
         /**
          * Get creator.
          *
-         * @return \Eccube\Entity\Member|null
+         * @return Member|null
          */
         public function getCreator()
         {
             return $this->Creator;
         }
+
+        /**
+         * String representation of object
+         *
+         * @see http://php.net/manual/en/serializable.serialize.php
+         *
+         * @return string the string representation of the object or null
+         *
+         * @since 5.1.0
+         */
+        public function serialize()
+        {
+            // see https://symfony.com/doc/2.7/security/entity_provider.html#create-your-user-entity
+            // MemberRepository::loadUserByUsername() で Work をチェックしているため、ここでは不要
+            return serialize([
+                $this->id,
+                $this->login_id,
+                $this->password,
+                $this->salt,
+            ]);
+        }
+
+        /**
+         * Constructs the object
+         *
+         * @see http://php.net/manual/en/serializable.unserialize.php
+         *
+         * @param string $serialized <p>
+         * The string representation of the object.
+         * </p>
+         *
+         * @return void
+         *
+         * @since 5.1.0
+         */
+        public function unserialize($serialized)
+        {
+            list(
+                $this->id,
+                $this->login_id,
+                $this->password,
+                $this->salt) = unserialize($serialized);
+        }
+
+        public function getUserIdentifier(): string
+        {
+            return $this->login_id;
+        }
+
     }
 }

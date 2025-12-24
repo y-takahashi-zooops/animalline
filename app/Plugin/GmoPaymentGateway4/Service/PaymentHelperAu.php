@@ -9,6 +9,7 @@ namespace Plugin\GmoPaymentGateway4\Service;
 
 use Eccube\Entity\Order;
 use Eccube\Service\Payment\PaymentResult;
+use Plugin\GmoPaymentGateway4\Repository\GmoConfigRepository;
 use Plugin\GmoPaymentGateway4\Service\Method\CarAu;
 use Plugin\GmoPaymentGateway4\Util\PaymentUtil;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,6 +20,20 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class PaymentHelperAu extends PaymentHelperCarrier
 {
+    protected $eccubeConfig;
+    protected $GmoConfig;
+    protected $router;
+
+    public function __construct(
+        array $eccubeConfig,
+        GmoConfigRepository $gmoConfigRepository,
+        UrlGeneratorInterface $router
+    ) {
+        $this->eccubeConfig = $eccubeConfig;
+        $this->GmoConfig = $gmoConfigRepository->get();
+        $this->router = $router;
+    }
+
     /**
      * GMO-PG 支払方法別のクラス名称を取得する
      *
@@ -94,7 +109,7 @@ class PaymentHelperAu extends PaymentHelperCarrier
         // 摘要
         $sendData['Commodity'] = $this->getCommodity($Order);
         // 決済結果戻しURL
-        $sendData['RetURL'] = $this->container->get('router')
+        $sendData['RetURL'] = $this->router
             ->generate('gmo_payment_gateway_au_result', [],
                        UrlGeneratorInterface::ABSOLUTE_URL);
 

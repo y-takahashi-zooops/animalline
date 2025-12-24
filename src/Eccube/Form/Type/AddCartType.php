@@ -13,7 +13,7 @@
 
 namespace Eccube\Form\Type;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;
 use Eccube\Common\EccubeConfig;
 use Eccube\Entity\CartItem;
@@ -48,7 +48,7 @@ class AddCartType extends AbstractType
     /**
      * @var \Eccube\Entity\Product
      */
-    protected $Product = null;
+    protected $Product;
 
     /**
      * @var ProductClassRepository
@@ -68,7 +68,7 @@ class AddCartType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        /* @var $Product \Eccube\Entity\Product */
+        /** @var \Eccube\Entity\Product $Product */
         $Product = $options['product'];
         $this->Product = $Product;
         $ProductClasses = $Product->getProductClasses();
@@ -85,9 +85,13 @@ class AddCartType extends AbstractType
                 $builder
                     ->create('ProductClass', HiddenType::class, [
                         'data_class' => null,
-                        'data' => $Product->hasProductClass() ? null : $ProductClasses->first(),
+                        'data' => $Product->hasProductClass() ? $ProductClasses->first() : null,
                         'constraints' => [
                             new Assert\NotBlank(),
+                        ],
+                        'attr' => [
+                            'id' => 'add_cart_ProductClass',            // EC-CUBE JSが値をセットするID
+                            'name' => 'add_cart[ProductClass]',         // EC-CUBE JSが値をPOSTするname
                         ],
                     ])
                     ->addModelTransformer(new EntityToIdTransformer($this->doctrine->getManager(), ProductClass::class))
@@ -199,7 +203,7 @@ class AddCartType extends AbstractType
     {
         $context->getValidator()->validate($data['product_class_id'], [
             new Assert\NotBlank(),
-        ], '[product_class_id]');
+        ], '[product_class]');
         if ($this->Product->getClassName1()) {
             $context->validateValue($data['classcategory_id1'], [
                 new Assert\NotBlank(),
@@ -209,7 +213,7 @@ class AddCartType extends AbstractType
                 ]),
             ], '[classcategory_id1]');
         }
-        //商品規格2初期状態(未選択)の場合の返却値は「NULL」で「__unselected」ではない
+        // 商品規格2初期状態(未選択)の場合の返却値は「NULL」で「__unselected」ではない
         if ($this->Product->getClassName2()) {
             $context->getValidator()->validate($data['classcategory_id2'], [
                 new Assert\NotBlank(),

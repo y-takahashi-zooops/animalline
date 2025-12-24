@@ -37,7 +37,8 @@ class OrderController extends AbstractController
     /**
      * 受注編集 > 売上確定(実売上)実行
      *
-     * @Route("/%eccube_admin_route%/gmo_payment_gateway/order/commit/{id}", requirements={"id" = "\d+"}, name="gmo_payment_gateway_admin_order_commit", methods={"POST"})
+     * @Method("POST")
+     * @Route("/%eccube_admin_route%/gmo_payment_gateway/order/commit/{id}", requirements={"id" = "\d+"}, name="gmo_payment_gateway_admin_order_commit")
      */
     public function commit(Request $request, Order $Order)
     {
@@ -64,7 +65,8 @@ class OrderController extends AbstractController
     /**
      * 受注編集 > 取消(返品)実行
      *
-     * @Route("/%eccube_admin_route%/gmo_payment_gateway/order/cancel/{id}", requirements={"id" = "\d+"}, name="gmo_payment_gateway_admin_order_cancel", methods={"POST"})
+     * @Method("POST")
+     * @Route("/%eccube_admin_route%/gmo_payment_gateway/order/cancel/{id}", requirements={"id" = "\d+"}, name="gmo_payment_gateway_admin_order_cancel")
      */
     public function cancel(Request $request, Order $Order)
     {
@@ -89,36 +91,10 @@ class OrderController extends AbstractController
     }
 
     /**
-     * 受注編集 > 一部取消(一部返品)実行
-     *
-     * @Route("/%eccube_admin_route%/gmo_payment_gateway/order/partial/{id}", requirements={"id" = "\d+"}, name="gmo_payment_gateway_admin_order_partial", methods={"POST"})
-     */
-    public function partial(Request $request, Order $Order)
-    {
-        if ($request->isXmlHttpRequest() && $this->isTokenValid()) {
-            $prefix = 'gmo_payment_gateway.admin.order_edit.';
-            $myname = trans($prefix . 'button.partial');
-
-            PaymentUtil::logInfo($myname . " start");
-
-            // 注文に GMO-PG 情報を付加する
-            $Order = $this->PaymentHelperAdmin->prepareGmoInfoForOrder($Order);
-
-            $r = $this->PaymentHelperAdmin->doPartialOrder($Order);
-            $this->setCompleteMessage($myname, $r);
-
-            PaymentUtil::logInfo($myname . " end");
-
-            return $this->json([]);
-        }
-
-        throw new BadRequestHttpException();
-    }
-
-    /**
      * 受注編集 > 決済金額変更
      *
-     * @Route("/%eccube_admin_route%/gmo_payment_gateway/order/change/{id}", requirements={"id" = "\d+"}, name="gmo_payment_gateway_admin_order_change", methods={"POST"})
+     * @Method("POST")
+     * @Route("/%eccube_admin_route%/gmo_payment_gateway/order/change/{id}", requirements={"id" = "\d+"}, name="gmo_payment_gateway_admin_order_change")
      */
     public function change(Request $request, Order $Order)
     {
@@ -145,7 +121,8 @@ class OrderController extends AbstractController
     /**
      * 受注編集 > 再オーソリ実行
      *
-     * @Route("/%eccube_admin_route%/gmo_payment_gateway/order/reauth/{id}", requirements={"id" = "\d+"}, name="gmo_payment_gateway_admin_order_reauth", methods={"POST"})
+     * @Method("POST")
+     * @Route("/%eccube_admin_route%/gmo_payment_gateway/order/reauth/{id}", requirements={"id" = "\d+"}, name="gmo_payment_gateway_admin_order_reauth")
      */
     public function reauth(Request $request, Order $Order)
     {
@@ -172,7 +149,8 @@ class OrderController extends AbstractController
     /**
      * 受注編集 > 決済状態確認・反映
      *
-     * @Route("/%eccube_admin_route%/gmo_payment_gateway/order/status/{id}", requirements={"id" = "\d+"}, name="gmo_payment_gateway_admin_order_status", methods={"POST"})
+     * @Method("POST")
+     * @Route("/%eccube_admin_route%/gmo_payment_gateway/order/status/{id}", requirements={"id" = "\d+"}, name="gmo_payment_gateway_admin_order_status")
      */
     public function status(Request $request, Order $Order)
     {

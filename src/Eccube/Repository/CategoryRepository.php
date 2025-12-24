@@ -16,9 +16,9 @@ namespace Eccube\Repository;
 use Customize\Config\AnilineConf;
 use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
+use Doctrine\Persistence\ManagerRegistry as RegistryInterface;
 use Eccube\Common\EccubeConfig;
 use Eccube\Entity\Category;
-use Symfony\Bridge\Doctrine\RegistryInterface;
 use Eccube\Repository\Master\ProductStatusRepository;
 
 /**
@@ -81,7 +81,7 @@ class CategoryRepository extends AbstractRepository
      *
      * @return Category[] カテゴリの配列
      */
-    public function getList(Category $Parent = null, $flat = false)
+    public function getList(?Category $Parent = null, $flat = false)
     {
         $qb = $this->createQueryBuilder('c1')
             ->select('c1, c2, c3, c4, c5')

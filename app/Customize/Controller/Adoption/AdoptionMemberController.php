@@ -22,10 +22,15 @@ use Customize\Entity\ConservationBankAccount;
 use Customize\Form\Type\Adoption\ConservationBankAccountType;
 use Customize\Repository\ConservationBankAccountRepository;
 use Eccube\Form\Type\Front\EntryType;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Customize\Repository\ConservationContactHeaderRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Eccube\Common\EccubeConfig;
 
 class AdoptionMemberController extends AbstractController
 {
@@ -45,9 +50,9 @@ class AdoptionMemberController extends AbstractController
     protected $adoptionQueryService;
 
     /**
-     * @var EncoderFactoryInterface
+     * @var UserPasswordHasherInterface
      */
-    protected $encoderFactory;
+    protected $passwordHasher;
 
     /**
      * @var TokenStorage
@@ -70,35 +75,61 @@ class AdoptionMemberController extends AbstractController
     protected $conservationBankAccountRepository;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
+     * @var FormFactoryInterface
+     */
+    protected $formFactory;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * ConservationController constructor.
      *
      * @param CustomerRepository $customerRepository
      * @param ConservationsRepository $conservationsRepository
      * @param AdoptionQueryService $adoptionQueryService
-     * @param EncoderFactoryInterface $encoderFactory
+     * @param UserPasswordHasherInterface $passwordHasher
      * @param TokenStorageInterface $tokenStorage
      * @param ConservationContactHeaderRepository $conservationContactHeaderRepository
      * @param BenefitsStatusRepository $benefitsStatusRepository
      * @param ConservationBankAccountRepository $conservationBankAccountRepository
+     * @param LoggerInterface $logger
      */
     public function __construct(
+        EntityManagerInterface $entityManager,
         CustomerRepository  $customerRepository,
         ConservationsRepository  $conservationsRepository,
         AdoptionQueryService  $adoptionQueryService,
-        EncoderFactoryInterface $encoderFactory,
+        UserPasswordHasherInterface $passwordHasher,
         TokenStorageInterface $tokenStorage,
         ConservationContactHeaderRepository $conservationContactHeaderRepository,
         BenefitsStatusRepository $benefitsStatusRepository,
-        ConservationBankAccountRepository $conservationBankAccountRepository
+        ConservationBankAccountRepository $conservationBankAccountRepository,
+        FormFactoryInterface $formFactory,
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher,
+        EccubeConfig $eccubeConfig,
     ) {
         $this->customerRepository = $customerRepository;
         $this->conservationsRepository = $conservationsRepository;
         $this->adoptionQueryService = $adoptionQueryService;
-        $this->encoderFactory = $encoderFactory;
+        $this->passwordHasher = $passwordHasher;
         $this->tokenStorage = $tokenStorage;
         $this->conservationContactHeaderRepository = $conservationContactHeaderRepository;
         $this->benefitsStatusRepository = $benefitsStatusRepository;
         $this->conservationBankAccountRepository = $conservationBankAccountRepository;
+        $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
+        $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     /**
@@ -122,7 +153,7 @@ class AdoptionMemberController extends AbstractController
         //ログイン完了後に元のページに戻るためのセッション変数を設定
 
         if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
-            log_info('認証済のためログイン処理をスキップ');
+            $this->logger->info('認証済のためログイン処理をスキップ');
 
             return $this->redirectToRoute('adoption_mypage');
         }
@@ -147,7 +178,7 @@ class AdoptionMemberController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_MYPAGE_MYPAGE_LOGIN_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_MYPAGE_MYPAGE_LOGIN_INITIALIZE);
 
         $form = $builder->getForm();
 
@@ -245,7 +276,7 @@ class AdoptionMemberController extends AbstractController
                 ->setThumbnailPath($thumbnail_path)
                 ->setLicenseThumbnailPath($license_thumbnail_path);
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($conservation);
 
             if($conservation->getIdHash() == ""){
@@ -284,7 +315,7 @@ class AdoptionMemberController extends AbstractController
 
         /* @var $builder \Symfony\Component\Form\FormBuilderInterface */
         $builder = $this->formFactory->createBuilder(EntryType::class, $customer, [
-            'password' => $request->get('entry')['password']['first'] ?? '',
+            'plain_password' => $request->get('entry')['password']['first'] ?? '',
             'email' => $request->get('entry')['email']['first'] ?? '',
         ]);
 
@@ -295,19 +326,19 @@ class AdoptionMemberController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_MYPAGE_CHANGE_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_MYPAGE_CHANGE_INDEX_INITIALIZE);
 
         /* @var $form \Symfony\Component\Form\FormInterface */
         $form = $builder->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            log_info('会員編集開始');
+            $this->logger->info('会員編集開始');
 
             if ($customer->getPassword() === $this->eccubeConfig['eccube_default_password']) {
                 $customer->setPassword($previousPassword);
             } else {
-                $encoder = $this->encoderFactory->getEncoder($customer);
+                $encoder = $this->passwordHasher->getEncoder($customer);
                 if ($customer->getSalt() === null) {
                     $customer->setSalt($encoder->createSalt());
                 }
@@ -317,7 +348,7 @@ class AdoptionMemberController extends AbstractController
             }
             $this->entityManager->flush();
 
-            log_info('会員編集完了');
+            $this->logger->info('会員編集完了');
 
             $event = new EventArgs(
                 [
@@ -326,7 +357,7 @@ class AdoptionMemberController extends AbstractController
                 ],
                 $request
             );
-            $this->eventDispatcher->dispatch(EccubeEvents::FRONT_MYPAGE_CHANGE_INDEX_COMPLETE, $event);
+            $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_MYPAGE_CHANGE_INDEX_COMPLETE);
 
             return $this->redirect($this->generateUrl('adoption_change_complete'));
         }
@@ -386,7 +417,7 @@ class AdoptionMemberController extends AbstractController
                         ],
                         $request
                     );
-                    $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_COMPLETE, $event);
+                    $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_CONTACT_INDEX_COMPLETE);
 
                     $data = $event->getArgument('data');
 

@@ -13,12 +13,19 @@ use Plugin\GmoPaymentGateway4\Service\Method\RakutenPay;
 use Plugin\GmoPaymentGateway4\Util\PaymentUtil;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Eccube\Common\EccubeConfig;
 
 /**
  * 楽天ペイ決済処理を行うクラス
  */
 class PaymentHelperRakutenPay extends PaymentHelper
 {
+    public function __construct(
+        EccubeConfig $eccubeConfig
+    ) {
+        $this->eccubeConfig = $eccubeConfig;
+    }
+
     /**
      * GMO-PG 支払方法別のクラス名称を取得する
      *
@@ -93,13 +100,13 @@ class PaymentHelperRakutenPay extends PaymentHelper
         // 商品名
         $sendData['ItemName'] = $this->getItemName($Order);
         // 決済結果戻しURL(正常時)
-        $sendData['RetURL'] = $this->container->get('router')
-            ->generate('gmo_payment_gateway_rakuten_pay_result',
-                       ['result' => 1], UrlGeneratorInterface::ABSOLUTE_URL);
+        $sendData['RetURL'] = $this->router->generate(
+            'gmo_payment_gateway_rakuten_pay_result', [], UrlGeneratorInterface::ABSOLUTE_URL
+        );
         // 決済結果戻しURL(異常時)
-        $sendData['ErrorRcvURL'] = $this->container->get('router')
-            ->generate('gmo_payment_gateway_rakuten_pay_result',
-                       ['result' => 0], UrlGeneratorInterface::ABSOLUTE_URL);
+        $sendData['ErrorRcvURL'] = $this->router->generate(
+            'gmo_payment_gateway_rakuten_pay_result', [], UrlGeneratorInterface::ABSOLUTE_URL
+        );
 
         $sendData['action_status'] =
             $const['gmo_payment_gateway.action_status.exec_request'];

@@ -17,8 +17,8 @@ parameters:
     gmo_payment_gateway.pay_status.authenticated: 0
     gmo_payment_gateway.pay_status.authprocess: 0
     gmo_payment_gateway.pay_status.request_success: 1
-    gmo_payment_gateway.pay_status.paysuccess: 2
-    gmo_payment_gateway.pay_status.expired: 3
+    gmo_payment_gateway.pay_status.pay_success: 2
+    gmo_payment_gateway.pay_status.expire: 3
     gmo_payment_gateway.pay_status.cancel: 4
     gmo_payment_gateway.pay_status.fail: 99
     gmo_payment_gateway.pay_status.auth: 11
@@ -36,8 +36,6 @@ parameters:
     gmo_payment_gateway.pay_status.reqsales: 22
     gmo_payment_gateway.pay_status.reqcancel: 23
     gmo_payment_gateway.pay_status.reqchange: 24
-    gmo_payment_gateway.pay_status.trading: 25
-    gmo_payment_gateway.pay_status.stop: 26
 
     gmo_payment_gateway.receive.wait_time: 5
 
@@ -48,7 +46,6 @@ parameters:
     gmo_payment_gateway.pay_type.docomo: 9
     gmo_payment_gateway.pay_type.softbank: 11
     gmo_payment_gateway.pay_type.rakuten_pay: 18
-    gmo_payment_gateway.pay_type.ganb: 36
 
     gmo_payment_gateway_regist_card_num: 5
 
@@ -75,7 +72,7 @@ monolog:
             action_level: error
             passthru_level: info
             handler: GmoPaymentGateway4_rotating_file
-            channels: ['GmoPaymentGateway4']
+            channels: ['!event', '!doctrine']
         GmoPaymentGateway4_rotating_file:
             type: rotating_file
             max_files: 60

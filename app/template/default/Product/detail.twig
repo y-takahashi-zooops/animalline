@@ -88,6 +88,21 @@ file that was distributed with this source code.
             width: 0;
             height: 0;
         }
+
+		/* input text no spin button  */
+		input::-webkit-outer-spin-button,
+		input::-webkit-inner-spin-button {
+			-webkit-appearance: none;
+			margin: 0;
+		}
+		input[type='number'] {
+			-moz-appearance: textfield;
+		}
+
+		label[for="month"], label[for="day"] {
+			display: none;
+		}
+
     </style>
 {% endblock %}
 
@@ -219,11 +234,12 @@ file that was distributed with this source code.
 		// 通常注文が押されたときは、通常注文を活性に、定期便を非活性にする
 		$('#order_type_0').on('click', function (e) {
        		 if(document.getElementById("order_type_0").checked){
-            	$('.normal_block').removeClass('glay');
+					console.log('normal check');
+            	//$('.normal_block').removeClass('glay');
 	            $('.normal_readonly').removeAttr('readonly');
 
-				$('.subscription_cycle_block').hide();
-				$('.subscription_block').addClass('glay');
+				//$('.subscription_cycle_block').hide();
+				//$('.subscription_block').addClass('glay');
 				$('.subscription_readonly').attr('readonly', true);
 			}
 		});
@@ -231,11 +247,12 @@ file that was distributed with this source code.
 		// 定期便が押されたときは、通常注文を非活性に、定期便を活性にする
 		$('#order_type_1').on('click', function (e) {
 			if(document.getElementById("order_type_1").checked){
-				$('.subscription_cycle_block').show();
-				$('.subscription_block').removeClass('glay');
+				console.log('sub check1');
+				//$('.subscription_cycle_block').show();
+				//$('.subscription_block').removeClass('glay');
 				$('.subscription_readonly').removeAttr('readonly');
 
-				$('.normal_block').addClass('glay');
+				//$('.normal_block').addClass('glay');
 	            $('.normal_readonly').attr('readonly', true);
 			}
 		});
@@ -253,215 +270,405 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block main %}
-	<div class="ec-productRole">
-		<div class="ec-grid2">
-			<div class="ec-grid2__cell">
-				<div class="ec-sliderItemRole">
-					<div class="item_visual">
-						{% for ProductImage in Product.ProductImage %}
-							<div class="slide-item"><img src="{{ asset(ProductImage, 'save_image') }}"></div>
-						{% else %}
-							<div class="slide-item"><img src="{{ asset(''|no_image_product, 'save_image') }}"/></div>
-						{% endfor %}
-					</div>
-					<div class="item_nav">
-						{% for ProductImage in Product.ProductImage %}
-							<div class="slideThumb" data-index="{{ loop.index0 }}"><img src="{{ asset(ProductImage, 'save_image') }}"></div>
-						{% endfor %}
-					</div>
-					{# <div class="ec-productRole__description">{{ Product.description_detail|raw|nl2br }} #}
-					<div class="ec-productRole__description">{{ Product.description_detail|raw }}</div>
+
+
+	<div class="page-wrap">
+		<div class="wrap sp-wrap w1200">
+			<nav class="breadcrumb "><ul class="breadcrumb__list"><li class="breadcrumb__item"><a href="../../" class="breadcrumb__link">TOP</a></li><li class="breadcrumb__item"><span class="breadcrumb__separator"><i class="icon icon-right"></i></span><a href="../../products/list?category_id=35" class="breadcrumb__link">犬用品</a></li><li class="breadcrumb__item breadcrumb__item--active"><span class="breadcrumb__separator"><i class="icon icon-right"></i></span><span class="breadcrumb__text">DRYフード</span></li></ul></nav>        <div class="product-detail">
+				<div class="product-detail__title serif">
+					{{ Product.name }}
 				</div>
-			</div>
-			<div class="ec-grid2__cell">
-				<div class="ec-productRole__profile">
-					{# 商品名 #}
-					<div class="ec-productRole__title">
-						<h2 class="ec-headingTitle">{{ Product.name }}</h2>
-					</div>
-					{# タグ #}
-					<ul class="ec-productRole__tags">
-						{% for Tag in Product.Tags %}
-							<li class="ec-productRole__tag tag_{{ Tag.id }}">{{ Tag }}</li>
-						{% endfor %}
-					</ul>
-					{# 通常価格 #}
-					{% if Product.hasProductClass -%}
-						<div class="ec-productRole__priceRegular">
-							{% if Product.getPrice01Min is not null and Product.getPrice01IncTaxMin == Product.getPrice01IncTaxMax %}
-								<span class="ec-productRole__priceRegularPrice">{{ '通常価格'|trans }}：<span class="price01-default">{{ Product.getPrice01IncTaxMin|price }}</span>
-								</span>
-								<span class="ec-productRole__priceRegularTax">{{ '税込'|trans }}</span>
-							{% elseif Product.getPrice01Min is not null and Product.getPrice01Max is not null %}
-								<span class="ec-productRole__priceRegularPrice">{{ '通常価格'|trans }}：<span class="price01-default">{{ Product.getPrice01IncTaxMin|price }}～
-										{{ Product.getPrice01IncTaxMax|price }}</span>
-								</span>
-								<span class="ec-productRole__priceRegularTax">{{ '税込'|trans }}</span>
-							{% endif %}
-						</div>
-					{% else %}
-						{% if Product.getPrice01Max is not null %}
-							<span class="ec-productRole__priceRegularPrice">{{ '通常価格'|trans }}：{{ Product.getPrice01IncTaxMin|price }}</span>
-							<span class="ec-productRole__priceRegularTax">{{ '税込'|trans }}</span>
-						{% endif %}
-					{% endif %}
-					{# 販売価格 #}
-					<div class="ec-productRole__price">
-						{% if Product.hasProductClass -%}
-							{% if Product.getPrice02IncTaxMin == Product.getPrice02IncTaxMax %}
-								<div class="ec-price">
-									<span class="ec-price__price price02-default">{{ Product.getPrice02IncTaxMin|price }}</span>
-									<span class="ec-price__tax">{{ '税込'|trans }}</span>
-								</div>
-							{% else %}
-								<div class="ec-price">
-									<span class="ec-price__price price02-default">{{ Product.getPrice02IncTaxMin|price }}
-										～
-										{{ Product.getPrice02IncTaxMax|price }}</span>
-									<span class="ec-price__tax">{{ '税込'|trans }}</span>
-								</div>
-							{% endif %}
-						{% else %}
-							<div class="ec-price">
-								<span class="ec-price__price">{{ Product.getPrice02IncTaxMin|price }}</span>
-								<span class="ec-price__tax">{{ '税込'|trans }}</span>
+				<div class="product-detail__main flex sp-vert break">
+					<div class="product-detail__gallery">
+						<div class="product-detail__slider swiper js-product-slider">
+							<div class="swiper-wrapper">
+								{% for ProductImage in Product.ProductImage %}
+									<div class="swiper-slide">
+										<img src="{{ asset(ProductImage, 'save_image') }}" alt="" class="product-detail__image" />
+									</div>
+								{% else %}
+									<div class="swiper-slide">
+										<img src="{{ asset(''|no_image_product, 'save_image') }}" alt="" class="product-detail__image" />
+									</div>
+								{% endfor %}
 							</div>
-						{% endif %}
-					</div>
-					{# 商品コード #}
-					{% if Product.code_min is not empty %}
-						<div class="ec-productRole__code">
-							{{ '商品コード'|trans }}：
-							<span class="product-code-default">{{ Product.code_min }}
-								{% if Product.code_min != Product.code_max %}
-									～
-									{{ Product.code_max }}
-								{% endif %}
-							</span>
-						</div>
-					{% endif %}
-					{# 関連カテゴリ #}
-					{% if Product.ProductCategories is not empty %}
-						<div class="ec-productRole__category">
-							<div>{{ '関連カテゴリ'|trans }}</div>
-							{% for ProductCategory in Product.ProductCategories %}
-								<ul>
-									<li>
-										{% for Category in ProductCategory.Category.path %}
-											<a href="{{ url('product_list') }}?category_id={{ Category.id }}">{{ Category.name }}</a>
-											{%- if loop.last == false %}
-												<span>＞</span>
-											{% endif -%}
-										{% endfor %}
-									</li>
-								</ul>
+						</div><!--End .product-detail__slider-->
+						<div class="swiper product-detail__thumbnail js-product-slider-nav">
+							<div class="swiper-wrapper">
+								{% for ProductImage in Product.ProductImage %}
+									<div class="swiper-slide product-detail__thumbnail-slide" data-index="{{ loop.index0 }}">
+										<img src="{{ asset(ProductImage, 'save_image') }}" alt="" class="product-detail__thumbnail-img">
+									</div>
+								{% endfor %}
+							</div>
+						</div><!--End .product-detail__thumbnail-->
+					</div><!--End .product-detail__gallery-->
+
+
+
+					<div class="product-detail__info">
+						{# タグ #}
+						<div class="product-detail__tags flex">
+							{% for Tag in Product.Tags %}
+								<a href="" class="product-detail__tag tag_{{ Tag.id }}">{{ Tag }}</a>
 							{% endfor %}
 						</div>
-					{% endif %}
-					<form action="{{ url('product_add_cart', {id:Product.id}) }}" method="post" id="form1" name="form1">
-						{% if Product.stock_find %}
-							{# 仕様 #}
-							{% if Product.ClassName1 %}
-								<div class="ec-select" style="margin-top:1rem">
-									<span>{{ form_label(form.classcategory_id1) }}▼</span><br>
-									{{ form_widget(form.classcategory_id1) }}
-									{{ form_row(form.classcategory_id1) }}
-								</div>
+						<div class="product-detail__price">
+							{# 通常価格 #}
+							{% if Product.hasProductClass -%}
+									{% if Product.getPrice01Min is not null and Product.getPrice01IncTaxMin == Product.getPrice01IncTaxMax %}
+										<div class="product-detail__price-normal">
+											{{ '通常価格'|trans }}：{{ Product.getPrice01IncTaxMin|price }}
+											<span class="product-detail__tax -tax">{{ '(税込)'|trans }}</span>
+										</div>
+									{% elseif Product.getPrice01Min is not null and Product.getPrice01Max is not null %}
+										<div class="product-detail__price-normal">
+											{{ '通常価格'|trans }}：<span class="price01-default">{{ Product.getPrice01IncTaxMin|price }}～
+										{{ Product.getPrice01IncTaxMax|price }}
+											<span class="product-detail__tax -tax">{{ '(税込)'|trans }}</span>
+										</div>
+									{% endif %}
+
+							{% else %}
+								{% if Product.getPrice01Max is not null %}
+									<div class="product-detail__price-normal">
+										{{ '通常価格'|trans }}：{{ Product.getPrice01IncTaxMin|price }}
+										<span class="product-detail__tax -tax">{{ '(税込)'|trans }}</span>
+									</div>
+								{% endif %}
 							{% endif %}
-							{% if Product.ClassName2 %}
-								<div class="ec-select">
-									<span>{{ form_label(form.classcategory_id2) }}</span><br>
-									{{ form_widget(form.classcategory_id2) }}
-									{{ form_row(form.classcategory_id2) }}
+
+							{# 販売価格 #}
+							{% if Product.hasProductClass -%}
+								{% if Product.getPrice02IncTaxMin == Product.getPrice02IncTaxMax %}
+									<div class="product-detail__price-new serif">
+										{{ Product.getPrice02IncTaxMin|price }}
+										<span class="product-detail__tax -tax">{{ '(税込)'|trans }}</span>
+									</div>
+								{% else %}
+									<div class="product-detail__price-new serif">
+										{{ Product.getPrice02IncTaxMin|price }}
+										～
+										{{ Product.getPrice02IncTaxMax|price }}
+										<span class="product-detail__tax -tax">{{ '(税込)'|trans }}</span>
+									</div>
+								{% endif %}
+							{% else %}
+								<div class="product-detail__price-new serif">
+									{{ Product.getPrice02IncTaxMin|price }}
+									<span class="product-detail__tax -tax">{{ '(税込)'|trans }}</span>
 								</div>
 							{% endif %}
 
-							<div class="ec-productRole__order">
-								<ul class="order_list">
-									<li class="order_list_block normal_block" {% if Product.ClassName1 %}style="display: none"{% endif %}>
-										<div class="order_label">
-											{{ form_widget(form.order_type[0]) }}
-											<div class="ec-numberInput">
-												<span>{{ '数量'|trans }}</span>
-												{{ form_widget(form.normal_quantity, {'attr': {'class': 'normal_readonly'}}) }}
-												{{ form_errors(form.normal_quantity) }}
-											</div>
+							{# 商品コード #}
+							{% if Product.code_min is not empty %}
+								<div class="product-detail__code">
+									{{ '商品コード'|trans }}：
+									{{ Product.code_min }}
+										{% if Product.code_min != Product.code_max %}
+											～
+											{{ Product.code_max }}
+										{% endif %}
+								</div>
+							{% endif %}
+
+						</div>
+
+
+						<form action="{{ url('product_add_cart', {id:Product.id}) }}" method="post" id="form1" name="form1" class="product-detail__order" style="margin-bottom: 0;">
+							{% if Product.stock_find %}
+								{# 仕様 #}
+								{% if Product.ClassName1 %}
+									<div class="ec-select" style="margin-top:1rem">
+										<span>{{ form_label(form.classcategory_id1) }}▼</span><br>
+										{{ form_widget(form.classcategory_id1) }}
+										{{ form_errors(form.classcategory_id1) }}
+									</div>
+								{% endif %}
+								{% if Product.ClassName2 %}
+									<div class="ec-select">
+										<span>{{ form_label(form.classcategory_id2) }}</span><br>
+										{{ form_widget(form.classcategory_id2) }}
+										{{ form_errors(form.classcategory_id2) }}
+									</div>
+								{% endif %}
+
+								<div class="ec-productRole__order">
+									<div class="product-detail__order-type flex vcenter sp-bet radio-group"{% if Product.ClassName1 %}style="display: none"{% endif %}>
+										<label class="product-detail__radio flex vcenter">
+											{{ form_widget(form.order_type[0], {'attr':{'class':'product-detail__radio '}}) }}
+										</label>
+										<div class="product-detail__qty flex">
+											<span class="product-detail__qty-label">数量</span>
+											<button type="button" class="product-detail__qty-btn product-detail__qty-btn--minus js-product-qty-minus">-</button>
+											{{ form_widget(form.normal_quantity, {'attr': {'class': 'normal_readonly product-detail__qty-input js-product-qty-input'}}) }}
+											{{ form_errors(form.normal_quantity) }}
+											<button type="button" class="product-detail__qty-btn product-detail__qty-btn--plus js-product-qty-plus">+</button>
 										</div>
-									</li>
-									<li class="order_list_block subscription_block glay">
-										<div class="order_label">
+									</div>
+									<div class="product-detail__order-type flex vcenter sp-bet radio-group">
+										<label class="product-detail__radio flex vcenter">
 											{{ form_widget(form.order_type[1]) }}
-											<div class="ec-numberInput">
-												<span>{{ '数量'|trans }}</span>
-												{{ form_widget(form.subscription_quantity, {'attr': {'class': 'subscription_readonly', 'readonly':'readonly'}}) }}
-												{{ form_errors(form.subscription_quantity) }}
-											</div>
+										</label>
+										<div class="product-detail__qty flex">
+											<span class="product-detail__qty-label">数量</span>
+											<button type="button" class="product-detail__qty-btn product-detail__qty-btn--minus js-product-qty-minus">-</button>
+											{{ form_widget(form.subscription_quantity, {'attr': {'class': 'subscription_readonly product-detail__qty-input js-product-qty-input', 'readonly':'readonly'}}) }}
+											{{ form_errors(form.subscription_quantity) }}
+											<button type="button" class="product-detail__qty-btn product-detail__qty-btn--plus js-product-qty-plus">+</button>
+
 										</div>
-										<ul class="subscription_cycle_block" style="display: none;">
-											<li style="font-weight: bold;">お届けサイクル：</li>
-											<li class="subscription_cycle">
-												<div class="mb-2">{{ form_widget(form.cycle_type[0]) }}</div>
-												{{ form_row(form.month) }}
-											</li>
-											<li class="subscription_cycle">
-												<div class="mb-2">{{ form_widget(form.cycle_type[1]) }}</div>
-												{{ form_row(form.day) }}
-											</li>
-										</ul>
-									</li>
-								</ul>
-							</div>
-							<div class="ec-productRole__btn">
-								<button type="submit" class="ec-blockBtn--action add-cart" disabled="disabled">
-									{{ 'カートに入れる'|trans }}
-								</button>
-							</div>
+									</div>
+									<div id="subscription-options" style="display:none;" class="product-detail__subscription-options">
+										<div class="product-detail__subscription-label">
+											お届けサイクル：
+										</div>
+										<div class="flex vert">
+											<div class="mb-2">
+											{{ form_widget(form.cycle_type[0], {'attr':{'class':'product-detail__subscription-titile'}}) }}
+											</div>
+											{{ form_row(form.month, {'attr':{'class':'product-detail__subscription-form'}}) }}
+										</div>
+
+										<div class="flex vert">
+											<div class="mb-2">
+												{{ form_widget(form.cycle_type[1], {'attr':{'class':'product-detail__subscription-title'}}) }}
+											</div>
+											{{ form_row(form.day, {'attr':{'class':'product-detail__subscription-form'}}) }}
+										</div>
+									</div>
+
+									<script>
+										document.querySelectorAll('input[name="order_type"]').forEach(el => {
+											el.addEventListener('change', function() {
+												document.getElementById('subscription-options').style.display = this.value === 'subscription' ? 'block' : 'none';
+											});
+										});
+									</script>
+
+								</div>
+								<div class="product-detail__shipping-msg">{{ BaseInfo.delivery_free_amount | number_format(0, '.', ',') }}円以上で送料無料！</div>
+								<div class="product-detail__actions flex vert">
+									<button type="submit" class="add-cart product-detail__btn product-detail__btn-cart flex vcenter hcenter">
+										<span class="product-detail__cart-icon product-detail__icon"><i class="icon icon-cart"></i></span>
+										{{ 'カートに入れる'|trans }}
+									</button>
+								</div>
 							{% else %}
-							<div class="ec-productRole__btn">
-								<button type="button" class="ec-blockBtn--action" disabled="disabled">
-									{{ 'ただいま品切れ中です。'|trans }}
-								</button>
-							</div>
-						{% endif %}
-						{{ form_rest(form) }}
-					</form>
-					<div class="ec-modal">
-						<div class="ec-modal-overlay">
-							<div class="ec-modal-wrap">
+								<div class="product-detail__shipping-msg">{{ BaseInfo.delivery_free_amount | number_format(0, '.', ',') }}円以上で送料無料！</div>
+								<div class="product-detail__actions flex vert">
+									<button class="product-detail__btn product-detail__btn-cart flex vcenter hcenter" disabled="disabled">
+										<span class="product-detail__cart-icon product-detail__icon"><i class="icon icon-cart"></i></span>
+										{{ 'ただいま品切れ中です。'|trans }}
+									</button>
+								</div>
+							{% endif %}
+							{{ form_rest(form) }}
+						</form>
+
+							{# カート モーダル #}
+							<div class="ec-modal">
+								<div class="ec-modal-overlay">
+									<div class="ec-modal-wrap">
 								<span class="ec-modal-close">
 									<span class="ec-icon"><img src="{{ asset('assets/icon/cross-dark.svg') }}" alt=""/></span>
 								</span>
-								<div id="ec-modal-header" class="text-center">{{ 'カートに追加しました。'|trans }}</div>
-								<div class="ec-modal-box">
-									<div class="ec-role">
-										<span class="ec-inlineBtn--cancel">{{ 'お買い物を続ける'|trans }}</span>
-										<a href="{{ url('cart') }}" class="ec-inlineBtn--action">{{ 'カートへ進む'|trans }}</a>
+										<div id="ec-modal-header" class="text-center">{{ 'カートに追加しました。'|trans }}</div>
+										<div class="ec-modal-box">
+											<div class="ec-role">
+												<span class="ec-inlineBtn--cancel">{{ 'お買い物を続ける'|trans }}</span>
+												<a href="{{ url('cart') }}" class="ec-inlineBtn--action">{{ 'カートへ進む'|trans }}</a>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
+
+							{# お気に入り #}
+							{% if BaseInfo.option_favorite_product %}
+								<form action="{{ url('product_add_favorite', {id:Product.id}) }}" method="post">
+									<div class="product-detail__actions flex vert">
+										{% if is_favorite == false %}
+											<button type="submit" id="favorite" class="product-detail__btn product-detail__btn-favorite flex vcenter hcenter">
+												<span class="product-detail__favorite-icon product-detail__icon"><i class="icon icon-heart"></i></span>
+												{{ 'お気に入りに追加'|trans }}
+											</button>
+
+										{% else %}
+											<button type="submit" id="favorite" class="product-detail__btn product-detail__btn-favorite flex vcenter hcenter" disabled="disabled">
+												<span class="product-detail__favorite-icon product-detail__icon"><i class="icon icon-heart"></i></span>
+												{{ 'お気に入りに追加済です。'|trans }}
+											</button>
+										{% endif %}
+									</div>
+								</form>
+							{% endif %}
+
+						<details class="product-detail__desc sp">
+							<summary class="product-detail__desc-title flex bet vcenter">
+								商品説明<i class="icon icon-plus"></i><i class="icon icon-minus"></i>
+							</summary>
+							<div class="product-detail__desc-text">
+								{{ Product.description_detail|raw }}
+							</div>
+						</details>
+						<div class="product-detail__links">
+							<a href="{{ url('help_tradelaw') }}" target="_blank" class="product-detail__link">送料・お支払方法・発送日数について</a>
+						</div>
+						<a href="{{ url('contact') }}" class="product-detail__inquiry flex vcenter pc-hend sp-hcenter">
+							この商品を問い合わせる<i class="icon icon-triangle"></i>
+						</a>
+					</div><!--End .product-detail__info-->
+				</div><!--End .product-detail__main-->
+
+
+
+				<div class="product-detail__desc pc">
+					<h2 class="product-detail__desc-title">商品説明</h2>
+					<div class="product-detail__desc-text">
+						{{ Product.description_detail|raw }}
+					</div>
+				</div>
+
+				{% if Product.freearea %}
+					<div class="ec-productRole__description">{{ include(template_from_string(Product.freearea)) }}</div>
+				{% endif %}
+
+				<!-- form_rest area -->
+				<!-- {{ form_rest(form) }} -->
+
+				<!-- レビュープラグイン -->
+				<!--
+				<div class="product-detail__reviews">
+					<h2 class="product-detail__reviews-title">
+						この商品のレビュー
+						<span class="product-detail__reviews-average">☆☆☆☆☆ (0)</span>
+					</h2>
+					<a href="../../products/review" class="product-detail__reviews-btn flex vcenter hcenter">
+						<i class="product-detail__reviews-icon icon-cart"></i>
+						レビューを投稿する
+					</a>
+				</div> --><!--End .product-detail__reviews-->
+
+
+
+				<section class="secRecommend">
+					<h2 class="pageHead">おすすめ商品</h2>
+					<div class="slider-wrap">
+						<div class="swiper js-sliderProduct" data-slider-id="3" data-slides-per-view="4" data-slides-per-view_sp="2">
+							<div class="swiper-wrapper">
+								{% for product in osusume %}
+									<div class="swiper-slide">
+										<a href="{{ url('product_detail', {'id': product.id}) }}" class="productItem flex vert">
+											<div class="productItem__img">
+												<img src="{{ asset(product.main_list_image|no_image_product, 'save_image') }}" alt="{{ product.name }}">
+											</div>
+											<div class="productItem__ttl">
+												{{ product.name }}
+											</div>
+											<div class="productItem__more flex vcenter">
+												{% if product.hasProductClass -%}
+													{% if product.getPrice02IncTaxMin == product.getPrice02IncTaxMax %}
+														<span class="productItem__price serif">{{ product.getPrice02IncTaxMin|price }} {{ '(税込)'|trans }}</span>
+													{% else %}
+														<span class="productItem__price serif">{{ product.getPrice02IncTaxMin|price }}
+										～
+										{{ product.getPrice02IncTaxMax|price }} {{ '(税込)'|trans }}</span>
+													{% endif %}
+												{% else %}
+													<span class="productItem__price serif">{{ product.getPrice02IncTaxMin|price }} {{ '(税込)'|trans }}</span>
+												{% endif %}
+											</div>
+										</a>
+									</div>
+								{% endfor %}
+
+							</div>
+						</div>
+						<div class="swiper-button-prev productBtn productBtn-left pc" data-slider-id="3">
+							<img src="{{ asset('assets/img/ec/arrow_left.svg') }}" alt="前へ">
+						</div>
+						<div class="swiper-button-next productBtn productBtn-right pc" data-slider-id="3">
+							<img src="{{ asset('assets/img/ec/arrow_right.svg') }}" alt="次へ">
 						</div>
 					</div>
-					{% if BaseInfo.option_favorite_product %}
-						<form action="{{ url('product_add_favorite', {id:Product.id}) }}" method="post">
-							<div class="ec-productRole__btn">
-								{% if is_favorite == false %}
-									<button type="submit" id="favorite" class="ec-blockBtn--cancel">
-										{{ 'お気に入りに追加'|trans }}
-									</button>
-								{% else %}
-									<button type="submit" id="favorite" class="ec-blockBtn--cancel" disabled="disabled">{{ 'お気に入りに追加済です。'|trans }}
-									</button>
-								{% endif %}
+					<div class="secRecommend__btn flex hcenter">
+						<a href="{{ url('product_list', {'category_id': 49}) }}" class="pageBtn flex vcenter hcenter">
+							一覧を見る<i class="icon icon-triangle"></i>
+						</a>
+					</div>
+				</section>
+
+
+				<section class="secProductNew">
+					<h2 class="pageHead">新着商品</h2>
+					<div class="slider-wrap">
+						<div class="swiper js-sliderProduct" data-slider-id="2" data-slides-per-view="4">
+							<div class="swiper-wrapper">
+
+								{% for product in products_new |slice(0,10) %}
+									<div class="swiper-slide">
+										<a href="{{ url('product_detail', {'id': product.id}) }}" class="productItem flex vert">
+											<div class="productItem__img">
+												<img src="{{ asset(product.main_list_image|no_image_product, 'save_image') }}" alt="{{ product.name }}" >
+											</div>
+											<div class="productItem__ttl">
+												{{ product.name }}
+											</div>
+											<div class="productItem__more flex vcenter">
+												{% if product.hasProductClass -%}
+													{% if product.getPrice02IncTaxMin == product.getPrice02IncTaxMax %}
+														<span class="productItem__price serif">{{ product.getPrice02IncTaxMin|price }} {{ '(税込)'|trans }}</span>
+													{% else %}
+														<span class="productItem__price serif">{{ product.getPrice02IncTaxMin|price }}
+										～
+										{{ product.getPrice02IncTaxMax|price }} {{ '(税込)'|trans }}</span>
+													{% endif %}
+												{% else %}
+													<span class="productItem__price serif">{{ product.getPrice02IncTaxMin|price }} {{ '(税込)'|trans }}</span>
+												{% endif %}
+											</div>
+										</a>
+									</div>
+								{% endfor %}
+
 							</div>
-						</form>
-					{% endif %}
-					
+						</div>
+						<div class="swiper-button-prev productBtn productBtn-left pc" data-slider-id="2">
+							<img src="{{ asset('assets/img/ec/arrow_left.svg') }}" alt="前へ">
+						</div>
+						<div class="swiper-button-next productBtn productBtn-right pc" data-slider-id="2">
+							<img src="{{ asset('assets/img/ec/arrow_right.svg') }}" alt="次へ">
+						</div>
+					</div>
+					<div class="secProductNew__btn flex hcenter">
+						<a href="{{ url('product_list', {'category_id': 75}) }}" class="pageBtn flex vcenter hcenter">
+							一覧を見る<i class="icon icon-triangle"></i>
+						</a>
+					</div>
+				</section>
+
+
+
+
+				<section class="secBanner">
+					<div class="secBanner__list flex break">
+						<a href="{{ url("adoption_info") }}" class="secBanner__item">
+							<img src="{{ asset('assets/img/ec/banner_breeder.jpg') }}" alt="犬・猫ブリーダー直販サイトのアニマルライン">
+						</a>
+						<a href="{{url('breeder_info')}}" class="secBanner__item">
+							<img src="{{ asset('assets/img/ec/banner_adoption.jpg') }}" alt="保護犬・猫と里親になりたい方のマッチングサイト">
+						</a>
+						<a href="{{ url("ani_dctn_info") }}" class="secBanner__item">
+							<img src="{{ asset('assets/img/ec/banner_pet_training.jpg') }}" alt="ペットの家庭教師">
+						</a>
+					</div>
+				</section>
+
+
 			</div>
+
 		</div>
 	</div>
-	
-	{% if Product.freearea %}
-		<div class="ec-productRole__description">{{ include(template_from_string(Product.freearea)) }}</div>
-	{% endif %}
-		</div>
+
 	{% endblock %}

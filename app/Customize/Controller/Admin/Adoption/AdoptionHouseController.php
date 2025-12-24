@@ -20,9 +20,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Exception as HttpException;
+use Doctrine\ORM\EntityManagerInterface;
 
 class AdoptionHouseController extends AbstractController
 {
+
 
     /**
      * 犬舎・猫舎情報編集保護団体管理
@@ -49,7 +51,7 @@ class AdoptionHouseController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $conservationsHouse->setConservationHousePref($conservationsHouse->getPref());
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($conservationsHouse);
             $entityManager->flush();
             return $this->redirectToRoute('admin_adoption_list');

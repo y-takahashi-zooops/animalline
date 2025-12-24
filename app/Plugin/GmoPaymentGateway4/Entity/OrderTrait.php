@@ -223,31 +223,4 @@ trait OrderTrait
     {
         $this->gmoPaymentIds = $gmoPaymentIds;
     }
-
-    /**
-     * 集約した購入商品名を返す
-     * 単一明細の場合はそのまま商品名を返す
-     * 複数明細の場合は１行目の商品名に「、他」を付加して返す
-     *
-     * @return string
-     */
-    public function getSummaryProductName()
-    {
-        $summaryName = '';
-
-        foreach ($this->OrderItems as $OrderItem) {
-            if (!$OrderItem->isProduct()) {
-                continue;
-            }
-
-            if (empty($summaryName)) {
-                $summaryName = $OrderItem->getProductName();
-            } else {
-                $summaryName .= trans('gmo_payment_gateway.com.other');
-                break;
-            }
-        }
-
-        return $summaryName;
-    }
 }

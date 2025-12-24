@@ -52,6 +52,15 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 use Customize\Repository\BreedersRepository;
 use Customize\Repository\ConservationsRepository;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
+
+
+use Psr\Log\LoggerInterface;
 
 class OrderController extends AbstractController
 {
@@ -137,6 +146,11 @@ class OrderController extends AbstractController
     protected $conservationsRepository;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * OrderController constructor.
      *
      * @param PurchaseFlow $orderPurchaseFlow
@@ -154,6 +168,8 @@ class OrderController extends AbstractController
      * @param OrderStateMachine $orderStateMachine ;
      * @param BreedersRepository $breedersRepository ;
      * @param ConservationsRepository $conservationsRepository ;
+     * @param LoggerInterface $logger
+     * @param SessionInterface $session,
      */
     public function __construct(
         PurchaseFlow $orderPurchaseFlow,
@@ -171,7 +187,11 @@ class OrderController extends AbstractController
         OrderStateMachine $orderStateMachine,
         MailService $mailService,
         BreedersRepository $breedersRepository,
-        ConservationsRepository $conservationsRepository
+        ConservationsRepository $conservationsRepository,
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher,
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
     ) {
         $this->purchaseFlow = $orderPurchaseFlow;
         $this->csvExportService = $csvExportService;
@@ -189,6 +209,10 @@ class OrderController extends AbstractController
         $this->mailService = $mailService;
         $this->breedersRepository = $breedersRepository;
         $this->conservationsRepository = $conservationsRepository;
+        $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -212,7 +236,7 @@ class OrderController extends AbstractController
      * @Route("/%eccube_admin_route%/order/page/{page_no}", requirements={"page_no" = "\d+"}, name="admin_order_page")
      * @Template("@admin/Order/index.twig")
      */
-    public function index(Request $request, $page_no = null, PaginatorInterface $paginator)
+    public function index(Request $request, ?int $page_no = 1, PaginatorInterface $paginator)
     {
         $builder = $this->formFactory
             ->createBuilder(SearchOrderType::class);
@@ -223,7 +247,7 @@ class OrderController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_ORDER_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_ORDER_INDEX_INITIALIZE);
 
         $searchForm = $builder->getForm();
 
@@ -318,7 +342,7 @@ class OrderController extends AbstractController
             $request
         );
 
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_ORDER_INDEX_SEARCH, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_ORDER_INDEX_SEARCH);
 
         $pagination = $paginator->paginate(
             $qb,
@@ -349,7 +373,7 @@ class OrderController extends AbstractController
                 ->find($order_id);
             if ($Order) {
                 $this->entityManager->remove($Order);
-                log_info('受注削除', [$Order->getId()]);
+                $this->logger->info('受注削除', [$Order->getId()]);
             }
         }
 
@@ -373,7 +397,7 @@ class OrderController extends AbstractController
     {
         $filename = 'order_'.(new \DateTime())->format('YmdHis').'.csv';
         $response = $this->exportCsv($request, CsvType::CSV_TYPE_ORDER, $filename);
-        log_info('受注CSV出力ファイル名', [$filename]);
+        $this->logger->info('受注CSV出力ファイル名', [$filename]);
 
         return $response;
     }
@@ -391,7 +415,7 @@ class OrderController extends AbstractController
     {
         $filename = 'shipping_'.(new \DateTime())->format('YmdHis').'.csv';
         $response = $this->exportCsv($request, CsvType::CSV_TYPE_SHIPPING, $filename);
-        log_info('配送CSV出力ファイル名', [$filename]);
+        $this->logger->info('配送CSV出力ファイル名', [$filename]);
 
         return $response;
     }
@@ -457,7 +481,7 @@ class OrderController extends AbstractController
                             ],
                             $request
                         );
-                        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_ORDER_CSV_EXPORT_ORDER, $event);
+                        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_ORDER_CSV_EXPORT_ORDER);
 
                         $ExportCsvRow->pushData();
                     }
@@ -521,7 +545,7 @@ class OrderController extends AbstractController
         $result = [];
         try {
             if ($Order->getOrderStatus()->getId() == $OrderStatus->getId()) {
-                log_info('対応状況一括変更スキップ');
+                $this->logger->info('対応状況一括変更スキップ');
                 $result = ['message' => trans('admin.order.skip_change_status', ['%name%' => $Shipping->getId()])];
             } else {
                 if ($this->orderStateMachine->can($Order, $OrderStatus)) {
@@ -579,7 +603,7 @@ class OrderController extends AbstractController
                     ])];
                 }
 
-                log_info('対応状況一括変更処理完了', [$Order->getId()]);
+                $this->logger->info('対応状況一括変更処理完了', [$Order->getId()]);
             }
         } catch (\Exception $e) {
             log_error('予期しないエラーです', [$e->getMessage()]);
@@ -619,7 +643,7 @@ class OrderController extends AbstractController
         );
 
         if ($errors->count() != 0) {
-            log_info('送り状番号入力チェックエラー');
+            $this->logger->info('送り状番号入力チェックエラー');
             $messages = [];
             /** @var \Symfony\Component\Validator\ConstraintViolationInterface $error */
             foreach ($errors as $error) {
@@ -632,7 +656,7 @@ class OrderController extends AbstractController
         try {
             $shipping->setTrackingNumber($trackingNumber);
             $this->entityManager->flush($shipping);
-            log_info('送り状番号変更処理完了', [$shipping->getId()]);
+            $this->logger->info('送り状番号変更処理完了', [$shipping->getId()]);
             $message = ['status' => 'OK', 'shipping_id' => $shipping->getId(), 'tracking_number' => $trackingNumber];
 
             return $this->json($message);
@@ -658,7 +682,7 @@ class OrderController extends AbstractController
 
         if (count($ids) == 0) {
             $this->addError('admin.order.delivery_note_parameter_error', 'admin');
-            log_info('The Order cannot found!');
+            $this->logger->info('The Order cannot found!');
 
             return $this->redirectToRoute('admin_order');
         }
@@ -712,7 +736,7 @@ class OrderController extends AbstractController
 
         // Validation
         if (!$form->isValid()) {
-            log_info('The parameter is invalid!');
+            $this->logger->info('The parameter is invalid!');
 
             return $this->render('@admin/Order/order_pdf.twig', [
                 'form' => $form->createView(),
@@ -727,7 +751,7 @@ class OrderController extends AbstractController
         // 異常終了した場合の処理
         if (!$status) {
             $this->addError('admin.order.export.pdf.download.failure', 'admin');
-            log_info('Unable to create pdf files! Process have problems!');
+            $this->logger->info('Unable to create pdf files! Process have problems!');
 
             return $this->render('@admin/Order/order_pdf.twig', [
                 'form' => $form->createView(),
@@ -750,7 +774,7 @@ class OrderController extends AbstractController
             $response->headers->set('Content-Disposition', 'inline; filename="'.$orderPdfService->getPdfFileName().'"');
         }
 
-        log_info('OrderPdf download success!', ['Order ID' => implode(',', $request->get('ids', []))]);
+        $this->logger->info('OrderPdf download success!', ['Order ID' => implode(',', $request->get('ids', []))]);
 
         $isDefault = isset($arrData['default']) ? $arrData['default'] : false;
         if ($isDefault) {

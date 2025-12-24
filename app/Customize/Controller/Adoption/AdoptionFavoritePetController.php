@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Doctrine\ORM\EntityManagerInterface;
 
 class AdoptionFavoritePetController extends AbstractController
 {
@@ -34,6 +35,11 @@ class AdoptionFavoritePetController extends AbstractController
     protected $conservationsHousesRepository;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
      * AdoptionController constructor.
      *
      * @param ConservationPetsRepository $conservationPetsRepository
@@ -41,6 +47,7 @@ class AdoptionFavoritePetController extends AbstractController
      * @param ConservationsHousesRepository $conservationsHousesRepository
      */
     public function __construct(
+        EntityManagerInterface $entityManager,
         ConservationPetsRepository    $conservationPetsRepository,
         PetsFavoriteRepository        $petsFavoriteRepository,
         ConservationsHousesRepository $conservationsHousesRepository
@@ -48,6 +55,7 @@ class AdoptionFavoritePetController extends AbstractController
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->petsFavoriteRepository = $petsFavoriteRepository;
         $this->conservationsHousesRepository = $conservationsHousesRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -63,7 +71,7 @@ class AdoptionFavoritePetController extends AbstractController
         $pet = $this->conservationPetsRepository->find($id);
         $favorite = $this->petsFavoriteRepository->findOneBy(['Customer' => $this->getUser(), 'pet_id' => $id]);
         $adoptionSelf = $pet->getConservation()->getId() == $this->getUser()->getId();
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->entityManager;
         if ($adoptionSelf) {
             return new JsonResponse('not-allowed');
         } elseif (!$favorite) {

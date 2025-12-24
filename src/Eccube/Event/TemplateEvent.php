@@ -13,8 +13,8 @@
 
 namespace Eccube\Event;
 
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Class TemplateEvent
@@ -37,7 +37,7 @@ class TemplateEvent extends Event
     private $parameters;
 
     /**
-     * @var null|Response
+     * @var Response|null
      */
     private $response;
 
@@ -59,7 +59,7 @@ class TemplateEvent extends Event
      * @param array $parameters
      * @param Response|null $response
      */
-    public function __construct($view, $source, array $parameters = [], Response $response = null)
+    public function __construct($view, $source, array $parameters = [], ?Response $response = null)
     {
         $this->view = $view;
         $this->source = $source;
@@ -145,7 +145,7 @@ class TemplateEvent extends Event
     }
 
     /**
-     * @return null|Response
+     * @return Response|null
      */
     public function getResponse()
     {
@@ -153,7 +153,7 @@ class TemplateEvent extends Event
     }
 
     /**
-     * @param null|Response $response
+     * @param Response|null $response
      */
     public function setResponse($response)
     {

@@ -26,6 +26,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * 決済状況管理
@@ -52,6 +54,7 @@ class PaymentStatusController extends AbstractController
      */
     protected $bulkActions = [];
 
+
     /**
      * PaymentController constructor.
      *
@@ -60,11 +63,15 @@ class PaymentStatusController extends AbstractController
     public function __construct(
         PageMaxRepository $pageMaxRepository,
         OrderRepository $orderRepository,
-        PaymentHelperAdmin $PaymentHelperAdmin
+        PaymentHelperAdmin $PaymentHelperAdmin,
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
     ) {
         $this->pageMaxRepository = $pageMaxRepository;
         $this->orderRepository = $orderRepository;
         $this->PaymentHelperAdmin = $PaymentHelperAdmin;
+        $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
 
         $this->bulkActions = [
             ['id' => 1, 'name' => trans('gmo_payment_gateway.admin.' .
@@ -84,7 +91,7 @@ class PaymentStatusController extends AbstractController
      * @Template("@GmoPaymentGateway4/admin/payment_status.twig")
      */
     public function index
-        (Request $request, PaginatorInterface $paginator, $page_no = null)
+        (Request $request, PaginatorInterface $paginator, ?int $page_no = null)
     {
         $searchForm = $this->createForm(SearchPaymentType::class);
 
@@ -101,7 +108,7 @@ class PaymentStatusController extends AbstractController
          **/
         $page_count = $this->session->get
             ('gmo_payment_gateway.admin.payment_status.search.page_count',
-             $this->eccubeConfig->get('eccube_default_page_count'));
+                $this->eccubeConfig->get('eccube_default_page_count'));
 
         $page_count_param = (int) $request->get('page_count');
         $pageMaxis = $this->pageMaxRepository->findAll();
@@ -112,7 +119,7 @@ class PaymentStatusController extends AbstractController
                     $page_count = $pageMax->getName();
                     $this->session->set
                         ('gmo_payment_gateway.admin.' .
-                         'payment_status.search.page_count', $page_count);
+                            'payment_status.search.page_count', $page_count);
                     break;
                 }
             }
@@ -121,7 +128,7 @@ class PaymentStatusController extends AbstractController
         if ('POST' === $request->getMethod()) {
             $searchForm->handleRequest($request);
 
-            if ($searchForm->isSubmitted() && $searchForm->isValid()) {
+            if ($searchForm->isValid()) {
                 /**
                  * 検索が実行された場合は, セッションに検索条件を保存する.
                  * ページ番号は最初のページ番号に初期化する.
@@ -132,11 +139,11 @@ class PaymentStatusController extends AbstractController
                 // 検索条件, ページ番号をセッションに保持.
                 $this->session->set
                     ('gmo_payment_gateway.admin.' .
-                     'payment_status.search',
-                     FormUtil::getViewData($searchForm));
+                        'payment_status.search',
+                        FormUtil::getViewData($searchForm));
                 $this->session->set
                     ('gmo_payment_gateway.admin.' .
-                     'payment_status.search.page_no', $page_no);
+                        'payment_status.search.page_no', $page_no);
             } else {
                 // 検索エラーの際は, 詳細検索枠を開いてエラー表示する.
                 return [
@@ -159,12 +166,12 @@ class PaymentStatusController extends AbstractController
                     // ページ送りで遷移した場合.
                     $this->session->set
                         ('gmo_payment_gateway.admin.' .
-                         'payment_status.search.page_no', (int) $page_no);
+                            'payment_status.search.page_no', (int) $page_no);
                 } else {
                     // 他画面から遷移した場合.
                     $page_no = $this->session->get
                         ('gmo_payment_gateway.admin.' .
-                         'payment_status.search.page_no', 1);
+                            'payment_status.search.page_no', 1);
                 }
                 $viewData = $this->session->get
                     ('gmo_payment_gateway.admin.payment_status.search', []);
@@ -180,10 +187,10 @@ class PaymentStatusController extends AbstractController
                 // セッション中の検索条件, ページ番号を初期化.
                 $this->session->set
                     ('gmo_payment_gateway.admin.' .
-                     'payment_status.search', $searchData);
+                        'payment_status.search', $searchData);
                 $this->session->set
                     ('gmo_payment_gateway.admin.' .
-                     'payment_status.search.page_no', $page_no);
+                        'payment_status.search.page_no', $page_no);
             }
         }
 
@@ -226,7 +233,8 @@ class PaymentStatusController extends AbstractController
     /**
      * 一括処理.
      *
-     * @Route("/%eccube_admin_route%/gmo_payment_gateway/payment_status/bulk_action/{id}", requirements={"id" = "\d+"}, name="gmo_payment_gateway_admin_payment_status_bulk_action", methods={"POST"})
+     * @Method("POST")
+     * @Route("/%eccube_admin_route%/gmo_payment_gateway/payment_status/bulk_action/{id}", requirements={"id" = "\d+"}, name="gmo_payment_gateway_admin_payment_status_bulk_action")
      */
     public function bulkAction(Request $request, $id)
     {
@@ -288,8 +296,8 @@ class PaymentStatusController extends AbstractController
         }
 
         $message = trans('gmo_payment_gateway.admin.' .
-                         'payment_status.bulk_action.success',
-                         ['%count%' => $count]);
+            'payment_status.bulk_action.success',
+            ['%count%' => $count]);
         $this->addSuccess($message, 'admin');
         PaymentUtil::logInfo($message);
 
@@ -297,7 +305,7 @@ class PaymentStatusController extends AbstractController
 
         return $this->redirectToRoute
             ('gmo_payment_gateway_admin_payment_status_pageno',
-             ['resume' => Constant::ENABLED]);
+                ['resume' => Constant::ENABLED]);
     }
 
     private function createQueryBuilder(array $searchData)
@@ -311,8 +319,7 @@ class PaymentStatusController extends AbstractController
             ->innerJoin(GmoOrderPayment::class, 'g',
                         'WITH', 'o.id = g.order_id')
             ->where($qb->expr()->andx(
-                $qb->expr()->notIn('o.OrderStatus', [OrderStatus::PENDING,
-                                                     OrderStatus::PROCESSING])
+                $qb->expr()->notIn('o.OrderStatus', [OrderStatus::PENDING, OrderStatus::PROCESSING])
             ))
             ->orderBy('o.order_date', 'DESC')
             ->addOrderBy('o.id', 'DESC');
@@ -333,9 +340,9 @@ class PaymentStatusController extends AbstractController
             count($searchData['PaymentStatuses']) > 0) {
             $qb->andWhere
                 ($qb->expr()->in
-                 ('g.memo04', ':PaymentStatuses'))
+                    ('g.memo04', ':PaymentStatuses'))
                 ->setParameter('PaymentStatuses',
-                               $searchData['PaymentStatuses']);
+                                $searchData['PaymentStatuses']);
         }
 
         return $qb;

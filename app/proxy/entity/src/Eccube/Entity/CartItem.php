@@ -15,249 +15,261 @@ namespace Eccube\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * CartItem
- *
- * @ORM\Table(name="dtb_cart_item")
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="discriminator_type", type="string", length=255)
- * @ORM\HasLifecycleCallbacks()
- * @ORM\Entity(repositoryClass="Eccube\Repository\CartItemRepository")
- */
-class CartItem extends \Eccube\Entity\AbstractEntity implements ItemInterface
-{
-    use \Customize\Entity\CartItemTrait;
-    use PointRateTrait;
 
     /**
-     * @var integer
+     * CartItem
      *
-     * @ORM\Column(name="id", type="integer", options={"unsigned":true})
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
-
-    /**
-     * @var string
+     * @ORM\Table(name="dtb_cart_item")
      *
-     * @ORM\Column(name="price", type="decimal", precision=12, scale=2, options={"default":0})
-     */
-    private $price = 0;
-
-    /**
-     * @var string
+     * @ORM\InheritanceType("SINGLE_TABLE")
      *
-     * @ORM\Column(name="quantity", type="decimal", precision=10, scale=0, options={"default":0})
-     */
-    private $quantity = 0;
-
-    /**
-     * @var \Eccube\Entity\ProductClass
+     * @ORM\DiscriminatorColumn(name="discriminator_type", type="string", length=255)
      *
-     * @ORM\ManyToOne(targetEntity="Eccube\Entity\ProductClass")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="product_class_id", referencedColumnName="id")
-     * })
-     */
-    private $ProductClass;
-
-    /**
-     * @var \Eccube\Entity\Cart
+     * @ORM\HasLifecycleCallbacks()
      *
-     * @ORM\ManyToOne(targetEntity="Eccube\Entity\Cart", inversedBy="CartItems")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="cart_id", referencedColumnName="id", onDelete="CASCADE")
-     * })
+     * @ORM\Entity(repositoryClass="Eccube\Repository\CartItemRepository")
      */
-    private $Cart;
-
-    /**
-     * sessionのシリアライズのために使われる
-     *
-     * @var int
-     */
-    private $product_class_id;
-
-    public function __sleep()
+    class CartItem extends AbstractEntity implements ItemInterface
     {
-        return ['product_class_id', 'price', 'quantity'];
-    }
+        use PointRateTrait, \Customize\Entity\CartItemTrait;
 
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+        /**
+         * @var int
+         *
+         * @ORM\Column(name="id", type="integer", options={"unsigned":true})
+         *
+         * @ORM\Id
+         *
+         * @ORM\GeneratedValue(strategy="IDENTITY")
+         */
+        private $id;
 
-    /**
-     * @param  integer  $price
-     *
-     * @return CartItem
-     */
-    public function setPrice($price)
-    {
-        $this->price = $price;
+        /**
+         * @var string
+         *
+         * @ORM\Column(name="price", type="decimal", precision=12, scale=2, options={"default":0})
+         */
+        private $price = 0;
 
-        return $this;
-    }
+        /**
+         * @var string
+         *
+         * @ORM\Column(name="quantity", type="decimal", precision=10, scale=0, options={"default":0})
+         */
+        private $quantity = 0;
 
-    /**
-     * @return string
-     */
-    public function getPrice()
-    {
-        return $this->price;
-    }
+        /**
+         * @var ProductClass
+         *
+         * @ORM\ManyToOne(targetEntity="Eccube\Entity\ProductClass")
+         *
+         * @ORM\JoinColumns({
+         *
+         *   @ORM\JoinColumn(name="product_class_id", referencedColumnName="id")
+         * })
+         */
+        private $ProductClass;
 
-    /**
-     * @param  integer  $quantity
-     *
-     * @return CartItem
-     */
-    public function setQuantity($quantity)
-    {
-        $this->quantity = $quantity;
+        /**
+         * @var Cart
+         *
+         * @ORM\ManyToOne(targetEntity="Eccube\Entity\Cart", inversedBy="CartItems", cascade={"persist"})
+         *
+         * @ORM\JoinColumns({
+         *
+         *   @ORM\JoinColumn(name="cart_id", referencedColumnName="id", onDelete="CASCADE")
+         * })
+         */
+        private $Cart;
 
-        return $this;
-    }
+        /**
+         * sessionのシリアライズのために使われる
+         *
+         * @var int
+         */
+        private $product_class_id;
 
-    /**
-     * @return string
-     */
-    public function getQuantity()
-    {
-        return $this->quantity;
-    }
+        public function __sleep()
+        {
+            return ['product_class_id', 'price', 'quantity'];
+        }
 
-    /**
-     * @return integer
-     */
-    public function getTotalPrice()
-    {
-        return $this->getPrice() * $this->getQuantity();
-    }
+        /**
+         * @return int
+         */
+        public function getId()
+        {
+            return $this->id;
+        }
 
-    /**
-     * 商品明細かどうか.
-     *
-     * @return boolean 商品明細の場合 true
-     */
-    public function isProduct()
-    {
-        return true;
-    }
+        /**
+         * @param  int  $price
+         *
+         * @return CartItem
+         */
+        public function setPrice($price)
+        {
+            $this->price = $price;
 
-    /**
-     * 送料明細かどうか.
-     *
-     * @return boolean 送料明細の場合 true
-     */
-    public function isDeliveryFee()
-    {
-        return false;
-    }
+            return $this;
+        }
 
-    /**
-     * 手数料明細かどうか.
-     *
-     * @return boolean 手数料明細の場合 true
-     */
-    public function isCharge()
-    {
-        return false;
-    }
+        /**
+         * @return string
+         */
+        public function getPrice()
+        {
+            return $this->price;
+        }
 
-    /**
-     * 値引き明細かどうか.
-     *
-     * @return boolean 値引き明細の場合 true
-     */
-    public function isDiscount()
-    {
-        return false;
-    }
+        /**
+         * @param  int  $quantity
+         *
+         * @return CartItem
+         */
+        public function setQuantity($quantity)
+        {
+            $this->quantity = $quantity;
 
-    /**
-     * 税額明細かどうか.
-     *
-     * @return boolean 税額明細の場合 true
-     */
-    public function isTax()
-    {
-        return false;
-    }
+            return $this;
+        }
 
-    /**
-     * ポイント明細かどうか.
-     *
-     * @return boolean ポイント明細の場合 true
-     */
-    public function isPoint()
-    {
-        return false;
-    }
+        /**
+         * @return string
+         */
+        public function getQuantity()
+        {
+            return $this->quantity;
+        }
 
-    public function getOrderItemType()
-    {
-        // TODO OrderItemType::PRODUCT
-        $ItemType = new \Eccube\Entity\Master\OrderItemType();
+        /**
+         * @return int
+         */
+        public function getTotalPrice()
+        {
+            return $this->getPrice() * $this->getQuantity();
+        }
 
-        return $ItemType;
-    }
+        /**
+         * 商品明細かどうか.
+         *
+         * @return bool 商品明細の場合 true
+         */
+        public function isProduct()
+        {
+            return true;
+        }
 
-    /**
-     * @param ProductClass $ProductClass
-     *
-     * @return $this
-     */
-    public function setProductClass(ProductClass $ProductClass)
-    {
-        $this->ProductClass = $ProductClass;
+        /**
+         * 送料明細かどうか.
+         *
+         * @return bool 送料明細の場合 true
+         */
+        public function isDeliveryFee()
+        {
+            return false;
+        }
 
-        $this->product_class_id = is_object($ProductClass) ?
+        /**
+         * 手数料明細かどうか.
+         *
+         * @return bool 手数料明細の場合 true
+         */
+        public function isCharge()
+        {
+            return false;
+        }
+
+        /**
+         * 値引き明細かどうか.
+         *
+         * @return bool 値引き明細の場合 true
+         */
+        public function isDiscount()
+        {
+            return false;
+        }
+
+        /**
+         * 税額明細かどうか.
+         *
+         * @return bool 税額明細の場合 true
+         */
+        public function isTax()
+        {
+            return false;
+        }
+
+        /**
+         * ポイント明細かどうか.
+         *
+         * @return bool ポイント明細の場合 true
+         */
+        public function isPoint()
+        {
+            return false;
+        }
+
+        public function getOrderItemType()
+        {
+            // TODO OrderItemType::PRODUCT
+            $ItemType = new Master\OrderItemType();
+
+            return $ItemType;
+        }
+
+        /**
+         * @param ProductClass $ProductClass
+         *
+         * @return $this
+         */
+        public function setProductClass(ProductClass $ProductClass)
+        {
+            $this->ProductClass = $ProductClass;
+
+            $this->product_class_id = is_object($ProductClass) ?
             $ProductClass->getId() : null;
 
-        return $this;
-    }
+            return $this;
+        }
 
-    /**
-     * @return ProductClass
-     */
-    public function getProductClass()
-    {
-        return $this->ProductClass;
-    }
+        /**
+         * @return ProductClass
+         */
+        public function getProductClass()
+        {
+            return $this->ProductClass;
+        }
 
-    /**
-     * @return int|null
-     */
-    public function getProductClassId()
-    {
-        return $this->product_class_id;
-    }
+        /**
+         * @return int|null
+         */
+        public function getProductClassId()
+        {
+            return $this->product_class_id;
+        }
 
-    public function getPriceIncTax()
-    {
-        // TODO ItemInterfaceに追加, Cart::priceは税込み金額が入っているので,フィールドを分ける必要がある
-        return $this->price;
-    }
+        public function getPriceIncTax()
+        {
+            // TODO ItemInterfaceに追加, Cart::priceは税込み金額が入っているので,フィールドを分ける必要がある
+            return $this->price;
+        }
 
-    /**
-     * @return Cart
-     */
-    public function getCart()
-    {
-        return $this->Cart;
-    }
+        /**
+         * @return Cart
+         */
+        public function getCart()
+        {
+            return $this->Cart;
+        }
 
-    /**
-     * @param Cart $Cart
-     */
-    public function setCart(Cart $Cart)
-    {
-        $this->Cart = $Cart;
+        /**
+         * @param Cart $Cart
+         */
+        public function setCart(Cart $Cart)
+        {
+            $this->Cart = $Cart;
+
+            return $this;
+        }
     }
-}

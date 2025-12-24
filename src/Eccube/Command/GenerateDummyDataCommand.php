@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of EC-CUBE
  *
@@ -13,7 +12,7 @@
 
 namespace Eccube\Command;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Eccube\Entity\Master\OrderStatus;
 use Eccube\Repository\DeliveryRepository;
 use Eccube\Repository\ProductRepository;
@@ -23,32 +22,27 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-
 class GenerateDummyDataCommand extends Command
 {
     protected static $defaultName = 'eccube:fixtures:generate';
-
     /**
      * @var Generator
      */
     protected $generator;
-
     /**
      * @var EntityManager
      */
     protected $entityManager;
-
     /**
      * @var DeliveryRepository
      */
     protected $deliveryRepository;
-
     /**
      * @var ProductRepository
      */
     protected $productRepository;
 
-    public function __construct(Generator $generator = null, EntityManager $entityManager = null, DeliveryRepository $deliveryRepository = null, ProductRepository $productRepository = null)
+    public function __construct(?Generator $generator = null, ?EntityManagerInterface $entityManager = null, ?DeliveryRepository $deliveryRepository = null, ?ProductRepository $productRepository = null)
     {
         parent::__construct();
         $this->generator = $generator;
@@ -56,44 +50,34 @@ class GenerateDummyDataCommand extends Command
         $this->deliveryRepository = $deliveryRepository;
         $this->productRepository = $productRepository;
     }
-
     protected function configure()
     {
         $this
             ->setDescription('Dummy data generator')
             ->addOption('with-locale', null, InputOption::VALUE_REQUIRED, 'Set to the locale.', 'ja_JP')
             ->addOption('without-image', null, InputOption::VALUE_NONE, 'Do not generate images.')
-            ->addOption('with-image', null, InputOption::VALUE_REQUIRED, 'Generate image type of abstract|animals|business|cats|city|food|nightlife|fashion|people|nature|sports|technics|transport', 'cats')
             ->addOption('products', null, InputOption::VALUE_REQUIRED, 'Number of Products.', 100)
             ->addOption('orders', null, InputOption::VALUE_REQUIRED, 'Number of Orders.', 10)
             ->addOption('customers', null, InputOption::VALUE_REQUIRED, 'Number of Customers.', 100)
             ->setHelp(<<<EOF
 The <info>%command.name%</info> command generate of dummy data.
-
   <info>php %command.full_name%</info>
-
 Generate of dummy data with images.
-
   <info>php %command.full_name% --without-image</info>
-
 Generate of dummy data without images, use for options to faster.
 ;
 EOF
             );
     }
-
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $locale = $input->getOption('with-locale');
-        $imageType = $input->getOption('with-image');
         $notImage = $input->getOption('without-image');
         $numberOfProducts = $input->getOption('products');
         $numberOfOrder = $input->getOption('orders');
         $numberOfCustomer = $input->getOption('customers');
-
         $Customers = [];
         $Products = [];
-
         $faker = Faker::create($locale);
         for ($i = 0; $i < $numberOfCustomer; $i++) {
             $email = microtime(true).'.'.$faker->safeEmail;
@@ -120,7 +104,7 @@ EOF
             // @see https://github.com/fzaninotto/Faker/issues/1125#issuecomment-268676186
             gc_collect_cycles();
 
-            $Product = $this->generator->createProduct(null, 3, $notImage ? null : $imageType);
+            $Product = $this->generator->createProduct(null, 3, !$notImage);
             switch ($output->getVerbosity()) {
                 case OutputInterface::VERBOSITY_QUIET:
                     break;
@@ -164,7 +148,6 @@ EOF
             for ($i = 0; $i < $numberOfOrder; $i++) {
                 // @see https://github.com/fzaninotto/Faker/issues/1125#issuecomment-268676186
                 gc_collect_cycles();
-
                 $Order = $this->generator->createOrder($Customer, $Product->getProductClasses()->toArray(), $Delivery, $charge, $discount);
                 $Status = $this->entityManager->find(OrderStatus::class, $faker->randomElement($randomOrderStatus));
                 $Order->setOrderStatus($Status);
@@ -181,7 +164,7 @@ EOF
                         $output->writeln('Order: id='.$Order->getId());
                         break;
                 }
-                $this->entityManager->flush($Order);
+                $this->entityManager->flush();
                 $j++;
                 if ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL && ($j % 100) === 0 && $j > 0) {
                     $output->writeln(' ...'.$j);
@@ -190,5 +173,7 @@ EOF
         }
         $output->writeln('');
         $output->writeln(sprintf('%s <info>success</info>', 'eccube:fixtures:generate'));
+
+        return 0;
     }
 }

@@ -1,0 +1,80 @@
+{% extends 'default_frame.twig' %}
+
+{% block stylesheet %}
+
+{% endblock %}
+{% block javascript %}
+
+<script>
+</script>
+
+{% endblock %}
+
+{% block main %}
+
+    <div class="page-wrap">
+        <div class="wrap sp-wrap w1200">
+
+                <div class="p-greenies sp-wrap">
+                    <div class="p-greenies__banner">
+                        <img src="{{ asset('assets/img/ec/greenies-banner.jpg') }}" alt="グリニーズ" class="p-greenies__banner-img">
+                    </div>
+
+                    <div class="p-greenies__products flex bet sp-vert break">
+                        <div class="p-greenies__products-pet">
+                            <img src="{{ asset('assets/img/ec/dog-product.jpg') }}" alt="犬用グリニーズ">
+                        </div>
+                        <div class="p-greenies__products-pet">
+                            <img src="{{ asset('assets/img/ec/cat-product.jpg') }}" alt="猫用グリニーズ">
+                        </div>
+                    </div>
+
+                    <div class="p-greenies__lead">
+                        <p class="p-greenies__lead-text">
+                            愛犬・愛猫が毎日楽しく、<br>
+                            おいしく歯や健康のケアができるよう、<br>
+                            グリニーズシリーズはサポートします。
+                        </p>
+                        <p class="p-greenies__lead-desc">
+                            わんちゃんには噛むことで歯に・口臭をしっかりケアする歯みがき専用ガムのグリニーズプラスと<br class="pc">
+                            おなかや関節、免疫の健康をサポートするグリニーズデイリーサプリメント。<br>
+                            ねこちゃんにはおやつ感覚で食べることでできる歯みがき専用スナックとおやつでありながら<br class="pc">成猫用総合栄養食の基準を満たした毛玉ケア・皮膚被毛ケアスナック。
+                        </p>
+                    </div>
+
+                    <div class="p-greenies__links flex break sp-vert">
+                        <div class="p-greenies__links-pet p-greenies__links-dog">
+                            <a href="{{ url('product_list', {'category_id': 71}) }}" class="p-greenies__links-btn">
+                                <div class="p-greenies__links-line flex vcenter pc">
+                                <span class="p-greenies__links-icon p-greenies__links-icon--dog">
+                                    <img src="{{ asset('assets/img/ec/dog-img.svg') }}" alt="犬">
+                                </span>
+                                    <span class="p-greenies__links-text">犬用グリニーズはこちら</span>
+                                </div>
+                                <div class="p-greenies__links-img">
+                                    <img src="{{ asset('assets/img/ec/greenies-dog-logo_pc.png') }}" alt="犬用グリニーズ" class="pc">
+                                    <img src="{{ asset('assets/img/ec/greenies-dog-logo_sp.png') }}" alt="犬用グリニーズ" class="sp">
+                                </div>
+                            </a>
+                        </div>
+                        <div class="p-greenies__links-pet p-greenies__links-cat">
+                            <a href="{{ url('product_list', {'category_id': 72}) }}" class="p-greenies__links-btn">
+                                <div class="p-greenies__links-line flex vcenter hend pc">
+                                    <span class="p-greenies__links-text">猫用グリニーズはこちら</span>
+                                    <span class="p-greenies__links-icon p-greenies__links-icon--cat">
+                                    <img src="{{ asset('assets/img/ec/cat-img.svg') }}" alt="猫">
+                                </span>
+                                </div>
+                                <div class="p-greenies__links-img">
+                                    <img src="{{ asset('assets/img/ec/greenies-cat-logo_pc.png') }}" alt="猫用グリニーズ" class="pc">
+                                    <img src="{{ asset('assets/img/ec/greenies-cat-logo_sp.png') }}" alt="猫用グリニーズ" class="sp">
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

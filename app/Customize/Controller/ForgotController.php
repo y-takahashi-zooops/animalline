@@ -25,9 +25,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception as HttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ForgotController extends AbstractController
 {
@@ -47,9 +53,14 @@ class ForgotController extends AbstractController
     protected $customerRepository;
 
     /**
-     * @var EncoderFactoryInterface
+     * @var UserPasswordHasherInterface
      */
-    protected $encoderFactory;
+    protected $passwordHasher;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
 
     /**
      * ForgotController constructor.
@@ -57,18 +68,34 @@ class ForgotController extends AbstractController
      * @param ValidatorInterface $validator
      * @param MailService $mailService
      * @param CustomerRepository $customerRepository
-     * @param EncoderFactoryInterface $encoderFactory
+     * @param UserPasswordHasherInterface $passwordHasher
+     * @param LoggerInterface $logger
+     * @param FormFactoryInterface $formFactory
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param EccubeConfig $eccubeConfig
      */
     public function __construct(
         ValidatorInterface $validator,
         MailService $mailService,
         CustomerRepository $customerRepository,
-        EncoderFactoryInterface $encoderFactory
+        UserPasswordHasherInterface $passwordHasher,
+        LoggerInterface $logger,
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher,
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator
     ) {
         $this->validator = $validator;
         $this->mailService = $mailService;
         $this->customerRepository = $customerRepository;
-        $this->encoderFactory = $encoderFactory;
+        $this->passwordHasher = $passwordHasher;
+        $this->logger = $logger;
+        $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
+        $this->translator = $translator;
     }
 
     /**
@@ -107,7 +134,7 @@ class ForgotController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_FORGOT_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_FORGOT_INDEX_INITIALIZE);
 
         $form = $builder->getForm();
         $form->handleRequest($request);
@@ -133,7 +160,7 @@ class ForgotController extends AbstractController
                     ],
                     $request
                 );
-                $this->eventDispatcher->dispatch(EccubeEvents::FRONT_FORGOT_INDEX_COMPLETE, $event);
+                $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_FORGOT_INDEX_COMPLETE);
 
                 // 完了URLの生成
                 $reset_url = $this->generateUrl('forgot_reset', ['reset_key' => $Customer->getResetKey(),'return_path' => $return_path], UrlGeneratorInterface::ABSOLUTE_URL);
@@ -142,7 +169,7 @@ class ForgotController extends AbstractController
                 $this->mailService->sendPasswordResetNotificationMail($Customer, $reset_url);
 
                 // ログ出力
-                log_info('send reset password mail to:'."{$Customer->getId()} {$Customer->getEmail()} {$request->getClientIp()}");
+                $this->logger->info('send reset password mail to:'."{$Customer->getId()} {$Customer->getEmail()} {$request->getClientIp()}");
             } else {
                 log_warning(
                     'Un active customer try send reset password email: ',
@@ -246,18 +273,21 @@ class ForgotController extends AbstractController
                 ->getRegularCustomerByResetKey($reset_key, $form->get('login_email')->getData());
             if ($Customer) {
                 // パスワードの発行・更新
-                $encoder = $this->encoderFactory->getEncoder($Customer);
-                $pass = $form->get('password')->getData();
-                $Customer->setPassword($pass);
+                // $encoder = $this->passwordHasher->getEncoder($Customer);
+                // $pass = $form->get('password')->getData();
+                // $Customer->setPassword($pass);
+                $plainPassword = $form->get('password')->getData();
+                $encoded = $this->passwordHasher->hashPassword($Customer, $plainPassword);
+                $Customer->setPassword($encoded);
 
                 // 発行したパスワードの暗号化
-                if ($Customer->getSalt() === null) {
-                    $Customer->setSalt($this->encoderFactory->getEncoder($Customer)->createSalt());
-                }
-                $encPass = $encoder->encodePassword($pass, $Customer->getSalt());
+                // if ($Customer->getSalt() === null) {
+                //     $Customer->setSalt($this->passwordHasher->getEncoder($Customer)->createSalt());
+                // }
+                // $encPass = $encoder->encodePassword($pass, $Customer->getSalt());
 
-                // パスワードを更新
-                $Customer->setPassword($encPass);
+                // // パスワードを更新
+                // $Customer->setPassword($encPass);
                 // リセットキーをクリア
                 $Customer->setResetKey(null);
 
@@ -271,16 +301,16 @@ class ForgotController extends AbstractController
                     ],
                     $request
                 );
-                $this->eventDispatcher->dispatch(EccubeEvents::FRONT_FORGOT_RESET_COMPLETE, $event);
+                $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_FORGOT_RESET_COMPLETE);
 
                 // 完了メッセージを設定
-                $this->addFlash('password_reset_complete', trans('front.forgot.reset_complete'));
+                $this->addFlash('password_reset_complete', $this->translator->trans('front.forgot.reset_complete'));
 
                 // ログインページへリダイレクト
                 return $this->redirectToRoute($return_path);
             } else {
                 // リセットキー・メールアドレスから会員データが取得できない場合
-                $error = trans('front.forgot.reset_not_found');
+                $error = $this->translator->trans('front.forgot.reset_not_found');
             }
         }
 

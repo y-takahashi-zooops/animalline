@@ -11,8 +11,9 @@ use Eccube\Repository\AbstractRepository;
 use Eccube\Repository\CustomerRepository;
 use Plugin\GmoPaymentGateway4\Entity\GmoMember;
 use Plugin\GmoPaymentGateway4\Util\PaymentUtil;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * GmoMemberRepository
@@ -24,19 +25,23 @@ class GmoMemberRepository extends AbstractRepository
      */
     protected $customerRepository;
 
+    protected $entityManager;
+
     /**
      * GmoMemberRepository constructor.
      *
-     * @param RegistryInterface $registry
+     * @param ManagerRegistry $registry
      * @param CustomerRepository $customerRepository
      */
     public function __construct(
-        RegistryInterface $registry,
-        CustomerRepository $customerRepository)
-    {
+        ManagerRegistry $registry,
+        CustomerRepository $customerRepository,
+        EntityManagerInterface $entityManager
+    ) {
         parent::__construct($registry, GmoMember::class);
 
         $this->customerRepository = $customerRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**

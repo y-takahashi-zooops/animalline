@@ -16,14 +16,13 @@ namespace Eccube\Service;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\EntityManagerInterface;
 use Eccube\Annotation\EntityExtension;
+use Eccube\Common\EccubeConfig;
 use PhpCsFixer\Tokenizer\CT;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Finder\Finder;
-use Zend\Code\Reflection\ClassReflection;
 
 class EntityProxyService
 {
@@ -33,22 +32,30 @@ class EntityProxyService
     protected $entityManager;
 
     /**
-     * @var ContainerInterface
+     * @var EccubeConfig
      */
-    protected $container;
+    protected $eccubeConfig;
+
+    /**
+     * @var string
+     */
+    protected $projectDir;
 
     /**
      * EntityProxyService constructor.
      *
      * @param EntityManagerInterface $entityManager
-     * @param ContainerInterface $container
+     * @param EccubeConfig $eccubeConfig
+     * @param string $projectDir
      */
     public function __construct(
         EntityManagerInterface $entityManager,
-        ContainerInterface $container
+        EccubeConfig $eccubeConfig,
+        string $projectDir
     ) {
         $this->entityManager = $entityManager;
-        $this->container = $container;
+        $this->eccubeConfig = $eccubeConfig;
+        $this->projectDir = $projectDir;
     }
 
     /**
@@ -61,7 +68,7 @@ class EntityProxyService
      *
      * @return array 生成したファイルのリスト
      */
-    public function generate($includesDirs, $excludeDirs, $outputDir, OutputInterface $output = null)
+    public function generate($includesDirs, $excludeDirs, $outputDir, ?OutputInterface $output = null)
     {
         if (is_null($output)) {
             $output = new ConsoleOutput();
@@ -75,8 +82,7 @@ class EntityProxyService
         // プロキシファイルの生成
         foreach ($targetEntities as $targetEntity) {
             $traits = isset($addTraits[$targetEntity]) ? $addTraits[$targetEntity] : [];
-            $rc = new ClassReflection($targetEntity);
-            $fileName = str_replace('\\', '/', $rc->getFileName());
+            $fileName = $this->originalEntityPath($targetEntity);
             $baseName = basename($fileName);
             $entityTokens = Tokens::fromCode(file_get_contents($fileName));
 
@@ -96,7 +102,7 @@ class EntityProxyService
             foreach ($traits as $trait) {
                 $this->addTrait($entityTokens, $trait);
             }
-            $projectDir = str_replace('\\', '/', $this->container->getParameter('kernel.project_dir'));
+            $projectDir = str_replace('\\', '/', $this->projectDir);
 
             // baseDir e.g. /src/Eccube/Entity and /app/Plugin/PluginCode/Entity
             $baseDir = str_replace($projectDir, '', str_replace($baseName, '', $fileName));
@@ -113,6 +119,31 @@ class EntityProxyService
         }
 
         return $generatedFiles;
+    }
+
+    private function originalEntityPath(string $entityClassName): string
+    {
+        $projectDir = rtrim(str_replace('\\', '/', $this->projectDir), '/');
+        $originalPath = null;
+
+        if (preg_match('/\AEccube\\\\Entity\\\\(.+)\z/', $entityClassName, $matches)) {
+            $pathToEntity = str_replace('\\', '/', $matches[1]);
+            $originalPath = sprintf('%s/src/Eccube/Entity/%s.php', $projectDir, $pathToEntity);
+        } elseif (preg_match('/\ACustomize\\\\Entity\\\\(.+)\z/', $entityClassName, $matches)) {
+            $pathToEntity = str_replace('\\', '/', $matches[1]);
+            $originalPath = sprintf('%s/app/Customize/Entity/%s.php', $projectDir, $pathToEntity);
+        } elseif (preg_match('/\APlugin\\\\([^\\\\]+)\\\\Entity\\\\(.+)\z/', $entityClassName, $matches)) {
+            $pathToEntity = str_replace('\\', '/', $matches[2]);
+            $originalPath = sprintf('%s/app/Plugin/%s/Entity/%s.php', $projectDir, $matches[1], $pathToEntity);
+        }
+
+        if ($originalPath !== null && file_exists($originalPath)) {
+            return $originalPath;
+        }
+
+        $rc = new \ReflectionClass($entityClassName);
+
+        return str_replace('\\', '/', $rc->getFileName());
     }
 
     /**
@@ -168,7 +199,9 @@ class EntityProxyService
             foreach ($traits as $trait) {
                 $anno = $reader->getClassAnnotation(new \ReflectionClass($trait), EntityExtension::class);
                 if ($anno) {
-                    $proxies[$anno->value][] = $trait;
+                    $class = str_replace('\\\\', '\\', $anno->value);
+                    $class = ltrim($class, '\\');
+                    $proxies[$class][] = $trait;
                 }
             }
             $proxySets[] = $proxies;

@@ -9,10 +9,17 @@ use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\PreloadedExtension;
 use Symfony\Component\Form\Test\TypeTestCase;
 use Symfony\Component\Validator\Validation;
+use Doctrine\ORM\EntityManagerInterface;
 
 class BreederEvalutionTypeTest extends TypeTestCase
 {
     private $entityManager;
+
+    public function __construct(
+        EntityManagerInterface $entityManager
+    ) {
+        $this->entityManager = $entityManager;
+    }
 
     protected function setUp()
     {

@@ -57,7 +57,7 @@ class ProductType extends AbstractType
      */
     public function __construct(
         CategoryRepository $categoryRepository,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
     ) {
         $this->categoryRepository = $categoryRepository;
         $this->eccubeConfig = $eccubeConfig;
@@ -86,11 +86,13 @@ class ProductType extends AbstractType
                 'mapped' => false,
             ])
             ->add('description_detail', TextareaType::class, [
+                'purify_html' => true,
                 'constraints' => [
                     new Assert\Length(['max' => $this->eccubeConfig['eccube_ltext_len']]),
                 ],
             ])
             ->add('description_list', TextareaType::class, [
+                'purify_html' => true,
                 'required' => false,
                 'constraints' => [
                     new Assert\Length(['max' => $this->eccubeConfig['eccube_ltext_len']]),
@@ -102,14 +104,14 @@ class ProductType extends AbstractType
                 'mapped' => false,
                 'expanded' => true,
                 'choices' => $this->categoryRepository->getList(null, true),
-                'choice_value' => function (Category $Category = null) {
+                'choice_value' => function (?Category $Category = null) {
                     return $Category ? $Category->getId() : null;
                 },
             ])
 
             // 詳細な説明
             ->add('Tag', EntityType::class, [
-                'class' => 'Eccube\Entity\Tag',
+                'class' => \Eccube\Entity\Tag::class,
                 'query_builder' => function ($er) {
                     return $er->createQueryBuilder('t')
                     ->orderBy('t.sort_no', 'DESC');
@@ -127,9 +129,11 @@ class ProductType extends AbstractType
             ])
             // サブ情報
             ->add('free_area', TextareaType::class, [
+                'purify_html' => true,
                 'required' => false,
                 'constraints' => [
                     new TwigLint(),
+                    new Assert\Length(['max' => $this->eccubeConfig['eccube_lltext_len']]),
                 ],
             ])
 
@@ -200,9 +204,14 @@ class ProductType extends AbstractType
     private function validateFilePath($form, $dirs)
     {
         foreach ($form->getData() as $fileName) {
+            if (strpos($fileName, '..') !== false) {
+                $form->getRoot()['product_image']->addError(new FormError(trans('admin.product.image__invalid_path')));
+                break;
+            }
             $fileInDir = array_filter($dirs, function ($dir) use ($fileName) {
                 $filePath = realpath($dir.'/'.$fileName);
                 $topDirPath = realpath($dir);
+
                 return strpos($filePath, $topDirPath) === 0 && $filePath !== $topDirPath;
             });
             if (!$fileInDir) {

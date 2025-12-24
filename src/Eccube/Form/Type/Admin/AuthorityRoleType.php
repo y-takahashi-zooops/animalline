@@ -22,11 +22,15 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AuthorityRoleType extends AbstractType
 {
-    public function __construct()
+    private TranslatorInterface $translator;
+
+    public function __construct(TranslatorInterface $translator)
     {
+        $this->translator = $translator;
     }
 
     /**
@@ -36,7 +40,7 @@ class AuthorityRoleType extends AbstractType
     {
         $builder
             ->add('Authority', EntityType::class, [
-                'class' => 'Eccube\Entity\Master\Authority',
+                'class' => \Eccube\Entity\Master\Authority::class,
                 'expanded' => false,
                 'multiple' => false,
                 'required' => false,
@@ -47,7 +51,7 @@ class AuthorityRoleType extends AbstractType
                 'constraints' => [
                     new Regex([
                         'pattern' => '/^\\/.*/',
-                        'message' => trans('admin.setting.system.authority.deny_url_is_invalid'),
+                        'message' => $this->translator->trans('admin.setting.system.authority.deny_url_is_invalid'),
                     ]),
                 ],
             ])
@@ -58,9 +62,9 @@ class AuthorityRoleType extends AbstractType
                 $denyUrl = $form['deny_url']->getData();
 
                 if (!$Authority && !empty($denyUrl)) {
-                    $form['Authority']->addError(new FormError(trans('admin.setting.system.authority.authority_not_selected')));
+                    $form['Authority']->addError(new FormError($this->translator->trans('admin.setting.system.authority.authority_not_selected')));
                 } elseif ($Authority && empty($denyUrl)) {
-                    $form['deny_url']->addError(new FormError(trans('admin.setting.system.authority.deny_url_is_empty')));
+                    $form['deny_url']->addError(new FormError($this->translator->trans('admin.setting.system.authority.deny_url_is_empty')));
                 }
             })
         ;
@@ -72,7 +76,7 @@ class AuthorityRoleType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => 'Eccube\Entity\AuthorityRole',
+            'data_class' => \Eccube\Entity\AuthorityRole::class,
         ]);
     }
 

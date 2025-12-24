@@ -17,6 +17,7 @@ use Eccube\Common\EccubeConfig;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -58,7 +59,7 @@ class LogType extends AbstractType
             ->sort(function (\SplFileInfo $a, \SplFileInfo $b) {
                 return strcmp($b->getMTime(), $a->getMTime());
             });
-        $dirs = $this->kernel->getLogDir().DIRECTORY_SEPARATOR.$this->kernel->getEnvironment();
+        $dirs = $this->kernel->getLogDir() . DIRECTORY_SEPARATOR . $this->kernel->getEnvironment();
         foreach ($finder->in($dirs) as $file) {
             $files[$file->getFilename()] = $file->getFilename();
         }
@@ -66,7 +67,7 @@ class LogType extends AbstractType
         $builder
             ->add('files', ChoiceType::class, [
                 'choices' => array_flip($files),
-                'data' => 'site_'.date('Y-m-d').'.log',
+                'data' => 'site_' . date('Y-m-d') . '.log',
                 'expanded' => false,
                 'multiple' => false,
                 'constraints' => [
@@ -82,6 +83,9 @@ class LogType extends AbstractType
                     new Assert\NotBlank(),
                     new Assert\Range(['min' => 1, 'max' => 50000]),
                 ],
+            ])
+            ->add('download', SubmitType::class, [
+                'label' => 'admin.common.download',
             ]);
     }
 

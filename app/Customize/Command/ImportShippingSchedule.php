@@ -26,6 +26,7 @@ use Eccube\Repository\ShippingRepository;
 use Customize\Repository\DnaSalesHeaderRepository;
 use Customize\Repository\DnaSalesStatusRepository;
 use Customize\Repository\BenefitsStatusRepository;
+use Psr\Log\LoggerInterface;
 
 class ImportShippingSchedule extends Command
 {
@@ -107,6 +108,11 @@ class ImportShippingSchedule extends Command
     protected $benefitsStatusRepository;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * Import shipping schedule constructor.
      *
      * @param EntityManagerInterface $entityManager
@@ -122,6 +128,7 @@ class ImportShippingSchedule extends Command
      * @param DnaSalesHeaderRepository $dnaSalesHeaderRepository
      * @param DnaSalesStatusRepository $dnaSalesStatusRepository
      * @param BenefitsStatusRepository $benefitsStatusRepository
+     * @param LoggerInterface $logger
      */
     public function __construct(
         EntityManagerInterface           $entityManager,
@@ -136,7 +143,8 @@ class ImportShippingSchedule extends Command
         ShippingRepository $shippingRepository,
         DnaSalesHeaderRepository         $dnaSalesHeaderRepository,
         DnaSalesStatusRepository         $dnaSalesStatusRepository,
-        BenefitsStatusRepository $benefitsStatusRepository
+        BenefitsStatusRepository $benefitsStatusRepository,
+        LoggerInterface $logger
     ) {
         parent::__construct();
         $this->entityManager = $entityManager;
@@ -152,6 +160,7 @@ class ImportShippingSchedule extends Command
         $this->dnaSalesHeaderRepository = $dnaSalesHeaderRepository;
         $this->dnaSalesStatusRepository = $dnaSalesStatusRepository;
         $this->benefitsStatusRepository = $benefitsStatusRepository;
+        $this->logger = $logger;
     }
 
     protected function configure()
@@ -213,7 +222,7 @@ var_dump($fileName);
                 throw new Exception('Error: Failed to open file');
             }
 
-            log_info('商品CSV取込開始');
+            $this->logger->info('商品CSV取込開始');
 
             // CSVファイルの登録処理
             while (($data = fgetcsv($fp)) !== false) {
@@ -307,7 +316,7 @@ var_dump($fileName);
             throw $e;
         }
 
-        log_info('商品CSV取込完了');
+        $this->logger->info('商品CSV取込完了');
         fclose($fp);
     }
 }

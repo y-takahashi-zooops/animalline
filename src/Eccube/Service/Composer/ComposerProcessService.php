@@ -18,9 +18,11 @@ use Eccube\Common\EccubeConfig;
 use Eccube\Entity\BaseInfo;
 use Eccube\Exception\PluginException;
 use Eccube\Repository\BaseInfoRepository;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class ComposerProcessService
+ * 
  * @deprecated Not maintained
  */
 class ComposerProcessService implements ComposerServiceInterface
@@ -35,8 +37,6 @@ class ComposerProcessService implements ComposerServiceInterface
      */
     protected $entityManager;
 
-    private $workingDir;
-
     /**
      * @var ComposerApiService
      */
@@ -47,18 +47,30 @@ class ComposerProcessService implements ComposerServiceInterface
     private $baseInfoRepository;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * ComposerProcessService constructor.
      *
      * @param EccubeConfig $eccubeConfig
      * @param EntityManagerInterface $entityManager
      * @param ComposerApiService $composerApiService
+     * @param LoggerInterface $logger
      */
-    public function __construct(EccubeConfig $eccubeConfig, EntityManagerInterface $entityManager, ComposerApiService $composerApiService, BaseInfoRepository $baseInfoRepository)
-    {
+    public function __construct(
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager,
+        ComposerApiService $composerApiService,
+        BaseInfoRepository $baseInfoRepository,
+        LoggerInterface $logger
+    ) {
         $this->eccubeConfig = $eccubeConfig;
         $this->entityManager = $entityManager;
         $this->composerApiService = $composerApiService;
         $this->baseInfoRepository = $baseInfoRepository;
+        $this->logger = $logger;
     }
 
     public function execRequire($packageName, $output = null)
@@ -80,9 +92,9 @@ class ComposerProcessService implements ComposerServiceInterface
     /**
      * Run command
      *
-     * @throws PluginException
-     *
      * @param string $command
+     * 
+     * @throws PluginException
      */
     public function runCommand($commands, $output = null, $init = true)
     {
@@ -101,7 +113,7 @@ class ComposerProcessService implements ComposerServiceInterface
             if ($returnValue) {
                 throw new PluginException($outputString);
             }
-            log_info(PHP_EOL.$outputString.PHP_EOL);
+            $this->logger->info(PHP_EOL.$outputString.PHP_EOL);
 
             return $outputString;
         } catch (\Exception $exception) {
@@ -138,13 +150,13 @@ class ComposerProcessService implements ComposerServiceInterface
         return $this->composerApiService->execConfig($key, $value);
     }
 
-    public function configureRepository(BaseInfo $BaseInfo)
+    public function configureRepository(BaseInfo $BaseInfo): void
     {
-        return $this->composerApiService->configureRepository($BaseInfo);
+        $this->composerApiService->configureRepository($BaseInfo);
     }
 
-    public function foreachRequires($packageName, $version, $callback, $typeFilter = null, $level = 0)
+    public function foreachRequires($packageName, $version, $callback, $typeFilter = null, $level = 0): void
     {
-        return $this->composerApiService->foreachRequires($packageName, $version, $callback, $typeFilter, $level);
+        $this->composerApiService->foreachRequires($packageName, $version, $callback, $typeFilter, $level);
     }
 }

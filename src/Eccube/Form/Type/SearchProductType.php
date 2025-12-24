@@ -13,6 +13,9 @@
 
 namespace Eccube\Form\Type;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Eccube\Entity\Master\ProductListMax;
+use Eccube\Entity\Master\ProductListOrderBy;
 use Eccube\Form\Type\Master\ProductListMaxType;
 use Eccube\Form\Type\Master\ProductListOrderByType;
 use Eccube\Repository\CategoryRepository;
@@ -22,6 +25,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 
 class SearchProductType extends AbstractType
 {
@@ -31,13 +35,19 @@ class SearchProductType extends AbstractType
     protected $categoryRepository;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
      * SearchProductType constructor.
      *
      * @param CategoryRepository $categoryRepository
      */
-    public function __construct(CategoryRepository $categoryRepository)
+    public function __construct(CategoryRepository $categoryRepository, EntityManagerInterface $entityManager)
     {
         $this->categoryRepository = $categoryRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -52,12 +62,17 @@ class SearchProductType extends AbstractType
             'data' => 'search',
         ]);
         $builder->add('category_id', EntityType::class, [
-            'class' => 'Eccube\Entity\Category',
+            'class' => \Eccube\Entity\Category::class,
             'choice_label' => 'NameWithLevel',
             'choices' => $Categories,
             'placeholder' => 'common.select__all_products',
             'required' => false,
+            'mapped' => true,
         ]);
+        // $builder->add('category_id', IntegerType::class, [
+        //     'required' => false,
+        //     'mapped' => false
+        // ]);
         $builder->add('name', SearchType::class, [
             'required' => false,
             'attr' => [
@@ -67,9 +82,11 @@ class SearchProductType extends AbstractType
         $builder->add('pageno', HiddenType::class, []);
         $builder->add('disp_number', ProductListMaxType::class, [
             'label' => false,
+            'choices' => $this->entityManager->getRepository(ProductListMax::class)->findBy([], ['sort_no' => 'ASC']),
         ]);
         $builder->add('orderby', ProductListOrderByType::class, [
             'label' => false,
+            'choices' => $this->entityManager->getRepository(ProductListOrderBy::class)->findBy([], ['sort_no' => 'ASC']),
         ]);
     }
 

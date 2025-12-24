@@ -39,6 +39,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Eccube\Repository\Master\OrderItemTypeRepository;
 use Customize\Controller\Admin\Product\ProductController as BaseProductController;
+use Doctrine\ORM\EntityManagerInterface;
+use Eccube\Common\EccubeConfig;
 
 class ProductWasteController extends BaseProductController
 {
@@ -108,6 +110,11 @@ class ProductWasteController extends BaseProductController
     protected $stockWasteReasonRepository;
 
     /**
+     * @var EccubeConfig
+     */
+    protected $eccubeConfig;
+
+    /**
      * ProductWasteController constructor.
      *
      * @param CsvExportService $csvExportService
@@ -125,6 +132,7 @@ class ProductWasteController extends BaseProductController
      * @param StockWasteReasonRepository $stockWasteReasonRepository
      */
     public function __construct(
+        EntityManagerInterface $entityManager,
         CsvExportService                $csvExportService,
         ProductClassRepository          $productClassRepository,
         ProductImageRepository          $productImageRepository,
@@ -137,7 +145,8 @@ class ProductWasteController extends BaseProductController
         TagRepository                   $tagRepository,
         OrderItemTypeRepository         $orderItemTypeRepository,
         StockWasteRepository            $stockWasteRepository,
-        StockWasteReasonRepository      $stockWasteReasonRepository
+        StockWasteReasonRepository      $stockWasteReasonRepository,
+        EccubeConfig $eccubeConfig
     ) {
         $this->csvExportService = $csvExportService;
         $this->productClassRepository = $productClassRepository;
@@ -152,7 +161,16 @@ class ProductWasteController extends BaseProductController
         $this->orderItemTypeRepository = $orderItemTypeRepository;
         $this->stockWasteRepository = $stockWasteRepository;
         $this->stockWasteReasonRepository = $stockWasteReasonRepository;
+        $this->eccubeConfig = $eccubeConfig;
+        
+        // 親クラスのsetterメソッドを呼び出してプロパティを設定
+        $this->setEntityManager($entityManager);
     }
+
+    // public function index(Request $request, $page_no = null, PaginatorInterface $paginator)
+    // {
+    //     return $this->redirectToRoute('admin_product_waste');
+    // }
 
     /**
      * 廃棄管理画面
@@ -167,7 +185,7 @@ class ProductWasteController extends BaseProductController
             $waste = $this->stockWasteRepository->find($request->get('id_destroy'));
             $productClass = $waste->getProductClass();
             $productClass->setStock((int)$productClass->getStock() + $waste->getWasteUnit());
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($productClass);
             $entityManager->remove($waste);
             $entityManager->flush();
@@ -203,7 +221,7 @@ class ProductWasteController extends BaseProductController
      * @Route("/%eccube_admin_route%/product/waste/{id}", requirements={"id" = "\d+"}, name="admin_product_waste_regist")
      * @Template("@admin/Product/waste_regist.twig")
      */
-    public function waste_regist(Request $request)
+    public function waste_regist(Request $request, ?int $id = null)
     {
         $productClassId = $request->get('id');
         $productClass = $this->productClassRepository->find($productClassId);
@@ -227,7 +245,7 @@ class ProductWasteController extends BaseProductController
                     ->setProductClass($productClass);
                 $this->productClassRepository->decrementStock($productClass, $stockUnit);
                 $productClass->setUpdateDate(Carbon::now());
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->entityManager;
                 $entityManager->persist($stockWaste);
                 $entityManager->persist($productClass);
                 $entityManager->flush();

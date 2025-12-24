@@ -24,6 +24,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Eccube\Repository\MemberRepository;
+use Psr\Log\LoggerInterface;
 
 class TestCommand extends Command
 {
@@ -80,6 +81,11 @@ class TestCommand extends Command
     protected $businessHolidayRepository;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * ExportProduct constructor.
      *
      * @param EntityManagerInterface $entityManager
@@ -90,6 +96,7 @@ class TestCommand extends Command
      * @param ProductStockService $productStockService
      * @param CategoryRepository $categoryRepository
      * @param BusinessHolidayRepository $businessHolidayRepository
+     * @param LoggerInterface $logger
      */
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -100,7 +107,8 @@ class TestCommand extends Command
         SupplierRepository     $supplierRepository,
         ProductStockService     $productStockService,
         CategoryRepository   $categoryRepository,
-        BusinessHolidayRepository $businessHolidayRepository
+        BusinessHolidayRepository $businessHolidayRepository,
+        LoggerInterface $logger
     ) {
         parent::__construct();
         $this->entityManager = $entityManager;
@@ -112,6 +120,7 @@ class TestCommand extends Command
         $this->memberRepository = $memberRepository;
         $this->categoryRepository = $categoryRepository;
         $this->businessHolidayRepository = $businessHolidayRepository;
+        $this->logger = $logger;
     }
 
     protected function configure()
@@ -170,7 +179,7 @@ var_dump($csvpath);
                 throw new \Exception('Error: Failed to open file');
             }
 
-            log_info('商品画像CSV取込開始');
+            $this->logger->info('商品画像CSV取込開始');
 
             // CSVファイルの登録処理
             while (($data = fgetcsv($fp)) !== FALSE) {
@@ -307,7 +316,7 @@ var_dump($csvpath);
             throw $e;
         }
 
-        log_info('商品CSV取込完了');
+        $this->logger->info('商品CSV取込完了');
         fclose($fp);
     }
 }

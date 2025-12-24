@@ -203,12 +203,12 @@ file that was distributed with this source code.
                                     <tr>
                                         <td class="pt-2 pb-2"></td>
                                         <td class="align-middle">{{ instock.id }}</td>
-                                        <td class="align-middle">{{ instock.OrderDate | date('Y/m/d') }}</td>
-                                        <td class="align-middle">{{ instock.arrivalDateSchedule | date('Y/m/d') }}</td>
-                                        <td class="align-middle">{{ instock.arrivalDate is empty ? '_' : instock.arrivalDate | date('Y/m/d') }}</td>
-                                        <td class="align-middle">{{ instock.isSendWms == 0 ? '未' : '済' }}</td>
-                                        <td class="align-middle">{{ instock.isCommit == 0 ? '未' : '済' }}</td>
-                                        <td class="align-middle">{{ instock.remarkText }}</td>
+                                        <td class="align-middle">{{ instock.instockHeader.orderDate|date('Y-m-d') }}</td>
+                                        <td class="align-middle">{{ instock.instockHeader.arrivalDateSchedule | date('Y/m/d') }}</td>
+                                        <td class="align-middle">{{ instock.instockHeader.arrivalDate is empty ? '_' : instock.instockHeader.arrivalDate | date('Y/m/d') }}</td>
+                                        <td class="align-middle">{{ instock.instockHeader.isSendWms == 0 ? '未' : '済' }}</td>
+                                        <td class="align-middle">{{ instock.instockHeader.isCommit == 0 ? '未' : '済' }}</td>
+                                        <td class="align-middle">{{ instock.instockHeader.remarkText }}</td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>
@@ -220,7 +220,7 @@ file that was distributed with this source code.
             <button class="btn btn-ec-conversion px-5" type="button" onClick="confirmSendWMS()">入荷予定をWMSに送信</button>
 
             <div class="navigation float-right">
-                {{ knp_pagination_render(instocks) }}
+                {{ knp_pagination_render(instocks, '@KnpPaginator/twitter_bootstrap_v4_pagination.html.twig') }}
             </div>
             <!-- 完全に削除の確認モーダル-->
             <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="discontinuance"
@@ -229,7 +229,7 @@ file that was distributed with this source code.
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title font-weight-bold">入荷情報を削除します</h5>
-                            <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+                            <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close"><span
                                         aria-hidden="true">×</span></button>
                         </div>
                         <div class="modal-body text-left">
@@ -241,10 +241,10 @@ file that was distributed with this source code.
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-ec-sub" type="button" data-dismiss="modal">キャンセル</button>
+                            <button class="btn btn-ec-sub" type="button" data-bs-dismiss="modal">キャンセル</button>
                             <button class="btn btn-ec-delete" type="button" id="bulkDelete">削除</button>
                             <button class="btn btn-ec-regular" id="bulkDeleteDone" style="display: none" type="button"
-                                    data-dismiss="modal">完了
+                                    data-bs-dismiss="modal">完了
                             </button>
                         </div>
                     </div>

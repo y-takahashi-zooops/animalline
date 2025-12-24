@@ -7,7 +7,6 @@
 # 共通
 gmo_payment_gateway.com.yen: 円
 gmo_payment_gateway.com.required: 必須
-gmo_payment_gateway.com.other: '、他'
 gmo_payment_gateway.com.payname.credit: クレジットカード決済
 gmo_payment_gateway.com.payname.cvs: コンビニ決済
 gmo_payment_gateway.com.payname.cvs.lawson: ローソン
@@ -20,10 +19,9 @@ gmo_payment_gateway.com.payname.payeasy: Pay-easy決済
 gmo_payment_gateway.com.payname.payeasy.net: Pay-easy決済(ネットバンク)
 gmo_payment_gateway.com.payname.payeasy.atm: Pay-easy決済(銀行ATM)
 gmo_payment_gateway.com.payname.carrier.au: auかんたん決済
-gmo_payment_gateway.com.payname.carrier.docomo: d払い
+gmo_payment_gateway.com.payname.carrier.docomo: ドコモケータイ払い
 gmo_payment_gateway.com.payname.carrier.softbank: ソフトバンクまとめて支払い
 gmo_payment_gateway.com.payname.rakuten_pay: 楽天ペイ
-gmo_payment_gateway.com.payname.ganb: '銀行振込(バーチャル口座 あおぞら)'
 gmo_payment_gateway.com.payname.unknown: 不明な決済
 gmo_payment_gateway.com.error_file.error1: エラー定義ファイルの読み込みに失敗しました。
 
@@ -40,7 +38,6 @@ gmo_payment_gateway.admin.save.failed: 保存に失敗しました
 
 # 管理 nav
 gmo_payment_gateway.admin.nav.payment_list: 決済状況一覧
-gmo_payment_gateway.admin.nav.fraud_detection_list: 不正検知一覧
 
 # プラグイン設定画面
 gmo_payment_gateway.admin.config.title: PGマルチペイメントサービス決済プラグイン
@@ -95,16 +92,12 @@ gmo_payment_gateway.admin.payment_edit.credit.col5: 本人認証サービス(3D�
 gmo_payment_gateway.admin.payment_edit.credit.col6: 3Dセキュア表示店舗名
 gmo_payment_gateway.admin.payment_edit.credit.col7: 入力回数制限
 gmo_payment_gateway.admin.payment_edit.credit.col8: 入力回数制限 検出時間
-gmo_payment_gateway.admin.payment_edit.credit.col8.min: 分
 gmo_payment_gateway.admin.payment_edit.credit.col9: 入力回数制限 エラー上限回数
-gmo_payment_gateway.admin.payment_edit.credit.col9.cnt: 回
 gmo_payment_gateway.admin.payment_edit.credit.col10: 入力回数制限 ロック時間
-gmo_payment_gateway.admin.payment_edit.credit.col10.min: 分
 gmo_payment_gateway.admin.payment_edit.credit.col11: 決済完了案内タイトル
 gmo_payment_gateway.admin.payment_edit.credit.col12: 決済完了案内本文
 gmo_payment_gateway.admin.payment_edit.credit.col13: 自由項目1
 gmo_payment_gateway.admin.payment_edit.credit.col14: 自由項目2
-gmo_payment_gateway.admin.payment_edit.credit.col15: 3Dセキュア必須タイプ
 gmo_payment_gateway.admin.payment_edit.credit.method1: 一括払い
 gmo_payment_gateway.admin.payment_edit.credit.method2: 分割2回払い
 gmo_payment_gateway.admin.payment_edit.credit.method3: 分割3回払い
@@ -146,13 +139,9 @@ gmo_payment_gateway.admin.payment_edit.credit.method84: 分割84回払い
 gmo_payment_gateway.admin.payment_edit.credit.method_1b: ボーナス一括
 gmo_payment_gateway.admin.payment_edit.credit.method_2b: ボーナス分割2回払い
 gmo_payment_gateway.admin.payment_edit.credit.method_r: リボ払い
-gmo_payment_gateway.admin.payment_edit.credit.jobcd.note1: 仮売上(AUTH)・・・カードの与信枠を確保し承認番号を得ること。※仮売上のデータ保持期間は60日です。実売上処理を行わないとカード会社への売上データが作成されません。
 gmo_payment_gateway.admin.payment_edit.credit.credit_pay_methods.note1: ※有効にする支払い種別を選択してください。
 gmo_payment_gateway.admin.payment_edit.credit.credit_pay_methods.note2: ※PGマルチペイメントサービスのショップ管理画面にてカード会社契約状況を確認のうえ、ご設定いただきますようお願いします。
 gmo_payment_gateway.admin.payment_edit.credit.use_securitycd.note1: ※カード番号の裏面の3～4桁の番号を入力するようにします。
-gmo_payment_gateway.admin.payment_edit.credit.use_securitycd_option.note1: ※セキュリティコードを利用するに設定した場合に有効となります。
-gmo_payment_gateway.admin.payment_edit.credit.TdFlag.1: 3DS1.0を利用する
-gmo_payment_gateway.admin.payment_edit.credit.TdFlag.2: 3DS2.0を利用する
 gmo_payment_gateway.admin.payment_edit.credit.TdFlag.note1: ※本人認証サービスを使用するにはSSL環境が必要です。
 gmo_payment_gateway.admin.payment_edit.credit.TdFlag.note2: ※携帯電話(フューチャーフォン）の場合には通常の決済が実行されます。
 gmo_payment_gateway.admin.payment_edit.credit.TdTenantName.caution: （半角英数18文字以内で入力）
@@ -160,22 +149,6 @@ gmo_payment_gateway.admin.payment_edit.credit.TdTenantName.note1: ※本人認�
 gmo_payment_gateway.admin.payment_edit.credit.TdTenantName.note2: 設定した店舗名は、本人認証サービスのパスワード入力画面に表示する店舗名になります。
 gmo_payment_gateway.admin.payment_edit.credit.TdTenantName.note3: 日本語を設定された場合（特に全角）、文字の組み合わせによっては文字化けを起こす、もしくはエラーとなり決済できないことがございます。
 gmo_payment_gateway.admin.payment_edit.credit.TdTenantName.note4: 3Dセキュア表示店舗名には、可能でしたら半角にて設定いただき、十分な検証をおこなっていただくことを推奨いたします。
-gmo_payment_gateway.admin.payment_edit.credit.TdRequired.0: 契約内容に従う（デフォルト）
-gmo_payment_gateway.admin.payment_edit.credit.TdRequired.1: 3DS認証必須
-gmo_payment_gateway.admin.payment_edit.credit.TdRequired.2: 3DS認証必須ではない
-gmo_payment_gateway.admin.payment_edit.credit.TdRequired.note1: ※本人認証サービス(3Dセキュア)を3DS2.0または3DS1.0に設定した場合に有効となります。
-gmo_payment_gateway.admin.payment_edit.credit.limit_min.caution: （半角数字で入力）
-gmo_payment_gateway.admin.payment_edit.credit.limit_min.note1: ※入力回数制限を利用しない場合、入力は不要です。
-gmo_payment_gateway.admin.payment_edit.credit.limit_min.note2: ※指定した検出時間内に決済エラーが発生した場合、エラー回数を加算します。
-gmo_payment_gateway.admin.payment_edit.credit.limit_min.validate1: 検出時間を入力してください。
-gmo_payment_gateway.admin.payment_edit.credit.limit_count.caution: （半角数字で入力）
-gmo_payment_gateway.admin.payment_edit.credit.limit_count.note1: ※入力回数制限を利用しない場合、入力は不要です。
-gmo_payment_gateway.admin.payment_edit.credit.limit_count.note2: ※指定したエラー上限回数に達した場合、クレジットカード決済およびクレジットカード編集の利用が制限されます。
-gmo_payment_gateway.admin.payment_edit.credit.limit_count.validate1: エラー上限回数を入力してください。
-gmo_payment_gateway.admin.payment_edit.credit.lock_min.caution: （半角数字で入力）
-gmo_payment_gateway.admin.payment_edit.credit.lock_min.note1: ※入力回数制限を利用しない場合、入力は不要です。
-gmo_payment_gateway.admin.payment_edit.credit.lock_min.note2: ※エラー上限回数に達した場合のロック時間を設定します。
-gmo_payment_gateway.admin.payment_edit.credit.lock_min.validate1: ロック時間を入力してください。
 gmo_payment_gateway.admin.payment_edit.credit.order_mail_title1.caution: （上限50文字）
 gmo_payment_gateway.admin.payment_edit.credit.order_mail_title1.note1: ご注文完了画面とご注文完了メールに、支払いに関する案内文を入れる場合にはタイトルと本文を入れて下さい。(両方入っていない場合は有効になりません。)
 gmo_payment_gateway.admin.payment_edit.credit.order_mail_body1.caution: （上限1,000文字）
@@ -332,7 +305,7 @@ gmo_payment_gateway.admin.payment_edit.au.ClientField1.caution: （上限100文�
 gmo_payment_gateway.admin.payment_edit.au.ClientField2.caution: （上限100文字）
 gmo_payment_gateway.admin.payment_edit.au.action_error1: '※ サービス名（店名）に禁止されている文字「%char%」が含まれています。'
 
-# d払い
+# ドコモケータイ払い
 gmo_payment_gateway.admin.payment_edit.docomo.col1: 処理区分
 gmo_payment_gateway.admin.payment_edit.docomo.col2: 支払期限
 gmo_payment_gateway.admin.payment_edit.docomo.col2.sec: 秒
@@ -347,7 +320,7 @@ gmo_payment_gateway.admin.payment_edit.docomo.payment_term_sec.note1: ※省略�
 gmo_payment_gateway.admin.payment_edit.docomo.payment_term_sec.validate1: ※ 支払い期限は最大86400秒まで設定可能です。
 gmo_payment_gateway.admin.payment_edit.docomo.docomo_disp1.caution: （上限40文字）
 gmo_payment_gateway.admin.payment_edit.docomo.docomo_disp2.caution: （上限40文字）
-gmo_payment_gateway.admin.payment_edit.docomo.docomo_disp.note1: ※spモードの場合のみ、以下のd払い画面に表示されます。
+gmo_payment_gateway.admin.payment_edit.docomo.docomo_disp.note1: ※spモードの場合のみ、以下のドコモケータイ払い画面に表示されます。
 gmo_payment_gateway.admin.payment_edit.docomo.docomo_disp.note2: ・決済内容確認画面
 gmo_payment_gateway.admin.payment_edit.docomo.docomo_disp.note3: ・利用明細
 gmo_payment_gateway.admin.payment_edit.docomo.docomo_disp.note4: 商品の詳細説明や、お客様へのメッセージなどにご使用下さい。
@@ -387,22 +360,6 @@ gmo_payment_gateway.admin.payment_edit.rakuten_pay.order_mail_body1.caution: （
 gmo_payment_gateway.admin.payment_edit.rakuten_pay.ClientField1.caution: （上限100文字）
 gmo_payment_gateway.admin.payment_edit.rakuten_pay.ClientField2.caution: （上限100文字）
 
-# 銀行振込（バーチャル口座 あおぞら）
-gmo_payment_gateway.admin.payment_edit.ganb.col1: 取引有効日数
-gmo_payment_gateway.admin.payment_edit.ganb.col1.day: 日
-gmo_payment_gateway.admin.payment_edit.ganb.col2: 決済完了案内タイトル
-gmo_payment_gateway.admin.payment_edit.ganb.col3: 決済完了案内本文
-gmo_payment_gateway.admin.payment_edit.ganb.col4: 自由項目1
-gmo_payment_gateway.admin.payment_edit.ganb.col5: 自由項目2
-gmo_payment_gateway.admin.payment_edit.ganb.trade_days.caution: （半角数字で入力）
-gmo_payment_gateway.admin.payment_edit.ganb.trade_days.note1: ※取引が有効な日数を指定してください。省略すると無期限になります。
-gmo_payment_gateway.admin.payment_edit.ganb.trade_days.validate1: ※ 取引有効日数は最大999日まで設定可能です。
-gmo_payment_gateway.admin.payment_edit.ganb.order_mail_title1.caution: （上限50文字）
-gmo_payment_gateway.admin.payment_edit.ganb.order_mail_title1.note1: ご注文完了画面とご注文完了メールに、支払いに関する案内文を入れる場合にはタイトルと本文を入れて下さい。(両方入っていない場合は有効になりません。)
-gmo_payment_gateway.admin.payment_edit.ganb.order_mail_body1.caution: （上限1,000文字）
-gmo_payment_gateway.admin.payment_edit.ganb.ClientField1.caution: （上限100文字）
-gmo_payment_gateway.admin.payment_edit.ganb.ClientField2.caution: （上限100文字）
-
 # 受注修正画面
 gmo_payment_gateway.admin.order_edit.title: PGマルチペイメントサービス決済情報
 gmo_payment_gateway.admin.order_edit.col.payment_method: 決済種別
@@ -422,17 +379,7 @@ gmo_payment_gateway.admin.order_edit.col.bk_code: 収納機関番号
 gmo_payment_gateway.admin.order_edit.col.conf_no: 確認番号
 gmo_payment_gateway.admin.order_edit.col.receipt_no: 受付番号
 gmo_payment_gateway.admin.order_edit.col.payment_term: 払込期限
-gmo_payment_gateway.admin.order_edit.col.bank_code: 銀行コード
-gmo_payment_gateway.admin.order_edit.col.bank_name: 銀行名
-gmo_payment_gateway.admin.order_edit.col.branch_code: 支店コード
-gmo_payment_gateway.admin.order_edit.col.branch_name: 支店名
-gmo_payment_gateway.admin.order_edit.col.account_type: 口座種別
-gmo_payment_gateway.admin.order_edit.col.account_number: 口座番号
-gmo_payment_gateway.admin.order_edit.col.account_holder_name: 口座名義
-gmo_payment_gateway.admin.order_edit.col.available_date: 取引有効期限
 gmo_payment_gateway.admin.order_edit.col.amount: 決済金額
-gmo_payment_gateway.admin.order_edit.col.amount.ganb: 振込依頼金額
-gmo_payment_gateway.admin.order_edit.col.total_transfer_amount: 累計入金額
 gmo_payment_gateway.admin.order_edit.col.action: 決済操作
 gmo_payment_gateway.admin.order_edit.col.log: 決済ログ
 gmo_payment_gateway.admin.order_edit.col.log.a: 決済ログ表示・非表示
@@ -440,7 +387,6 @@ gmo_payment_gateway.admin.order_edit.col.log.time: 時間
 gmo_payment_gateway.admin.order_edit.col.log.contents: 内容
 gmo_payment_gateway.admin.order_edit.button.commit: 売上確定(実売上)実行
 gmo_payment_gateway.admin.order_edit.button.cancel: 取消(返品)実行
-gmo_payment_gateway.admin.order_edit.button.partial: 一部取消(一部返品)実行
 gmo_payment_gateway.admin.order_edit.button.change: 決済金額変更
 gmo_payment_gateway.admin.order_edit.button.reauth: 再オーソリ実行
 gmo_payment_gateway.admin.order_edit.button.status: 決済状態確認・反映
@@ -459,9 +405,8 @@ gmo_payment_gateway.admin.order_edit.action_error10: '決済処理エラー：�
 gmo_payment_gateway.admin.order_edit.action_error11: '決済処理エラー：取消期限を越えています(注文確定後の取引の場合、注文確定の処理完了日から翌月末日迄であること)。'
 gmo_payment_gateway.admin.order_edit.action_error12: '決済キャンセルエラー：auかんたん決済(WebMoney)は返品処理に対応していません。'
 gmo_payment_gateway.admin.order_edit.action_error13: '決済キャンセルエラー：auかんたん決済返品期限切れ。返品期限は売上確定月の翌々月末日までです。'
-gmo_payment_gateway.admin.order_edit.action_error14: '決済キャンセルエラー：d払い取消期限切れ。d払いのキャンセルは取引日の翌々月末20:00までです。'
+gmo_payment_gateway.admin.order_edit.action_error14: '決済キャンセルエラー：ドコモケータイ払い取消期限切れ。ドコモケータイ払いのキャンセルは取引日の翌々月末20:00までです。'
 gmo_payment_gateway.admin.order_edit.action_error15: '決済キャンセルエラー：ソフトバンクケータイ支払いキャンセル期限切れ。キャンセル期限はサービス仕様をご確認下さい。'
-gmo_payment_gateway.admin.order_edit.action_error16: '決済キャンセルエラー：決済金額を取得できませんでした。'
 
 # 管理 会員修正
 gmo_payment_gateway.admin.customer_edit.title: PGマルチペイメントサービス決済情報
@@ -472,7 +417,7 @@ gmo_payment_gateway.admin.payment_status.bulk_action.success: '%count%件を処�
 gmo_payment_gateway.admin.payment_status.title: 決済状況一覧
 gmo_payment_gateway.admin.payment_status.sub_title: 受注管理
 gmo_payment_gateway.admin.payment_status.search: 検索
-gmo_payment_gateway.admin.payment_status.search_result_count: '検索結果：%count%件が該当しました'
+gmo_payment_gateway.admin.payment_status.search_result_count: 検索結果：%count%件が該当しました
 gmo_payment_gateway.admin.payment_status.search_condition_payment: 支払方法
 gmo_payment_gateway.admin.payment_status.search_condition_order_status: 対応状況
 gmo_payment_gateway.admin.payment_status.search_condition_payment_status: 決済状況
@@ -499,24 +444,6 @@ gmo_payment_gateway.admin.payment_status.bulk_modal_body: 複数の項目を変�
 gmo_payment_gateway.admin.payment_status.bulk_modal_action_exec: 実行
 gmo_payment_gateway.admin.payment_status.bulk_modal_action_cancel: キャンセル
 gmo_payment_gateway.admin.payment_status.bulk_alert: 選択されていません
-
-# 管理 不正検知一覧
-gmo_payment_gateway.admin.fraud_detection.search.cond.ip_address: IPアドレス
-gmo_payment_gateway.admin.fraud_detection.search.cond.occur_time: 発生日
-gmo_payment_gateway.admin.fraud_detection.search.cond.occur_time_start: 発生日(開始)
-gmo_payment_gateway.admin.fraud_detection.search.cond.occur_time_end: 発生日(終了)
-gmo_payment_gateway.admin.fraud_detection.search.cond.error_count: エラー回数
-gmo_payment_gateway.admin.fraud_detection.search.cond.error_count_start: エラー回数(開始)
-gmo_payment_gateway.admin.fraud_detection.search.cond.error_count_end: エラー回数(終了)
-gmo_payment_gateway.admin.fraud_detection.col1: IPアドレス
-gmo_payment_gateway.admin.fraud_detection.col2: 発生日
-gmo_payment_gateway.admin.fraud_detection.col3: 解除日
-gmo_payment_gateway.admin.fraud_detection.col4: エラー回数
-gmo_payment_gateway.admin.fraud_detection.col5: ロック状態
-gmo_payment_gateway.admin.fraud_detection.col6: ロック解除
-gmo_payment_gateway.admin.fraud_detection.status: ロック中
-gmo_payment_gateway.admin.fraud_detection.unlock: 解除する
-gmo_payment_gateway.admin.fraud_detection.unlock.done: '%ip%のロックを解除しました。'
 
 # フロント 共通
 gmo_payment_gateway.shopping.com.mismatch.payment: 支払い方法が一致していません。
@@ -545,7 +472,7 @@ gmo_payment_gateway.shopping.credit.col6.label: このカードを登録する�
 gmo_payment_gateway.shopping.credit.col6.note1: カード情報を登録すると次回より入力無しで購入出来ます。
 gmo_payment_gateway.shopping.credit.col6.note2: カード情報は当店では保管いたしません。
 gmo_payment_gateway.shopping.credit.col6.note3: 委託する決済代行会社にて安全に保管されます。
-gmo_payment_gateway.shopping.credit.col6.note4: 'カード情報が既に%count%個登録されています。'
+gmo_payment_gateway.shopping.credit.col6.note4: カード情報が既に%count%個登録されています。
 gmo_payment_gateway.shopping.credit.col6.note5: これ以上は新規で登録出来ません。
 gmo_payment_gateway.shopping.credit.col6.note6: 新たに登録したい場合は、大変お手数ですが後ほどマイページにて編集して下さい。
 gmo_payment_gateway.shopping.credit.col6.register: 登録する
@@ -572,19 +499,6 @@ gmo_payment_gateway.shopping.credit.3dsecure.note1: 本人認証サービス（3
 gmo_payment_gateway.shopping.credit.3dsecure.note2: ※画面が切り替るまで少々時間がかかる場合がございますが、そのままお待ちください。
 gmo_payment_gateway.shopping.credit.3dsecure.error1: '取引ID(MD)が一致しませんでした。(%MD1%|%MD2%)'
 gmo_payment_gateway.shopping.credit.3dsecure.error2: 結果電文が取得できませんでした。
-gmo_payment_gateway.shopping.credit.3dsecure2.error1: '取引ID(AccessID)が一致しませんでした。(%AccessID1%|%AccessID2%)'
-gmo_payment_gateway.shopping.credit.3dsecure2.note1: |
-  当社がお客様から収集した以下の1及び2記載の情報等は、クレジットカードの発行会社が行う不正利用検知・防止のために、お客様が利用されているクレジットカードの発行会社へ提供させていただきます。
-
-  1.お客様情報
-  　住所、emailアドレス、会員登録日、会員情報更新日
-
-  2.配送先情報
-  　配送先住所
-
-  お客様が利用されているクレジットカードの発行会社が外国にある場合、これらの情報は当該発行会社が所属する国に移転される場合があります。
-  お客様が未成年の場合、親権者または後見人の承諾を得るものとします。
-gmo_payment_gateway.shopping.credit.fraud.detect.lock: 'アカウント[%ip%]がロックされているためクレジットカード決済をご利用いただけません。ショップサポートにお問い合わせください。'
 
 # フロント コンビニ入力フォーム
 gmo_payment_gateway.shopping.cvs.col1: コンビニ選択
@@ -634,17 +548,15 @@ gmo_payment_gateway.mypage.card_edit.append.success: カードを追加しまし
 gmo_payment_gateway.mypage.card_edit.modify.success: カードを更新しました。
 gmo_payment_gateway.mypage.card_edit.delete.success: 選択したカードを削除しました。
 
-gmo_payment_gateway.mypage.card_edit.fraud.detect.lock: 'アカウント[%ip%]がロックされているためカード情報編集をご利用いただけません。ショップサポートにお問い合わせください。'
-
 # 内部処理向け
 gmo_payment_gateway.payment_helper.approve: 承認番号
 gmo_payment_gateway.payment_helper.custid: お客様番号
 gmo_payment_gateway.payment_helper.bkcode: 収納機関番号
 gmo_payment_gateway.payment_helper.receiptno1: お客様番号
 gmo_payment_gateway.payment_helper.receiptno2: 受付番号
-gmo_payment_gateway.payment_helper.receiptno3: 第２番号(12桁)
+gmo_payment_gateway.payment_helper.receiptno3: 注文番号
 gmo_payment_gateway.payment_helper.confno1: 確認番号
-gmo_payment_gateway.payment_helper.confno2: 第１番号(5桁)
+gmo_payment_gateway.payment_helper.confno2: 企業コード
 gmo_payment_gateway.payment_helper.confno3: 申込番号
 gmo_payment_gateway.payment_helper.paymentterm: お支払い期限
 gmo_payment_gateway.payment_helper.paymentterm.fmt: '%04d年%02d月%02d日 %02d時%02d分'
@@ -661,17 +573,14 @@ gmo_payment_gateway.payment_helper.error5: 'レスポンスデータエラー: �
 gmo_payment_gateway.payment_helper.do_no_order.title: 不一致データ検出
 gmo_payment_gateway.payment_helper.do_unmatch_accessid.title: 取引ID不一致データ検出
 gmo_payment_gateway.payment_helper.do_unmatch_paytype.title: 支払い方法不一致データ検出
-gmo_payment_gateway.payment_helper.do_deposit_after_expiration.title: 取引停止または期限切れ後に入金を検出
-gmo_payment_gateway.payment_helper.do_insufficient_deposit.title: 入金額の不足を検出
-gmo_payment_gateway.payment_helper.do_too_much_deposit.title: 入金額の超過を検出
 
 gmo_payment_gateway.payment_helper.carrier.cancel: 決済がキャンセルされました。
 
 # pay_status
 gmo_payment_gateway.pay_status.unsettled: 未決済
 gmo_payment_gateway.pay_status.request_success: 要求成功
-gmo_payment_gateway.pay_status.paysuccess: 支払い完了
-gmo_payment_gateway.pay_status.expired: 期限切れ
+gmo_payment_gateway.pay_status.pay_success: 支払い完了
+gmo_payment_gateway.pay_status.expire: 期限切れ
 gmo_payment_gateway.pay_status.cancel: キャンセル
 gmo_payment_gateway.pay_status.fail: 決済失敗
 gmo_payment_gateway.pay_status.auth: 仮売上済み
@@ -688,5 +597,3 @@ gmo_payment_gateway.pay_status.paystart: 決済開始
 gmo_payment_gateway.pay_status.reqsales: 注文確定受付
 gmo_payment_gateway.pay_status.reqcancel: キャンセル受付
 gmo_payment_gateway.pay_status.reqchange: 注文金額変更受付
-gmo_payment_gateway.pay_status.trading: 取引中
-gmo_payment_gateway.pay_status.stop: 取引停止

@@ -23,6 +23,8 @@ use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class ProductSupplierController extends AbstractController
 {
@@ -43,11 +45,17 @@ class ProductSupplierController extends AbstractController
      * @param SupplierRepository $supplierRepository
      */
     public function __construct(
+        EntityManagerInterface $entityManager,
         ProductClassRepository $productClassRepository,
-        SupplierRepository     $supplierRepository
+        SupplierRepository     $supplierRepository,
+        FormFactoryInterface $formFactory
     ) {
         $this->productClassRepository = $productClassRepository;
         $this->supplierRepository = $supplierRepository;
+        
+        // 親クラスのsetterメソッドを呼び出してプロパティを設定
+        $this->setEntityManager($entityManager);
+        $this->setFormFactory($formFactory);
     }
 
     /**
@@ -63,7 +71,7 @@ class ProductSupplierController extends AbstractController
             $supplier = $this->supplierRepository->find($request->get('id-destroy'));
             $issetProduct = $this->productClassRepository->findBy(['supplier_code' => $supplier->getSupplierCode()]);
             if (!$issetProduct) {
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->entityManager;
                 $entityManager->remove($supplier);
                 $entityManager->flush();
             }
@@ -75,7 +83,7 @@ class ProductSupplierController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($supplierNew);
             $entityManager->flush();
 
@@ -86,7 +94,8 @@ class ProductSupplierController extends AbstractController
         $formUpdate = [];
         foreach ($suppliers as $supplier) {
             $uniqueFormName = 'Form' . $supplier->getId();
-            $formHandle = $this->get('form.factory')->createNamed($uniqueFormName, SupplierType::class, $supplier);
+            // $formHandle = $this->get('form.factory')->createNamed($uniqueFormName, SupplierType::class, $supplier);
+            $formHandle = $this->formFactory->createNamed($uniqueFormName, SupplierType::class, $supplier);
             $formUpdate[$uniqueFormName] = $formHandle;
             $supplier->is_destroy = (bool)$this->productClassRepository->findBy(['supplier_code' => $supplier->getSupplierCode()]);
         }
@@ -96,7 +105,7 @@ class ProductSupplierController extends AbstractController
                 $supplier = $this->supplierRepository->find($request->get('supplier-id'));
                 $formHandle->handleRequest($request);
                 if ($formHandle->isSubmitted() && $formHandle->isValid()) {
-                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager = $this->entityManager;
                     $entityManager->persist($supplier);
                     $entityManager->flush();
                 }

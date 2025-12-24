@@ -13,29 +13,43 @@
 
 namespace Customize\Controller;
 
+use Eccube\Entity\Customer;
 use Eccube\Entity\CustomerAddress;
 use Eccube\Entity\Order;
 use Eccube\Entity\Shipping;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Eccube\Exception\ShoppingException;
+use Eccube\Form\Type\Front\CustomerLoginType;
+use Eccube\Form\Type\Front\ShoppingShippingType;
 use Eccube\Form\Type\Shopping\CustomerAddressType;
 use Eccube\Form\Type\Shopping\OrderType;
+use Eccube\Repository\BaseInfoRepository;
 use Eccube\Repository\OrderRepository;
+use Eccube\Repository\TradeLawRepository;
 use Eccube\Service\CartService;
 use Eccube\Service\MailService;
 use Eccube\Service\OrderHelper;
 use Eccube\Service\Payment\PaymentDispatcher;
 use Eccube\Service\Payment\PaymentMethodInterface;
-use Plugin\ZooopsSubscription\Entity\SubscriptionContract;
+use Eccube\Service\PurchaseFlow\PurchaseContext;
+use Eccube\Service\PurchaseFlow\PurchaseFlow;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Constraints\Date;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Eccube\Controller\ShoppingController as BaseShoppingController;
 use Customize\Service\SubscriptionProcess;
+use Symfony\Component\ProxyManager\Proxy\ProxyInterface;
+use Doctrine\Common\Util\ClassUtils;
+
+
 
 class ShoppingController extends BaseShoppingController
 {
@@ -60,22 +74,60 @@ class ShoppingController extends BaseShoppingController
     protected $orderRepository;
 
     /**
+     * @var BaseInfoRepository
+     */
+    protected $baseInfoRepository;
+
+    /**
+     * @var TradeLawRepository
+     */
+    protected TradeLawRepository $tradeLawRepository;
+
+    protected RateLimiterFactory $shoppingConfirmIpLimiter;
+
+    protected RateLimiterFactory $shoppingConfirmCustomerLimiter;
+
+    protected RateLimiterFactory $shoppingCheckoutIpLimiter;
+
+    protected RateLimiterFactory $shoppingCheckoutCustomerLimiter;
+
+    /**
      * @var SubscriptionProcess
      */
     protected $subscriptionProcess;
+
+    private array $paymentMethods;
 
     public function __construct(
         CartService $cartService,
         MailService $mailService,
         OrderRepository $orderRepository,
         OrderHelper $orderHelper,
-        SubscriptionProcess $subscriptionProcess
+        TradeLawRepository $tradeLawRepository,
+        RateLimiterFactory $shoppingConfirmIpLimiter,
+        RateLimiterFactory $shoppingConfirmCustomerLimiter,
+        RateLimiterFactory $shoppingCheckoutIpLimiter,
+        RateLimiterFactory $shoppingCheckoutCustomerLimiter,
+        BaseInfoRepository $baseInfoRepository,
+        SubscriptionProcess $subscriptionProcess,
+        iterable $paymentMethods
     ) {
         $this->cartService = $cartService;
         $this->mailService = $mailService;
         $this->orderRepository = $orderRepository;
         $this->orderHelper = $orderHelper;
+        $this->tradeLawRepository = $tradeLawRepository;
+        $this->shoppingConfirmIpLimiter = $shoppingConfirmIpLimiter;
+        $this->shoppingConfirmCustomerLimiter = $shoppingConfirmCustomerLimiter;
+        $this->shoppingCheckoutIpLimiter = $shoppingCheckoutIpLimiter;
+        $this->shoppingCheckoutCustomerLimiter = $shoppingCheckoutCustomerLimiter;
+        $this->baseInfoRepository = $baseInfoRepository;
         $this->subscriptionProcess = $subscriptionProcess;
+        $this->paymentMethods = [];
+        foreach ($paymentMethods as $service) {
+            $className = $service instanceof ProxyInterface ? ClassUtils::getRealClass(get_class($service)) : get_class($service);
+            $this->paymentMethods[$className] = $service;
+        }
     }
 
     /**
@@ -86,8 +138,7 @@ class ShoppingController extends BaseShoppingController
      * @Route("/shopping/checkout", name="shopping_checkout", methods={"POST"})
      * @Template("Shopping/confirm.twig")
      */
-    public function checkout(Request $request)
-    {
+    public function checkout(Request $request) {
         // ログイン状態のチェック.
         if ($this->orderHelper->isLoginRequired()) {
             log_info('[注文処理] 未ログインもしくはRememberMeログインのため, ログイン画面に遷移します.');
@@ -195,6 +246,117 @@ class ShoppingController extends BaseShoppingController
         return $this->redirectToRoute('shopping_error');
     }
 
+        /**
+     * 注文確認画面を表示する.
+     *
+     * ここではPaymentMethod::verifyがコールされます.
+     * PaymentMethod::verifyではクレジットカードの有効性チェック等, 注文手続きを進められるかどうかのチェック処理を行う事を想定しています.
+     * PaymentMethod::verifyでエラーが発生した場合は, 注文手続き画面へリダイレクトします.
+     *
+     * @Route("/shopping/confirm", name="shopping_confirm", methods={"POST"})
+     *
+     * @Template("Shopping/confirm.twig")
+     */
+    public function confirm(Request $request)
+    {
+        // ログイン状態のチェック.
+        if ($this->orderHelper->isLoginRequired()) {
+            log_info('[注文確認] 未ログインもしくはRememberMeログインのため, ログイン画面に遷移します.');
+
+            return $this->redirectToRoute('shopping_login');
+        }
+
+        // 受注の存在チェック
+        $preOrderId = $this->cartService->getPreOrderId();
+        $Order = $this->orderHelper->getPurchaseProcessingOrder($preOrderId);
+        if (!$Order) {
+            log_info('[注文確認] 購入処理中の受注が存在しません.', [$preOrderId]);
+
+            return $this->redirectToRoute('shopping_error');
+        }
+
+        $activeTradeLaws = $this->tradeLawRepository->findBy(['displayOrderScreen' => true], ['sortNo' => 'ASC']);
+        $form = $this->createForm(OrderType::class, $Order);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            log_info('[注文確認] 集計処理を開始します.', [$Order->getId()]);
+            $response = $this->executePurchaseFlow($Order);
+            $this->entityManager->flush();
+
+            if ($response) {
+                return $response;
+            }
+
+            log_info('[注文確認] IPベースのスロットリングを実行します.');
+            $ipLimiter = $this->shoppingConfirmIpLimiter->create($request->getClientIp());
+            if (!$ipLimiter->consume()->isAccepted()) {
+                log_info('[注文確認] 試行回数制限を超過しました(IPベース)');
+                throw new TooManyRequestsHttpException();
+            }
+
+            $Customer = $this->getUser();
+            if ($Customer instanceof Customer) {
+                log_info('[注文確認] 会員ベースのスロットリングを実行します.');
+                $customerLimiter = $this->shoppingConfirmCustomerLimiter->create($Customer->getId());
+                if (!$customerLimiter->consume()->isAccepted()) {
+                    log_info('[注文確認] 試行回数制限を超過しました(会員ベース)');
+                    throw new TooManyRequestsHttpException();
+                }
+            }
+
+            log_info('[注文確認] PaymentMethod::verifyを実行します.', [$Order->getPayment()->getMethodClass()]);
+            $paymentMethod = $this->createPaymentMethod($Order, $form);
+            $PaymentResult = $paymentMethod->verify();
+
+            if ($PaymentResult) {
+                if (!$PaymentResult->isSuccess()) {
+                    $this->entityManager->rollback();
+                    foreach ($PaymentResult->getErrors() as $error) {
+                        $this->addError($error);
+                    }
+
+                    log_info('[注文確認] PaymentMethod::verifyのエラーのため, 注文手続き画面へ遷移します.', [$PaymentResult->getErrors()]);
+
+                    return $this->redirectToRoute('shopping');
+                }
+
+                $response = $PaymentResult->getResponse();
+                if ($response instanceof Response && ($response->isRedirection() || $response->isSuccessful())) {
+                    $this->entityManager->flush();
+
+                    log_info('[注文確認] PaymentMethod::verifyが指定したレスポンスを表示します.');
+
+                    return $response;
+                }
+            }
+
+            $this->entityManager->flush();
+
+            log_info('[注文確認] 注文確認画面を表示します.');
+
+            return [
+                'form' => $form->createView(),
+                'Order' => $Order,
+                'activeTradeLaws' => $activeTradeLaws,
+            ];
+        }
+
+        log_info('[注文確認] フォームエラーのため, 注文手続画面を表示します.', [$Order->getId()]);
+
+        $template = new Template([
+            'owner' => [$this, 'confirm'],
+            'template' => 'Shopping/index.twig',
+        ]);
+        $request->attributes->set('_template', $template);
+
+        return [
+            'form' => $form->createView(),
+            'Order' => $Order,
+            'activeTradeLaws' => $activeTradeLaws,
+        ];
+    }
+
     /**
      * PaymentMethodをコンテナから取得する.
      *
@@ -205,7 +367,11 @@ class ShoppingController extends BaseShoppingController
      */
     private function createPaymentMethod(Order $Order, FormInterface $form)
     {
-        $PaymentMethod = $this->container->get($Order->getPayment()->getMethodClass());
+        $class = $Order->getPayment()->getMethodClass();
+        if (!isset($this->paymentMethods[$class])) {
+            throw new \RuntimeException("PaymentMethod $class not found");
+        }
+        $PaymentMethod = $this->paymentMethods[$class];
         $PaymentMethod->setOrder($Order);
         $PaymentMethod->setFormType($form);
 

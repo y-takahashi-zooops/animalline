@@ -24,6 +24,11 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Psr\Log\LoggerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class TagController extends AbstractController
 {
@@ -32,13 +37,30 @@ class TagController extends AbstractController
      */
     protected $tagRepository;
 
-    public function __construct(TagRepository $tagRepository)
-    {
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    public function __construct(
+        TagRepository $tagRepository,
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher,
+        EntityManagerInterface $entityManager,
+        FormFactoryInterface $formFactory,
+        SessionInterface $session
+    ) {
         $this->tagRepository = $tagRepository;
+        $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
+        $this->session = $session;
     }
 
     /**
-     * @Route("/%eccube_admin_route%/product/tag", name="admin_product_tag")
+     * @Route("/%eccube_admin_route%/product/tag", name="admin_product_tag", methods={"GET", "POST"})
+     * 
      * @Template("@admin/Product/tag.twig")
      *
      * @param Request $request
@@ -64,7 +86,7 @@ class TagController extends AbstractController
             $request
         );
 
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_PRODUCT_TAG_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_PRODUCT_TAG_INDEX_INITIALIZE);
 
         $form = $builder->getForm();
 
@@ -130,7 +152,7 @@ class TagController extends AbstractController
     {
         $this->isTokenValid();
 
-        log_info('タグ削除開始', [$Tag->getId()]);
+        $this->logger->info('タグ削除開始', [$Tag->getId()]);
 
         try {
             $this->tagRepository->delete($Tag);
@@ -140,13 +162,13 @@ class TagController extends AbstractController
                     'Tag' => $Tag,
                 ], $request
             );
-            $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_PRODUCT_TAG_DELETE_COMPLETE, $event);
+            $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_PRODUCT_TAG_DELETE_COMPLETE);
 
             $this->addSuccess('admin.common.delete_complete', 'admin');
 
-            log_info('タグ削除完了', [$Tag->getId()]);
+            $this->logger->info('タグ削除完了', [$Tag->getId()]);
         } catch (\Exception $e) {
-            log_info('タグ削除エラー', [$Tag->getId(), $e]);
+            $this->logger->info('タグ削除エラー', [$Tag->getId(), $e]);
 
             $message = trans('admin.common.delete_error.foreign_key', ['%name%' => $Tag->getName()]);
             $this->addError($message, 'admin');
@@ -163,7 +185,7 @@ class TagController extends AbstractController
         if ($request->isXmlHttpRequest() && $this->isTokenValid()) {
             $sortNos = $request->request->all();
             foreach ($sortNos as $tagId => $sortNo) {
-                /* @var $Tag \Eccube\Entity\Tag */
+                /** @var Tag $Tag */
                 $Tag = $this->tagRepository
                     ->find($tagId);
                 $Tag->setSortNo($sortNo);
@@ -185,6 +207,6 @@ class TagController extends AbstractController
             $request
         );
 
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_PRODUCT_TAG_INDEX_COMPLETE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_PRODUCT_TAG_INDEX_COMPLETE);
     }
 }

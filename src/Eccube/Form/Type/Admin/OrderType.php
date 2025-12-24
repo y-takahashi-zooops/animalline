@@ -43,6 +43,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class OrderType extends AbstractType
 {
@@ -66,6 +67,8 @@ class OrderType extends AbstractType
      */
     protected $orderStatusRepository;
 
+    private TranslatorInterface $translator;
+
     /**
      * OrderType constructor.
      *
@@ -77,12 +80,14 @@ class OrderType extends AbstractType
         EntityManagerInterface $entityManager,
         EccubeConfig $eccubeConfig,
         OrderStateMachine $orderStateMachine,
-        OrderStatusRepository $orderStatusRepository
+        OrderStatusRepository $orderStatusRepository,
+        TranslatorInterface $translator
     ) {
         $this->entityManager = $entityManager;
         $this->eccubeConfig = $eccubeConfig;
         $this->orderStateMachine = $orderStateMachine;
         $this->orderStatusRepository = $orderStatusRepository;
+        $this->translator = $translator;
     }
 
     /**
@@ -156,21 +161,13 @@ class OrderType extends AbstractType
                 'required' => false,
                 'constraints' => [
                     new Assert\NotBlank(),
-                    new Email(['strict' => $this->eccubeConfig['eccube_rfc_email_check']]),
+                    new Email(null, null, $this->eccubeConfig['eccube_rfc_email_check'] ? 'strict' : null),
                 ],
             ])
             ->add('phone_number', PhoneNumberType::class, [
                 'required' => false,
                 'constraints' => [
                     new Assert\NotBlank(),
-                ],
-            ])
-            ->add('company_name', TextType::class, [
-                'required' => false,
-                'constraints' => [
-                    new Assert\Length([
-                        'max' => $this->eccubeConfig['eccube_stext_len'],
-                    ]),
                 ],
             ])
             ->add('message', TextareaType::class, [
@@ -197,6 +194,10 @@ class OrderType extends AbstractType
                         'pattern' => "/^\d+$/u",
                         'message' => 'form_error.numeric_only',
                     ]),
+                    new Assert\Range([
+                        'min' => 0,
+                        'max' => $this->eccubeConfig['eccube_price_max'],
+                    ]),
                 ],
             ])
             ->add('note', TextareaType::class, [
@@ -213,7 +214,7 @@ class OrderType extends AbstractType
                 'choice_label' => function (Payment $Payment) {
                     return $Payment->isVisible()
                         ? $Payment->getMethod()
-                        : $Payment->getMethod().trans('admin.common.hidden_label');
+                        : $Payment->getMethod(). $this->translator->trans('admin.common.hidden_label');
                 },
                 'placeholder' => false,
                 'query_builder' => function ($er) {
@@ -242,7 +243,7 @@ class OrderType extends AbstractType
             ->add($builder->create('Customer', HiddenType::class)
                 ->addModelTransformer(new DataTransformer\EntityToIdTransformer(
                     $this->entityManager,
-                    '\Eccube\Entity\Customer'
+                    \Eccube\Entity\Customer::class
                 )));
 
         $builder->addEventListener(FormEvents::POST_SET_DATA, [$this, 'sortOrderItems']);
@@ -388,6 +389,12 @@ class OrderType extends AbstractType
         // 新規登録時は, 新規受付ステータスで登録する.
         if (null === $Order->getOrderStatus()) {
             $Order->setOrderStatus($this->orderStatusRepository->find(OrderStatus::NEW));
+            // 会員受注の場合、会員の性別/職業/誕生日をエンティティにコピーする
+            if ($Customer = $Order->getCustomer()) {
+                $Order->setSex($Customer->getSex());
+                $Order->setJob($Customer->getJob());
+                $Order->setBirth($Customer->getBirth());
+            }
         } else {
             // 編集時は, mapped => falseで定義しているため, フォームから変更後データを取得する.
             $form = $event->getForm();
@@ -426,7 +433,7 @@ class OrderType extends AbstractType
         if ($oldStatus->getId() != $newStatus->getId()) {
             if (!$this->orderStateMachine->can($Order, $newStatus)) {
                 $form['OrderStatus']->addError(
-                    new FormError(trans('admin.order.failed_to_change_status__short', [
+                    new FormError($this->translator->trans('admin.order.failed_to_change_status__short', [
                         '%from%' => $oldStatus->getName(),
                         '%to%' => $newStatus->getName(),
                     ])));
@@ -456,7 +463,7 @@ class OrderType extends AbstractType
         if ($count < 1) {
             // 画面下部にエラーメッセージを表示させる
             $form = $event->getForm();
-            $form['OrderItemsErrors']->addError(new FormError(trans('admin.order.product_item_not_found')));
+            $form['OrderItemsErrors']->addError(new FormError($this->translator->trans('admin.order.product_item_not_found')));
         }
     }
 

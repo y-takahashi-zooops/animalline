@@ -36,6 +36,12 @@ use Knp\Component\Pager\Paginator;
 use Eccube\Repository\CategoryRepository;
 use Eccube\Repository\ProductRepository;
 use Eccube\Form\Type\AddCartType;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Eccube\Common\EccubeConfig;
+use Eccube\Entity\CartItem;
+
+use Psr\Log\LoggerInterface;
 
 class ProductInstockController extends AbstractController
 {
@@ -80,6 +86,16 @@ class ProductInstockController extends AbstractController
     protected $categoryRepository;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
+     * @var EccubeConfig
+     */
+    protected $eccubeConfig;
+
+    /**
      * ProductInstockController constructor.
      *
      * @param SupplierRepository $supplierRepository
@@ -88,8 +104,10 @@ class ProductInstockController extends AbstractController
      * @param ExportInstockSchedule $exportInstockSchedule
      * @param ProductStockRepository $productStockRepository
      * @param ProductStockService $productStockService
+     * @param LoggerInterface $logger
      */
     public function __construct(
+        EntityManagerInterface $entityManager,
         SupplierRepository              $supplierRepository,
         InstockScheduleHeaderRepository $instockScheduleHeaderRepository,
         InstockScheduleRepository       $instockScheduleRepository,
@@ -97,7 +115,10 @@ class ProductInstockController extends AbstractController
         ProductStockRepository          $productStockRepository,
         ProductStockService          $productStockService,
         ProductRepository $productRepository,
-        CategoryRepository $categoryRepository
+        CategoryRepository $categoryRepository,
+        FormFactoryInterface $formFactory,
+        LoggerInterface $logger,
+        EccubeConfig $eccubeConfig
     ) {
         $this->supplierRepository = $supplierRepository;
         $this->instockScheduleHeaderRepository = $instockScheduleHeaderRepository;
@@ -107,6 +128,12 @@ class ProductInstockController extends AbstractController
         $this->productStockService = $productStockService;
         $this->productRepository = $productRepository;
         $this->categoryRepository = $categoryRepository;
+        $this->logger = $logger;
+        $this->eccubeConfig = $eccubeConfig;
+        
+        // 親クラスのsetterメソッドを呼び出してプロパティを設定
+        $this->setEntityManager($entityManager);
+        $this->setFormFactory($formFactory);
     }
 
     /**
@@ -273,7 +300,7 @@ class ProductInstockController extends AbstractController
      */
     public function deleteInstock(Request $request): JsonResponse
     {
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->entityManager;
         if ($request->get('id')) {
             $instockHeader = $this->instockScheduleHeaderRepository->find($request->get('id'));
             $instocks = $this->instockScheduleRepository->findBy(['InstockHeader' => $request->get('id')]);
@@ -349,7 +376,7 @@ class ProductInstockController extends AbstractController
             $totalPrice = array_sum($subTotalPrices);
 
             if ($request->get('mode') === 'register') {
-                log_info('受注登録開始', [$TargetInstock->getId()]);
+                $this->logger->info('受注登録開始', [$TargetInstock->getId()]);
                 if ($form->isValid()) {
                     $TargetInstock->setInstockSchedule();
                     if (!$id) {
@@ -405,7 +432,7 @@ class ProductInstockController extends AbstractController
                     $this->entityManager->flush();
 
                     $this->addSuccess('admin.common.save_complete', 'admin');
-                    log_info('受注登録完了', [$TargetInstock->getId()]);
+                    $this->logger->info('受注登録完了', [$TargetInstock->getId()]);
                     return $this->redirectToRoute($id ? 'admin_product_instock_list' : 'admin_product_instock_registration_new');
                 }
             }
@@ -429,7 +456,7 @@ class ProductInstockController extends AbstractController
      * @Route("/%eccube_admin_route%/instock/search/product/page/{page_no}", requirements={"page_no" = "\d+"}, name="admin_instock_search_product_page")
      * @Template("@admin/Product/search_product.twig")
      */
-    public function searchProduct(Request $request, $page_no = null, Paginator $paginator)
+    public function searchProduct(Request $request, ?int $page_no = 1, PaginatorInterface $paginator)
     {
         if ($request->isXmlHttpRequest() && $this->isTokenValid()) {
             log_debug('search product start.');

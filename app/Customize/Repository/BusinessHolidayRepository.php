@@ -4,7 +4,7 @@ namespace Customize\Repository;
 
 use Customize\Entity\BusinessHoliday;
 use DateTime;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Eccube\Repository\AbstractRepository;
 
 /**
@@ -15,7 +15,7 @@ use Eccube\Repository\AbstractRepository;
  */
 class BusinessHolidayRepository extends AbstractRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, BusinessHoliday::class);
     }

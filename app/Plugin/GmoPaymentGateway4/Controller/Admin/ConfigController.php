@@ -15,6 +15,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ConfigController extends AbstractController
 {
@@ -29,13 +31,18 @@ class ConfigController extends AbstractController
      * @param GmoConfigRepository $gmoConfigRepository
      */
     public function __construct(
-        GmoConfigRepository $gmoConfigRepository
+        GmoConfigRepository $gmoConfigRepository,
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
+
     ) {
         $this->gmoConfigRepository = $gmoConfigRepository;
+        $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
     }
 
     /**
-     * @Route("/%eccube_admin_route%/gmo_payment_gateway4/config", name="gmo_payment_gateway4_admin_config")
+     * @Route("/%eccube_admin_route%/gmo_payment_gateway/config", name="gmo_payment_gateway4_admin_config")
      * @Template("@GmoPaymentGateway4/admin/config.twig")
      */
     public function index(Request $request)

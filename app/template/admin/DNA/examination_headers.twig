@@ -87,7 +87,7 @@ file that was distributed with this source code.
                                     <h5 class="modal-title font-weight-bold">
                                         確認ダイアログ
                                     </h5>
-                                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">×</span>
                                     </button>
                                 </div>
@@ -95,7 +95,7 @@ file that was distributed with this source code.
                                     <p class="text-left modal-message">検査機関を<span id="confirm-modal-label"></span>に設定しますか？</p>
                                 </div>
                                 <div class="modal-footer">
-                                    <button class="btn btn-ec-sub" type="button" data-dismiss="modal">
+                                    <button class="btn btn-ec-sub" type="button" data-bs-dismiss="modal">
                                         いいえ
                                     </button>
                                     <button class="btn btn-ec-conversion" type="submit">
@@ -109,7 +109,7 @@ file that was distributed with this source code.
             </form>
         </div>
         <div class="navigation float-right">
-            {{ knp_pagination_render(headers) }}
+            {{ knp_pagination_render(headers, '@KnpPaginator/twitter_bootstrap_v4_pagination.html.twig') }}
         </div>
     </div>
 </div>

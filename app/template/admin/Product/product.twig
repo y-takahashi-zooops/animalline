@@ -18,9 +18,6 @@ file that was distributed with this source code.
 {% form_theme form '@admin/Form/bootstrap_4_horizontal_layout.html.twig' %}
 
 {% block stylesheet %}
-    <link rel="stylesheet" href="{{ asset('assets/css/fileupload/jquery.fileupload.css', 'admin') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/fileupload/jquery.fileupload-ui.css', 'admin') }}">
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
     <style>
         #thumb div {
             float: left;
@@ -37,13 +34,7 @@ file that was distributed with this source code.
 {% endblock stylesheet %}
 
 {% block javascript %}
-    <script src="{{ asset('assets/js/vendor/fileupload/vendor/jquery.ui.widget.js', 'admin') }}"></script>
-    <script src="{{ asset('assets/js/vendor/fileupload/jquery.iframe-transport.js', 'admin') }}"></script>
-    <script src="{{ asset('assets/js/vendor/fileupload/jquery.fileupload.js', 'admin') }}"></script>
-    <script src="{{ asset('assets/js/vendor/fileupload/jquery.fileupload-process.js', 'admin') }}"></script>
-    <script src="{{ asset('assets/js/vendor/fileupload/jquery.fileupload-validate.js', 'admin') }}"></script>
     <script>var bootstrapTooltip = $.fn.tooltip.noConflict();</script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script>
         $.fn.tooltip = bootstrapTooltip;
         $(document).on('drop dragover', function(e) {
@@ -128,56 +119,82 @@ file that was distributed with this source code.
                 count_del++;
             });
             var count_add = {{ form.add_images|length|default(0) }};
-            $('#{{ form.product_image.vars.id }}').fileupload({
-                url: "{{ url('admin_product_image_add') }}",
-                type: "post",
-                sequentialUploads: true,
-                dataType: 'json',
-                dropZone: $('#upload-zone'),
-                done: function(e, data) {
-                    $('.progress').hide();
-                    $.each(data.result.files, function(index, file) {
-                        var path = '{{ asset('', 'temp_image') }}' + file;
-                        var $img = $(proto_img.replace(/__path__/g, path));
-                        var $new_img = $(proto_add.replace(/__name__/g, count_add));
-                        $new_img.val(file);
-                        $child = $img.append($new_img);
-                        $('#thumb').append($child);
-                        count_add++;
-                    });
-                    hideThumbnail();
-                    updateSortNo();
-                },
-                fail: function(e, data) {
-                    alert("{{ 'admin.common.upload_error'|trans }}");
-                },
-                always: function(e, data) {
-                    $('.progress').hide();
-                    $('.progress .progress-bar').width('0%');
-                },
-                start: function(e, data) {
-                    $('.progress').show();
-                },
-                acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-                maxFileSize: 10000000,
-                maxNumberOfFiles: 10,
-                progressall: function(e, data) {
-                    var progress = parseInt(data.loaded / data.total * 100, 10);
-                    $('.progress .progress-bar').css(
-                        'width',
-                        progress + '%'
-                    );
-                },
-                processalways: function(e, data) {
-                    if (data.files.error) {
-                        alert("{{ 'admin.common.upload_error'|trans }}");
-                    }
-                }
-            });
-            // 画像アップロード
+
+            // ファイル選択発火
             $('#file_upload').on('click', function() {
                 $('#{{ form.product_image.vars.id }}').click();
             });
+
+            // ファイル選択からアップロード
+            $('#{{ form.product_image.vars.id }}').on('change', function (e) {
+                uploadFiles(e.target.files);
+
+                // 同じファイルを再選択できるようにする
+                $(this).val('');
+            });
+
+            // ドラッグ&ドロップ
+            const uploadZone = document.getElementById('upload-zone');
+
+            // dragover（必須）
+            uploadZone.addEventListener('dragover', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(this).addClass('dragover'); // 見た目用（任意）
+            });
+
+            // dragleave（任意）
+            uploadZone.addEventListener('dragleave', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(this).removeClass('dragover');
+            });
+
+            // drop（ここで Ajax 実行）
+            uploadZone.addEventListener('drop', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(this).removeClass('dragover');
+
+                const files = e.dataTransfer.files;
+                uploadFiles(files);
+            });
+
+            // ファイルアップロード共通化関数
+            function uploadFiles(files) {
+                if (!files || files.length === 0) {
+                    return;
+                }
+
+                const formData = new FormData();
+                for (let i = 0; i < files.length; i++) {
+                    formData.append('admin_product[product_image][]', files[i]);
+                }
+
+                $.ajax({
+                    url: "{{ url('admin_product_image_add') }}",
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function (data) {
+                        data.files.forEach(function (file) {
+                            var path = '{{ asset('', 'temp_image') }}' + file;
+                            var $img = $(proto_img.replace(/__path__/g, path));
+                            var $new_img = $(proto_add.replace(/__name__/g, count_add));
+                            $new_img.val(file);
+                            $('#thumb').append($img.append($new_img));
+                            count_add++;
+                        });
+                        hideThumbnail();
+                        updateSortNo();
+                    },
+                    error: function () {
+                        alert("{{ 'admin.common.upload_error'|trans }}");
+                    }
+                });
+            }
 
             var mainTags = $('#allTags');
             var adminProductTag = $('#admin_product_Tag');
@@ -236,7 +253,7 @@ file that was distributed with this source code.
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">{{ 'admin.common.move_to_confirm_title'|trans }}</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
@@ -271,7 +288,7 @@ file that was distributed with this source code.
                                     </div>
                                 </div>
                                 <div class="col-4 text-right">
-                                    <a data-toggle="collapse" href="#basicConfig" aria-expanded="false"
+                                    <a data-bs-toggle="collapse" href="#basicConfig" aria-expanded="false"
                                        aria-controls="basicConfig">
                                         <i class="fa fa-angle-up fa-lg"></i>
                                     </a>
@@ -343,7 +360,7 @@ file that was distributed with this source code.
                                                 {{ 'admin.common.drag_and_drop_image_description'|trans }}
                                                 {{ form_widget(form.product_image, { attr : { accept : 'image/*', style : 'display:none;' } }) }}
                                                 {{ form_errors(form.product_image) }}
-                                                <a class="btn btn-ec-regular mr-2" onclick="$('#admin_product_product_image').click()">
+                                                <a id="file_upload" class="btn btn-ec-regular mr-2">
                                                     {{ 'admin.common.file_select'|trans }}
                                                 </a>
                                             </div><!-- /.media-body -->
@@ -361,7 +378,7 @@ file that was distributed with this source code.
                                     <div class="col">
                                         {{ form_widget(form.description_detail, { attr : { rows : "8"} }) }}
                                         {{ form_errors(form.description_detail) }}
-                                        <div class="d-inline-block mb-2" data-toggle="collapse" href="#addComment"
+                                        <div class="d-inline-block mb-2" data-bs-toggle="collapse" href="#addComment"
                                              role="button" aria-expanded="false" aria-controls="addComment">
                                             <a>
                                                 <i class="fa fa-plus-square-o font-weight-bold mr-1"></i>
@@ -658,27 +675,8 @@ file that was distributed with this source code.
                                 {% endif %}
 
                                 {# エンティティ拡張の自動出力 #}
-                                {% for f in form if f.vars.eccube_form_options.auto_render %}
-                                    {% if f.vars.eccube_form_options.form_theme %}
-                                        {% form_theme f f.vars.eccube_form_options.form_theme %}
-                                        {{ form_row(f) }}
-                                    {% else %}
-                                        <div class="row">
-                                            <div class="col-3">
-                                                <span>{{ f.vars.label|trans }}</span>
-                                            </div>
-                                            <div class="col mb-2">
-                                                <div>
-                                                    {{ form_widget(f) }}
-                                                    {{ form_errors(f) }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% if has_class == false %}
-                                    {% for f in form.class if f.vars.eccube_form_options.auto_render %}
+                                {% for f in form %}
+                                    {% if f.vars.eccube_form_options is defined and f.vars.eccube_form_options.auto_render %}
                                         {% if f.vars.eccube_form_options.form_theme %}
                                             {% form_theme f f.vars.eccube_form_options.form_theme %}
                                             {{ form_row(f) }}
@@ -694,6 +692,29 @@ file that was distributed with this source code.
                                                     </div>
                                                 </div>
                                             </div>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if has_class == false %}
+                                    {% for f in form.class %}
+                                        {% if f.vars.eccube_form_options is defined and f.vars.eccube_form_options.auto_render %}
+                                            {% if f.vars.eccube_form_options.form_theme %}
+                                                {% form_theme f f.vars.eccube_form_options.form_theme %}
+                                                {{ form_row(f) }}
+                                            {% else %}
+                                                <div class="row">
+                                                    <div class="col-3">
+                                                        <span>{{ f.vars.label|trans }}</span>
+                                                    </div>
+                                                    <div class="col mb-2">
+                                                        <div>
+                                                            {{ form_widget(f) }}
+                                                            {{ form_errors(f) }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
                                         {% endif %}
                                     {% endfor %}
                                 {% endif %}
@@ -715,7 +736,7 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-4 text-right">
-                                        <a data-toggle="collapse" href="#standardConfig" aria-expanded="false"
+                                        <a data-bs-toggle="collapse" href="#standardConfig" aria-expanded="false"
                                            aria-controls="standardConfig">
                                             <i class="fa fa-angle-up fa-lg"></i>
                                         </a>
@@ -770,7 +791,7 @@ file that was distributed with this source code.
                                     </div>
                                 </div>
                                 <div class="col-4 text-right">
-                                    <a data-toggle="collapse" href="#freeArea" aria-expanded="false"
+                                    <a data-bs-toggle="collapse" href="#freeArea" aria-expanded="false"
                                        aria-controls="freeArea">
                                         <i class="fa fa-angle-up fa-lg"></i>
                                     </a>
@@ -821,7 +842,7 @@ file that was distributed with this source code.
                                     </div>
                                 </div>
                                 <div class="col-4 text-right">
-                                    <a data-toggle="collapse" href="#category" aria-expanded="false"
+                                    <a data-bs-toggle="collapse" href="#category" aria-expanded="false"
                                        aria-controls="category">
                                         <i class="fa fa-angle-up fa-lg"></i>
                                     </a>
@@ -890,7 +911,7 @@ file that was distributed with this source code.
                                     </div>
                                 </div>
                                 <div class="col-4 text-right">
-                                    <a data-toggle="collapse" href="#tag" aria-expanded="false" aria-controls="tag">
+                                    <a data-bs-toggle="collapse" href="#tag" aria-expanded="false" aria-controls="tag">
                                         <i class="fa fa-angle-up fa-lg"></i>
                                     </a>
                                 </div>
@@ -907,7 +928,7 @@ file that was distributed with this source code.
                                     {% endfor %}
                                 {% endif %}
 
-                                <div class="d-block mb-3" data-toggle="collapse" href="#allTags" role="button"
+                                <div class="d-block mb-3" data-bs-toggle="collapse" href="#allTags" role="button"
                                      aria-expanded="false" aria-controls="allTags">
                                     <a>
                                         <i class="fa fa-plus-square-o font-weight-bold mr-1"></i>
@@ -927,7 +948,7 @@ file that was distributed with this source code.
                                         {% endfor %}
                                     {% endif %}
 
-                                    <div class="d-block mb-3" data-toggle="collapse" href="#allTags" role="button"
+                                    <div class="d-block mb-3" data-bs-toggle="collapse" href="#allTags" role="button"
                                          aria-expanded="false" aria-controls="allTags"></div>
                                 </div>
 
@@ -948,7 +969,7 @@ file that was distributed with this source code.
                                     <span class="card-title">{{ 'admin.product.create_date__card_title'|trans }}</span>
                                 </div>
                                 <div class="col-4 text-right">
-                                    <a data-toggle="collapse" href="#update" aria-expanded="false"
+                                    <a data-bs-toggle="collapse" href="#update" aria-expanded="false"
                                        aria-controls="update">
                                         <i class="fa fa-angle-up fa-lg"></i>
                                     </a>
@@ -963,7 +984,7 @@ file that was distributed with this source code.
                                         <span>{{ 'admin.common.create_date'|trans }}</span>
                                     </div>
                                     <div class="col">
-                                        <span>：{{ Product.create_date|date_min }}</span>
+                                        <span>：{{ Product.create_date|date('Y-m-d H:i:s') }}</span>
                                     </div>
                                 </div>
                                 <div class="row mb-2">
@@ -972,7 +993,7 @@ file that was distributed with this source code.
                                         <span>{{ 'admin.common.update_date'|trans }}</span>
                                     </div>
                                     <div class="col">
-                                        <span>：{{ Product.update_date|date_min }}</span>
+                                        <span>：{{ Product.update_date|date('Y-m-d H:i:s') }}</span>
                                     </div>
                                 </div>
                                 <div class="row mb-2">
@@ -1000,7 +1021,7 @@ file that was distributed with this source code.
                                     </div>
                                 </div>
                                 <div class="col-4 text-right">
-                                    <a data-toggle="collapse" href="#shopMemo" aria-expanded="false"
+                                    <a data-bs-toggle="collapse" href="#shopMemo" aria-expanded="false"
                                        aria-controls="shopMemo">
                                         <i class="fa fa-angle-up fa-lg"></i>
                                     </a>

@@ -45,6 +45,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Eccube\Controller\Admin\Order\ShippingController as BaseShippingController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Form\FormFactoryInterface;
+use Psr\Log\LoggerInterface;
+use Doctrine\ORM\EntityManagerInterface;
+
 
 class ShippingController extends BaseShippingController
 {
@@ -104,6 +108,11 @@ class ShippingController extends BaseShippingController
     protected $shippingScheduleRepository;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * EditController constructor.
      *
      * @param MailService $mailService
@@ -117,6 +126,7 @@ class ShippingController extends BaseShippingController
      * @param PurchaseFlow $orderPurchaseFlow
      * @param ShippingScheduleHeaderRepository $shippingScheduleHeaderRepository
      * @param ShippingScheduleRepository $shippingScheduleRepository
+     * @param LoggerInterface $logger
      */
     public function __construct(
         MailService                      $mailService,
@@ -129,7 +139,9 @@ class ShippingController extends BaseShippingController
         OrderStateMachine                $orderStateMachine,
         PurchaseFlow                     $orderPurchaseFlow,
         ShippingScheduleHeaderRepository $shippingScheduleHeaderRepository,
-        ShippingScheduleRepository       $shippingScheduleRepository
+        ShippingScheduleRepository       $shippingScheduleRepository,
+        LoggerInterface $logger,
+        EntityManagerInterface $entityManager
     ) {
         $this->mailService = $mailService;
         $this->orderItemRepository = $orderItemRepository;
@@ -142,6 +154,8 @@ class ShippingController extends BaseShippingController
         $this->purchaseFlow = $orderPurchaseFlow;
         $this->shippingScheduleHeaderRepository = $shippingScheduleHeaderRepository;
         $this->shippingScheduleRepository = $shippingScheduleRepository;
+        $this->logger = $logger;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -265,7 +279,7 @@ class ShippingController extends BaseShippingController
             }
 
             if (!$flowResult->hasError() && $request->get('mode') == 'register') {
-                log_info('出荷登録開始', [$Order->getId()]);
+                $this->logger->info('出荷登録開始', [$Order->getId()]);
 
                 try {
                     $this->purchaseFlow->prepare($Order, $purchaseContext);
@@ -279,7 +293,7 @@ class ShippingController extends BaseShippingController
 
                     $this->addInfo('admin.order.shipping_save_message', 'admin');
                     $this->addSuccess('admin.common.save_complete', 'admin');
-                    log_info('出荷登録完了', [$Order->getId()]);
+                    $this->logger->info('出荷登録完了', [$Order->getId()]);
 
                     return $this->redirectToRoute('admin_shipping_edit', ['id' => $Order->getId()]);
                 } catch (\Exception $e) {

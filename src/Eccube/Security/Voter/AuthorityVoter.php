@@ -40,20 +40,19 @@ class AuthorityVoter implements VoterInterface
     public function __construct(
         AuthorityRoleRepository $authorityRoleRepository,
         RequestStack $requestStack,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
     ) {
         $this->authorityRoleRepository = $authorityRoleRepository;
         $this->requestStack = $requestStack;
         $this->eccubeConfig = $eccubeConfig;
     }
 
-    public function vote(TokenInterface $token, $object, array $attributes)
+    public function vote(TokenInterface $token, $object, array $attributes): int
     {
-        $request = null;
         $path = null;
 
         try {
-            $request = $this->requestStack->getMasterRequest();
+            $request = $this->requestStack->getMainRequest();
         } catch (\RuntimeException $e) {
             // requestが取得できない場合、棄権する(テストプログラムで不要なため)
             return VoterInterface::ACCESS_ABSTAIN;

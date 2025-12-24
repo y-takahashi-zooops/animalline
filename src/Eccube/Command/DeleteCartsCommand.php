@@ -14,22 +14,22 @@
 namespace Eccube\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Eccube\Common\EccubeConfig;
 use Eccube\Repository\CartRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class DeleteCartsCommand extends Command
 {
     protected static $defaultName = 'eccube:delete-carts';
 
     /**
-     * @var ContainerInterface
+     * @var EccubeConfig
      */
-    protected $container;
+    protected $eccubeConfig;
 
     /**
      * @var SymfonyStyle
@@ -60,13 +60,15 @@ class DeleteCartsCommand extends Command
      */
     private $cartRepository;
 
-    public function __construct(ContainerInterface $container, EntityManagerInterface $entityManager, CartRepository $cartRepository)
+    public function __construct(EccubeConfig $eccubeConfig, EntityManagerInterface $entityManager, CartRepository $cartRepository, string $locale, string $timezoneId)
     {
         parent::__construct();
 
-        $this->container = $container;
+        $this->eccubeConfig = $eccubeConfig;
         $this->entityManager = $entityManager;
         $this->cartRepository = $cartRepository;
+        $this->locale = $locale;
+        $this->timezone = new \DateTimeZone($timezoneId);
     }
 
     protected function configure()
@@ -105,8 +107,6 @@ class DeleteCartsCommand extends Command
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
         $this->io = new SymfonyStyle($input, $output);
-        $this->locale = $this->container->getParameter('locale');
-        $this->timezone = new \DateTimeZone($this->container->getParameter('timezone'));
         $this->formatter = $this->createIntlFormatter();
     }
 
@@ -119,6 +119,8 @@ class DeleteCartsCommand extends Command
         $this->deleteCarts($dateTime);
 
         $this->io->success('Delete carts successful.');
+
+        return 0;
     }
 
     protected function deleteCarts(\DateTime $dateTime)
@@ -136,13 +138,11 @@ class DeleteCartsCommand extends Command
             $this->entityManager->flush();
             $this->entityManager->commit();
 
-            $this->io->comment("Deleted ${deleteRows} carts.");
+            $this->io->comment("Deleted {$deleteRows} carts.");
         } catch (\Exception $e) {
             $this->io->error('Failed delete carts. Rollbacked.');
             $this->entityManager->rollback();
         }
-
-        return;
     }
 
     protected function createIntlFormatter()

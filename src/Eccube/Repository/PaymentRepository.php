@@ -14,8 +14,8 @@
 namespace Eccube\Repository;
 
 use Doctrine\ORM\Query;
+use Doctrine\Persistence\ManagerRegistry as RegistryInterface;
 use Eccube\Entity\Payment;
-use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
  * PaymentRepository
@@ -61,7 +61,7 @@ class PaymentRepository extends AbstractRepository
     public function findPayments($delivery, $returnType = false)
     {
         $query = $this->createQueryBuilder('p')
-            ->innerJoin('Eccube\Entity\PaymentOption', 'po', 'WITH', 'po.payment_id = p.id')
+            ->innerJoin(\Eccube\Entity\PaymentOption::class, 'po', 'WITH', 'po.payment_id = p.id')
             ->where('po.Delivery = (:delivery) AND p.visible = true')
             ->orderBy('p.sort_no', 'DESC')
             ->setParameter('delivery', $delivery)

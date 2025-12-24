@@ -17,10 +17,11 @@ use Eccube\Common\EccubeConfig;
 use Eccube\Entity\Master\Authority;
 use Eccube\Entity\Master\Work;
 use Eccube\Entity\Member;
+use Eccube\Form\Type\RepeatedPasswordType;
+use Eccube\Form\Type\ToggleSwitchType;
 use Eccube\Repository\MemberRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Eccube\Form\Type\RepeatedPasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormError;
@@ -49,7 +50,7 @@ class MemberType extends AbstractType
      */
     public function __construct(
         EccubeConfig $eccubeConfig,
-        MemberRepository $memberRepository
+        MemberRepository $memberRepository,
     ) {
         $this->eccubeConfig = $eccubeConfig;
         $this->memberRepository = $memberRepository;
@@ -74,9 +75,48 @@ class MemberType extends AbstractType
                     new Assert\Length(['max' => $this->eccubeConfig['eccube_stext_len']]),
                 ],
             ])
-            ->add('login_id', TextType::class, [
+            ->add('plain_password', RepeatedPasswordType::class, [
+                'options' => [
+                    'constraints' => [
+                        new Assert\Length([
+                            'min' => $this->eccubeConfig['eccube_password_min_len'],
+                            'max' => $this->eccubeConfig['eccube_password_max_len'],
+                        ]),
+                        new Assert\Regex([
+                            'pattern' => $this->eccubeConfig['eccube_password_pattern'],
+                            'message' => 'form_error.password_pattern_invalid',
+                        ]),
+                        new Assert\NotBlank(),
+                    ],
+                ],
+            ])
+            ->add('Authority', EntityType::class, [
+                'class' => Authority::class,
+                'expanded' => false,
+                'multiple' => false,
+                'placeholder' => 'admin.common.select',
                 'constraints' => [
                     new Assert\NotBlank(),
+                ],
+            ])
+            ->add('Work', EntityType::class, [
+                'class' => Work::class,
+                'expanded' => true,
+                'multiple' => false,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ],
+            ])
+            ->add('two_factor_auth_enabled', ToggleSwitchType::class, [
+            ]);
+
+        // login idの入力は新規登録時のみとし、編集時はdisabledにする
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $form = $event->getForm();
+            $data = $event->getData();
+
+            $options = [
+                'constraints' => [
                     new Assert\Length([
                         'min' => $this->eccubeConfig['eccube_id_min_len'],
                         'max' => $this->eccubeConfig['eccube_id_max_len'],
@@ -86,32 +126,22 @@ class MemberType extends AbstractType
                         'message' => 'form_error.graph_only',
                     ]),
                 ],
-            ])
-            ->add('password', RepeatedPasswordType::class, [
-                'first_options' => [
-                    'label' => 'admin.setting.system.member.password',
-                ],
-                'second_options' => [
-                    'label' => 'admin.setting.system.member.password',
-                ],
-            ])
-            ->add('Authority', EntityType::class, [
-                'class' => 'Eccube\Entity\Master\Authority',
-                'expanded' => false,
-                'multiple' => false,
-                'placeholder' => 'admin.common.select',
-                'constraints' => [
-                    new Assert\NotBlank(),
-                ],
-            ])
-            ->add('Work', EntityType::class, [
-                'class' => 'Eccube\Entity\Master\Work',
-                'expanded' => true,
-                'multiple' => false,
-                'constraints' => [
-                    new Assert\NotBlank(),
-                ],
-            ]);
+            ];
+
+            if ($data->getId() === null) {
+                $options['constraints'][] = new Assert\NotBlank();
+            } else {
+                $options['required'] = false;
+                $options['mapped'] = false;
+                $options['attr'] = [
+                    'disabled' => 'disabled',
+                ];
+                $options['empty_data'] = $data->getLoginId();
+                $options['data'] = $data->getLoginId();
+            }
+
+            $form->add('login_id', TextType::class, $options);
+        });
 
         $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
             /** @var Member $Member */
@@ -144,7 +174,7 @@ class MemberType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => 'Eccube\Entity\Member',
+            'data_class' => Member::class,
         ]);
     }
 

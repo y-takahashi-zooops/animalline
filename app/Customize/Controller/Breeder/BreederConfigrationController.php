@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception as HttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
 
 class BreederConfigrationController extends AbstractController
 {
@@ -23,16 +24,23 @@ class BreederConfigrationController extends AbstractController
     protected $breederExaminationInfoRepository;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
      * BreederConfigrationController constructor.
      * @param BreederContactsRepository $breederContactsRepository
      * @param BreederExaminationInfoRepository $breederExaminationInfoRepository
      */
     public function __construct(
+        EntityManagerInterface $entityManager,
         BreederContactsRepository        $breederContactsRepository,
         BreederExaminationInfoRepository $breederExaminationInfoRepository
     ) {
         $this->breederContactsRepository = $breederContactsRepository;
         $this->breederExaminationInfoRepository = $breederExaminationInfoRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -362,7 +370,7 @@ class BreederConfigrationController extends AbstractController
                 $breederExaminationInfo->setPedigreeOrganizationOther(null);
             }
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($breederExaminationInfo);
             $entityManager->flush();
 

@@ -28,6 +28,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Customize\Repository\DnaSalesHeaderRepository;
 use Customize\Repository\DnaSalesStatusRepository;
+use Doctrine\ORM\EntityManagerInterface;
 
 class DnaController extends AbstractController
 {
@@ -238,7 +239,7 @@ class DnaController extends AbstractController
             return new JsonResponse(['isSuccess' => false], 404);
         }
 
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->entityManager;
         $DnaCheckKind->setDeleteFlg(!$DnaCheckKind->getDeleteFlg());
         $entityManager->flush();
 
@@ -257,7 +258,7 @@ class DnaController extends AbstractController
             return new JsonResponse(['isSuccess' => false], 404);
         }
 
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->entityManager;
         $DnaCheckKindEc->setDeleteFlg(!$DnaCheckKindEc->getDeleteFlg());
         $entityManager->flush();
 

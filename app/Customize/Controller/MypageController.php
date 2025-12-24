@@ -28,7 +28,8 @@ use Eccube\Repository\ProductRepository;
 use Eccube\Repository\CustomerAddressRepository;
 use Eccube\Service\CartService;
 use Eccube\Service\PurchaseFlow\PurchaseFlow;
-use Knp\Component\Pager\Paginator;
+// use Knp\Component\Pager\Paginator;
+use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -44,6 +45,11 @@ use Eccube\Repository\ShippingRepository;
 use Customize\Repository\DnaSalesHeaderRepository;
 use Customize\Repository\DnaSalesStatusRepository;
 use DateTime;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
+
 
 class MypageController extends BaseMypageController
 {
@@ -126,7 +132,7 @@ class MypageController extends BaseMypageController
      * @var DnaSalesStatusRepository
      */
     protected $dnaSalesStatusRepository;
-    
+
     /**
      * MypageController constructor.
      *
@@ -163,7 +169,11 @@ class MypageController extends BaseMypageController
         CustomerAddressRepository $customerAddressRepository,
         ShippingRepository $shippingRepository,
         DnaSalesHeaderRepository $dnaSalesHeaderRepository,
-        DnaSalesStatusRepository $dnaSalesStatusRepository
+        DnaSalesStatusRepository $dnaSalesStatusRepository,
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher,
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
     ) {
         $this->orderRepository = $orderRepository;
         $this->customerFavoriteProductRepository = $customerFavoriteProductRepository;
@@ -181,6 +191,10 @@ class MypageController extends BaseMypageController
         $this->shippingRepository = $shippingRepository;
         $this->dnaSalesHeaderRepository = $dnaSalesHeaderRepository;
         $this->dnaSalesStatusRepository = $dnaSalesStatusRepository;
+        $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -301,7 +315,7 @@ class MypageController extends BaseMypageController
      * @Route("/mypage/subscription", name="mypage_subscription")
      * @Template("Mypage/subscription.twig")
      */
-    public function subscription(Request $request, Paginator $paginator)
+    public function subscription(Request $request, PaginatorInterface $paginator)
     {
         $Customer = $this->getUser();
 
@@ -333,7 +347,7 @@ class MypageController extends BaseMypageController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch('front.mypage.mypage.subscription.history.initialize', $event);
+        $this->eventDispatcher->dispatch($event, 'front.mypage.mypage.subscription.history.initialize');
 
         $pagination = $paginator->paginate(
             $qb,
@@ -370,7 +384,7 @@ class MypageController extends BaseMypageController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_MYPAGE_MYPAGE_HISTORY_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_MYPAGE_MYPAGE_HISTORY_INITIALIZE);
 
         /** @var Order $Order */
         $SubscriptionContract = $event->getArgument('SubscriptionContract');
@@ -522,7 +536,7 @@ class MypageController extends BaseMypageController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_SHOPPING_SHIPPING_EDIT_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_SHOPPING_SHIPPING_EDIT_INITIALIZE);
 
         $form = $builder->getForm();
         $form->handleRequest($request);

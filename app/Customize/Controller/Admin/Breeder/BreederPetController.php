@@ -30,6 +30,7 @@ use DateTime;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Doctrine\ORM\EntityManagerInterface;
 
 class BreederPetController extends AbstractController
 {
@@ -229,7 +230,7 @@ class BreederPetController extends AbstractController
                 $breederPet->setReleaseDate($curStatus === AnilineConf::IS_ACTIVE_PUBLIC ? new DateTime : null);
             }
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($breederPet);
             $entityManager->flush();
 

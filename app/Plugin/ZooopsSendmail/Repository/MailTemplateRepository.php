@@ -4,7 +4,7 @@ namespace Plugin\ZooopsSendmail\Repository;
 
 use Eccube\Repository\AbstractRepository;
 use Plugin\ZooopsSendmail\Entity\MailTemplate;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * MailTemplateRepository
@@ -17,9 +17,9 @@ class MailTemplateRepository extends AbstractRepository
     /**
      * MailTemplateRepository constructor.
      *
-     * @param RegistryInterface $registry
+     * @param ManagerRegistry $registry
      */
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, MailTemplate::class);
     }

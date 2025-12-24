@@ -208,13 +208,13 @@ file that was distributed with this source code.
                                 <div class="row mb-2">
                                     <div class="col text-center">
                                         <div class="btn-group nav d-inline-flex" id="pills-tab" role="tablist">
-                                            <a class="nav-link active btn btn-ec-tab py-2 pl-4 pr-4" id="pills-weekly-tab" data-toggle="pill" href="#pills-weekly" role="tab" aria-controls="pills-weekly" aria-selected="true">
+                                            <a class="nav-link active btn btn-ec-tab py-2 pl-4 pr-4" id="pills-weekly-tab" data-bs-toggle="pill" href="#pills-weekly" role="tab" aria-controls="pills-weekly" aria-selected="true">
                                                 {{ 'admin.home.sales_summary_weekly'|trans }}
                                             </a>
-                                            <a class="nav-link btn btn-ec-tab py-2 pl-4 pr-4" id="pills-monthly-tab" data-toggle="pill" href="#pills-monthly" role="tab" aria-controls="pills-monthly" aria-selected="false">
+                                            <a class="nav-link btn btn-ec-tab py-2 pl-4 pr-4" id="pills-monthly-tab" data-bs-toggle="pill" href="#pills-monthly" role="tab" aria-controls="pills-monthly" aria-selected="false">
                                                 {{ 'admin.home.sales_summary_monthly'|trans }}
                                             </a>
-                                            <a class="nav-link btn btn-ec-tab py-2 pl-4 pr-4" id="pills-year-tab" data-toggle="pill" href="#pills-year" role="tab" aria-controls="pills-year" aria-selected="false">
+                                            <a class="nav-link btn btn-ec-tab py-2 pl-4 pr-4" id="pills-year-tab" data-bs-toggle="pill" href="#pills-year" role="tab" aria-controls="pills-year" aria-selected="false">
                                                 {{ 'admin.home.sales_summary_yearly'|trans }}
                                             </a>
                                         </div>
@@ -310,12 +310,12 @@ file that was distributed with this source code.
                                 {% for plugin in recommendedPlugins %}
                                     <div class="row py-3 border border-bottom-0 border-left-0 border-right-0">
                                         <div class="col-5 col-md-4">
-                                            <a href="#" data-toggle="modal" data-target="#searchPluginModal-{{ plugin.id }}">
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#searchPluginModal-{{ plugin.id }}">
                                                 <img src="{{ plugin.image }}" class="w-100" alt="{{ plugin.name }}">
                                             </a>
                                         </div>
                                         <div class="col-7 col-md-8 pl-0">
-                                            <a href="#" data-toggle="modal" data-target="#searchPluginModal-{{ plugin.id }}">{{ plugin.name }}</a>
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#searchPluginModal-{{ plugin.id }}">{{ plugin.name }}</a>
                                             <p class="m-0 pt-2">
                                                 {{ plugin.short_description }}
                                             </p>
@@ -325,7 +325,7 @@ file that was distributed with this source code.
                                 {% endfor %}
                             </div>
                             <div class="card-footer">
-                                > <a href="{{ url('admin_store_plugin_owners_search_page') }}">{{ 'admin.home.recommend_plugins.owner_store'|trans }}</a>
+                                > <a href="{{ url('admin_store_plugin_owners_search_page', {'page_no': 1}) }}">{{ 'admin.home.recommend_plugins.owner_store'|trans }}</a>
                             </div>
                         </div><!-- /#ec-cube-plugin -->
                     </div>

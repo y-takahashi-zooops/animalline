@@ -13,7 +13,7 @@
 
 namespace Customize\Form\Extension;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;
 use Eccube\Common\EccubeConfig;
 use Eccube\Entity\CartItem;
@@ -320,7 +320,8 @@ class AddCartTypeCustomizer extends AbstractTypeExtension
             new Assert\NotBlank(),
         ], '[product_class_id]');
         if ($this->Product->getClassName1()) {
-            $context->validateValue($data['classcategory_id1'], [
+            //$context->validateValue($data['classcategory_id1'], [
+            $context->getValidator()->validate($data['classcategory_id1'], [
                 new Assert\NotBlank(),
                 new Assert\NotEqualTo([
                     'value' => '__unselected',
@@ -343,9 +344,17 @@ class AddCartTypeCustomizer extends AbstractTypeExtension
     /**
      * {@inheritdoc}
      */
-    public function getExtendedType()
+    public static function getExtendedTypes(): iterable
     {
-        return AddCartType::class;
+        return [\Eccube\Form\Type\AddCartType::class];
+    }
+
+    /**
+     * @deprecated For Symfony < 4.2 compatibility
+     */
+    public static function getExtendedType()
+    {
+        return \Eccube\Form\Type\AddCartType::class;
     }
 
 }

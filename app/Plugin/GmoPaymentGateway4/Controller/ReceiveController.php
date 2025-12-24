@@ -34,6 +34,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ReceiveController extends AbstractController
 {
@@ -136,7 +137,8 @@ class ReceiveController extends AbstractController
         PaymentHelperSoftbank $PaymentHelperSoftbank,
         PaymentHelperRakutenPay $PaymentHelperRakutenPay,
         PaymentHelperReceive $PaymentHelperReceive,
-        ErrorUtil $errorUtil
+        ErrorUtil $errorUtil,
+        EntityManagerInterface $entityManager
     ) {
         $this->orderRepository = $orderRepository;
         $this->orderStatusRepository = $orderStatusRepository;
@@ -151,12 +153,14 @@ class ReceiveController extends AbstractController
         $this->PaymentHelperRakutenPay = $PaymentHelperRakutenPay;
         $this->PaymentHelperReceive = $PaymentHelperReceive;
         $this->errorUtil = $errorUtil;
+        $this->entityManager = $entityManager;
     }
 
     /**
      * 結果通知を受け取る
      *
-     * @Route("/gmo_payment_gateway/receive", name="gmo_payment_gateway_receive", methods={"POST"})
+     * @Method("POST")
+     * @Route("/gmo_payment_gateway/receive", name="gmo_payment_gateway_receive")
      */
     public function receive(Request $request)
     {
@@ -208,12 +212,12 @@ class ReceiveController extends AbstractController
     /**
      * 本人認証サービス（3Dセキュア）からの戻りを受け取る
      *
-     * @Route("/gmo_payment_gateway/3dsecure/{version}", requirements={"version" = "\d+"}, name="gmo_payment_gateway_3dsecure", methods={"POST"})
+     * @Method("POST")
+     * @Route("/gmo_payment_gateway/3dsecure", name="gmo_payment_gateway_3dsecure")
      */
-    public function card3dsecure(Request $request, $version)
+    public function card3dsecure(Request $request)
     {
-        PaymentUtil::logInfo('ReceiveController::card3dsecure start.' .
-                             ' [ver: ' . $version . ']');
+        PaymentUtil::logInfo('ReceiveController::card3dsecure start.');
 
         // 受信データ配列を取得
         $receiveData = $request->request->all();
@@ -234,13 +238,8 @@ class ReceiveController extends AbstractController
         }
 
         // 3Dセキュアパスワード入力画面からデータを受け取り処理続行
-        if ($version == 1) {
-            $r = $this->PaymentHelperCredit
-                ->do3dSecureContinuation($Order, $receiveData);
-        } else {
-            $r = $this->PaymentHelperCredit
-                ->do3dSecure2Continuation($Order, $receiveData);
-        }
+        $r = $this->PaymentHelperCredit
+            ->do3dSecureContinuation($Order, $receiveData);
         if (!$r) {
             $errors = $this->PaymentHelperCredit->getError();
             foreach ($errors as $error) {
@@ -308,6 +307,8 @@ class ReceiveController extends AbstractController
 
     fail:
 
+        $this->entityManager->rollback();
+
         if (!is_null($Order)) {
             // 受注ステータスを決済処理中 -> 購入処理中へ変更
             $OrderStatus =
@@ -326,7 +327,8 @@ class ReceiveController extends AbstractController
     /**
      * auかんたん決済のセンター側からの戻りを受け取る
      *
-     * @Route("/gmo_payment_gateway/au_result", name="gmo_payment_gateway_au_result", methods={"POST"})
+     * @Method("POST")
+     * @Route("/gmo_payment_gateway/au_result", name="gmo_payment_gateway_au_result")
      */
     public function auResult(Request $request)
     {
@@ -381,10 +383,6 @@ class ReceiveController extends AbstractController
             $Order->appendCompleteMailMessage($message);
         }
 
-        // 受信ログデータを保存
-        $GmoOrderPayment->setPaymentLogData($receiveData, false, $Order);
-
-        $this->entityManager->persist($GmoOrderPayment);
         $this->entityManager->flush();
 
         // カート削除
@@ -424,9 +422,10 @@ class ReceiveController extends AbstractController
     }
 
     /**
-     * d払いのセンター側からの戻りを受け取る
+     * ドコモケータイ払いのセンター側からの戻りを受け取る
      *
-     * @Route("/gmo_payment_gateway/docomo_result", name="gmo_payment_gateway_docomo_result", methods={"POST"})
+     * @Method("POST")
+     * @Route("/gmo_payment_gateway/docomo_result", name="gmo_payment_gateway_docomo_result")
      */
     public function docomoResult(Request $request)
     {
@@ -482,10 +481,6 @@ class ReceiveController extends AbstractController
             $Order->appendCompleteMailMessage($message);
         }
 
-        // 受信ログデータを保存
-        $GmoOrderPayment->setPaymentLogData($receiveData, false, $Order);
-
-        $this->entityManager->persist($GmoOrderPayment);
         $this->entityManager->flush();
 
         // カート削除
@@ -527,7 +522,8 @@ class ReceiveController extends AbstractController
     /**
      * ソフトバンクまとめて支払いのセンター側からの戻りを受け取る
      *
-     * @Route("/gmo_payment_gateway/softbank_result", name="gmo_payment_gateway_softbank_result", methods={"POST"})
+     * @Method("POST")
+     * @Route("/gmo_payment_gateway/softbank_result", name="gmo_payment_gateway_softbank_result")
      */
     public function softbankResult(Request $request)
     {
@@ -575,10 +571,6 @@ class ReceiveController extends AbstractController
             $Order->appendCompleteMailMessage($message);
         }
 
-        // 受信ログデータを保存
-        $GmoOrderPayment->setPaymentLogData($receiveData, false, $Order);
-
-        $this->entityManager->persist($GmoOrderPayment);
         $this->entityManager->flush();
 
         // カート削除
@@ -620,7 +612,8 @@ class ReceiveController extends AbstractController
     /**
      * 楽天ペイのセンター側からの戻りを受け取る
      *
-     * @Route("/gmo_payment_gateway/rakuten_pay_result/{result}", requirements={"result" = "\d+"}, name="gmo_payment_gateway_rakuten_pay_result", methods={"POST"})
+     * @Method("POST")
+     * @Route("/gmo_payment_gateway/rakuten_pay_result/{result}", requirements={"result" = "\d+"}, name="gmo_payment_gateway_rakuten_pay_result")
      */
     public function rakutenPayResult(Request $request, $result)
     {
@@ -663,10 +656,6 @@ class ReceiveController extends AbstractController
             $Order->appendCompleteMailMessage($message);
         }
 
-        // 受信ログデータを保存
-        $GmoOrderPayment->setPaymentLogData($receiveData, false, $Order);
-
-        $this->entityManager->persist($GmoOrderPayment);
         $this->entityManager->flush();
 
         // カート削除

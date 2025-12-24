@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Doctrine\ORM\EntityManagerInterface;
 
 class BreederFavoriteController extends AbstractController
 {
@@ -33,6 +34,11 @@ class BreederFavoriteController extends AbstractController
     protected $breederHouseRepository;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
      * BreederController constructor.
      *
      * @param PetsFavoriteRepository $petsFavoriteRepository
@@ -40,6 +46,7 @@ class BreederFavoriteController extends AbstractController
      * @param BreederHouseRepository $breederHouseRepository
      */
     public function __construct(
+        EntityManagerInterface $entityManager,
         PetsFavoriteRepository    $petsFavoriteRepository,
         BreederPetsRepository     $breederPetsRepository,
         BreederHouseRepository $breederHouseRepository
@@ -47,6 +54,7 @@ class BreederFavoriteController extends AbstractController
         $this->petsFavoriteRepository = $petsFavoriteRepository;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->breederHouseRepository = $breederHouseRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -60,7 +68,7 @@ class BreederFavoriteController extends AbstractController
         $pet = $this->breederPetsRepository->find($id);
         $favorite = $this->petsFavoriteRepository->findOneBy(['Customer' => $this->getUser(), 'pet_id' => $id]);
         $breederSelf = $pet->getBreeder()->getId() == $this->getUser()->getId();
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->entityManager;
         if ($breederSelf) {
             return new JsonResponse('not-allowed');
         } elseif (!$favorite) {

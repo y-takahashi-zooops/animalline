@@ -29,11 +29,15 @@ use Eccube\Repository\MailHistoryRepository;
 use Eccube\Repository\MailTemplateRepository;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
+use Twig\Environment;
+use Psr\Log\LoggerInterface;
 
 class ShippingMailService
 {
     /**
-     * @var \Swift_Mailer
+     * @var Email
      */
     protected $mailer;
 
@@ -63,7 +67,7 @@ class ShippingMailService
     protected $eccubeConfig;
 
     /**
-     * @var \Twig_Environment
+     * @var Environment
      */
     protected $twig;
 
@@ -73,26 +77,33 @@ class ShippingMailService
     protected $entityManager;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * MailService constructor.
      *
-     * @param \Swift_Mailer $mailer
+     * @param MailerInterface $mailer
      * @param MailTemplateRepository $mailTemplateRepository
      * @param MailHistoryRepository $mailHistoryRepository
      * @param BaseInfoRepository $baseInfoRepository
      * @param EventDispatcherInterface $eventDispatcher
-     * @param \Twig_Environment $twig
+     * @param Environment $twig
      * @param EccubeConfig $eccubeConfig
      * @param EntityManagerInterface $entityManager
+     * @param LoggerInterface $logger
      */
     public function __construct(
-        \Swift_Mailer $mailer,
+        MailerInterface $mailer,
         MailTemplateRepository $mailTemplateRepository,
         MailHistoryRepository $mailHistoryRepository,
         BaseInfoRepository $baseInfoRepository,
         EventDispatcherInterface $eventDispatcher,
-        \Twig_Environment $twig,
+        Environment $twig,
         EccubeConfig $eccubeConfig,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        LoggerInterface $logger
     ) {
         $this->mailer = $mailer;
         $this->mailTemplateRepository = $mailTemplateRepository;
@@ -102,6 +113,7 @@ class ShippingMailService
         $this->eccubeConfig = $eccubeConfig;
         $this->twig = $twig;
         $this->entityManager = $entityManager;
+        $this->logger = $logger;
     }
 
     
@@ -110,26 +122,26 @@ class ShippingMailService
      *
      * @param \Eccube\Entity\Order $Order 受注情報
      *
-     * @return \Swift_Message
+     * @return Symfony Mailer
      */
     public function sendPlaneMail($title, $body, $Customer)
     {
-        log_info('受注メール送信開始');
+        $this->logger->info('受注メール送信開始');
 
-        $message = (new \Swift_Message())
-            ->setSubject('['.$this->BaseInfo->getShopName().'] '.$title)
-            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
-            ->setTo([$Customer->getEmail()])
-            ->setBcc($this->BaseInfo->getEmail01())
-            ->setReplyTo($this->BaseInfo->getEmail03())
-            ->setReturnPath($this->BaseInfo->getEmail04());
+        $email = (new Email())
+            ->subject('['.$this->BaseInfo->getShopName().'] '.$title)
+            ->from($this->BaseInfo->getEmail01())
+            ->to($Customer->getEmail())
+            ->bcc($this->BaseInfo->getEmail01())
+            ->replyTo($this->BaseInfo->getEmail03())
+            ->returnPath($this->BaseInfo->getEmail04());
 
         $body = $Customer->getName01()."　".$Customer->getName02()."様\n\n".$body;
-        $message->setBody($body);
+        $email->text($body);
 
-        $count = $this->mailer->send($message);
+        $this->mailer->send($email);
 
-        return $message;
+        return $email;
     }
 
     /**
@@ -137,25 +149,25 @@ class ShippingMailService
      *
      * @param \Eccube\Entity\Order $Order 受注情報
      *
-     * @return \Swift_Message
+     * @return Symfony Mailer
      */
     public function sendShippingDateChangeMail(\Eccube\Entity\Order $Order)
     {
-        log_info('受注メール送信開始');
+        $this->logger->info('受注メール送信開始');
 
         $body = $this->twig->render('Mail/shipping_date_change.twig', ['Order' => $Order]);
 
-        $message = (new \Swift_Message())
-            ->setSubject('['.$this->BaseInfo->getShopName().'] '." 商品お届け日変更受付のお知らせ")
-            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
-            ->setTo([$Order->getEmail()])
-            ->setBcc($this->BaseInfo->getEmail01())
-            ->setReplyTo($this->BaseInfo->getEmail03())
-            ->setReturnPath($this->BaseInfo->getEmail04());
+        $email = (new Email())
+            ->subject('['.$this->BaseInfo->getShopName().'] '." 商品お届け日変更受付のお知らせ")
+            ->from($this->BaseInfo->getEmail01())
+            ->to($Order->getEmail())
+            ->bcc($this->BaseInfo->getEmail01())
+            ->replyTo($this->BaseInfo->getEmail03())
+            ->returnPath($this->BaseInfo->getEmail04());
 
-        $message->setBody($body);
+        $email->html($body);
 
-        $count = $this->mailer->send($message);
+        $this->mailer->send($email);
 
         // !!! use native SQL to avoid relation cascade error!
         $sql = "
@@ -166,8 +178,9 @@ class ShippingMailService
         $stmt = $this->entityManager->getConnection()->prepare($sql);
         $orderId = $Order->getId();
         $sendDate = (new \DateTime)->format('Y-m-d H:i:s');
-        $mailSubject = $message->getSubject();
-        $mailBody = $message->getBody();
+        $mailSubject = $email->getSubject();
+        $mailBody = strip_tags($body);
+        $mailHtmlBody = $body;
         $stmt->bindParam('order_id', $orderId);
         $stmt->bindParam('send_date', $sendDate);
         $stmt->bindParam('mail_subject', $mailSubject);
@@ -175,9 +188,9 @@ class ShippingMailService
         $stmt->bindParam('mail_html_body', $mailHtmlBody);
         $stmt->execute();
 
-        log_info('受注メール送信完了', ['count' => $count]);
+        $this->logger->info('受注メール送信完了');
 
-        return $message;
+        return $email;
     }
 
     /**

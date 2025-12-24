@@ -32,6 +32,9 @@ use Customize\Service\MailService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Cookie;
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class BreederController extends AbstractController
 {
@@ -94,6 +97,16 @@ class BreederController extends AbstractController
    */
   protected $affiliateStatusRepository;
 
+  /**
+   * @var EntityManagerInterface
+   */
+  protected $entityManager;
+
+  /**
+   * @var FormFactoryInterface
+   */
+  protected $formFactory;
+
 
   /**
    * @var MailService
@@ -117,6 +130,7 @@ class BreederController extends AbstractController
    * @param AffiliateStatusRepository $affiliateStatusRepository
    */
   public function __construct(
+    EntityManagerInterface $entityManager,
     BreederContactsRepository $breederContactsRepository,
     BreederPetImageRepository $breederPetImageRepository,
     BreederQueryService       $breederQueryService,
@@ -129,7 +143,9 @@ class BreederController extends AbstractController
     BreederExaminationInfoRepository $breederExaminationInfoRepository,
     BreederEvaluationsRepository $breederEvaluationsRepository,
     MailService                      $mailService,
-    AffiliateStatusRepository $affiliateStatusRepository
+    AffiliateStatusRepository $affiliateStatusRepository,
+    FormFactoryInterface $formFactory,
+    EventDispatcherInterface $eventDispatcher
   ) {
     $this->breederContactsRepository = $breederContactsRepository;
     $this->breederPetImageRepository = $breederPetImageRepository;
@@ -144,6 +160,9 @@ class BreederController extends AbstractController
     $this->breederEvaluationsRepository = $breederEvaluationsRepository;
     $this->mailService = $mailService;
     $this->affiliateStatusRepository = $affiliateStatusRepository;
+    $this->entityManager = $entityManager;
+    $this->formFactory = $formFactory;
+    $this->eventDispatcher = $eventDispatcher;
   }
 
 
@@ -206,7 +225,7 @@ class BreederController extends AbstractController
       $response->headers->setCookie(new Cookie('rid_key', $sessid));
       //}
 
-      $entityManager = $this->getDoctrine()->getManager();
+      $entityManager = $this->entityManager;
 
       //$session = $request->getSession();
       //$sessid = $session->getId();
@@ -526,7 +545,7 @@ class BreederController extends AbstractController
       array('url' => "#", 'title' => "「" . $breeder->getLicenseHouseName() . "」" . $breeder->getBreederName() . "ブリーダー")
     );
 
-    $entityManager = $this->getDoctrine()->getManager();
+    $entityManager = $this->entityManager;
     $breeder->setViewCount(intval($breeder->getViewCount() + 1));
     $entityManager->persist($breeder);
     $entityManager->flush();
@@ -783,7 +802,7 @@ class BreederController extends AbstractController
       ],
       $request
     );
-    $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_INITIALIZE, $event);
+    $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_CONTACT_INDEX_INITIALIZE);
 
     $form = $builder->getForm();
     $form->handleRequest($request);
@@ -827,7 +846,7 @@ class BreederController extends AbstractController
             ],
             $request
           );
-          $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_COMPLETE, $event);
+          $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_CONTACT_INDEX_COMPLETE);
 
           $data = $event->getArgument('data');
 

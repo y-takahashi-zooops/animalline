@@ -34,7 +34,9 @@ use Plugin\GmoPaymentGateway4\Service\Method\PayEasyNet;
 use Plugin\GmoPaymentGateway4\Util\ErrorUtil;
 use Plugin\GmoPaymentGateway4\Util\PaymentUtil;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
+use Twig\Environment;
 
 /**
  * 決済共通処理を行うクラス
@@ -47,12 +49,12 @@ abstract class PaymentHelper
     protected $container;
 
     /**
-     * @var \Swift_Mailer
+     * @var MailerInterface
      */
     protected $mailer;
 
     /**
-     * @var \Twig_Environment
+     * @var Environment
      */
     protected $twig;
 
@@ -153,16 +155,11 @@ abstract class PaymentHelper
     protected $results = null;
 
     /**
-     * @var Plugin\GmoPaymentGateway4\Service\FraudDetector
-     */
-    protected $fraudDetector;
-
-    /**
      * PaymentHelper constructor.
      *
      * @param ContainerInterface $container
-     * @param \Swift_Mailer $mailer
-     * @param \Twig_Environment $twig
+     * @param MailerInterface $mailer
+     * @param Environment $twig
      * @param EccubeConfig $eccubeConfig
      * @param EntityManagerInterface $entityManager
      * @param PluginService $pluginService
@@ -176,12 +173,11 @@ abstract class PaymentHelper
      * @param GmoConfigRepository $gmoConfigRepository
      * @param GmoMemberRepository $gmoMemberRepository
      * @param ErrorUtil $errorUtil
-     * @param FraudDetector $fraudDetector
      */
     public function __construct(
         ContainerInterface $container,
-        \Swift_Mailer $mailer,
-        \Twig_Environment $twig,
+        MailerInterface $mailer,
+        Environment $twig,
         EccubeConfig $eccubeConfig,
         EntityManagerInterface $entityManager,
         PluginService $pluginService,
@@ -196,8 +192,7 @@ abstract class PaymentHelper
         GmoOrderPaymentRepository $gmoOrderPaymentRepository,
         GmoPaymentMethodRepository $gmoPaymentMethodRepository,
         GmoMemberRepository $gmoMemberRepository,
-        ErrorUtil $errorUtil,
-        FraudDetector $fraudDetector
+        ErrorUtil $errorUtil
     ) {
         $this->container = $container;
         $this->mailer = $mailer;
@@ -215,7 +210,6 @@ abstract class PaymentHelper
         $this->gmoPaymentMethodRepository = $gmoPaymentMethodRepository;
         $this->gmoMemberRepository = $gmoMemberRepository;
         $this->errorUtil = $errorUtil;
-        $this->fraudDetector = $fraudDetector;
 
         // プラグインコンフィグ(composer.json)を取得
         $dir = $pluginService->calcPluginDir(PaymentUtil::PLUGIN_CODE);
@@ -472,17 +466,7 @@ abstract class PaymentHelper
     private function getIfCancelAmount
         (array $sourceData, Order $Order = null, Customer $Customer = null)
     {
-        $GmoOrderPayment = $Order->getGmoOrderPayment();
-        $paymentLogData = $GmoOrderPayment->getPaymentLogData();
-
-        $cancelAmount = $Order->getDecPaymentTotal();
-        if (isset($sourceData['CancelAmount'])) {
-            $cancelAmount = $sourceData['CancelAmount'];
-        } else if (isset($paymentLogData['Amount'])) {
-            $cancelAmount = $paymentLogData['Amount'];
-        }
-
-        return $cancelAmount;
+        return $Order->getDecPaymentTotal();
     }
 
     /**
@@ -942,191 +926,6 @@ abstract class PaymentHelper
     }
 
     /**
-     * 3DS2.0 3DS必須タイプ
-     */
-    private function getIfTdRequired
-        (array $sourceData, Order $Order = null, Customer $Customer = null)
-    {
-        if (empty($this->gmoPaymentMethodConfig['TdRequired'])) {
-            return '0';
-        }
-
-        return $this->gmoPaymentMethodConfig['TdRequired'];
-    }
-
-    /**
-     * 3DS2.0 カード会員最終更新日(YYYYMMDD)
-     */
-    private function getIfTds2ChAccChange
-        (array $sourceData, Order $Order = null, Customer $Customer = null)
-    {
-        // ゲストの場合
-        if (is_null($Customer) || $Customer->getId() == 0) {
-            return null;
-        }
-
-        return $Customer->getUpdateDate()->format('Ymd');
-    }
-
-    /**
-     * 3DS2.0 カード会員作成日(YYYYMMDD)
-     */
-    private function getIfTds2ChAccDate
-        (array $sourceData, Order $Order = null, Customer $Customer = null)
-    {
-        // ゲストの場合
-        if (is_null($Customer) || $Customer->getId() == 0) {
-            return null;
-        }
-
-        return $Customer->getCreateDate()->format('Ymd');
-    }
-
-    /**
-     * 3DS2.0 カード会員名と配送先名の一致／不一致
-     */
-    private function getIfTds2ShipNameInd
-        (array $sourceData, Order $Order = null, Customer $Customer = null)
-    {
-        $Shipping = $Order->getShippings()[0];
-        if (is_null($Shipping)) {
-            return null;
-        }
-
-        $o_name = $Order->getName01() . $Order->getName02();
-        $s_name = $Shipping->getName01() . $Shipping->getName02();
-
-        if (strcmp($o_name, $s_name) == 0) {
-            return '01';
-        }
-
-        return '02';
-    }
-
-    /**
-     * 3DS2.0 請求先住所の国コード
-     */
-    private function getIfTds2BillAddrCountry
-        (array $sourceData, Order $Order = null, Customer $Customer = null)
-    {
-        // 392 固定
-        return '392';
-    }
-
-    /**
-     * 3DS2.0 請求先住所の区域部分の１行目
-     */
-    private function getIfTds2BillAddrLine1
-        (array $sourceData, Order $Order = null, Customer $Customer = null)
-    {
-        $addr = $Order->getPref()->getName() . $Order->getAddr01();
-        return PaymentUtil::subString($addr, 50);
-    }
-
-    /**
-     * 3DS2.0 請求先住所の区域部分の２行目
-     */
-    private function getIfTds2BillAddrLine2
-        (array $sourceData, Order $Order = null, Customer $Customer = null)
-    {
-        return PaymentUtil::subString($Order->getAddr02(), 50);
-    }
-
-    /**
-     * 3DS2.0 請求先住所の郵便番号
-     */
-    private function getIfTds2BillAddrPostCode
-        (array $sourceData, Order $Order = null, Customer $Customer = null)
-    {
-        return $Order->getPostalCode();
-    }
-
-    /**
-     * 3DS2.0 請求先住所の都道府県番号(00)
-     */
-    private function getIfTds2BillAddrState
-        (array $sourceData, Order $Order = null, Customer $Customer = null)
-    {
-        return sprintf('%02s', $Order->getPref()->getId());
-    }
-
-    /**
-     * 3DS2.0 カード会員のメールアドレス
-     */
-    private function getIfTds2Email
-        (array $sourceData, Order $Order = null, Customer $Customer = null)
-    {
-        return $Order->getEmail();
-    }
-
-    /**
-     * 3DS2.0 配送先住所の国コード
-     */
-    private function getIfTds2ShipAddrCountry
-        (array $sourceData, Order $Order = null, Customer $Customer = null)
-    {
-        // 392 固定
-        return '392';
-    }
-
-    /**
-     * 3DS2.0 配送先住所の区域部分の１行目
-     */
-    private function getIfTds2ShipAddrLine1
-        (array $sourceData, Order $Order = null, Customer $Customer = null)
-    {
-        $Shipping = $Order->getShippings()[0];
-        if (is_null($Shipping)) {
-            return null;
-        }
-
-        $addr = $Shipping->getPref()->getName() . $Shipping->getAddr01();
-        return PaymentUtil::subString($addr, 50);
-    }
-
-    /**
-     * 3DS2.0 配送先住所の区域部分の２行目
-     */
-    private function getIfTds2ShipAddrLine2
-        (array $sourceData, Order $Order = null, Customer $Customer = null)
-    {
-        $Shipping = $Order->getShippings()[0];
-        if (is_null($Shipping)) {
-            return null;
-        }
-
-        return PaymentUtil::subString($Shipping->getAddr02(), 50);
-    }
-
-    /**
-     * 3DS2.0 配送先住所の郵便番号
-     */
-    private function getIfTds2ShipAddrPostCode
-        (array $sourceData, Order $Order = null, Customer $Customer = null)
-    {
-        $Shipping = $Order->getShippings()[0];
-        if (is_null($Shipping)) {
-            return null;
-        }
-
-        return $Shipping->getPostalCode();
-    }
-
-    /**
-     * 3DS2.0 配送先住所の都道府県番号(00)
-     */
-    private function getIfTds2ShipAddrState
-        (array $sourceData, Order $Order = null, Customer $Customer = null)
-    {
-        $Shipping = $Order->getShippings()[0];
-        if (is_null($Shipping)) {
-            return null;
-        }
-
-        return sprintf('%02s', $Shipping->getPref()->getId());
-    }
-
-    /**
      * GMO-PG 注文に関するインタフェース送受信を行う
      *
      * @param Order $Order 注文
@@ -1308,16 +1107,7 @@ abstract class PaymentHelper
             } else {
                 $this->setError(trans('gmo_payment_gateway.' .
                                       'payment_helper.error1'));
-            }
-        } else if (strpos($string, 'ACS=2') === 0) {
-            $regex = '|^ACS=2&RedirectUrl\=(.+?)$|';
-            $ret = preg_match_all($regex, $string, $matches);
-            if ($ret !== false && $ret > 0) {
-                $arrRet[0]['ACS'] = '2';
-                $arrRet[0]['RedirectUrl'] = $matches[1][0];
-            } else {
-                $this->setError(trans('gmo_payment_gateway.' .
-                                      'payment_helper.error1'));
+                $msg = '-> 3D response failed: ' . $string;
             }
         } else {
             $arrTmpAnd = explode('&', $string);
@@ -1474,9 +1264,9 @@ abstract class PaymentHelper
             $const[$prefix . 'reqsales'] => trans($prefix . 'reqsales'),
             $const[$prefix . 'reqcancel'] => trans($prefix . 'reqcancel'),
             $const[$prefix . 'reqchange'] => trans($prefix . 'reqchange'),
-            $const[$prefix . 'paysuccess'] => trans($prefix . 'paysuccess'),
+            $const[$prefix . 'pay_success'] => trans($prefix . 'pay_success'),
             $const[$prefix . 'paystart'] => trans($prefix . 'paystart'),
-            $const[$prefix . 'expired'] => trans($prefix . 'expired'),
+            $const[$prefix . 'expire'] => trans($prefix . 'expire'),
             $const[$prefix . 'cancel'] => trans($prefix . 'cancel'),
             $const[$prefix . 'fail'] => trans($prefix . 'fail'),
             $const[$prefix . 'auth'] => trans($prefix . 'auth'),
@@ -1489,8 +1279,6 @@ abstract class PaymentHelper
             $const[$prefix . 'sauth'] => trans($prefix . 'sauth'),
             $const[$prefix . 'check'] => trans($prefix . 'check'),
             $const[$prefix . 'except'] => trans($prefix . 'except'),
-            $const[$prefix . 'trading'] => trans($prefix . 'trading'),
-            $const[$prefix . 'stop'] => trans($prefix . 'stop'),
         ];
     }
 

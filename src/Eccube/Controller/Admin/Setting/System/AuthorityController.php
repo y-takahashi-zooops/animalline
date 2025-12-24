@@ -41,7 +41,8 @@ class AuthorityController extends AbstractController
     }
 
     /**
-     * @Route("/%eccube_admin_route%/setting/system/authority", name="admin_setting_system_authority")
+     * @Route("/%eccube_admin_route%/setting/system/authority", name="admin_setting_system_authority", methods={"GET", "POST"})
+     *
      * @Template("@admin/Setting/System/authority.twig")
      */
     public function index(Request $request)
@@ -69,7 +70,7 @@ class AuthorityController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_SETTING_SYSTEM_AUTHORITY_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SYSTEM_AUTHORITY_INDEX_INITIALIZE);
 
         $form = $builder->getForm();
 
@@ -112,7 +113,7 @@ class AuthorityController extends AbstractController
                 ],
                 $request
             );
-            $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_SETTING_SYSTEM_AUTHORITY_INDEX_COMPLETE, $event);
+            $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_SETTING_SYSTEM_AUTHORITY_INDEX_COMPLETE);
 
             $this->addSuccess('admin.common.save_complete', 'admin');
 

@@ -12,22 +12,33 @@ use Eccube\Entity\Order;
 use Eccube\Service\PurchaseFlow\PurchaseContext;
 use Plugin\GmoPaymentGateway4\Entity\GmoPaymentMethod;
 use Plugin\GmoPaymentGateway4\Entity\GmoOrderPayment;
+use Plugin\GmoPaymentGateway4\Service\Method\CreditCard;
+use Plugin\GmoPaymentGateway4\Service\Method\Cvs;
+use Plugin\GmoPaymentGateway4\Service\Method\PayEasyNet;
+use Plugin\GmoPaymentGateway4\Service\Method\PayEasyAtm;
 use Plugin\GmoPaymentGateway4\Service\Method\CarAu;
 use Plugin\GmoPaymentGateway4\Service\Method\CarDocomo;
 use Plugin\GmoPaymentGateway4\Service\Method\CarSoftbank;
-use Plugin\GmoPaymentGateway4\Service\Method\CreditCard;
-use Plugin\GmoPaymentGateway4\Service\Method\Cvs;
-use Plugin\GmoPaymentGateway4\Service\Method\Ganb;
-use Plugin\GmoPaymentGateway4\Service\Method\PayEasyNet;
-use Plugin\GmoPaymentGateway4\Service\Method\PayEasyAtm;
 use Plugin\GmoPaymentGateway4\Service\Method\RakutenPay;
 use Plugin\GmoPaymentGateway4\Util\PaymentUtil;
+use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * 結果通知／その他受信向け決済処理を行うクラス
  */
 class PaymentHelperReceive extends PaymentHelper
 {
+    protected $entityManager;
+
+    public function __construct(
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
+    ) {
+        $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * GMO-PG 支払方法別のクラス名称を取得する
      *
@@ -249,7 +260,7 @@ class PaymentHelperReceive extends PaymentHelper
                 'doReceive' => 'doReceiveAu',
                 'payname' => trans($prefix . 'com.payname.carrier.au'),
             ],
-            // d払い
+            // ドコモケータイ払い
             $this->eccubeConfig[$prefix . 'pay_type.docomo'] => [
                 'class' => [
                     CarDocomo::class,
@@ -272,14 +283,6 @@ class PaymentHelperReceive extends PaymentHelper
                 ],
                 'doReceive' => 'doReceiveRakutenPay',
                 'payname' => trans($prefix . 'com.payname.rakuten_pay'),
-            ],
-            // 銀行振込（バーチャル口座 あおぞら）
-            $this->eccubeConfig[$prefix . 'pay_type.ganb'] => [
-                'class' => [
-                    Ganb::class,
-                ],
-                'doReceive' => 'doReceiveGanb',
-                'payname' => trans($prefix . 'com.payname.ganb'),
             ],
         ];
 
@@ -518,6 +521,7 @@ class PaymentHelperReceive extends PaymentHelper
             break;
 
         case 'SALES':
+        case 'RETURN':
             $receiveData['pay_status'] =
                 $const[$prefix . strtolower($receiveData['Status'])];
             PaymentUtil::logInfo('pay_status = ' . $receiveData['pay_status']);
@@ -530,14 +534,8 @@ class PaymentHelperReceive extends PaymentHelper
             break;
 
         case 'CANCEL':
-        case 'RETURN':
-            // 全部取消・返品の場合のみキャンセルに設定する
-            if (isset($receiveData['Amount']) &&
-                $receiveData['Amount'] == '0') {
-                $orderStatus = OrderStatus::CANCEL;
-            }
-            $receiveData['pay_status'] =
-                $const[$prefix . strtolower($receiveData['Status'])];
+            $orderStatus = OrderStatus::CANCEL;
+            $receiveData['pay_status'] = $const[$prefix . 'cancel'];
             PaymentUtil::logInfo('pay_status = ' . $receiveData['pay_status']);
             break;
 
@@ -556,7 +554,7 @@ class PaymentHelperReceive extends PaymentHelper
     }
 
     /**
-     * d払い受信処理
+     * ドコモケータイ払い受信処理
      *
      * @param Order $Order 注文
      * @param array $receiveData 受信データ
@@ -609,19 +607,14 @@ class PaymentHelperReceive extends PaymentHelper
 
         case 'EXPIRED':
             $orderStatus = OrderStatus::CANCEL;
-            $receiveData['pay_status'] = $const[$prefix . 'expired'];
+            $receiveData['pay_status'] = $const[$prefix . 'expire'];
             PaymentUtil::logInfo('pay_status = ' . $receiveData['pay_status']);
             break;
 
         case 'CANCEL':
-            // 全部取消・返品の場合のみキャンセルに設定する
-            if (isset($receiveData['Amount']) &&
-                $receiveData['Amount'] == '0') {
-                $orderStatus = OrderStatus::CANCEL;
-                $receiveData['pay_status'] = $const[$prefix . 'cancel'];
-                PaymentUtil::logInfo
-                    ('pay_status = ' . $receiveData['pay_status']);
-            }
+            $orderStatus = OrderStatus::CANCEL;
+            $receiveData['pay_status'] = $const[$prefix . 'cancel'];
+            PaymentUtil::logInfo('pay_status = ' . $receiveData['pay_status']);
             break;
 
         default:
@@ -696,7 +689,7 @@ class PaymentHelperReceive extends PaymentHelper
 
         case 'EXPIRED':
             $orderStatus = OrderStatus::CANCEL;
-            $receiveData['pay_status'] = $const[$prefix . 'expired'];
+            $receiveData['pay_status'] = $const[$prefix . 'expire'];
             PaymentUtil::logInfo('pay_status = ' . $receiveData['pay_status']);
             break;
 
@@ -753,7 +746,7 @@ class PaymentHelperReceive extends PaymentHelper
 
         case 'EXPIRED':
             $orderStatus = OrderStatus::CANCEL;
-            $receiveData['pay_status'] = $const[$prefix . 'expired'];
+            $receiveData['pay_status'] = $const[$prefix . 'expire'];
             PaymentUtil::logInfo('pay_status = ' . $receiveData['pay_status']);
             break;
 
@@ -800,71 +793,6 @@ class PaymentHelperReceive extends PaymentHelper
     }
 
     /**
-     * 銀行振込(バーチャル口座 あおぞら)受信処理
-     *
-     * @param Order $Order 注文
-     * @param array $receiveData 受信データ
-     * @return boolean true: OK, false: NG
-     */
-    protected function doReceiveGanb(Order $Order, array &$receiveData)
-    {
-        PaymentUtil::logInfo('PaymentHelperReceive::doReceiveGanb start.');
-
-        $orderStatus = 0;
-
-        $const = $this->eccubeConfig;
-        $prefix = 'gmo_payment_gateway.pay_status.';
-
-        PaymentUtil::logInfo('Status is ' . $receiveData['Status']);
-
-        switch ($receiveData['Status']) {
-        case 'UNPROCESSED':
-            $receiveData['pay_status'] = $const[$prefix . 'unsettled'];
-            PaymentUtil::logInfo('pay_status = ' . $receiveData['pay_status']);
-            break;
-
-        case 'TRADING':
-            $receiveData['pay_status'] = $const[$prefix . 'trading'];
-            PaymentUtil::logInfo('pay_status = ' . $receiveData['pay_status']);
-            break;
-
-        case 'PAYSUCCESS':
-            $orderStatus = OrderStatus::PAID;
-            $receiveData['pay_status'] = $const[$prefix . 'paysuccess'];
-            $Order->setPaymentDate(new \DateTime());
-            PaymentUtil::logInfo('pay_status = ' . $receiveData['pay_status']);
-            PaymentUtil::logInfo('Set payment date now.');
-            break;
-
-        case 'STOP':
-            $orderStatus = OrderStatus::CANCEL;
-            $receiveData['pay_status'] = $const[$prefix . 'stop'];
-            PaymentUtil::logInfo('pay_status = ' . $receiveData['pay_status']);
-            break;
-
-        case 'EXPIRED':
-            $orderStatus = OrderStatus::CANCEL;
-            $receiveData['pay_status'] = $const[$prefix . 'expired'];
-            PaymentUtil::logInfo('pay_status = ' . $receiveData['pay_status']);
-            break;
-
-        default:
-            PaymentUtil::logError
-                ('Sorry unknown Status = ' . $receiveData['Status']);
-            return false;
-        }
-
-        // 入金金額、累計入金額の確認と受注ステータスの補正処理を行う
-        $this->checkInAmount($Order, $receiveData, $orderStatus);
-
-        $this->checkAndSetOrderStatus($Order, $orderStatus);
-
-        PaymentUtil::logInfo('PaymentHelperReceive::doReceiveGanb end.');
-
-        return true;
-    }
-
-    /**
      * 共通受信処理
      *
      * @param Order $Order 注文
@@ -890,7 +818,7 @@ class PaymentHelperReceive extends PaymentHelper
 
         case 'PAYSUCCESS':
             $orderStatus = OrderStatus::PAID;
-            $receiveData['pay_status'] = $const[$prefix . 'paysuccess'];
+            $receiveData['pay_status'] = $const[$prefix . 'pay_success'];
             $Order->setPaymentDate(new \DateTime());
             PaymentUtil::logInfo('pay_status = ' . $receiveData['pay_status']);
             PaymentUtil::logInfo('Set payment date now.');
@@ -904,7 +832,7 @@ class PaymentHelperReceive extends PaymentHelper
 
         case 'EXPIRED':
             $orderStatus = OrderStatus::CANCEL;
-            $receiveData['pay_status'] = $const[$prefix . 'expired'];
+            $receiveData['pay_status'] = $const[$prefix . 'expire'];
             PaymentUtil::logInfo('pay_status = ' . $receiveData['pay_status']);
             break;
 
@@ -1015,71 +943,6 @@ class PaymentHelperReceive extends PaymentHelper
     }
 
     /**
-     * 期限切れ後に入金が発生した旨をメール送信する
-     *
-     * @param Order $Order 注文
-     * @param array $receiveData 受信データ
-     */
-    protected function doDepositAfterExpirationMail
-        (Order $Order, array $receiveData)
-    {
-        PaymentUtil::logInfo('doDepositAfterExpirationMail start.');
-
-        $name = 'deposit_after_expiration';
-        $prefix = 'gmo_payment_gateway.';
-        $tplpath = '@GmoPaymentGateway4/admin/mail/' . $name . '.twig';
-        $subject = trans($prefix . 'admin.config.title') . ' ' .
-            trans($prefix . 'payment_helper.do_' . $name . '.title');
-
-        $this->sendMail($tplpath, $subject, $receiveData, $Order);
-
-        PaymentUtil::logInfo('doDepositAfterExpirationMail end.');
-    }
-
-    /**
-     * 入金額の不足が発生した旨をメール送信する
-     *
-     * @param Order $Order 注文
-     * @param array $receiveData 受信データ
-     */
-    protected function doInsufficientDepositMail
-        (Order $Order, array $receiveData)
-    {
-        PaymentUtil::logInfo('doInsufficientDepositMail start.');
-
-        $name = 'insufficient_deposit';
-        $prefix = 'gmo_payment_gateway.';
-        $tplpath = '@GmoPaymentGateway4/admin/mail/' . $name . '.twig';
-        $subject = trans($prefix . 'admin.config.title') . ' ' .
-            trans($prefix . 'payment_helper.do_' . $name . '.title');
-
-        $this->sendMail($tplpath, $subject, $receiveData, $Order);
-
-        PaymentUtil::logInfo('doInsufficientDepositMail end.');
-    }
-
-    /**
-     * 入金額の超過が発生した旨をメール送信する
-     *
-     * @param Order $Order 注文
-     * @param array $receiveData 受信データ
-     */
-    protected function doTooMuchDepositMail(Order $Order, array $receiveData)
-    {
-        PaymentUtil::logInfo('doTooMuchDepositMail start.');
-
-        $name = 'too_much_deposit';
-        $prefix = 'gmo_payment_gateway.';
-        $tplpath = '@GmoPaymentGateway4/admin/mail/' . $name . '.twig';
-        $subject = trans($prefix . 'admin.config.title') . ' ' .
-            trans($prefix . 'payment_helper.do_' . $name . '.title');
-
-        $this->sendMail($tplpath, $subject, $receiveData, $Order);
-
-        PaymentUtil::logInfo('doTooMuchDepositMail end.');
-    }
-
-    /**
      * Send mail when call recv result
      *
      * @param string $templatePath
@@ -1127,19 +990,16 @@ class PaymentHelperReceive extends PaymentHelper
             'orderData' => $paymentLogData,
             'payment_method' => $payment_method,
         ]);
+        $email = (new Email())
+            ->subject($subject)
+            ->from($this->BaseInfo->getEmail01(), $this->BaseInfo->getShopName())
+            ->to($this->BaseInfo->getEmail02())
+            ->bcc($this->BaseInfo->getEmail01())
+            ->replyTo($this->BaseInfo->getEmail03())
+            ->returnPath($this->BaseInfo->getEmail04())
+            ->html($body);
 
-        $message = (new \Swift_Message())
-            ->setSubject($subject)
-            ->setFrom([$this->BaseInfo->getEmail01() =>
-                       $this->BaseInfo->getShopName()])
-            ->setTo($this->BaseInfo->getEmail02())
-            ->setBcc($this->BaseInfo->getEmail01())
-            ->setReplyTo($this->BaseInfo->getEmail03())
-            ->setReturnPath($this->BaseInfo->getEmail04())
-            ->setBody($body);
-        $this->mailer->send($message);
-
-        PaymentUtil::logInfo('sendMail end.');
+        $this->mailer->send($email);
     }
 
     /**
@@ -1194,88 +1054,6 @@ class PaymentHelperReceive extends PaymentHelper
         }
 
         PaymentUtil::logInfo('PaymentHelperReceive::fixedOrder end.');
-    }
-
-    /**
-     * 入金金額、累計入金額の確認と受注ステータスの補正処理を行う
-     *
-     * ・入金金額があって状態が取引停止または期限切れ
-     *   取引停止/期限切れ後入金発生メールを送信
-     * ・入金金額があって累計入金額＜決済金額
-     *   入金額不足発生メールを送信
-     * ・入金金額があって累計入金額＞決済金額
-     *   入金額超過発生メールを送信
-     * ・入金金額があって累計入金額>=決済金額
-     *   受注ステータスを入金済みにする
-     *   入金日をセットする
-     *
-     * @param Order $Order
-     * @param array $receiveData
-     * @param integer &$orderStatus
-     */
-    protected function checkInAmount
-        (Order $Order, array $receiveData, &$orderStatus)
-    {
-        PaymentUtil::logInfo('PaymentHelperReceive::checkInAmount start.');
-
-        if (!isset($receiveData['GanbInAmount']) ||
-            strlen($receiveData['GanbInAmount']) == 0) {
-            // 入金金額がない場合はここまで
-            PaymentUtil::logInfo('GanbInAmount not found. Normal exit.');
-            return;
-        }
-        PaymentUtil::logInfo('GanbInAmount: ' . $receiveData['GanbInAmount']);
-
-        /* ・入金金額があって状態が取引停止または期限切れ
-         *   取引停止/期限切れ後入金発生メールを送信 */
-        if ($receiveData['Status'] == 'EXPIRED' ||
-            $receiveData['Status'] == 'STOP') {
-            PaymentUtil::logInfo
-                ('取引停止または期限切れ後入金が発生しました。');
-            // メールを送信
-            $this->doDepositAfterExpirationMail($Order, $receiveData);
-        }
-
-        // 決済金額を取得
-        $amount = 0;
-        if (!empty($receiveData['Amount'])) {
-            $amount = $receiveData['Amount'];
-        }
-        PaymentUtil::logInfo('Amount: ' . $amount);
-
-        // 累計入金額を取得
-        $total = 0;
-        if (!empty($receiveData['GanbTotalTransferAmount'])) {
-            $total = $receiveData['GanbTotalTransferAmount'];
-        }
-        PaymentUtil::logInfo('GanbTotalTransferAmount: ' . $total);
-
-        /* ・入金金額があって累計入金額＜決済金額
-         *   入金額不足発生メールを送信 */
-        if ($total < $amount) {
-            PaymentUtil::logInfo('入金額不足が発生しました。');
-            // メールを送信
-            $this->doInsufficientDepositMail($Order, $receiveData);
-        }
-
-        /* ・入金金額があって累計入金額＞決済金額
-         *   入金額超過発生メールを送信 */
-        if ($total > $amount) {
-            PaymentUtil::logInfo('入金額超過が発生しました。');
-            // メールを送信
-            $this->doTooMuchDepositMail($Order, $receiveData);
-        }
-
-        /* ・入金金額があって累計入金額>=決済金額
-         *   受注ステータスを入金済みにする
-         *   入金日をセットする */
-        if ($total >= $amount) {
-            $orderStatus = OrderStatus::PAID;
-            $Order->setPaymentDate(new \DateTime());
-            PaymentUtil::logInfo('Set payment date now.');
-        }
-
-        PaymentUtil::logInfo('PaymentHelperReceive::checkInAmount end.');
     }
 
     /**

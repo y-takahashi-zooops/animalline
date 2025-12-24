@@ -32,13 +32,19 @@ use Symfony\Component\HttpKernel\Exception as HttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Eccube\Service\CartService;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Psr\Log\LoggerInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use Eccube\Common\EccubeConfig;
 
 class AnilineEntryController extends AbstractController
 {
@@ -68,9 +74,9 @@ class AnilineEntryController extends AbstractController
     protected $customerRepository;
 
     /**
-     * @var EncoderFactoryInterface
+     * @var UserPasswordHasherInterface
      */
-    protected $encoderFactory;
+    protected $passwordHasher;
 
     /**
      * @var TokenStorageInterface
@@ -86,7 +92,7 @@ class AnilineEntryController extends AbstractController
      * @var AffiliateStatusRepository
      */
     protected $affiliateStatusRepository;
-    
+
     /**
      * @var BreedersRepository
      */
@@ -98,6 +104,31 @@ class AnilineEntryController extends AbstractController
     protected $conservationsRepository;
 
     /**
+     * @var FormFactoryInterface
+     */
+    protected $formFactory;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
+     * @var string
+     */
+    public $auth_magic;
+
+    /**
+     * @var string
+     */
+    public $auth_type;
+
+    /**
+     * @var string
+     */
+    public $password_hash_algos;
+
+    /**
      * EntryController constructor.
      *
      * @param CartService $cartService
@@ -105,12 +136,14 @@ class AnilineEntryController extends AbstractController
      * @param MailService $mailService
      * @param BaseInfoRepository $baseInfoRepository
      * @param CustomerRepository $customerRepository
-     * @param EncoderFactoryInterface $encoderFactory
+     * @param UserPasswordHasherInterface $passwordHasher
      * @param ValidatorInterface $validatorInterface
      * @param TokenStorageInterface $tokenStorage
      * @param AffiliateStatusRepository $affiliateStatusRepository
      * @param BreedersRepository $breedersRepository
      * @param ConservationsRepository $conservationsRepository
+     * @param FormFactoryInterface $formFactory
+     * @param LoggerInterface $logger
      */
     public function __construct(
         CartService $cartService,
@@ -118,24 +151,36 @@ class AnilineEntryController extends AbstractController
         MailService $mailService,
         BaseInfoRepository $baseInfoRepository,
         CustomerRepository $customerRepository,
-        EncoderFactoryInterface $encoderFactory,
+        UserPasswordHasherInterface $passwordHasher,
         ValidatorInterface $validatorInterface,
         TokenStorageInterface $tokenStorage,
         AffiliateStatusRepository $affiliateStatusRepository,
         BreedersRepository $breedersRepository,
-        ConservationsRepository $conservationsRepository
+        ConservationsRepository $conservationsRepository,
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher,
+        LoggerInterface $logger,
+        EntityManagerInterface $entityManager,
+        EccubeConfig $eccubeConfig
     ) {
         $this->customerStatusRepository = $customerStatusRepository;
         $this->mailService = $mailService;
         $this->BaseInfo = $baseInfoRepository->get();
         $this->customerRepository = $customerRepository;
-        $this->encoderFactory = $encoderFactory;
+        $this->passwordHasher = $passwordHasher;
         $this->recursiveValidator = $validatorInterface;
         $this->tokenStorage = $tokenStorage;
         $this->cartService = $cartService;
         $this->affiliateStatusRepository = $affiliateStatusRepository;
         $this->breedersRepository = $breedersRepository;
         $this->conservationsRepository = $conservationsRepository;
+        $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->logger = $logger;
+        $this->entityManager = $entityManager;
+        $this->auth_magic = $eccubeConfig->get('eccube_auth_magic');
+        $this->auth_type = $eccubeConfig->get('eccube_auth_type');
+        $this->password_hash_algos = $eccubeConfig->get('eccube_password_hash_algos');
     }
 
     /**
@@ -166,7 +211,7 @@ class AnilineEntryController extends AbstractController
     /**
      * 会員登録画面.
      *
-     * @Route("/entry", name="entry")
+     * @Route("/entry", name="aniline_entry")
      * @Template("Entry/index.twig")
      */
     public function index(Request $request)
@@ -191,7 +236,7 @@ class AnilineEntryController extends AbstractController
         }
 
         if ($this->isGranted('ROLE_USER')) {
-            log_info('認証済のためログイン処理をスキップ');
+            $this->logger->info('認証済のためログイン処理をスキップ');
 
             return $this->redirectToRoute($returnPath);
         }
@@ -209,18 +254,17 @@ class AnilineEntryController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_ENTRY_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_ENTRY_INDEX_INITIALIZE);
 
         /* @var $form \Symfony\Component\Form\FormInterface */
         $form = $builder->getForm();
 
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             switch ($request->get('mode')) {
                 case 'confirm':
-                    log_info('会員登録確認開始');
-                    log_info('会員登録確認完了');
+                    $this->logger->info('会員登録確認開始');
+                    $this->logger->info('会員登録確認完了');
 
                     return $this->render(
                         'Entry/confirm.twig',
@@ -232,7 +276,7 @@ class AnilineEntryController extends AbstractController
                     );
 
                 case 'complete':
-                    log_info('会員登録開始');
+                    $this->logger->info('会員登録開始');
 
                     //ブリーダー・保護団体紹介チェック
                     $sessid = $request->cookies->get('rid_key');
@@ -240,7 +284,7 @@ class AnilineEntryController extends AbstractController
                     //$sessid = $session->getId();
                     $rid = 0;
 
-                    log_info("【キャンペーン】チェック開始 sessid=".$sessid);
+                    $this->logger->info("【キャンペーン】チェック開始 sessid=".$sessid);
 
                     if($sessid != ""){
                         $affiliate = $this->affiliateStatusRepository->findOneBy(array("session_id" => $sessid,"campaign_id" => array(1,2)),array('create_date' => 'DESC'));
@@ -255,7 +299,7 @@ class AnilineEntryController extends AbstractController
                                     $rid = $breeder->getId();
                                 }
                                 else{
-                                    log_info("【キャンペーン】関連ブリーダーが見つかりません。sessid=".$sessid."  hash=".$id_hash);
+                                    $this->logger->info("【キャンペーン】関連ブリーダーが見つかりません。sessid=".$sessid."  hash=".$id_hash);
                                 }
                             } elseif($cid == 2){
                                 //保護団体
@@ -264,20 +308,34 @@ class AnilineEntryController extends AbstractController
                                     $rid = $conservation->getId();
                                 }
                                 else{
-                                    log_info("【キャンペーン】関連保護団体が見つかりません。sessid=".$sessid."  hash=".$id_hash);
+                                    $this->logger->info("【キャンペーン】関連保護団体が見つかりません。sessid=".$sessid."  hash=".$id_hash);
                                 }
                             }
                         }
                     }
 
-                    $encoder = $this->encoderFactory->getEncoder($Customer);
-                    $salt = $encoder->createSalt();
-                    $password = $encoder->encodePassword($Customer->getPassword(), $salt);
+                    // $encoder = $this->passwordHasher->getEncoder($Customer);
+                    // $salt = $encoder->createSalt();
+                    // $password = $encoder->encodePassword($Customer->getPassword(), $salt);
+                    // $secretKey = $this->customerRepository->getUniqueSecretKey();
+
+                    // $Customer
+                    //     ->setSalt($salt)
+                    //     ->setPassword($password)
+                    //     ->setSecretKey($secretKey)
+                    //     ->setPoint(0)
+                    //     ->setIsBreeder(0)
+                    //     ->setRegistType($regist_type)
+                    //     ->setIsConservation(0)
+                    //     ->setRelationId($rid);
+
+                    // パスワードをハッシュ化（saltは不要）
+                    $hashedPassword = $this->passwordHasher->hashPassword($Customer, $Customer->getPlainPassword());
+
                     $secretKey = $this->customerRepository->getUniqueSecretKey();
 
                     $Customer
-                        ->setSalt($salt)
-                        ->setPassword($password)
+                        ->setPassword($hashedPassword)
                         ->setSecretKey($secretKey)
                         ->setPoint(0)
                         ->setIsBreeder(0)
@@ -288,7 +346,7 @@ class AnilineEntryController extends AbstractController
                     $this->entityManager->persist($Customer);
                     $this->entityManager->flush();
 
-                    log_info('会員登録完了');
+                    $this->logger->info('会員登録完了');
 
                     $event = new EventArgs(
                         [
@@ -297,7 +355,7 @@ class AnilineEntryController extends AbstractController
                         ],
                         $request
                     );
-                    $this->eventDispatcher->dispatch(EccubeEvents::FRONT_ENTRY_INDEX_COMPLETE, $event);
+                    $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_ENTRY_INDEX_COMPLETE);
 
 
                     $activateFlg = $this->BaseInfo->isOptionCustomerActivate();
@@ -319,7 +377,7 @@ class AnilineEntryController extends AbstractController
                             return $event->getResponse();
                         }
 
-                        log_info('仮会員登録完了画面へリダイレクト');
+                        $this->logger->info('仮会員登録完了画面へリダイレクト');
 
                         return $this->redirectToRoute('entry_complete',['ReturnPath' => $returnPath,]);
 
@@ -349,6 +407,13 @@ class AnilineEntryController extends AbstractController
             'prefix' => $prefix,
             'contact_save' => $contact_save
         ];
+        // return $this->render('Entry/index.twig', [
+        //     'returnPath' => $returnPath,
+        //     'form' => $form->createView(),
+        //     'request' => $request,
+        //     'prefix' => $prefix,
+        //     'contact_save' => $contact_save
+        // ]);
     }
 
     /**
@@ -517,7 +582,7 @@ class AnilineEntryController extends AbstractController
      */
     private function entryActivate(Request $request, $secret_key,$prefix)
     {
-        log_info('本会員登録開始');
+        $this->logger->info('本会員登録開始');
         $Customer = $this->customerRepository->getProvisionalCustomerBySecretKey($secret_key);
         if (is_null($Customer)) {
             return -1;
@@ -529,7 +594,7 @@ class AnilineEntryController extends AbstractController
         $this->entityManager->persist($Customer);
         $this->entityManager->flush();
 
-        log_info('本会員登録完了');
+        $this->logger->info('本会員登録完了');
 
         $event = new EventArgs(
             [
@@ -537,7 +602,7 @@ class AnilineEntryController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_ENTRY_ACTIVATE_COMPLETE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_ENTRY_ACTIVATE_COMPLETE);
 
         // メール送信
         $this->mailService->sendCustomerCompleteMail($Customer,$prefix);
@@ -550,7 +615,7 @@ class AnilineEntryController extends AbstractController
         }
 
         // 本会員登録してログイン状態にする
-        $token = new UsernamePasswordToken($Customer, null, 'breeder', ['ROLE_USER']);
+        $token = new UsernamePasswordToken($Customer, 'breeder', ['ROLE_USER']);
         $this->tokenStorage->setToken($token);
         $request->getSession()->migrate(true);
 
@@ -558,7 +623,7 @@ class AnilineEntryController extends AbstractController
             $this->cartService->save();
         }
 
-        log_info('ログイン済に変更', [$this->getUser()->getId()]);
+        $this->logger->info('ログイン済に変更', [$this->getUser()->getId()]);
 
         return $qtyInCart;
 

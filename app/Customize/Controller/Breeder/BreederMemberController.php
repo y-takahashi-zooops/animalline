@@ -27,13 +27,18 @@ use Customize\Form\Type\Front\ResetPasswordType;
 use Customize\Repository\BankAccountRepository;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Eccube\Form\Type\Front\EntryType;
 use Customize\Repository\BreederContactHeaderRepository;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Service\MailService;
 use Customize\Entity\BreederContactHeader;
 use Carbon\Carbon;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Psr\Log\LoggerInterface;
+use Eccube\Common\EccubeConfig;
 
 class BreederMemberController extends AbstractController
 {
@@ -58,9 +63,9 @@ class BreederMemberController extends AbstractController
     protected $tokenStorage;
 
     /**
-     * @var EncoderFactoryInterface
+     * @var UserPasswordHasherInterface
      */
-    protected $encoderFactory;
+    protected $passwordHasher;
 
     /**
      * @var BankAccountRepository
@@ -88,41 +93,65 @@ class BreederMemberController extends AbstractController
     protected $mailService;
 
     /**
+     * @var FormFactoryInterface
+     */
+    protected $formFactory;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * BreederController constructor.
      *
      * @param CustomerRepository $customerRepository
      * @param BreedersRepository $breedersRepository
      * @param BreederQueryService $breederQueryService
-     * @param EncoderFactoryInterface $encoderFactory
+     * @param UserPasswordHasherInterface $passwordHasher
      * @param TokenStorageInterface $tokenStorage
      * @param BankAccountRepository $bankAccountRepository
      * @param BreederContactHeaderRepository $breederContactHeaderRepository
      * @param BenefitsStatusRepository $benefitsStatusRepository
      * @param BreederPetsRepository $breederPetsRepository
      * @param MailService $mailService
+     * @param EntityManagerInterface $entityManager
+     * @param FormFactoryInterface $formFactory
+     * @param EventDispatcherInterface $eventDispatcher;
+     * @param LoggerInterface $logger
      */
     public function __construct(
         CustomerRepository  $customerRepository,
         BreedersRepository  $breedersRepository,
         BreederQueryService $breederQueryService,
-        EncoderFactoryInterface $encoderFactory,
+        UserPasswordHasherInterface $passwordHasher,
         TokenStorageInterface $tokenStorage,
         BankAccountRepository $bankAccountRepository,
         BreederContactHeaderRepository $breederContactHeaderRepository,
         BenefitsStatusRepository $benefitsStatusRepository,
         BreederPetsRepository  $breederPetsRepository,
-        MailService $mailService
+        MailService $mailService,
+        EntityManagerInterface $entityManager,
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher,
+        LoggerInterface $logger,
+        EccubeConfig $eccubeConfig
     ) {
         $this->customerRepository = $customerRepository;
         $this->breedersRepository = $breedersRepository;
         $this->breederQueryService = $breederQueryService;
-        $this->encoderFactory = $encoderFactory;
+        $this->passwordHasher = $passwordHasher;
         $this->tokenStorage = $tokenStorage;
         $this->bankAccountRepository = $bankAccountRepository;
         $this->breederContactHeaderRepository = $breederContactHeaderRepository;
         $this->benefitsStatusRepository = $benefitsStatusRepository;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->mailService = $mailService;
+        $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->logger = $logger;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     /**
@@ -146,7 +175,7 @@ class BreederMemberController extends AbstractController
         //ログイン完了後に元のページに戻るためのセッション変数を設定
 
         if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
-            log_info('認証済のためログイン処理をスキップ');
+            $this->logger->info('認証済のためログイン処理をスキップ');
 
             return $this->redirectToRoute('breeder_mypage');
         }
@@ -171,7 +200,7 @@ class BreederMemberController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_MYPAGE_MYPAGE_LOGIN_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_MYPAGE_MYPAGE_LOGIN_INITIALIZE);
 
         $form = $builder->getForm();
 
@@ -218,14 +247,14 @@ class BreederMemberController extends AbstractController
                     ->setContactType($contact_type)
                     ->setLastMessageDate(Carbon::now());
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($contact);
+	    $this->entityManager->persist($contact);
 
             $pet->setIsContact(1);
-            $entityManager->persist($pet);
+            $this->entityManager->persist($pet);
 
-            $entityManager->flush();
-            $breeder = $this->customerRepository->find($contact->getBreeder()->getId());
+            $this->entityManager->flush();
+
+	    $breeder = $this->customerRepository->find($contact->getBreeder()->getId());
             $this->mailService->sendMailContractAccept($breeder, 1);
 
             return $this->redirectToRoute('breeder_contact_complete', ['pet_id' => $contact_pet_id]);
@@ -335,8 +364,8 @@ class BreederMemberController extends AbstractController
                 ->setLicensePref($breederData->getPrefLicense())
                 ->setThumbnailPath($thumbnail_path)
                 ->setLicenseThumbnailPath($license_thumbnail_path);
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($breederData);
+	    $entityManager = $this->entityManager;
+	    $entityManager->persist($breederData);
 
             if($breederData->getIdHash() == ""){
                 $breederData->setIdHash(md5($breederData->getId()));
@@ -379,7 +408,7 @@ class BreederMemberController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $breederPetinfoTemplate->setBreeder($breeder);
             $entityManager->persist($breederPetinfoTemplate);
             $entityManager->flush();
@@ -405,7 +434,7 @@ class BreederMemberController extends AbstractController
 
         $form = $builder->getForm();
         $form->handleRequest($request);
-        $entityManager = $this->getDoctrine()->getManager();
+	$entityManager = $this->entityManager;
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $this->getUser();
@@ -441,7 +470,7 @@ class BreederMemberController extends AbstractController
 
         /* @var $builder \Symfony\Component\Form\FormBuilderInterface */
         $builder = $this->formFactory->createBuilder(EntryType::class, $Customer, [
-            'password' => $request->get('entry')['password']['first'] ?? '',
+            'plain_password' => $request->get('entry')['password']['first'] ?? '',
             'email' => $request->get('entry')['email']['first'] ?? '',
         ]);
 
@@ -452,19 +481,19 @@ class BreederMemberController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_MYPAGE_CHANGE_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_MYPAGE_CHANGE_INDEX_INITIALIZE);
 
         /* @var $form \Symfony\Component\Form\FormInterface */
         $form = $builder->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            log_info('会員編集開始');
+            $this->logger->info('会員編集開始');
 
             if ($Customer->getPassword() === $this->eccubeConfig['eccube_default_password']) {
                 $Customer->setPassword($previous_password);
             } else {
-                $encoder = $this->encoderFactory->getEncoder($Customer);
+                $encoder = $this->passwordHasher->getEncoder($Customer);
                 if ($Customer->getSalt() === null) {
                     $Customer->setSalt($encoder->createSalt());
                 }
@@ -474,7 +503,7 @@ class BreederMemberController extends AbstractController
             }
             $this->entityManager->flush();
 
-            log_info('会員編集完了');
+            $this->logger->info('会員編集完了');
 
             $event = new EventArgs(
                 [
@@ -483,7 +512,7 @@ class BreederMemberController extends AbstractController
                 ],
                 $request
             );
-            $this->eventDispatcher->dispatch(EccubeEvents::FRONT_MYPAGE_CHANGE_INDEX_COMPLETE, $event);
+            $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_MYPAGE_CHANGE_INDEX_COMPLETE);
 
             return $this->redirect($this->generateUrl('breeder_change_complete'));
         }
@@ -543,7 +572,7 @@ class BreederMemberController extends AbstractController
                         ],
                         $request
                     );
-                    $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_COMPLETE, $event);
+                    $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_CONTACT_INDEX_COMPLETE);
 
                     $data = $event->getArgument('data');
 

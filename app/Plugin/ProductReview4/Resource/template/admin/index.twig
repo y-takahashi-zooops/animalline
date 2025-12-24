@@ -207,7 +207,7 @@
                             {% for Review in pagination %}
                                 <tr>
                                     <td class="text-center">{{ Review.id }}</td>
-                                    <td>{{ Review.create_date|date_min }}</td>
+                                    <td>{{ Review.create_date|date('Y-m-d H:i:s') }}</td>
                                     <td>{{ Review.reviewer_name }}</td>
                                     <td>{{ Review.Product.name }}</td>
                                     <td>

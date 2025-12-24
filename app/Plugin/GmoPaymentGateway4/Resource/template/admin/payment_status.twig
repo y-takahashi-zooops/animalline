@@ -217,9 +217,7 @@ http://www.gmo-pg.com/
                     <input type="checkbox"  name="ids[]" id="check_{{ Order.id }}" value="{{ Order.id }}">
                   </td>
                   <td class="align-middle text-left"  id="pay_status--{{ Order.id }}">
-                  {% if paymentStatuses[Order.gmo_payment_gateway_payment_status] is defined %}
                     {{ paymentStatuses[Order.gmo_payment_gateway_payment_status] }}
-                  {% endif %}
                   </td>
                   <td class="align-middle text-left" id="payment_method--{{ Order.id }}">{{ Order.payment_method }}</td>
                   <td class="align-middle text-center"  id="order_status--{{ Order.id }}">

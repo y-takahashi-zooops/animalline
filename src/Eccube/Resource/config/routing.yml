@@ -1,0 +1,7 @@
+front:
+    resource: "@Eccube/Controller/"
+    type: annotation
+
+customize:
+    resource: "@Customize/Controller/"
+    type: annotation

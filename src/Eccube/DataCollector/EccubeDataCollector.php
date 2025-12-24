@@ -14,12 +14,13 @@
 namespace Eccube\DataCollector;
 
 use Eccube\Common\Constant;
+use Eccube\Common\EccubeConfig;
 use Eccube\Entity\Plugin;
 use Eccube\Repository\PluginRepository;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
+use Throwable;
 
 /**
  * EccubeDataCollector.
@@ -29,9 +30,9 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 class EccubeDataCollector extends DataCollector
 {
     /**
-     * @var ContainerInterface
+     * @var EccubeConfig
      */
-    protected $container;
+    protected $eccubeConfig;
 
     /**
      * @var PluginRepository
@@ -39,19 +40,54 @@ class EccubeDataCollector extends DataCollector
     protected $pluginRepository;
 
     /**
-     * @param ContainerInterface $container
+     * @var string
      */
-    public function __construct(ContainerInterface $container, PluginRepository $pluginRepository)
-    {
+    protected $currency;
+
+    /**
+     * @var string
+     */
+    protected $locale;
+
+    /**
+     * @var array
+     */
+    protected $enabledPlugins;
+
+    /**
+     * @var array
+     */
+    protected $disabledPlugins;
+
+    /**
+     * @param string $currency
+     * @param string $locale
+     * @param array $enabledPlugins
+     * @param array $disabledPlugins
+     * @param EccubeConfig $eccubeConfig
+     * @param PluginRepository $pluginRepository
+     */
+    public function __construct(
+        string $currency,
+        string $locale,
+        array $enabledPlugins,
+        array $disabledPlugins,
+        EccubeConfig $eccubeConfig,
+        PluginRepository $pluginRepository
+    ) {
         $this->data = [
             'version' => Constant::VERSION,
-            'base_currency_code' => null,
-            'currency_code' => null,
-            'default_locale_code' => null,
-            'locale_code' => null,
+            'base_currency_code' => $currency,
+            'currency_code' => $currency,
+            'default_locale_code' => $locale,
+            'locale_code' => $locale,
             'plugins' => [],
         ];
-        $this->container = $container;
+        $this->currency = $currency;
+        $this->locale = $locale;
+        $this->enabledPlugins = $enabledPlugins;
+        $this->disabledPlugins = $disabledPlugins;
+        $this->eccubeConfig = $eccubeConfig;
         $this->pluginRepository = $pluginRepository;
     }
 
@@ -106,19 +142,15 @@ class EccubeDataCollector extends DataCollector
     /**
      * {@inheritdoc}
      */
-    public function collect(Request $request, Response $response, \Exception $exception = null)
+    public function collect(Request $request, Response $response, ?\Throwable $exception = null)
     {
-        $this->data['base_currency_code'] = $this->container->getParameter('currency');
-        $this->data['currency_code'] = $this->container->getParameter('currency');
+        $this->data['base_currency_code'] = $this->currency;
+        $this->data['currency_code'] = $this->currency;
+        $this->data['locale_code'] = $this->locale;
 
         try {
-            $this->data['locale_code'] = $this->container->getParameter('locale');
-        } catch (LocaleNotFoundException $exception) {
-        }
-
-        try {
-            $enabled = $this->container->getParameter('eccube.plugins.enabled');
-            $disabled = $this->container->getParameter('eccube.plugins.disabled');
+            $enabled = $this->enabledPlugins;
+            $disabled = $this->disabledPlugins;
 
             $Plugins = $this->pluginRepository->findAll();
             foreach (array_merge($enabled, $disabled) as $code) {

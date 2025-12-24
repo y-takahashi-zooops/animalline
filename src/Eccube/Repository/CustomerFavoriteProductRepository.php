@@ -14,8 +14,8 @@
 namespace Eccube\Repository;
 
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\ManagerRegistry as RegistryInterface;
 use Eccube\Entity\CustomerFavoriteProduct;
-use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
  * CustomerFavoriteProductRepository
@@ -39,7 +39,7 @@ class CustomerFavoriteProductRepository extends AbstractRepository
         if ($this->isFavorite($Customer, $Product)) {
             return;
         } else {
-            $CustomerFavoriteProduct = new \Eccube\Entity\CustomerFavoriteProduct();
+            $CustomerFavoriteProduct = new CustomerFavoriteProduct();
             $CustomerFavoriteProduct->setCustomer($Customer);
             $CustomerFavoriteProduct->setProduct($Product);
 
@@ -93,7 +93,7 @@ class CustomerFavoriteProductRepository extends AbstractRepository
     /**
      * お気に入りを削除します.
      *
-     * @param \Eccube\Entity\CustomerFavoriteProduct $CustomerFavoriteProduct
+     * @param CustomerFavoriteProduct $CustomerFavoriteProduct
      */
     public function delete($CustomerFavoriteProduct)
     {

@@ -23,6 +23,9 @@ use Eccube\Event\EventArgs;
 use Customize\Form\Type\Adoption\ConservationContactType;
 use Customize\Service\MailService;
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class AdoptionMemberContactController extends AbstractController
 {
@@ -62,6 +65,16 @@ class AdoptionMemberContactController extends AbstractController
     protected $mailService;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
+     * @var FormFactoryInterface
+     */
+    protected $formFactory;
+
+    /**
      * AdoptionController constructor.
      *
      * @param ConservationContactHeaderRepository $conservationContactHeaderRepository
@@ -73,13 +86,16 @@ class AdoptionMemberContactController extends AbstractController
      * @param MailService $mailService
      */
     public function __construct(
+        EntityManagerInterface $entityManager,
         ConservationContactHeaderRepository $conservationContactHeaderRepository,
         ConservationContactsRepository $conservationContactsRepository,
         SendoffReasonRepository        $sendoffReasonRepository,
         ConservationsRepository        $conservationsRepository,
         ConservationPetsRepository     $conservationPetsRepository,
         CustomerRepository             $customerRepository,
-        MailService                    $mailService
+        MailService                    $mailService,
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->conservationContactHeaderRepository = $conservationContactHeaderRepository;
         $this->conservationContactsRepository = $conservationContactsRepository;
@@ -88,6 +104,9 @@ class AdoptionMemberContactController extends AbstractController
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->customerRepository = $customerRepository;
         $this->mailService = $mailService;
+        $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -114,7 +133,7 @@ class AdoptionMemberContactController extends AbstractController
     public function message(Request $request, ConservationContactHeader $msgHeader)
     {
         $msgHeader->setCustomerNewMsg(0);
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->entityManager;
         $entityManager->persist($msgHeader);
         $lastMessages = $this->conservationContactsRepository->findBy(
             [
@@ -158,7 +177,7 @@ class AdoptionMemberContactController extends AbstractController
             $msgHeader->setConservationNewMsg(1)
                 ->setLastMessageDate(Carbon::now());
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($conservationContact);
             $entityManager->persist($msgHeader);
             $entityManager->flush();
@@ -181,7 +200,7 @@ class AdoptionMemberContactController extends AbstractController
                 ->setIsReading(0)
                 ->setConservationContactHeader($msgHeader);
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($msgHeader);
             $entityManager->persist($conservationContact);
             $entityManager->flush();
@@ -231,7 +250,7 @@ class AdoptionMemberContactController extends AbstractController
                 }
                 */
             }
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($msgHeader);
             $entityManager->flush();
 
@@ -279,7 +298,7 @@ class AdoptionMemberContactController extends AbstractController
     public function adoption_message(Request $request, ConservationContactHeader $msgHeader)
     {
         $msgHeader->setConservationNewMsg(0);
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->entityManager;
         $entityManager->persist($msgHeader);
         $lastMessages = $this->conservationContactsRepository->findBy(
             [
@@ -322,7 +341,7 @@ class AdoptionMemberContactController extends AbstractController
             $msgHeader->setCustomerNewMsg(1)
                 ->setLastMessageDate(Carbon::now());
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($conservationContact);
             $entityManager->persist($msgHeader);
             $entityManager->flush();
@@ -343,7 +362,7 @@ class AdoptionMemberContactController extends AbstractController
                 ->setIsReading(0)
                 ->setConservationContactHeader($msgHeader);
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($msgHeader);
             $entityManager->persist($conservationContact);
             $entityManager->flush();
@@ -392,7 +411,7 @@ class AdoptionMemberContactController extends AbstractController
                 }
                 */
             }
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($msgHeader);
             $entityManager->flush();
 
@@ -438,7 +457,7 @@ class AdoptionMemberContactController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_CONTACT_INDEX_INITIALIZE);
 
         $form = $builder->getForm();
         $form->handleRequest($request);
@@ -481,7 +500,7 @@ class AdoptionMemberContactController extends AbstractController
                         ->setContactTitle($arr[$request->get('conservation_contact')['contact_type'] - 1])
                         ->setImageFile($newFilename)
                         ->setLastMessageDate(Carbon::now());
-                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager = $this->entityManager;
                     $entityManager->persist($contact);
                     $entityManager->flush();
 
@@ -527,7 +546,7 @@ class AdoptionMemberContactController extends AbstractController
     public function deleteMessageContact(Request $request) {
         $msg = $this->conservationContactsRepository->find($request->get('msgId'));
         $msgHeaderId = $msg->getConservationContactHeader()->getId();
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->entityManager;
         $msg->setIsDelete(AnilineConf::ANILINE_MESSAGE_DELETED);
         $entityManager->persist($msg);
         $entityManager->flush();

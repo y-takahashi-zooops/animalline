@@ -27,6 +27,8 @@ use Eccube\Repository\Master\ProductListOrderByRepository;
 use Eccube\Repository\ProductRepository;
 use Eccube\Repository\CategoryRepository;
 use Customize\Config\AnilineConf;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CustomTopController extends AbstractController
 {
@@ -60,13 +62,17 @@ class CustomTopController extends AbstractController
         ProductRepository $productRepository,
         CategoryRepository $categoryRepository,
         ProductListOrderByRepository $productListOrderByRepository,
-        MailService $mailService
+        MailService $mailService,
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->NewsRepository = $NewsRepository;
         $this->productListOrderByRepository = $productListOrderByRepository;
         $this->productRepository = $productRepository;
         $this->categoryRepository = $categoryRepository;
         $this->mailService = $mailService;
+        $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
     }
     /**
      * @Route("/ec", name="homepage")
@@ -292,7 +298,7 @@ class CustomTopController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_CONTACT_INDEX_INITIALIZE);
 
         $form = $builder->getForm();
         $form->handleRequest($request);      
@@ -331,7 +337,23 @@ class CustomTopController extends AbstractController
      * @Template("nutro.twig")
      */
     public function ec_nutro(){
-        return [];
+        $title = 'ニュートロ';
+
+        return ['title' => $title];
+    }
+
+    /**
+     * グリニーズ
+     *
+     * @Route("/greenies", name="ec_greenies")
+     * @Template("greenies.twig")
+     * @return array
+     */
+    public function ec_greenies()
+    {
+        $title = 'グリニーズ';
+
+        return ['title' => $title];
     }
 
     /**

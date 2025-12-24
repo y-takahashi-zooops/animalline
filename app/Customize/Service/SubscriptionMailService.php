@@ -16,11 +16,15 @@ namespace Customize\Service;
 use Eccube\Common\EccubeConfig;
 use Eccube\Entity\BaseInfo;
 use Eccube\Repository\BaseInfoRepository;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
+use Twig\Environment;
+use Psr\Log\LoggerInterface;
 
 class SubscriptionMailService
 {
     /**
-     * @var \Swift_Mailer
+     * @var MailerInterface
      */
     protected $mailer;
 
@@ -35,28 +39,36 @@ class SubscriptionMailService
     protected $eccubeConfig;
 
     /**
-     * @var \Twig_Environment
+     * @var Environment
      */
     protected $twig;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * SubscriptionMailService constructor.
      *
-     * @param \Swift_Mailer $mailer
+     * @param MailerInterface $mailer
      * @param BaseInfoRepository $baseInfoRepository
-     * @param \Twig_Environment $twig
+     * @param Environment $twig
      * @param EccubeConfig $eccubeConfig
+     * @param LoggerInterface $logger
      */
     public function __construct(
-        \Swift_Mailer $mailer,
+        MailerInterface $mailer,
         BaseInfoRepository $baseInfoRepository,
-        \Twig_Environment $twig,
-        EccubeConfig $eccubeConfig
+        Environment $twig,
+        EccubeConfig $eccubeConfig,
+        LoggerInterface $logger
     ) {
         $this->mailer = $mailer;
         $this->BaseInfo = $baseInfoRepository->get();
         $this->eccubeConfig = $eccubeConfig;
         $this->twig = $twig;
+        $this->logger = $logger;
     }
 
      /**
@@ -68,7 +80,7 @@ class SubscriptionMailService
      */
     public function sendSubscriotionRemindMail($Customer)
     {
-        log_info('次回お届け日変更リマインドメール送信開始');
+        $this->logger->info('次回お届け日変更リマインドメール送信開始');
 
         // メール内容作成
         $body = $this->twig->render('Mail/subscription_remind.twig', [
@@ -77,13 +89,14 @@ class SubscriptionMailService
         ]);
 
         // タイトル、宛名等を作成
-        $message = (new \Swift_Message())
-            ->setSubject('[' . $this->BaseInfo->getShopName() . '] ' . '定期注文次回お届け日変更期限のお知らせ')
-            ->setFrom([$this->BaseInfo->getEmail02() => $this->BaseInfo->getShopName()])
-            ->setTo([$Customer->getEmail()])
-            ->setBcc($this->BaseInfo->getEmail02())
-            ->setReplyTo($this->BaseInfo->getEmail02())
-            ->setReturnPath($this->BaseInfo->getEmail04());
+        $email = (new Email())
+            ->subject('[' . $this->BaseInfo->getShopName() . '] ' . '定期注文次回お届け日変更期限のお知らせ')
+            ->from($this->BaseInfo->getEmail02())
+            ->to($Customer->getEmail())
+            ->bcc($this->BaseInfo->getEmail02())
+            ->replyTo($this->BaseInfo->getEmail02())
+            ->returnPath($this->BaseInfo->getEmail04())
+            ->text($body);
 
         // HTMLテンプレートが存在する場合
         // $htmlFileName = 'Mail/subscription_remind.html.twig';
@@ -98,14 +111,14 @@ class SubscriptionMailService
         //         ->setBody($body, 'text/plain')
         //         ->addPart($htmlBody, 'text/html');
         // } else {
-            $message->setBody($body);
+            // $message->setBody($body);
         // }
 
-        $count = $this->mailer->send($message);
+        $this->mailer->send($email);
 
-        log_info('次回お届け日変更リマインドメール送信完了', ['count' => $count]);
+        $this->logger->info('次回お届け日変更リマインドメール送信完了');
 
-        return $count;
+        return 1;
     }
 
     /**
@@ -117,7 +130,7 @@ class SubscriptionMailService
      */
     public function sendSubscriotionConfirmMail($Order, $Shipping, $SubscriptionContract)
     {
-        log_info('次回お届け日確定メール送信開始');
+        $this->logger->info('次回お届け日確定メール送信開始');
 
         // メール内容作成
         $body = $this->twig->render('Mail/subscription_confirm.twig', [
@@ -128,13 +141,14 @@ class SubscriptionMailService
         ]);
 
         // タイトル、宛名等を作成
-        $message = (new \Swift_Message())
-            ->setSubject('[' . $this->BaseInfo->getShopName() . '] ' . '定期注文お届け日確定のお知らせ')
-            ->setFrom([$this->BaseInfo->getEmail02() => $this->BaseInfo->getShopName()])
-            ->setTo([$Order->getEmail()])
-            ->setBcc($this->BaseInfo->getEmail02())
-            ->setReplyTo($this->BaseInfo->getEmail02())
-            ->setReturnPath($this->BaseInfo->getEmail04());
+        $email = (new Email())
+            ->subject('[' . $this->BaseInfo->getShopName() . '] ' . '定期注文お届け日確定のお知らせ')
+            ->from($this->BaseInfo->getEmail02())
+            ->to($Order->getEmail())
+            ->bcc($this->BaseInfo->getEmail02())
+            ->replyTo($this->BaseInfo->getEmail02())
+            ->returnPath($this->BaseInfo->getEmail04())
+            ->text($body);
 
         // HTMLテンプレートが存在する場合
         // $htmlFileName = 'Mail/subscription_confirm.html.twig';
@@ -151,13 +165,13 @@ class SubscriptionMailService
         //         ->setBody($body, 'text/plain')
         //         ->addPart($htmlBody, 'text/html');
         // } else {
-            $message->setBody($body);
+            // $message->setBody($body);
         // }
 
-        $count = $this->mailer->send($message);
+        $this->mailer->send($email);
 
-        log_info('次回お届け日確定メール送信完了', ['count' => $count]);
+        $this->logger->info('次回お届け日確定メール送信完了');
 
-        return $count;
+        return 1;
     }
 }

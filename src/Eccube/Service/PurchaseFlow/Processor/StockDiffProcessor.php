@@ -74,7 +74,7 @@ class StockDiffProcessor extends ItemHolderValidator implements PurchaseProcesso
             $toQuantity = array_reduce($Items, function ($quantity, $Item) {
                 return $quantity += $Item->getQuantity();
             }, 0);
-            
+
             // ステータスをキャンセルに変更した場合
             if ($To->getOrderStatus() && $To->getOrderStatus()->getId() == OrderStatus::CANCEL
                 && $From->getOrderStatus() && $From->getOrderStatus()->getId() != OrderStatus::CANCEL) {
@@ -184,8 +184,6 @@ class StockDiffProcessor extends ItemHolderValidator implements PurchaseProcesso
      */
     public function commit(ItemHolderInterface $target, PurchaseContext $context)
     {
-        // 何もしない.
-        return;
     }
 
     /**
@@ -196,7 +194,5 @@ class StockDiffProcessor extends ItemHolderValidator implements PurchaseProcesso
      */
     public function rollback(ItemHolderInterface $itemHolder, PurchaseContext $context)
     {
-        // 何もしない.
-        return;
     }
 }

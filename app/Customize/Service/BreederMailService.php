@@ -17,11 +17,16 @@ use Eccube\Repository\MailHistoryRepository;
 use Eccube\Repository\MailTemplateRepository;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
+use Twig\Environment;
+use Psr\Log\LoggerInterface;
 
 class BreederMailService
 {
     /**
-     * @var \Swift_Mailer
+     * @var MailerInterface
      */
     protected $mailer;
 
@@ -51,29 +56,36 @@ class BreederMailService
     protected $eccubeConfig;
 
     /**
-     * @var \Twig_Environment
+     * @var Environment
      */
     protected $twig;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * MailService constructor.
      *
-     * @param \Swift_Mailer $mailer
+     * @param MailerInterface $mailer
      * @param MailTemplateRepository $mailTemplateRepository
      * @param MailHistoryRepository $mailHistoryRepository
      * @param BaseInfoRepository $baseInfoRepository
      * @param EventDispatcherInterface $eventDispatcher
-     * @param \Twig_Environment $twig
+     * @param Environment $twig
      * @param EccubeConfig $eccubeConfig
+     * @param LoggerInterface $logger
      */
     public function __construct(
-        \Swift_Mailer $mailer,
+        MailerInterface $mailer,
         MailTemplateRepository $mailTemplateRepository,
         MailHistoryRepository $mailHistoryRepository,
         BaseInfoRepository $baseInfoRepository,
         EventDispatcherInterface $eventDispatcher,
-        \Twig_Environment $twig,
-        EccubeConfig $eccubeConfig
+        Environment $twig,
+        EccubeConfig $eccubeConfig,
+        LoggerInterface $logger
     ) {
         $this->mailer = $mailer;
         $this->mailTemplateRepository = $mailTemplateRepository;
@@ -82,6 +94,7 @@ class BreederMailService
         $this->eventDispatcher = $eventDispatcher;
         $this->eccubeConfig = $eccubeConfig;
         $this->twig = $twig;
+        $this->logger = $logger;
     }
 
     /**
@@ -92,7 +105,7 @@ class BreederMailService
      */
     public function sendCustomerConfirmMail(\Customize\Entity\Breeders $Breeders, $activateUrl)
     {
-        log_info('仮会員登録メール送信開始');
+        $this->logger->info('仮会員登録メール送信開始');
 
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_entry_confirm_mail_template_id']);
 
@@ -102,13 +115,14 @@ class BreederMailService
             'activateUrl' => $activateUrl,
         ]);
 
-        $message = (new \Swift_Message())
-            ->setSubject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
-            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
-            ->setTo([$Breeders->getEmail()])
-            ->setBcc($this->BaseInfo->getEmail01())
-            ->setReplyTo($this->BaseInfo->getEmail03())
-            ->setReturnPath($this->BaseInfo->getEmail04());
+        $email = (new Email())
+            ->subject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
+            ->from(new Address($this->BaseInfo->getEmail01(), $this->BaseInfo->getShopName()))
+            ->to(new Address($Breeders->getEmail()))
+            ->bcc($this->BaseInfo->getEmail01())
+            ->replyTo($this->BaseInfo->getEmail03())
+            ->returnPath($this->BaseInfo->getEmail04())
+            ->text($body);
 
         // HTMLテンプレートが存在する場合
         // $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
@@ -124,25 +138,28 @@ class BreederMailService
         //         ->setBody($body, 'text/plain')
         //         ->addPart($htmlBody, 'text/html');
         // } else {
-            $message->setBody($body);
+            // $message->setBody($body);
         // }
 
         $event = new EventArgs(
             [
-                'message' => $message,
+                'message' => $email,
                 'Breeders' => $Breeders,
                 'BaseInfo' => $this->BaseInfo,
                 'activateUrl' => $activateUrl,
             ],
             null
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::MAIL_CUSTOMER_CONFIRM, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::MAIL_CUSTOMER_CONFIRM);
 
-        $count = $this->mailer->send($message, $failures);
-
-        log_info('仮会員登録メール送信完了', ['count' => $count]);
-
-        return $count;
+        try {
+            $this->mailer->send($email);
+            $this->logger->info('仮会員登録メール送信完了', ['email' => $Breeders->getEmail()]);
+            return 1;
+        } catch (\Throwable $e) {
+            log_error('メール送信エラー', ['exception' => $e]);
+            return 0;
+        }
     }
 
     /**
@@ -152,7 +169,7 @@ class BreederMailService
      */
     public function sendCustomerCompleteMail(\Customize\Entity\Breeders $Breeders)
     {
-        log_info('会員登録完了メール送信開始');
+        $this->logger->info('会員登録完了メール送信開始');
 
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_entry_complete_mail_template_id']);
 
@@ -161,13 +178,14 @@ class BreederMailService
             'BaseInfo' => $this->BaseInfo,
         ]);
 
-        $message = (new \Swift_Message())
-            ->setSubject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
-            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
-            ->setTo([$Breeders->getEmail()])
-            ->setBcc($this->BaseInfo->getEmail01())
-            ->setReplyTo($this->BaseInfo->getEmail03())
-            ->setReturnPath($this->BaseInfo->getEmail04());
+        $email = (new Email())
+            ->subject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
+            ->from(new Address($this->BaseInfo->getEmail01(), $this->BaseInfo->getShopName()))
+            ->to(new Address($Breeders->getEmail()))
+            ->bcc($this->BaseInfo->getEmail01())
+            ->replyTo($this->BaseInfo->getEmail03())
+            ->returnPath($this->BaseInfo->getEmail04())
+            ->text($body);
 
         // HTMLテンプレートが存在する場合
         // $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
@@ -182,24 +200,24 @@ class BreederMailService
         //         ->setBody($body, 'text/plain')
         //         ->addPart($htmlBody, 'text/html');
         // } else {
-            $message->setBody($body);
+            // $message->setBody($body);
         // }
 
         $event = new EventArgs(
             [
-                'message' => $message,
+                'message' => $email,
                 'Breeders' => $Breeders,
                 'BaseInfo' => $this->BaseInfo,
             ],
             null
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::MAIL_CUSTOMER_COMPLETE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::MAIL_CUSTOMER_COMPLETE);
 
-        $count = $this->mailer->send($message);
+        $this->mailer->send($email);
 
-        log_info('会員登録完了メール送信完了', ['count' => $count]);
+        $this->logger->info('会員登録完了メール送信完了');
 
-        return $count;
+        return 1;
     }
 
     /**
@@ -210,7 +228,7 @@ class BreederMailService
      */
     public function sendCustomerWithdrawMail(Breeders $Breeders, string $email)
     {
-        log_info('退会手続き完了メール送信開始');
+        $this->logger->info('退会手続き完了メール送信開始');
 
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_customer_withdraw_mail_template_id']);
 
@@ -219,13 +237,14 @@ class BreederMailService
             'BaseInfo' => $this->BaseInfo,
         ]);
 
-        $message = (new \Swift_Message())
-            ->setSubject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
-            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
-            ->setTo([$email])
-            ->setBcc($this->BaseInfo->getEmail01())
-            ->setReplyTo($this->BaseInfo->getEmail03())
-            ->setReturnPath($this->BaseInfo->getEmail04());
+        $emailMessage = (new Email())
+            ->subject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
+            ->from(new Address($this->BaseInfo->getEmail01(), $this->BaseInfo->getShopName()))
+            ->to(new Address($email))
+            ->bcc($this->BaseInfo->getEmail01())
+            ->replyTo($this->BaseInfo->getEmail03())
+            ->returnPath($this->BaseInfo->getEmail04())
+            ->text($body);
 
         // HTMLテンプレートが存在する場合
         // $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
@@ -240,25 +259,26 @@ class BreederMailService
         //         ->setBody($body, 'text/plain')
         //         ->addPart($htmlBody, 'text/html');
         // } else {
-            $message->setBody($body);
+            // $message->setBody($body);
         // }
 
         $event = new EventArgs(
             [
-                'message' => $message,
+                'email' => $emailMessage,
                 'Breeders' => $Breeders,
                 'BaseInfo' => $this->BaseInfo,
                 'email' => $email,
             ],
             null
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::MAIL_CUSTOMER_WITHDRAW, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::MAIL_CUSTOMER_WITHDRAW);
 
-        $count = $this->mailer->send($message);
+         // Send email via Symfony Mailer
+        $this->mailer->send($emailMessage);
 
-        log_info('退会手続き完了メール送信完了', ['count' => $count]);
+        $this->logger->info('退会手続き完了メール送信完了');
 
-        return $count;
+        return 1;
     }
 
     /**
@@ -268,7 +288,7 @@ class BreederMailService
      */
     public function sendContactMail($formData)
     {
-        log_info('お問い合わせ受付メール送信開始');
+        $this->logger->info('お問い合わせ受付メール送信開始');
 
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_contact_mail_template_id']);
 
@@ -278,13 +298,14 @@ class BreederMailService
         ]);
 
         // 問い合わせ者にメール送信
-        $message = (new \Swift_Message())
-            ->setSubject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
-            ->setFrom([$this->BaseInfo->getEmail02() => $this->BaseInfo->getShopName()])
-            ->setTo([$formData['email']])
-            ->setBcc($this->BaseInfo->getEmail02())
-            ->setReplyTo($this->BaseInfo->getEmail02())
-            ->setReturnPath($this->BaseInfo->getEmail04());
+        $emailMessage = (new Email())
+            ->subject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
+            ->from(new Address($this->BaseInfo->getEmail02(), $this->BaseInfo->getShopName()))
+            ->to(new Address($formData['email']))
+            ->bcc($this->BaseInfo->getEmail02())
+            ->replyTo(new Address($this->BaseInfo->getEmail02()))
+            ->returnPath($this->BaseInfo->getEmail04())
+            ->text($body);
 
         // HTMLテンプレートが存在する場合
         // $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
@@ -299,22 +320,23 @@ class BreederMailService
         //         ->setBody($body, 'text/plain')
         //         ->addPart($htmlBody, 'text/html');
         // } else {
-            $message->setBody($body);
+            // $message->setBody($body);
         // }
 
         $event = new EventArgs(
             [
-                'message' => $message,
+                'email' => $emailMessage,
                 'formData' => $formData,
                 'BaseInfo' => $this->BaseInfo,
             ],
             null
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::MAIL_CONTACT, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::MAIL_CONTACT);
 
-        $count = $this->mailer->send($message);
+        // メール送信
+        $count = $this->mailer->send($emailMessage);
 
-        log_info('お問い合わせ受付メール送信完了', ['count' => $count]);
+        $this->logger->info('お問い合わせ受付メール送信完了', ['count' => $count]);
 
         return $count;
     }
@@ -324,11 +346,11 @@ class BreederMailService
      *
      * @param \Eccube\Entity\Order $Order 受注情報
      *
-     * @return \Swift_Message
+     * @return Email
      */
     public function sendOrderMail(\Eccube\Entity\Order $Order)
     {
-        log_info('受注メール送信開始');
+        $this->logger->info('受注メール送信開始');
 
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_order_mail_template_id']);
 
@@ -336,13 +358,14 @@ class BreederMailService
             'Order' => $Order,
         ]);
 
-        $message = (new \Swift_Message())
-            ->setSubject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
-            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
-            ->setTo([$Order->getEmail()])
-            ->setBcc($this->BaseInfo->getEmail01())
-            ->setReplyTo($this->BaseInfo->getEmail03())
-            ->setReturnPath($this->BaseInfo->getEmail04());
+        $emailMessage = (new Email())
+            ->subject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
+            ->from(new Address($this->BaseInfo->getEmail01(), $this->BaseInfo->getShopName()))
+            ->to(new Address($Order->getEmail()))
+            ->bcc($this->BaseInfo->getEmail01())
+            ->replyTo(new Address($this->BaseInfo->getEmail03()))
+            ->returnPath($this->BaseInfo->getEmail04())
+            ->text($body);
 
         // HTMLテンプレートが存在する場合
         // $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
@@ -356,39 +379,42 @@ class BreederMailService
         //         ->setBody($body, 'text/plain')
         //         ->addPart($htmlBody, 'text/html');
         // } else {
-            $message->setBody($body);
+            // $message->setBody($body);
         // }
 
         $event = new EventArgs(
             [
-                'message' => $message,
+                'message' => $emailMessage,
                 'Order' => $Order,
                 'MailTemplate' => $MailTemplate,
                 'BaseInfo' => $this->BaseInfo,
             ],
             null
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::MAIL_ORDER, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::MAIL_ORDER);
 
-        $count = $this->mailer->send($message);
+        // メール送信
+        $count = $this->mailer->send($emailMessage);
 
+        // メール履歴の保存
         $MailHistory = new MailHistory();
-        $MailHistory->setMailSubject($message->getSubject())
-            ->setMailBody($message->getBody())
+        $MailHistory->setMailSubject($emailMessage->getSubject())
+            ->setMailBody($emailMessage->getTextBody())
             ->setOrder($Order)
             ->setSendDate(new \DateTime());
 
         // HTML用メールの設定
-        $multipart = $message->getChildren();
-        if (count($multipart) > 0) {
-            $MailHistory->setMailHtmlBody($multipart[0]->getBody());
+        if ($emailMessage instanceof \Symfony\Component\Mime\Email) {
+            if ($emailMessage->getHtmlBody()) {
+                $MailHistory->setMailHtmlBody($emailMessage->getHtmlBody());
+            }
         }
 
         $this->mailHistoryRepository->save($MailHistory);
 
-        log_info('受注メール送信完了', ['count' => $count]);
+        $this->logger->info('受注メール送信完了', ['count' => $count]);
 
-        return $message;
+        return $emailMessage;
     }
 
     /**
@@ -399,7 +425,7 @@ class BreederMailService
      */
     public function sendAdminCustomerConfirmMail(\Customize\Entity\Breeders $Breeders, $activateUrl)
     {
-        log_info('仮会員登録再送メール送信開始');
+        $this->logger->info('仮会員登録再送メール送信開始');
 
         /* @var $MailTemplate \Eccube\Entity\MailTemplate */
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_entry_confirm_mail_template_id']);
@@ -410,13 +436,14 @@ class BreederMailService
             'activateUrl' => $activateUrl,
         ]);
 
-        $message = (new \Swift_Message())
-            ->setSubject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
-            ->setFrom([$this->BaseInfo->getEmail03() => $this->BaseInfo->getShopName()])
-            ->setTo([$Breeders->getEmail()])
-            ->setBcc($this->BaseInfo->getEmail01())
-            ->setReplyTo($this->BaseInfo->getEmail03())
-            ->setReturnPath($this->BaseInfo->getEmail04());
+        $emailMessage = (new Email())
+            ->subject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
+            ->from(new Address($this->BaseInfo->getEmail03(), $this->BaseInfo->getShopName()))
+            ->to(new Address($Breeders->getEmail()))
+            ->bcc($this->BaseInfo->getEmail01())
+            ->replyTo(new Address($this->BaseInfo->getEmail03()))
+            ->returnPath($this->BaseInfo->getEmail04())
+            ->text($body);
 
         // HTMLテンプレートが存在する場合
         // $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
@@ -432,23 +459,24 @@ class BreederMailService
         //         ->setBody($body, 'text/plain')
         //         ->addPart($htmlBody, 'text/html');
         // } else {
-            $message->setBody($body);
+            // $message->setBody($body);
         // }
 
         $event = new EventArgs(
             [
-                'message' => $message,
+                'message' => $emailMessage,
                 'Breeders' => $Breeders,
                 'BaseInfo' => $this->BaseInfo,
                 'activateUrl' => $activateUrl,
             ],
             null
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::MAIL_ADMIN_CUSTOMER_CONFIRM, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::MAIL_ADMIN_CUSTOMER_CONFIRM);
 
-        $count = $this->mailer->send($message);
+        // メール送信
+        $count = $this->mailer->send($emailMessage);
 
-        log_info('仮会員登録再送メール送信完了', ['count' => $count]);
+        $this->logger->info('仮会員登録再送メール送信完了', ['count' => $count]);
 
         return $count;
     }
@@ -459,7 +487,7 @@ class BreederMailService
      * @param Order $Order 受注情報
      * @param $formData 入力内容
      *
-     * @return \Swift_Message
+     * @return Email
      *
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
@@ -467,33 +495,34 @@ class BreederMailService
      */
     public function sendAdminOrderMail(Order $Order, $formData)
     {
-        log_info('受注管理通知メール送信開始');
+        $this->logger->info('受注管理通知メール送信開始');
 
-        $message = (new \Swift_Message())
-            ->setSubject('['.$this->BaseInfo->getShopName().'] '.$formData['mail_subject'])
-            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
-            ->setTo([$Order->getEmail()])
-            ->setBcc($this->BaseInfo->getEmail01())
-            ->setReplyTo($this->BaseInfo->getEmail03())
-            ->setReturnPath($this->BaseInfo->getEmail04())
-            ->setBody($formData['tpl_data']);
+        $emailMessage = (new Email())
+            ->subject('['.$this->BaseInfo->getShopName().'] '.$formData['mail_subject'])
+            ->from(new Address($this->BaseInfo->getEmail01(), $this->BaseInfo->getShopName()))
+            ->to(new Address($Order->getEmail()))
+            ->bcc($this->BaseInfo->getEmail01())
+            ->replyTo(new Address($this->BaseInfo->getEmail03()))
+            ->returnPath($this->BaseInfo->getEmail04())
+            ->text($formData['tpl_data']);
 
         $event = new EventArgs(
             [
-                'message' => $message,
+                'message' => $emailMessage,
                 'Order' => $Order,
                 'formData' => $formData,
                 'BaseInfo' => $this->BaseInfo,
             ],
             null
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::MAIL_ADMIN_ORDER, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::MAIL_ADMIN_ORDER);
 
-        $count = $this->mailer->send($message);
+        // メール送信
+        $count = $this->mailer->send($emailMessage);
 
-        log_info('受注管理通知メール送信完了', ['count' => $count]);
+        $this->logger->info('受注管理通知メール送信完了', ['count' => $count]);
 
-        return $message;
+        return $emailMessage;
     }
 
     /**
@@ -504,7 +533,7 @@ class BreederMailService
      */
     public function sendPasswordResetNotificationMail(\Customize\Entity\Breeders $Breeders, $reset_url)
     {
-        log_info('パスワード再発行メール送信開始');
+        $this->logger->info('パスワード再発行メール送信開始');
 
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_forgot_mail_template_id']);
         $body = $this->twig->render($MailTemplate->getFileName(), [
@@ -514,12 +543,13 @@ class BreederMailService
             'reset_url' => $reset_url,
         ]);
 
-        $message = (new \Swift_Message())
-            ->setSubject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
-            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
-            ->setTo([$Breeders->getEmail()])
-            ->setReplyTo($this->BaseInfo->getEmail03())
-            ->setReturnPath($this->BaseInfo->getEmail04());
+        $emailMessage = (new Email())
+            ->subject('[' . $this->BaseInfo->getShopName() . '] ' . $MailTemplate->getMailSubject())
+            ->from(new Address($this->BaseInfo->getEmail01(), $this->BaseInfo->getShopName()))
+            ->to(new Address($Breeders->getEmail()))
+            ->replyTo(new Address($this->BaseInfo->getEmail03()))
+            ->returnPath($this->BaseInfo->getEmail04())
+            ->text($body);
 
         // HTMLテンプレートが存在する場合
         // $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
@@ -536,23 +566,24 @@ class BreederMailService
         //         ->setBody($body, 'text/plain')
         //         ->addPart($htmlBody, 'text/html');
         // } else {
-            $message->setBody($body);
+            // $message->setBody($body);
         // }
 
         $event = new EventArgs(
             [
-                'message' => $message,
+                'message' => $emailMessage,
                 'Breeders' => $Breeders,
                 'BaseInfo' => $this->BaseInfo,
                 'resetUrl' => $reset_url,
             ],
             null
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::MAIL_PASSWORD_RESET, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::MAIL_PASSWORD_RESET);
 
-        $count = $this->mailer->send($message);
+        // メール送信
+        $count = $this->mailer->send($emailMessage);
 
-        log_info('パスワード再発行メール送信完了', ['count' => $count]);
+        $this->logger->info('パスワード再発行メール送信完了', ['count' => $count]);
 
         return $count;
     }
@@ -565,7 +596,7 @@ class BreederMailService
      */
     public function sendPasswordResetCompleteMail(\Customize\Entity\Breeders $Breeders, $password)
     {
-        log_info('パスワード変更完了メール送信開始');
+        $this->logger->info('パスワード変更完了メール送信開始');
 
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_reset_complete_mail_template_id']);
 
@@ -575,13 +606,14 @@ class BreederMailService
             'password' => $password,
         ]);
 
-        $message = (new \Swift_Message())
-            ->setSubject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
-            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
-            ->setTo([$Breeders->getEmail()])
-            ->setBcc($this->BaseInfo->getEmail01())
-            ->setReplyTo($this->BaseInfo->getEmail03())
-            ->setReturnPath($this->BaseInfo->getEmail04());
+        $emailMessage = (new Email())
+            ->subject('[' . $this->BaseInfo->getShopName() . '] ' . $MailTemplate->getMailSubject())
+            ->from(new Address($this->BaseInfo->getEmail01(), $this->BaseInfo->getShopName()))
+            ->to(new Address($Breeders->getEmail()))
+            ->bcc(new Address($this->BaseInfo->getEmail01()))
+            ->replyTo(new Address($this->BaseInfo->getEmail03()))
+            ->returnPath($this->BaseInfo->getEmail04())
+            ->text($body);
 
         // HTMLテンプレートが存在する場合
         // $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
@@ -597,23 +629,24 @@ class BreederMailService
         //         ->setBody($body, 'text/plain')
         //         ->addPart($htmlBody, 'text/html');
         // } else {
-            $message->setBody($body);
+            // $message->setBody($body);
         // }
 
         $event = new EventArgs(
             [
-                'message' => $message,
+                'message' => $emailMessage,
                 'Breeders' => $Breeders,
                 'BaseInfo' => $this->BaseInfo,
                 'password' => $password,
             ],
             null
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::MAIL_PASSWORD_RESET_COMPLETE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::MAIL_PASSWORD_RESET_COMPLETE);
 
-        $count = $this->mailer->send($message);
+        // メール送信
+        $count = $this->mailer->send($emailMessage);
 
-        log_info('パスワード変更完了メール送信完了', ['count' => $count]);
+        $this->logger->info('パスワード変更完了メール送信完了', ['count' => $count]);
 
         return $count;
     }
@@ -628,7 +661,7 @@ class BreederMailService
      */
     public function sendShippingNotifyMail(Shipping $Shipping)
     {
-        log_info('出荷通知メール送信処理開始', ['id' => $Shipping->getId()]);
+        $this->logger->info('出荷通知メール送信処理開始', ['id' => $Shipping->getId()]);
 
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_shipping_notify_mail_template_id']);
 
@@ -636,13 +669,14 @@ class BreederMailService
         $Order = $Shipping->getOrder();
         $body = $this->getShippingNotifyMailBody($Shipping, $Order, $MailTemplate->getFileName());
 
-        $message = (new \Swift_Message())
-            ->setSubject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
-            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
-            ->setTo($Order->getEmail())
-            ->setBcc($this->BaseInfo->getEmail01())
-            ->setReplyTo($this->BaseInfo->getEmail03())
-            ->setReturnPath($this->BaseInfo->getEmail04());
+        $emailMessage = (new Email())
+            ->subject('[' . $this->BaseInfo->getShopName() . '] ' . $MailTemplate->getMailSubject())
+            ->from(new Address($this->BaseInfo->getEmail01(), $this->BaseInfo->getShopName()))
+            ->to(new Address($Order->getEmail()))
+            ->bcc(new Address($this->BaseInfo->getEmail01()))
+            ->replyTo(new Address($this->BaseInfo->getEmail03()))
+            ->returnPath($this->BaseInfo->getEmail04())
+            ->text($body);
 
         // HTMLテンプレートが存在する場合
         // $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
@@ -654,26 +688,29 @@ class BreederMailService
         //         ->setBody($body, 'text/plain')
         //         ->addPart($htmlBody, 'text/html');
         // } else {
-            $message->setBody($body);
+            // $message->setBody($body);
         // }
 
-        $this->mailer->send($message);
+        // メール送信
+        $this->mailer->send($emailMessage);
 
+        // メール履歴の保存
         $MailHistory = new MailHistory();
-        $MailHistory->setMailSubject($message->getSubject())
-                ->setMailBody($message->getBody())
-                ->setOrder($Order)
-                ->setSendDate(new \DateTime());
+        $MailHistory->setMailSubject($emailMessage->getSubject())
+            ->setMailBody($emailMessage->getBody())
+            ->setOrder($Order)
+            ->setSendDate(new \DateTime());
 
         // HTML用メールの設定
-        $multipart = $message->getChildren();
-        if (count($multipart) > 0) {
-            $MailHistory->setMailHtmlBody($multipart[0]->getBody());
+        if ($emailMessage instanceof \Symfony\Component\Mime\Email) {
+            if ($emailMessage->getHtmlBody()) {
+                $MailHistory->setMailHtmlBody($emailMessage->getHtmlBody());
+            }
         }
 
         $this->mailHistoryRepository->save($MailHistory);
 
-        log_info('出荷通知メール送信処理完了', ['id' => $Shipping->getId()]);
+        $this->logger->info('出荷通知メール送信処理完了', ['id' => $Shipping->getId()]);
     }
 
     /**
@@ -742,7 +779,7 @@ class BreederMailService
      */
     public function sendLicenseExpire($Customer)
     {
-        log_info('受注メール送信開始');
+        $this->logger->info('受注メール送信開始');
 
         // メール内容作成
         $body = $this->twig->render('Mail/Breeder/breeder_license_expire.twig', [
@@ -750,15 +787,17 @@ class BreederMailService
             'BaseInfo' => $this->BaseInfo,
         ]);
 
-        $message = (new \Swift_Message())
-            ->setSubject('【Animalline】動物取扱業登録証画像送付のお願い')
-            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
-            ->setTo([$Customer->getEmail()])
-            ->setBcc($this->BaseInfo->getEmail01())
-            ->setReplyTo($this->BaseInfo->getEmail03())
-            ->setReturnPath($this->BaseInfo->getEmail04());
+        $message = (new \Symfony\Component\Mime\Email())
+            ->subject('【Animalline】動物取扱業登録証画像送付のお願い')
+            ->from($this->BaseInfo->getEmail01(), $this->BaseInfo->getShopName())
+            ->to($Customer->getEmail())
+            ->bcc($this->BaseInfo->getEmail01())
+            ->replyTo($this->BaseInfo->getEmail03())
+            ->returnPath($this->BaseInfo->getEmail04())
+            ->text($body); 
 
-        $message->setBody($body);
+        // メール送信
+        $count = $this->mailer->send($message);
 
         $count = $this->mailer->send($message);
 

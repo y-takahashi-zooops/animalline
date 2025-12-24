@@ -23,6 +23,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Eccube\Repository\MemberRepository;
+use Psr\Log\LoggerInterface;
 
 class SetCategory extends Command
 {
@@ -72,6 +73,11 @@ class SetCategory extends Command
      * @var CategoryRepository
      */
     protected $categoryRepository;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
     
     
     /**
@@ -84,6 +90,7 @@ class SetCategory extends Command
      * @param SupplierRepository $supplierRepository
      * @param ProductStockService $productStockService
      * @param CategoryRepository $categoryRepository
+     * @param LoggerInterface $logger
      */
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -93,7 +100,8 @@ class SetCategory extends Command
         ProductRepository      $productRepository,
         SupplierRepository     $supplierRepository,
         ProductStockService     $productStockService,
-        CategoryRepository   $categoryRepository
+        CategoryRepository   $categoryRepository,
+        LoggerInterface $logger
     ) {
         parent::__construct();
         $this->entityManager = $entityManager;
@@ -104,6 +112,7 @@ class SetCategory extends Command
         $this->productStockService = $productStockService;
         $this->memberRepository = $memberRepository;
         $this->categoryRepository = $categoryRepository;
+        $this->logger = $logger;
     }
 
     protected function configure()
@@ -229,6 +238,6 @@ class SetCategory extends Command
             throw $e;
         }
 
-        log_info('商品CSV取込完了');
+        $this->logger->info('商品CSV取込完了');
     }
 }

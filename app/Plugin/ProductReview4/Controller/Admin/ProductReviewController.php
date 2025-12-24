@@ -25,11 +25,15 @@ use Plugin\ProductReview4\Form\Type\Admin\ProductReviewType;
 use Plugin\ProductReview4\Repository\ProductReviewConfigRepository;
 use Plugin\ProductReview4\Repository\ProductReviewRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Form\FormFactoryInterface;
+use Psr\Log\LoggerInterface;
+use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Class ProductReviewController admin.
@@ -55,23 +59,38 @@ class ProductReviewController extends AbstractController
     protected $csvExportService;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+
+    /**
      * ProductReviewController constructor.
      *
      * @param PageMaxRepository $pageMaxRepository
      * @param ProductReviewRepository $productReviewRepository
      * @param ProductReviewConfigRepository $productReviewConfigRepository
      * @param CsvExportService $csvExportService
+     * @param LoggerInterface $logger
      */
     public function __construct(
         PageMaxRepository $pageMaxRepository,
         ProductReviewRepository $productReviewRepository,
         ProductReviewConfigRepository $productReviewConfigRepository,
-        CsvExportService $csvExportService
+        CsvExportService $csvExportService,
+        FormFactoryInterface $formFactory,
+        LoggerInterface $logger,
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
     ) {
         $this->pageMaxRepository = $pageMaxRepository;
         $this->productReviewRepository = $productReviewRepository;
         $this->productReviewConfigRepository = $productReviewConfigRepository;
         $this->csvExportService = $csvExportService;
+        $this->formFactory = $formFactory;
+        $this->logger = $logger;
+        $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -193,7 +212,7 @@ class ProductReviewController extends AbstractController
             $this->entityManager->persist($ProductReview);
             $this->entityManager->flush($ProductReview);
 
-            log_info('Product review edit');
+            $this->logger->info('Product review edit');
 
             $this->addSuccess('product_review.admin.save.complete', 'admin');
 
@@ -229,7 +248,7 @@ class ProductReviewController extends AbstractController
         $this->entityManager->flush($ProductReview);
         $this->addSuccess('product_review.admin.delete.complete', 'admin');
 
-        log_info('Product review delete', ['id' => $ProductReview->getId()]);
+        $this->logger->info('Product review delete', ['id' => $ProductReview->getId()]);
 
         return $this->redirect($this->generateUrl('product_review_admin_product_review_page', ['resume' => 1]));
     }
@@ -300,7 +319,7 @@ class ProductReviewController extends AbstractController
         $response->headers->set('Content-Disposition', 'attachment; filename='.$filename);
         $response->send();
 
-        log_info('商品レビューCSV出力ファイル名', [$filename]);
+        $this->logger->info('商品レビューCSV出力ファイル名', [$filename]);
 
         return $response;
     }

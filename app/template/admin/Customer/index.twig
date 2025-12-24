@@ -101,7 +101,7 @@ file that was distributed with this source code.
                             {{ form_widget(searchForm.multi) }}
                             {{ form_errors(searchForm.multi) }}
                         </div>
-                        <div class="d-inline-block mb-3 collapsed" data-toggle="collapse" href="#searchDetail" aria-expanded="false" aria-controls="searchDetail"><a><i class="fa font-weight-bold mr-1 fa-plus-square-o"></i><span class="font-weight-bold">{{ 'admin.common.search_detail'|trans }}</span></a></div>
+                        <div class="d-inline-block mb-3 collapsed" data-bs-toggle="collapse" href="#searchDetail" aria-expanded="false" aria-controls="searchDetail"><a><i class="fa font-weight-bold mr-1 fa-plus-square-o"></i><span class="font-weight-bold">{{ 'admin.common.search_detail'|trans }}</span></a></div>
                     </div>
                 </div>
             </div>
@@ -272,22 +272,24 @@ file that was distributed with this source code.
                 </div>
 
                 {# エンティティ拡張の自動出力 #}
-                {% for f in searchForm if f.vars.eccube_form_options.auto_render %}
-                    {# TODO 1項目1行になるのを改善 #}
-                    <div class="row mb-2">
-                        {% if f.vars.eccube_form_options.form_theme %}
-                            {% form_theme f f.vars.eccube_form_options.form_theme %}
-                            {{ form_row(f) }}
-                        {% else %}
-                            <div class="col">
-                                <div class="mb-3">
-                                    <label>{{ f.vars.label|trans }}</label>
-                                    {{ form_widget(f) }}
-                                    {{ form_errors(f) }}
+                {% for f in searchForm %}
+                    {% if f.vars.eccube_form_options is defined and f.vars.eccube_form_options.auto_render %}
+                        {# TODO 1項目1行になるのを改善 #}
+                        <div class="row mb-2">
+                            {% if f.vars.eccube_form_options.form_theme %}
+                                {% form_theme f f.vars.eccube_form_options.form_theme %}
+                                {{ form_row(f) }}
+                            {% else %}
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <label>{{ f.vars.label|trans }}</label>
+                                        {{ form_widget(f) }}
+                                        {{ form_errors(f) }}
+                                    </div>
                                 </div>
-                            </div>
-                        {% endif %}
-                    </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
                 {% endfor %}
             </div>
         </div>
@@ -374,7 +376,7 @@ file that was distributed with this source code.
                                                 <div class="text-right">
                                                     {% if Customer.Status.id == constant('Eccube\\Entity\\Master\\CustomerStatus::PROVISIONAL') %}
                                                         <div class="px-1 d-inline-block" data-tooltip="true" data-placement="top" title="{{ 'admin.customer.resend'|trans }}">
-                                                            <a class="btn btn-ec-actionIcon" data-toggle="modal" data-target="#discontinuance_cus_{{ Customer.id }}">
+                                                            <a class="btn btn-ec-actionIcon" data-bs-toggle="modal" data-bs-target="#discontinuance_cus_{{ Customer.id }}">
                                                                 <i class="fa fa-send fa-lg text-secondary" aria-hidden="true"></i>
                                                             </a>
                                                         </div>
@@ -383,7 +385,7 @@ file that was distributed with this source code.
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
                                                                         <h5 class="modal-title font-weight-bold">{{ 'admin.customer.resend_confirm_title'|trans }}</h5>
-                                                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                                        <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
                                                                             <span aria-hidden="true">×</span>
                                                                         </button>
                                                                     </div>
@@ -391,7 +393,7 @@ file that was distributed with this source code.
                                                                         <p class="text-left">{{ 'admin.customer.resend_confirm_message'|trans }}</p>
                                                                     </div>
                                                                     <div class="modal-footer">
-                                                                        <button class="btn btn-ec-sub" type="button" data-dismiss="modal">{{ 'admin.common.cancel'|trans }}</button>
+                                                                        <button class="btn btn-ec-sub" type="button" data-bs-dismiss="modal">{{ 'admin.common.cancel'|trans }}</button>
                                                                         {# TODO: CSSの変更は別タスクでやります #}
                                                                         <a class="btn btn-ec-delete" href="{{ url('admin_customer_resend', {'id' : Customer.id}) }}" {{ csrf_token_for_anchor() }} data-method="get" data-confirm="false">
                                                                             {{ 'admin.common.send'|trans }}
@@ -402,7 +404,7 @@ file that was distributed with this source code.
                                                         </div>
                                                     {% endif %}
                                                     <div class="px-1 d-inline-block" data-tooltip="true" data-placement="top" title="{{ 'admin.common.delete'|trans }}">
-                                                        <a class="btn btn-ec-actionIcon" data-toggle="modal" data-target="#discontinuance-{{ Customer.id }}">
+                                                        <a class="btn btn-ec-actionIcon" data-bs-toggle="modal" data-bs-target="#discontinuance-{{ Customer.id }}">
                                                             <i class="fa fa-close fa-lg text-secondary" aria-hidden="true"></i>
                                                         </a>
                                                     </div>
@@ -412,7 +414,7 @@ file that was distributed with this source code.
                                                                 <div class="modal-header">
                                                                     <h5 class="modal-title font-weight-bold">
                                                                         {{ 'admin.common.delete_modal__title'|trans }}</h5>
-                                                                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
                                                                         <span aria-hidden="true">×</span>
                                                                     </button>
                                                                 </div>
@@ -421,7 +423,7 @@ file that was distributed with this source code.
                                                                         {{ 'admin.common.delete_modal__message'|trans({ '%name%' : Customer.email }) }}</p>
                                                                 </div>
                                                                 <div class="modal-footer">
-                                                                    <button class="btn btn-ec-sub" type="button" data-dismiss="modal">
+                                                                    <button class="btn btn-ec-sub" type="button" data-bs-dismiss="modal">
                                                                         {{ 'admin.common.cancel'|trans }}
                                                                     </button>
                                                                     <a href="{{ url('admin_customer_delete', {'id' : Customer.id}) }}" class="btn btn-ec-delete"{{ csrf_token_for_anchor() }} data-method="delete" data-confirm="false">

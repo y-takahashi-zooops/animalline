@@ -15,18 +15,23 @@ namespace Eccube\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-if (!class_exists('\Eccube\Entity\Tag')) {
+if (!class_exists(Tag::class)) {
     /**
      * Tag
      *
      * @ORM\Table(name="dtb_tag")
+     * 
      * @ORM\InheritanceType("SINGLE_TABLE")
+     * 
      * @ORM\DiscriminatorColumn(name="discriminator_type", type="string", length=255)
+     * 
      * @ORM\HasLifecycleCallbacks()
+     * 
      * @ORM\Entity(repositoryClass="Eccube\Repository\TagRepository")
+     * 
      * @ORM\Cache(usage="NONSTRICT_READ_WRITE")
      */
-    class Tag extends \Eccube\Entity\AbstractEntity
+    class Tag extends AbstractEntity
     {
         /**
          * @return string
@@ -40,7 +45,9 @@ if (!class_exists('\Eccube\Entity\Tag')) {
          * @var int
          *
          * @ORM\Column(name="id", type="integer", options={"unsigned":true})
+         * 
          * @ORM\Id
+         * 
          * @ORM\GeneratedValue(strategy="IDENTITY")
          */
         protected $id;
@@ -149,11 +156,11 @@ if (!class_exists('\Eccube\Entity\Tag')) {
         /**
          * Add productTag.
          *
-         * @param \Eccube\Entity\ProductTag $productTag
+         * @param ProductTag $productTag
          *
          * @return Tag
          */
-        public function addProductTag(\Eccube\Entity\ProductTag $productTag)
+        public function addProductTag(ProductTag $productTag)
         {
             $this->ProductTag[] = $productTag;
 
@@ -163,11 +170,11 @@ if (!class_exists('\Eccube\Entity\Tag')) {
         /**
          * Remove productTag.
          *
-         * @param \Eccube\Entity\ProductTag $productTag
+         * @param ProductTag $productTag
          *
-         * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+         * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
          */
-        public function removeProductTag(\Eccube\Entity\ProductTag $productTag)
+        public function removeProductTag(ProductTag $productTag)
         {
             return $this->ProductTag->removeElement($productTag);
         }

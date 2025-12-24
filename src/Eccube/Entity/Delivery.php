@@ -15,17 +15,21 @@ namespace Eccube\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-if (!class_exists('\Eccube\Entity\Delivery')) {
+if (!class_exists(Delivery::class)) {
     /**
      * Delivery
      *
      * @ORM\Table(name="dtb_delivery")
+     * 
      * @ORM\InheritanceType("SINGLE_TABLE")
+     * 
      * @ORM\DiscriminatorColumn(name="discriminator_type", type="string", length=255)
+     * 
      * @ORM\HasLifecycleCallbacks()
+     * 
      * @ORM\Entity(repositoryClass="Eccube\Repository\DeliveryRepository")
      */
-    class Delivery extends \Eccube\Entity\AbstractEntity
+    class Delivery extends AbstractEntity
     {
         /**
          * @return string
@@ -39,7 +43,9 @@ if (!class_exists('\Eccube\Entity\Delivery')) {
          * @var int
          *
          * @ORM\Column(name="id", type="integer", options={"unsigned":true})
+         * 
          * @ORM\Id
+         * 
          * @ORM\GeneratedValue(strategy="IDENTITY")
          */
         private $id;
@@ -80,7 +86,7 @@ if (!class_exists('\Eccube\Entity\Delivery')) {
         private $sort_no;
 
         /**
-         * @var boolean
+         * @var bool
          *
          * @ORM\Column(name="visible", type="boolean", options={"default":true})
          */
@@ -118,27 +124,33 @@ if (!class_exists('\Eccube\Entity\Delivery')) {
          * @var \Doctrine\Common\Collections\Collection
          *
          * @ORM\OneToMany(targetEntity="Eccube\Entity\DeliveryTime", mappedBy="Delivery", cascade={"persist","remove"})
+         * 
          * @ORM\OrderBy({
+         * 
          *     "sort_no"="ASC"
          * })
          */
         private $DeliveryTimes;
 
         /**
-         * @var \Eccube\Entity\Member
+         * @var Member
          *
          * @ORM\ManyToOne(targetEntity="Eccube\Entity\Member")
+         * 
          * @ORM\JoinColumns({
+         * 
          *   @ORM\JoinColumn(name="creator_id", referencedColumnName="id")
          * })
          */
         private $Creator;
 
         /**
-         * @var \Eccube\Entity\Master\SaleType
+         * @var Master\SaleType
          *
          * @ORM\ManyToOne(targetEntity="Eccube\Entity\Master\SaleType")
+         * 
          * @ORM\JoinColumns({
+         * 
          *   @ORM\JoinColumn(name="sale_type_id", referencedColumnName="id")
          * })
          */
@@ -335,11 +347,11 @@ if (!class_exists('\Eccube\Entity\Delivery')) {
         /**
          * Add paymentOption.
          *
-         * @param \Eccube\Entity\PaymentOption $paymentOption
+         * @param PaymentOption $paymentOption
          *
          * @return Delivery
          */
-        public function addPaymentOption(\Eccube\Entity\PaymentOption $paymentOption)
+        public function addPaymentOption(PaymentOption $paymentOption)
         {
             $this->PaymentOptions[] = $paymentOption;
 
@@ -349,11 +361,11 @@ if (!class_exists('\Eccube\Entity\Delivery')) {
         /**
          * Remove paymentOption.
          *
-         * @param \Eccube\Entity\PaymentOption $paymentOption
+         * @param PaymentOption $paymentOption
          *
-         * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+         * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
          */
-        public function removePaymentOption(\Eccube\Entity\PaymentOption $paymentOption)
+        public function removePaymentOption(PaymentOption $paymentOption)
         {
             return $this->PaymentOptions->removeElement($paymentOption);
         }
@@ -371,11 +383,11 @@ if (!class_exists('\Eccube\Entity\Delivery')) {
         /**
          * Add deliveryFee.
          *
-         * @param \Eccube\Entity\DeliveryFee $deliveryFee
+         * @param DeliveryFee $deliveryFee
          *
          * @return Delivery
          */
-        public function addDeliveryFee(\Eccube\Entity\DeliveryFee $deliveryFee)
+        public function addDeliveryFee(DeliveryFee $deliveryFee)
         {
             $this->DeliveryFees[] = $deliveryFee;
 
@@ -385,11 +397,11 @@ if (!class_exists('\Eccube\Entity\Delivery')) {
         /**
          * Remove deliveryFee.
          *
-         * @param \Eccube\Entity\DeliveryFee $deliveryFee
+         * @param DeliveryFee $deliveryFee
          *
-         * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+         * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
          */
-        public function removeDeliveryFee(\Eccube\Entity\DeliveryFee $deliveryFee)
+        public function removeDeliveryFee(DeliveryFee $deliveryFee)
         {
             return $this->DeliveryFees->removeElement($deliveryFee);
         }
@@ -407,11 +419,11 @@ if (!class_exists('\Eccube\Entity\Delivery')) {
         /**
          * Add deliveryTime.
          *
-         * @param \Eccube\Entity\DeliveryTime $deliveryTime
+         * @param DeliveryTime $deliveryTime
          *
          * @return Delivery
          */
-        public function addDeliveryTime(\Eccube\Entity\DeliveryTime $deliveryTime)
+        public function addDeliveryTime(DeliveryTime $deliveryTime)
         {
             $this->DeliveryTimes[] = $deliveryTime;
 
@@ -443,11 +455,11 @@ if (!class_exists('\Eccube\Entity\Delivery')) {
         /**
          * Set creator.
          *
-         * @param \Eccube\Entity\Member|null $creator
+         * @param Member|null $creator
          *
          * @return Delivery
          */
-        public function setCreator(\Eccube\Entity\Member $creator = null)
+        public function setCreator(?Member $creator = null)
         {
             $this->Creator = $creator;
 
@@ -457,7 +469,7 @@ if (!class_exists('\Eccube\Entity\Delivery')) {
         /**
          * Get creator.
          *
-         * @return \Eccube\Entity\Member|null
+         * @return Member|null
          */
         public function getCreator()
         {
@@ -467,11 +479,11 @@ if (!class_exists('\Eccube\Entity\Delivery')) {
         /**
          * Set saleType.
          *
-         * @param \Eccube\Entity\Master\SaleType|null $saleType
+         * @param Master\SaleType|null $saleType
          *
          * @return Delivery
          */
-        public function setSaleType(\Eccube\Entity\Master\SaleType $saleType = null)
+        public function setSaleType(?Master\SaleType $saleType = null)
         {
             $this->SaleType = $saleType;
 
@@ -481,7 +493,7 @@ if (!class_exists('\Eccube\Entity\Delivery')) {
         /**
          * Get saleType.
          *
-         * @return \Eccube\Entity\Master\SaleType|null
+         * @return Master\SaleType|null
          */
         public function getSaleType()
         {
@@ -491,7 +503,7 @@ if (!class_exists('\Eccube\Entity\Delivery')) {
         /**
          * Set visible
          *
-         * @param boolean $visible
+         * @param bool $visible
          *
          * @return Delivery
          */
@@ -505,7 +517,7 @@ if (!class_exists('\Eccube\Entity\Delivery')) {
         /**
          * Is the visibility visible?
          *
-         * @return boolean
+         * @return bool
          */
         public function isVisible()
         {

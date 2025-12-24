@@ -48,6 +48,7 @@ use Eccube\Service\PurchaseFlow\PurchaseFlow;
 use Eccube\Service\PurchaseFlow\PurchaseContext;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Cookie;
+use Doctrine\ORM\EntityManagerInterface;
 
 class DnaEcController extends BaseProductController
 {
@@ -141,7 +142,8 @@ class DnaEcController extends BaseProductController
         PurchaseFlow $cartPurchaseFlow,
         DnaSalesStatusRepository $dnaSalesStatusRepository,
         DnaSalesHeaderRepository $dnaSalesHeaderRepository,
-        DnaSalesDetailRepository $dnaSalesDetailRepository
+        DnaSalesDetailRepository $dnaSalesDetailRepository,
+        EntityManagerInterface $entityManager,
     ) {
         $this->NewsRepository = $NewsRepository;
         $this->productListOrderByRepository = $productListOrderByRepository;
@@ -158,6 +160,7 @@ class DnaEcController extends BaseProductController
         $this->dnaSalesStatusRepository = $dnaSalesStatusRepository;
         $this->dnaSalesHeaderRepository = $dnaSalesHeaderRepository;
         $this->dnaSalesDetailRepository = $dnaSalesDetailRepository;
+        $this->entityManager = $entityManager;
     }
 
 
@@ -214,7 +217,7 @@ class DnaEcController extends BaseProductController
         $form->handleRequest($request);
 
         if ($request->isMethod('POST')) {
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
 
             //未購入のDNA検査情報があるか
             $dnaSalesHeader = $this->dnaSalesHeaderRepository->findOneBy(['Customer' => $customer, 'shipping_status' => 0]);

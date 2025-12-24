@@ -80,7 +80,7 @@
     {% if Page.meta_tags is not empty %}
         {{ include(template_from_string(Page.meta_tags)) }}
     {% endif %}
-    <link rel="icon" href="{{ asset('assets/img/common/favicon.ico', 'user_data') }}">
+    <link rel="icon" href="{{ asset('assets/img/ec/favicon.png') }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 
@@ -91,18 +91,49 @@
 	<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=Asap:wght@400;500;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link href="{{ asset('assets/css/common/css/common.css?ver=2110291') }}" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+
+    <link rel="stylesheet" href="{{ asset('assets/css-spc/common.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css-spc/style.css') }}">
+
     <link rel="canonical" href="{{ app.request.getUri }}">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-{% block stylesheet %}{% endblock %}
+
+    {% block stylesheet %}
+    <style>
+        .ec-searchnavRole{
+            margin-bottom: 16rem;
+        }
+        .ec-role{
+            margin-bottom: 1rem;
+        }
+        .ec-cartRole{
+            margin-bottom: 6rem;
+        }
+        .ec-contactRole{
+            margin-bottom: 10rem;
+        }
+        .ec-layoutRole__main{
+            margin-bottom: 10rem;
+        }
+    </style>
+    {% endblock %}
+
+
     <script>
+
         $(function() {
+
             $.ajaxSetup({
                 'headers': {
                     'ECCUBE-CSRF-TOKEN': $('meta[name="eccube-csrf-token"]').attr('content')
                 }
             });
+
         });
+
     </script>
+
+
     <script src="https://kit.fontawesome.com/330557fe96.js" crossorigin="anonymous"></script>
     {# Layout: HEAD #}
     {% if Layout.Head %}
@@ -111,73 +142,303 @@
     {# プラグイン用styleseetやmetatagなど #}
     {% if plugin_assets is defined %}{{ include('@admin/snippet.twig', { snippets: plugin_assets }) }}{% endif %}
     <link rel="stylesheet" href="{{ asset('assets/css/customize.css', 'user_data') }}">
+
 </head>
 <body id="page_{{ app.request.get('_route') }}" class="{{ body_class|default('other_page') }}">
-	<div id="wrapper">
-		<header id="header" role="banner">
-			<div class="inner">
-				<h1 class="logomark"><a href="{{url('homepage')}}"><img src="{{ asset('assets/css/common/img/header/logomark.png') }}" alt="アニマルライン"></a></h1>
-                {% set Carts = get_all_carts() %}
-                {% set totalPrice = get_carts_total_price() %}
-                {% set totalQuantity = get_carts_total_quantity() %}
-                <div class="ec-headerRole__cart">
-                    <div class="cart-box">
-                        <div class="icon"><a href="{{url('cart')}}"><img src="{{ asset('assets/css/common/img/parts/icon_cart01.png') }}" alt=""></a></div>
-                        <div class="count">{{ totalQuantity }}</div>
+
+<div id="overlay" class="mdOverlay"></div>
+
+{% set DogCategories = repository('Eccube\\Entity\\Category').findBy({'Parent': 7}) %}
+{% set CatCategories = repository('Eccube\\Entity\\Category').findBy({'Parent': 8}) %}
+
+{% from 'navCategory.twig' import mzNav %}
+{% from 'navCategory.twig' import mzSpNav %}
+
+    <header id="header" class="header" itemscope="" itemtype="https://schema.org/WPHeader" style="position: fixed;">
+        <div class="header__frame">
+            <div class="wrap w1200">
+                <div class="header__topbase flex bet vcenter str">
+                    <div class="header__topleft flex vert sp-hcenter">
+                        <div class="header__desc pc">
+                            わんちゃん、ねこちゃんが、生涯幸せでいられる環境を目指してペット用品通販サイト
+                        </div>
+                        <div class="flex vcenter">
+                            <a class="headerLogo" href="{{ url('homepage') }}">
+                                <h1 class="headerLogo__in flex vcenter">
+                                    <img class="headerLogo__img" src="{{ asset('assets/img/ec/logo.png') }}" alt="アニマルライン" />
+                                </h1>
+                            </a>
+                            <span class="headerLogo__text pc">{{ BaseInfo.delivery_free_amount | number_format(0, '.', ',') }}円以上で送料無料！</span>
+                        </div>
+                    </div>
+                    <div class="header__topright flex">
+                        <form method="get" class="headerSearch flex pc" action="{{ path('product_list') }}">
+                            <input type="text" class="headerSearch__input" name="name" placeholder="検索キーワードを入力">
+                            <button type="submit" class="headerSearch__btn">
+                                <i class="icon icon-search"></i>検索
+                            </button>
+                        </form>
+                        <div class="headerTel flex vert pc">
+                            <div class="headerTel__txt">受付時間 月～土 10:00～18:00</div>
+                            <div class="headerTel__line flex vcenter">
+                                <span class="headerTel__ttl">TEL</span>
+                                <span class="headerTel__num serif">03-5969-9718</span>
+                            </div>
+                        </div>
+                        <button type="button" id="gNav-open" class="sp gNavBtn">
+                            <div class="gNavBtn__box">
+                                <div class="gNavBtn__icon">
+                                    <i class="icon icon-pawprint"></i>
+                                </div>
+                                <div class="gNavBtn__txtMenu -menu">MENU</div>
+                                <div class="gNavBtn__txtClose -close">CLOSE</div>
+                            </div>
+                        </button>
                     </div>
                 </div>
-				<div class="menu-btn"><a href="javascript:menu();"><span></span><span></span><span></span></a></div>
-				<div class="menu-area">
-					<div class="">
-                        <form method="get" class="search-box" action="{{ path('product_list') }}">
-                            <input class="text" type="search" name="name" placeholder="キーワードを入力">
-                            <input class="icon" type="submit" value="">
-                        </form>
-					</div>
-					<ul class="option-list">
-                        {% if is_granted('ROLE_USER') == false %}
-                            <li class="register"><a href="{{ url('entry') }}"><span>新規会員登録</span></a></li>
-                            <li class="login"><a href="{{ url('mypage_login') }}"><span>マイページ</span></a></li>
-                            <li class="login"><a href="{{ url('mypage_login') }}"><span>ログイン</span></a></li>
-                        {% else %}
-                            <li class="order"><a href="{{url('mypage')}}"><span>マイページ</span></a></li>
-                            <li class="login"><a href="{{ url('logout') }}"><span>ログアウト</span></a></li>
-                        {% endif %}
-                    </ul>
-                    
-                    <nav class="nav" role="navigation">
-						<ul class="main-list">
-							<li>
-								<ul class="child-list custom">
-									<li><a href="{{ url('help_privacy') }}">プライバシーポリシー</a></li>
-									<li><a href="{{ url('help_tradelaw') }}">特定商取引法</a></li>
-									<li><a href="{{ url('contact') }}">お問合せ</a></li>
-								</ul>
-							</li>
-						</ul>
-					</nav>
-				</div>
-			</div>
-		</header><!-- / #header -->
-
-        {% block main %}{% endblock %}
-
-		<footer id="footer" role="contentinfo">
-			<div class="pageup"><a href="#wrapper">TOPへ戻る</a></div>
-			<div class="inner">
-				<ul class="sitemap-list">
-					<li><a href="{{ url('help_privacy') }}"><span>プライバシーポリシー</span></a></li>
-					<li><a href="{{ url('help_tradelaw') }}"><span>特定商取引法に基づく表記</span></a></li>
-					<li><a href="{{ url('contact') }}"><span>お問い合わせ</span></a></li>
-				</ul>
-			</div>
-            <div style="text-align: center">
-            <div class="footer-logo"><a href="{{ url('homepage') }}"><img src="{{ asset('assets/img/logo.png') }}" width="305" height="40" alt="Animalline"/></a></div>
             </div>
 
-            <small id="copyright">Copyright © 2021 Animalline All Rights Reserved.</small>
-        </footer><!-- / #footer -->
-	</div><!-- / #wrapper -->
+            <div class="header__bottombase pc">
+                <div class="wrap w1200">
+                    <div class="header__base flex sp-bet vcenter str bet">
+                        <div class="header__left">
+                            <div class="headerNav flex vcenter">
+                                <div class="headerNav__btn flex vcenter headerPulldown">
+                                    <a href="" class="headerNav__link flex vcenter hcenter vert">
+                                        <div class="headerNav__btn-grp flex vcenter">
+                                            <i class="headerNav__link--icon icon-inu"></i>犬用品を買う
+                                        </div>
+                                        <i class="headerNav__link--arrow icon icon-down"></i>
+                                    </a>
+                                    <div class="headerPulldown__body">
+                                        <ul class="headerPulldown__list">
+                                            {{ mzNav(DogCategories) }}
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="headerNav__btn flex vcenter headerPulldown">
+                                    <a href="" class="headerNav__link flex vcenter hcenter vert">
+                                        <div class="headerNav__btn-grp flex vcenter">
+                                            <i class="headerNav__link--icon icon-neko"></i>猫用品を買う
+                                        </div>
+                                        <i class="headerNav__link--arrow icon icon-down"></i>
+                                    </a>
+                                    <div class="headerPulldown__body">
+                                        <ul class="headerPulldown__list">
+                                            {{ mzNav(CatCategories) }}
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="parent headerNav__btn flex vcenter">
+                                    <a href="https://animalline.jp/" class="headerNav__link flex vcenter hcenter vert">
+                                        <div class="headerNav__btn-grp flex vcenter">
+                                            <i class="headerNav__link--icon icon-pawprint"></i>
+                                            <div>アニマルライン | 犬・猫のブリーダー直販と里親募集サイト</div>
+                                        </div>
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="header__right">
+                            <div class="headerBtn flex vcenter">
+                                {% if is_granted('ROLE_USER') == false %}
+                                <a href="{{ url('aniline_entry') }}" class="headerBtn__link headerBtn__link--reg flex vert vcenter hcenter">
+                                    会員登録
+                                    <i class="icon icon-reg"></i>
+                                </a>
+                                <a href="{{ url('mypage_login') }}" class="headerBtn__link headerBtn__link--login flex vert vcenter hcenter">
+                                    ログイン
+                                    <i class="icon icon-login"></i>
+                                </a>
+                                {% else %}
+                                    <a href="{{ url('mypage') }}" class="headerBtn__link headerBtn__link--mypage flex vert vcenter hcenter">
+                                        マイページ<i class="icon icon-mypage"></i>
+                                    </a>
+                                    <a href="{{ url('logout') }}" class="headerBtn__link headerBtn__link--login flex vert vcenter hcenter">
+                                        ログアウト<i class="icon icon-login"></i>
+                                    </a>
+                                    <a href="{{ url('mypage_favorite') }}" class="headerBtn__link headerBtn__link--fav flex vert vcenter hcenter">
+                                        お気に入り<i class="icon icon-heart"></i>
+                                    </a>
+                                {% endif %}
+                                {% set Carts = get_all_carts() %}
+                                {% set totalPrice = get_carts_total_price() %}
+                                {% set totalQuantity = get_carts_total_quantity() %}
+                                <a href="{{ url('cart') }}" class="headerBtn__link headerBtn__link--cart flex vert vcenter hcenter">
+                                    カートを見る
+                                    <i class="icon icon-cart"></i>
+                                </a>
+                                <!-- <div class="count">{{ totalQuantity }}</div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav id="gNav" class="gNav sp-wrap" itemscope="" itemtype="https://schema.org/SiteNavigationElement" style="display:none">
+        <div class="gNav__menu mdAcc">
+            <div class="gNav__box">
+                <form method="get" class="headerSearch flex" action="{{ path('product_list') }}">
+                    <input type="text" class="headerSearch__input" name="name" placeholder="検索キーワードを入力">
+                    <button type="submit" class="headerSearch__btn">
+                        <i class="icon icon-search"></i>検索
+                    </button>
+                </form>
+            </div>
+            <div class="gNav__box">
+                <input id="gNav1" class="mdAcc__check" type="checkbox" value="" />
+                <label for="gNav1" class="mdAcc__btn gNav__item flex vcenter hcenter -sub">
+                    <i class="icon icon-inu"></i>犬用品を買う
+                </label>
+                <div class="mdAcc__body">
+                    <div class="mdAcc__in">
+                        {{ mzSpNav(DogCategories) }}
+                    </div>
+                </div>
+            </div>
+            <div class="gNav__box">
+                <input id="gNav2" class="mdAcc__check" type="checkbox" value="" />
+                <label for="gNav2" class="mdAcc__btn gNav__item flex vcenter hcenter -sub">
+                    <i class="icon icon-neko"></i>猫用品を買う
+                </label>
+                <div class="mdAcc__body">
+                    <div class="acc-in">
+                       {{ mzSpNav(CatCategories) }}
+                    </div>
+                </div>
+            </div>
+            <a href="https://animalline.jp/" class="gNav__item flex vcenter hcenter gNav__item--notsub">
+                <i class="icon icon-pawprint"></i>アニマルライン | 犬・猫のブリーダー直販と里親募集サイト
+            </a>
+
+        </div>
+        <div class="gNav__contact">
+            <div class="gNav__contact--txt">受付時間 月～土 10:00～18:00</div>
+            <div class="gNav__contact--tel flex vcenter">
+                <span>TEL</span>
+                <span class="serif">03-5969-9718</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="headerPad"></div>
+    <!-- content -->
+    {% block main %}{% endblock %}
+
+    <footer id="footer" class="footer" itemscope itemtype="http://schema.org/WPFooter" style="background-color: #f2f2f2;">
+        <nav class="navbar sp flex hcenter">
+            {% if is_granted('ROLE_USER') == false %}
+                <a href="{{ url('aniline_entry') }}" class="navbar__item navbar__item--signup flex hcenter vert">
+                    会員登録<i class="icon icon-reg"></i>
+                </a>
+                <a href="{{ url('mypage_login') }}" class="navbar__item navbar__item--login flex hcenter vert">
+                    ログイン<i class="icon icon-login"></i>
+                </a>
+            {% else %}
+                <a href="{{ url('logout') }}" class="navbar__item navbar__item--login flex hcenter vert">
+                    ログアウト<i class="icon icon-login"></i>
+                </a>
+            {% endif %}
+            <a href="{{ url('cart') }}" class="navbar__item navbar__item--cart flex hcenter vert">
+                カートを見る<i class="icon icon-cart"></i>
+            </a>
+        </nav>
+        <div class="back2top flex break vcenter pc">
+            <img src="{{ asset('assets/img/ec/page_top.svg') }}" alt="上に戻る">
+        </div>
+        <div class="footerLeg">
+            <img src="{{ asset('assets/img/ec/footer_leg.svg') }}" alt="">
+        </div>
+        <div class="wrap w1200 sp-wrap">
+            <div class="footerTop flex sp-break break pc-bet">
+                <div class="footer__left flex sp-vert">
+                    <div class="footer__col">
+                        <div class="footer__ttl">お支払方法について</div>
+                        <div class="footer__txt">
+                            お支払いは、クレジットカードがご利用いただけます。<br>
+                            ※クレジットカードのセキュリティはSSLというシステムを利用しております。カード番号は暗号化されて安全に送信されますので、どうぞご安心ください。
+                        </div>
+                        <div class="footer__img">
+                            <img src="{{ asset('assets/img/ec/credit_card_visa.png') }}" alt="クレジットカード(VISA)">
+                            <img src="{{ asset('assets/img/ec/credit_card_master.png') }}" alt="クレジットカード(Master)">
+                            <br class="sp">
+                            <img src="{{ asset('assets/img/ec/credit_card_jcb.png') }}" alt="クレジットカード(JCB)">
+                            <img src="{{ asset('assets/img/ec/credit_card_amex.png') }}" alt="クレジットカード(AMEX)">
+                            <img src="{{ asset('assets/img/ec/credit_card_diners.png') }}" alt="クレジットカード(Diners)">
+                        </div>
+                    </div>
+                    <div class="footer__col">
+                        <div class="footer__ttl">送料・配送について</div>
+                        <div class="footer__txt">
+                            <p>送料：商品合計額が、5,500(税込)未満の場合に送料600円(税込)を頂戴しております。</p>
+                            <p>配送は、佐川急便でお届けいたします。<br>
+                                ご注文は３日以内に発送いたします。但し、在庫状況・道路事情などにより発送が遅れる場合もございますので予めご了承ください。<br>
+                                また、時間指定も承っております。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer__right">
+                    <div class="footer__ttl">営業日</div>
+                    <div class="footer__txt">
+                        営業時間：平日・土　10:00～18:00<br>
+                        休業日：日・祝／年末年始
+                    </div>
+                    <!-- 休日のカレンダー -->
+                    <div class="footerCalendar flex sp-vert">
+                        <div class="footerCalendar__wrap flex">
+                            <!-- 今月 -->
+                            <div class="calendar" id="calendar_thisMonth">
+
+                            </div>
+                            <!-- 来月 -->
+                            <div class="calendar" id="calendar_nextMonth">
+
+                            </div>
+                        </div>
+                        <div class="calendar-legend flex vstart">
+                            <span class="holiday-box"></span><span>休業日</span>
+                        </div>
+                    </div>
+                    <div class="footer__ttl">お問い合わせ</div>
+                    <div class="footerContact flex bet pc-vcenter sp-vert">
+                        <div class="footerContact--left">
+                            <div class="footerContact__txt">受付時間 平日・土 10:00～18:00</div>
+                            <div class="footerContact__tel flex vcenter">
+                                <span>TEL</span>
+                                <span class="serif">03-5969-9718</span>
+                            </div>
+                        </div>
+                        <div class="footerContact--right">
+                            <a href="{{ url('contact') }}" class="pageBtn flex vcenter hcenter">
+                                お問い合わせページ<i class="icon icon-triangle"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footerBottom">
+            <div class="footerNav flex vcenter hcenter break">
+                <a href="{{ url('help_privacy') }}" class="footerNav__link">プライバシーポリシー</a>
+                <a href="{{ url('help_tradelaw') }}" class="footerNav__link">特定商法取引法に関する表示</a>
+                <a href="{{ url('contact') }}" class="footerNav__link">お問い合わせ</a>
+            </div>
+            <div class="footerLogo flex hcenter">
+                <a href="{{ url('homepage') }}" class="footerLogo__link">
+                    <img src="{{ asset('assets/img/ec/logo.png') }}" alt="アニマルライン">
+                </a>
+            </div>
+            <div class="footerCopy flex hcenter">
+                <p class="footerCopy__txt">(C)Copyright 2002-2025 Animalline CO.,LTD All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer><!-- / #footer -->
+
+    <script src="https://ajaxzip3.github.io/ajaxzip3.js?v1758768813927"></script>
+    <script src="{{ asset('assets/js-spc/main.min.js') }}"></script>
 
 	<script defer src="{{ asset('assets/css/common/js/jquery.ofi.min.js') }}"></script>
 	<script defer src="{{ asset('assets/css/common/js/jquery.smallarticles.js') }}"></script>
@@ -189,7 +450,137 @@
     {% include('@common/lang.twig') %}
     <script src="{{ asset('assets/js/function.js') }}?ver=20230518"></script>
     <script src="{{ asset('assets/js/eccube.js') }}"></script>
-    {% block javascript %}{% endblock %}
+
+    <script>
+        // 業務カレンダー表示用
+        const week = ["日", "月", "火", "水", "木", "金", "土"];
+        const today = new Date();
+        // 月末だとずれる可能性があるため、1日固定で取得
+        var showDate = new Date(today.getFullYear(), today.getMonth(), 1);
+
+        $(function() {
+
+            year = showDate.getFullYear();
+            month = showDate.getMonth();
+
+            // showDateの月は配列なので、11が12月、0が1月
+            if( month == 11){
+                nextyear = year + 1;
+                nextmonth = 0;
+            } else {
+                nextyear = year
+                nextmonth = month + 1;
+            }
+
+            // 当月カレンダー作成
+            $.ajax({
+                url: '{{ url('customize_calendar_index.name') }}',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    'year' : year,
+                    'month' : month
+                }
+            }).done(function (data) {// 正常時
+                calendar = createCalendar(data.year, data.month, data.dates);
+                document.querySelector('#calendar_thisMonth').innerHTML = calendar;
+            }).fail(function () { // エラー時
+                alert('読み込みエラー');
+            });
+
+            // 翌月カレンダー作成
+            $.ajax({
+                url: '{{ url('customize_calendar_index.name') }}',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    'year' : nextyear,
+                    'month' : nextmonth
+                }
+            }).done(function (data) {// 正常時
+                calendar = createCalendar(data.year, data.month, data.dates);
+                document.querySelector('#calendar_nextMonth').innerHTML = calendar;
+            }).fail(function () { // エラー時
+                alert('読み込みエラー');
+            });
+
+        });
+
+        // カレンダー作成
+        function createCalendar(year, month, dates) {
+
+            // 当日
+            //let targetDate = new Date(today.getFullYear(), today.getMonth(), 1);
+            let targetYear = showDate.getFullYear();
+            let targetMonth = showDate.getMonth() + 1;
+            let targetDay = today.getDate();
+            let targetFlag = false;
+            if(parseInt(year) === targetYear && month === targetMonth){
+                // 当日チェック対象
+                targetFlag = true;
+            }
+
+            // 月・曜日
+            var calendar = '<h3 class="serif">' + year + '年<span>'+ month + '月</span></h3>';
+            calendar += '<div class="calendar-grid">';
+            for (var i = 0; i < week.length; i++) {
+                calendar += '<div class="day-header">' + week[i] + '</div>';
+            }
+            //calendar += "</thead></tr>";
+
+            var count = 0;
+            var row = Math.ceil((dates.length) / week.length);
+
+            // 1行ずつ設定
+            for (var i = 0; i < row; i++) {
+                //calendar += "<tr>";
+                // 1カラム単位で設定
+                for (var j = 0; j < week.length; j++) {
+                    count = j + i * 7;
+                    // 休日
+                    if(dates[count].holiday) {
+                        if(targetFlag && targetDay === parseInt(dates[count].day)){
+                            calendar += '<div class="day holiday" style="font-weight: bold;">' + dates[count].day + '</div>';
+                        }else{
+                            calendar += '<div class="day holiday">' + dates[count].day + '</div>';
+                        }
+                        // 前月or翌月
+                    }else if(dates[count].disabled){
+                        calendar += '<div class="day other-month-day">' + dates[count].day + '</div>';
+                    }else if(dates[count].week === '0'){
+                        // 日曜日
+                        if(targetFlag && targetDay === parseInt(dates[count].day)){
+                            calendar += '<div class="day sunday" style="font-weight: bold;">' + dates[count].day + '</div>';
+                        }else{
+                            calendar += '<div class="day sunday">' + dates[count].day + '</div>';
+                        }
+                    }else if(dates[count].week === '6'){
+                        // 土曜日
+                        if(targetFlag && targetDay === parseInt(dates[count].day)){
+                            calendar += '<div class="day saturday" style="font-weight: bold;">' + dates[count].day + '</div>';
+                        }else{
+                            calendar += '<div class="day saturday">' + dates[count].day + '</div>';
+                        }
+                    }
+                    // その他
+                    else{
+                        if(targetFlag && targetDay === parseInt(dates[count].day)){
+                            calendar += '<div class="day today" style="font-weight: bold;">' + dates[count].day + '</div>';
+                        }else{
+                            calendar += '<div class="day">' + dates[count].day + '</div>';
+                        }
+                    }
+                }
+                //calendar += "</div>";
+            }
+            calendar += "</div>";
+
+            return calendar;
+        }
+
+    </script>
+    {% block javascript %} {% endblock %}
+
     {# Layout: CLOSE_BODY_BEFORE #}
     {% if Layout.CloseBodyBefore %}
         {{ include('block.twig', {'Blocks': Layout.CloseBodyBefore}) }}

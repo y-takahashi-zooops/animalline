@@ -34,16 +34,19 @@ use Eccube\Repository\Master\PrefRepository;
 use Eccube\Repository\OrderRepository;
 use Eccube\Repository\PaymentRepository;
 use Eccube\Util\StringUtil;
-use SunCat\MobileDetectBundle\DeviceDetector\MobileDetector;
-use Symfony\Bundle\FrameworkBundle\Controller\ControllerTrait;
+// use SunCat\MobileDetectBundle\DeviceDetector\MobileDetector;
+// use Symfony\Bundle\FrameworkBundle\Controller\ControllerTrait;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Eccube\Service\OrderHelper as BaseOrderHelper;
+use Detection\MobileDetect;
+use Psr\Log\LoggerInterface;
 
 class OrderHelper extends BaseOrderHelper
 {
     // FIXME 必要なメソッドのみ移植する
-    use ControllerTrait;
+    // use ControllerTrait;
 
     /**
      * @var ContainerInterface
@@ -92,6 +95,13 @@ class OrderHelper extends BaseOrderHelper
      */
     protected $orderItemTypeRepository;
 
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    protected $security;
+
     public function __construct(
         ContainerInterface $container,
         EntityManagerInterface $entityManager,
@@ -102,8 +112,10 @@ class OrderHelper extends BaseOrderHelper
         PaymentRepository $paymentRepository,
         DeviceTypeRepository $deviceTypeRepository,
         PrefRepository $prefRepository,
-        MobileDetector $mobileDetector,
-        SessionInterface $session
+        MobileDetect $mobileDetector,
+        SessionInterface $session,
+        Security $security,
+        LoggerInterface $logger
     ) {
         $this->container = $container;
         $this->orderRepository = $orderRepository;
@@ -116,6 +128,8 @@ class OrderHelper extends BaseOrderHelper
         $this->prefRepository = $prefRepository;
         $this->mobileDetector = $mobileDetector;
         $this->session = $session;
+        $this->logger = $logger;
+        $this->security = $security;
     }
 
     /**
@@ -134,10 +148,12 @@ class OrderHelper extends BaseOrderHelper
         $preOrderId = $this->createPreOrderId();
         $Order->setPreOrderId($preOrderId);
 
+        $detect = new MobileDetect();
+
         // 顧客情報の設定
         $this->setCustomer($Order, $Customer);
 
-        $DeviceType = $this->deviceTypeRepository->find($this->mobileDetector->isMobile() ? DeviceType::DEVICE_TYPE_MB : DeviceType::DEVICE_TYPE_PC);
+        $DeviceType = $this->deviceTypeRepository->find($detect->isMobile() ? DeviceType::DEVICE_TYPE_MB : DeviceType::DEVICE_TYPE_PC);
         $Order->setDeviceType($DeviceType);
 
         // 明細情報の設定
@@ -176,7 +192,7 @@ class OrderHelper extends BaseOrderHelper
         if (count($Cart->getCartItems()) > 0) {
             $divide = $this->session->get(self::SESSION_CART_DIVIDE_FLAG);
             if ($divide) {
-                log_info('ログイン時に販売種別が異なる商品がカートと結合されました。');
+                $this->logger->info('ログイン時に販売種別が異なる商品がカートと結合されました。');
 
                 return false;
             }
@@ -184,7 +200,7 @@ class OrderHelper extends BaseOrderHelper
             return true;
         }
 
-        log_info('カートに商品が入っていません。');
+        $this->logger->info('カートに商品が入っていません。');
 
         return false;
     }
@@ -197,17 +213,17 @@ class OrderHelper extends BaseOrderHelper
     public function isLoginRequired()
     {
         // フォームログイン済はログイン不要
-        if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
+        if ($this->security->isGranted('IS_AUTHENTICATED_FULLY')) {
             return false;
         }
 
         // Remember Meログイン済の場合はフォームからのログインが必要
-        if ($this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+        if ($this->security->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return true;
         }
 
         // 未ログインだがお客様情報を入力している場合はログイン不要
-        if (!$this->getUser() && $this->getNonMember()) {
+        if (!$this->security->getUser() && $this->getNonMember()) {
             return false;
         }
 
@@ -237,11 +253,12 @@ class OrderHelper extends BaseOrderHelper
      * セッションに保持されている非会員情報を取得する.
      * 非会員購入時に入力されたお客様情報を返す.
      *
+     * @param string $session_key
      * @return Customer
      */
-    public function getNonMember()
+    public function getNonMember($session_key = self::SESSION_NON_MEMBER)
     {
-        $NonMember = $this->session->get(self::SESSION_NON_MEMBER);
+        $NonMember = $this->session->get($session_key);
         if ($NonMember && $NonMember->getPref()) {
             $Pref = $this->prefRepository->find($NonMember->getPref()->getId());
             $NonMember->setPref($Pref);

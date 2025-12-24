@@ -14,12 +14,17 @@
 namespace Eccube\Repository;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Persistence\ManagerRegistry as RegistryInterface;
 use Eccube\Common\EccubeConfig;
 use Eccube\Doctrine\Query\Queries;
+use Eccube\Entity\Category;
+use Eccube\Entity\Master\ProductListMax;
+use Eccube\Entity\Master\ProductListOrderBy;
+use Eccube\Entity\Master\ProductStatus;
 use Eccube\Entity\Product;
 use Eccube\Entity\ProductStock;
+use Eccube\Entity\Tag;
 use Eccube\Util\StringUtil;
-use Symfony\Bridge\Doctrine\RegistryInterface;
 use Eccube\Entity\Master\SaleType;
 use Eccube\Repository\Master\SaleTypeRepository;
 /**
@@ -39,6 +44,16 @@ class ProductRepository extends AbstractRepository
      * @var EccubeConfig
      */
     protected $eccubeConfig;
+
+    public const COLUMNS = [
+        'product_id' => 'p.id',
+        'name' => 'p.name',
+        'product_code' => 'pc.code',
+        'stock' => 'pc.stock',
+        'status' => 'p.Status',
+        'create_date' => 'p.create_date',
+        'update_date' => 'p.update_date',
+    ];
 
     /**
      * @var SaleTypeRepository
@@ -67,7 +82,7 @@ class ProductRepository extends AbstractRepository
     /**
      * Find the Product with sorted ClassCategories.
      *
-     * @param integer $productId
+     * @param int $productId
      *
      * @return Product
      */
@@ -134,8 +149,13 @@ class ProductRepository extends AbstractRepository
     /**
      * get query builder.
      *
-     * @param  array $searchData
-     * @param  object|bool $loggedUser
+     * @param array{
+     *         category_id?:Category,
+     *         name?:string,
+     *         pageno?:string,
+     *         disp_number?:ProductListMax,
+     *         orderby?:ProductListOrderBy
+     *     } $searchData
      *
      * @return \Doctrine\ORM\QueryBuilder
      */
@@ -181,10 +201,18 @@ class ProductRepository extends AbstractRepository
         }
 
         // Order By
-        // 価格低い順
         $config = $this->eccubeConfig;
-        if (!empty($searchData['orderby']) && $searchData['orderby']->getId() == $config['eccube_product_order_price_lower']) {
-            //@see http://doctrine-orm.readthedocs.org/en/latest/reference/dql-doctrine-query-language.html
+
+        $orderby = $searchData['orderby'] ?? null;
+
+        // $orderbyがオブジェクトなら getId()、intならそのまま
+        $orderbyId = is_object($orderby) && method_exists($orderby, 'getId')
+            ? $orderby->getId()
+            : $orderby;
+
+        // 価格低い順
+        if (!empty($orderbyId) && $orderbyId == $config['eccube_product_order_price_lower']) {
+            // @see http://doctrine-orm.readthedocs.org/en/latest/reference/dql-doctrine-query-language.html
             $qb->addSelect('MIN(pc.price02) as HIDDEN price02_min');
             $qb->innerJoin('p.ProductClasses', 'pc');
             $qb->andWhere('pc.visible = true');
@@ -192,7 +220,7 @@ class ProductRepository extends AbstractRepository
             $qb->orderBy('price02_min', 'ASC');
             $qb->addOrderBy('p.id', 'DESC');
         // 価格高い順
-        } elseif (!empty($searchData['orderby']) && $searchData['orderby']->getId() == $config['eccube_product_order_price_higher']) {
+        } elseif (!empty($orderbyId) && $orderbyId == $config['eccube_product_order_price_higher']) {
             $qb->addSelect('MAX(pc.price02) as HIDDEN price02_max');
             $qb->innerJoin('p.ProductClasses', 'pc');
             $qb->andWhere('pc.visible = true');
@@ -200,7 +228,7 @@ class ProductRepository extends AbstractRepository
             $qb->orderBy('price02_max', 'DESC');
             $qb->addOrderBy('p.id', 'DESC');
         // 新着順
-        } elseif (!empty($searchData['orderby']) && $searchData['orderby']->getId() == $config['eccube_product_order_newer']) {
+        } elseif (!empty($orderbyId) && $orderbyId == $config['eccube_product_order_newer']) {
             // 在庫切れ商品非表示の設定が有効時対応
             // @see https://github.com/EC-CUBE/ec-cube/issues/1998
             //if ($this->getEntityManager()->getFilters()->isEnabled('option_nostock_hidden') == true) {
@@ -228,7 +256,25 @@ class ProductRepository extends AbstractRepository
     /**
      * get query builder.
      *
-     * @param  array $searchData
+     * @param array{
+     *         id?:string|int|null,
+     *         category_id?:Category,
+     *         status?:ProductStatus[],
+     *         link_status?:ProductStatus[],
+     *         stock_status?:int,
+     *         stock?:ProductStock::IN_STOCK|ProductStock::OUT_OF_STOCK,
+     *         tag_id?:Tag,
+     *         create_datetime_start?:\DateTime,
+     *         create_datetime_end?:\DateTime,
+     *         create_date_start?:\DateTime,
+     *         create_date_end?:\DateTime,
+     *         update_datetime_start?:\DateTime,
+     *         update_datetime_end?:\DateTime,
+     *         update_date_start?:\DateTime,
+     *         update_date_end?:\DateTime,
+     *         sortkey?:string,
+     *         sorttype?:string
+     *     } $searchData
      *
      * @return \Doctrine\ORM\QueryBuilder
      */
@@ -245,7 +291,7 @@ class ProductRepository extends AbstractRepository
 
         // id
         if (isset($searchData['id']) && StringUtil::isNotBlank($searchData['id'])) {
-            $id = preg_match('/^\d{0,10}$/', $searchData['id'])  ? $searchData['id'] : null;
+            $id = preg_match('/^\d{0,10}$/', $searchData['id']) ? $searchData['id'] : null;
             if ($id && $id > '2147483647' && $this->isPostgreSQL()) {
                 $id = null;
             }
@@ -322,6 +368,14 @@ class ProductRepository extends AbstractRepository
             }
         }
 
+        // tag
+        if (!empty($searchData['tag_id']) && $searchData['tag_id']) {
+            $qb
+                ->innerJoin('p.ProductTag', 'pt')
+                ->andWhere('pt.Tag = :tag_id')
+                ->setParameter('tag_id', $searchData['tag_id']);
+        }
+
         // crate_date
         if (!empty($searchData['create_datetime_start']) && $searchData['create_datetime_start']) {
             $date = $searchData['create_datetime_start'];
@@ -377,8 +431,16 @@ class ProductRepository extends AbstractRepository
         }
 
         // Order By
-        $qb
-            ->orderBy('p.update_date', 'DESC');
+        if (isset($searchData['sortkey']) && !empty($searchData['sortkey'])) {
+            $sortOrder = (isset($searchData['sorttype']) && $searchData['sorttype'] == 'a') ? 'ASC' : 'DESC';
+
+            $qb->orderBy(self::COLUMNS[$searchData['sortkey']], $sortOrder);
+            $qb->addOrderBy('p.update_date', 'DESC');
+            $qb->addOrderBy('p.id', 'DESC');
+        } else {
+            $qb->orderBy('p.update_date', 'DESC');
+            $qb->addOrderBy('p.id', 'DESC');
+        }
 
         return $this->queries->customize(QueryKey::PRODUCT_SEARCH_ADMIN, $qb, $searchData);
     }

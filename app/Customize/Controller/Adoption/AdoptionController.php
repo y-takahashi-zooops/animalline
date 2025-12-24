@@ -28,6 +28,9 @@ use Customize\Form\Type\Front\ContactType;
 use Customize\Service\MailService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Cookie;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class AdoptionController extends AbstractController
 {
@@ -81,6 +84,11 @@ class AdoptionController extends AbstractController
     protected $mailService;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    protected $eventDispatcher;
+
+    /**
      * AdoptionController constructor.
      *
      * @param ConservationPetsRepository $conservationPetsRepository
@@ -95,6 +103,7 @@ class AdoptionController extends AbstractController
      * @param AffiliateStatusRepository $affiliateStatusRepository
      */
     public function __construct(
+        EntityManagerInterface $entityManager,
         ConservationPetsRepository     $conservationPetsRepository,
         ConservationPetImageRepository $conservationPetImageRepository,
         ConservationContactsRepository $conservationContactsRepository,
@@ -104,7 +113,9 @@ class AdoptionController extends AbstractController
         ConservationsRepository        $conservationsRepository,
         ConservationsHousesRepository  $conservationsHousesRepository,
         MailService                    $mailService,
-        AffiliateStatusRepository $affiliateStatusRepository
+        AffiliateStatusRepository $affiliateStatusRepository,
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->conservationPetImageRepository = $conservationPetImageRepository;
@@ -116,6 +127,11 @@ class AdoptionController extends AbstractController
         $this->conservationsHousesRepository = $conservationsHousesRepository;
         $this->mailService = $mailService;
         $this->affiliateStatusRepository = $affiliateStatusRepository;
+        $this->eventDispatcher = $eventDispatcher;
+        
+        // 親クラスのsetterメソッドを呼び出してプロパティを設定
+        $this->setEntityManager($entityManager);
+        $this->setFormFactory($formFactory);
     }
 
 
@@ -160,7 +176,7 @@ class AdoptionController extends AbstractController
                 $response->headers->setCookie(new Cookie('rid_key',$sessid));
             //}
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
 
             //$session = $request->getSession();
             //$sessid = $session->getId();
@@ -294,7 +310,7 @@ class AdoptionController extends AbstractController
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
 
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->entityManager;
         $conservation->setViewCount(intval($conservation->getViewCount() + 1));
         $entityManager->persist($conservation);
         $entityManager->flush();
@@ -440,7 +456,7 @@ class AdoptionController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_CONTACT_INDEX_INITIALIZE);
 
         $form = $builder->getForm();
         $form->handleRequest($request);
@@ -484,7 +500,7 @@ class AdoptionController extends AbstractController
                         ],
                         $request
                     );
-                    $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_COMPLETE, $event);
+                    $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_CONTACT_INDEX_COMPLETE);
 
                     $data = $event->getArgument('data');
 

@@ -14,30 +14,33 @@
 namespace Eccube\Doctrine\EventSubscriber;
 
 use Doctrine\Common\EventSubscriber;
-use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
+use Doctrine\ORM\Event\PostLoadEventArgs;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use Eccube\Entity\ProductClass;
 use Eccube\Service\TaxRuleService;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\ORM\Event\PostUpdateEventArgs;
+use Doctrine\ORM\Event\PrePersistEventArgs;
+use Doctrine\ORM\Event\PostPersistEventArgs;
 
 class TaxRuleEventSubscriber implements EventSubscriber
 {
     /**
      * @var TaxRuleService
      */
-    protected $container;
+    protected $taxRuleService;
 
     /**
      * TaxRuleEventSubscriber constructor.
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(TaxRuleService $taxRuleService)
     {
-        $this->container = $container;
+        $this->taxRuleService = $taxRuleService;
     }
 
     public function getTaxRuleService()
     {
-        return $this->container->get(TaxRuleService::class);
+        return $this->taxRuleService;
     }
 
     public function getSubscribedEvents()
@@ -50,7 +53,7 @@ class TaxRuleEventSubscriber implements EventSubscriber
         ];
     }
 
-    public function prePersist(LifecycleEventArgs $args)
+    public function prePersist(PrePersistEventArgs $args)
     {
         $entity = $args->getObject();
 
@@ -62,7 +65,7 @@ class TaxRuleEventSubscriber implements EventSubscriber
         }
     }
 
-    public function postLoad(LifecycleEventArgs $args)
+    public function postLoad(PostLoadEventArgs $args)
     {
         $entity = $args->getObject();
 
@@ -74,7 +77,7 @@ class TaxRuleEventSubscriber implements EventSubscriber
         }
     }
 
-    public function postPersist(LifecycleEventArgs $args)
+    public function postPersist(PostPersistEventArgs $args)
     {
         $entity = $args->getObject();
 
@@ -86,7 +89,7 @@ class TaxRuleEventSubscriber implements EventSubscriber
         }
     }
 
-    public function postUpdate(LifecycleEventArgs $args)
+    public function postUpdate(PostUpdateEventArgs $args)
     {
         $entity = $args->getObject();
 

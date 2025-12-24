@@ -9,13 +9,19 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 #}
 
+{% set normal_type2 = false %}
 {# ヘッダーの切り替え #}
-{% if request.get('ReturnPath') =="adoption_mypage" %}
+{% if app.request.query.get('ReturnPath') =="adoption_mypage" %}
     {% set base_template = 'adoption_frame.twig' %}
-{% elseif request.get('ReturnPath') =="breeder_mypage" %}
+{% elseif app.request.query.get('ReturnPath') =="breeder_mypage" %}
     {% set base_template = 'breeder_frame.twig' %}
 {% else %}
-    {% set base_template = 'normal_frame.twig' %}
+    {% if app.request.query.get('ReturnPath') == '' %}
+        {% set base_template = 'normal_type2_frame.twig' %}
+        {% set normal_type2 = true %}
+    {% else%}
+        {% set base_template = 'normal_frame.twig' %}
+    {% endif %}
 {% endif %}
 
 {% extends base_template %}
@@ -24,264 +30,521 @@ file that was distributed with this source code.
 {% set body_class = 'registration_page' %}
 
 {% form_theme form 'Form/form_div_layout.twig' %}
+{% block stylesheet %}
+    <style>
+        .ec-required{
+            display: inline-block;
+            align-items: center;
+            border: 1px solid #d2493f;
+            border-radius: .2rem;
+            color: #d2493f;
+            /*display: flex;*/
+            font-size: 1.4rem;
+            font-weight: 500;
+            /*height: 2rem;*/
+            margin-bottom: 1rem;
+            margin-left: 1rem;
+            /*padding: 0.5rem;*/
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
+        .ec-errorMessage{
+            margin-bottom: 25px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #DE5050;
+        }
+        .error input.e-form__input, .error select.e-form__input{
+            border-color: #CF3F34;
+            background: #FDF1F0;
+        }
+    </style>
+{% endblock %}
 
 {% block javascript %}
     <script src="//yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
 {% endblock javascript %}
 
 {% block main %}
-    <div class="ec-registerRole">
-        <div class="ec-pageHeader">
-            {% if contact_save %}
-            <div style="margin: 0 20%">
-                <p style="color:#F00">すでに会員登録済みの方は「会員ログイン」からログインしてください。<br />
-                ログインをした際にお問い合わせメッセージが送信されます。</p>
-                <button class="ec-blockBtn--action" onclick="location.href='{{ url('breeder_login') }}'">会員ログイン</button>
-            </div>
-            {% endif %}
-{% if request.get('ReturnPath') =="adoption_mypage" %}
-    <h1>{{ '新規保護団体代表者様登録'|trans }}</h1>
-{% elseif request.get('ReturnPath') =="breeder_mypage" %}
-    <h1>{{ '新規ブリーダー様登録'|trans }}</h1>
-{% else %}
-    {% if contact_save %}
-    <h1>{{ 'お客様情報入力'|trans }}</h1>
-    {% else %}
-    <h1>{{ '新規会員登録'|trans }}</h1>
-    {% endif %}
-{% endif %}
-        </div>
-        {% if request.get('ReturnPath') =="adoption_mypage" %}
-        <div style="border: solid 1px; padding: 1rem;"><b>代表者様の情報をご記入ください。団体情報のご記入 は本会員登録後にございます。</b></div>
-        {% endif %}
-        {% if request.get('ReturnPath') =="breeder_mypage" %}
-        <div style="border: solid 1px; padding: 1rem;"><b>代表者様の情報をご記入ください。団体情報のご記入 は本会員登録後にございます。</b></div>
-        {% else %}
-            
-        {% endif %}
+    {% if (normal_type2) %}
 
-        <div class="ec-off1Grid">
-            <div class="ec-off1Grid__cell">
-                <form method="post" action="{{ url('entry') }}" novalidate class="h-adr">
-                    <span class="p-country-name" style="display:none;">Japan</span>
-                    {{ form_widget(form._token) }}
-                    <div class="ec-borderedDefs">
-                        <dl>
-                            <dt>
-                                {{ form_label(form.name, 'お名前', { 'label_attr': { 'class': 'ec-label' }}) }}
-                            </dt>
-                            <dd>
-                                <div class="ec-halfInput{{ has_errors(form.name.name01, form.name.name02) ? ' error'}}">
-                                    {{ form_widget(form.name.name01, { 'attr': { 'placeholder': '姓' }}) }}
-                                    {{ form_widget(form.name.name02, { 'attr': { 'placeholder': '名' }}) }}
+        <div class="page-wrap">
+            <div class="wrap sp-wrap w1200">
+                <nav class="breadcrumb "><ul class="breadcrumb__list"><li class="breadcrumb__item"><a href="{{ url('homepage') }}" class="breadcrumb__link">TOP</a></li><li class="breadcrumb__item breadcrumb__item--active"><span class="breadcrumb__separator"><i class="icon icon-right"></i></span><span class="breadcrumb__text">新規会員登録</span></li></ul></nav>        <div class="p-entry">
+                    <form method="post" action="{{ url('aniline_entry') }}" novalidate class="e-form">
+                        <span class="p-country-name" style="display:none;">Japan</span>
+                        {{ form_widget(form._token) }}
+
+                        <h2 class="e-form__title serif">会員情報登録</h2>
+
+                        <div class="e-form__row e-form__row--inline flex sp-vert">
+                            <div class="e-form__field">
+                                <label class="e-form__label flex vcenter" for="last-name">
+                                    <span class="e-form__text"> {{ form_label(form.name, 'お名前(姓)', { 'label_attr': { 'class': 'ec-label' }}) }}</span>
+                                </label>
+                                <div class="{{ has_errors(form.name.name01) ? ' error'}}">
+                                    {{ form_widget(form.name.name01, { 'attr': { 'placeholder': '姓' , 'class': 'e-form__input'}}) }}
                                     {{ form_errors(form.name.name01) }}
+                                </div>
+                            </div>
+                            <div class="e-form__field">
+                                <label class="e-form__label flex vcenter" for="first-name">
+                                    <span class="e-form__text"> {{ form_label(form.name, 'お名前(名)', { 'label_attr': { 'class': 'ec-label' }}) }}</span>
+                                </label>
+                                <div class="{{ has_errors(form.name.name01, form.name.name02) ? ' error'}}">
+                                    {{ form_widget(form.name.name02, { 'attr': { 'placeholder': '名' , 'class': 'e-form__input'}}) }}
                                     {{ form_errors(form.name.name02) }}
                                 </div>
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>
-                                {{ form_label(form.kana, 'お名前(カナ)', { 'label_attr': { 'class': 'ec-label' }}) }}
-                            </dt>
-                            <dd>
-                                <div class="ec-halfInput{{ has_errors(form.kana.kana01, form.kana.kana02) ? ' error'}}">
-                                    {{ form_widget(form.kana.kana01, { 'attr': { 'placeholder': 'セイ' }}) }}
-                                    {{ form_widget(form.kana.kana02, { 'attr': { 'placeholder': 'メイ' }}) }}
+                            </div>
+                        </div>
+
+                        <div class="e-form__row e-form__row--inline flex sp-vert">
+                            <div class="e-form__field">
+                                <label class="e-form__label flex vcenter" for="last-name-kana">
+                                    <span class="e-form__text">{{ form_label(form.kana, 'お名前(姓カナ)', { 'label_attr': { 'class': 'ec-label' }}) }}</span>
+                                </label>
+                                <div class="{{ has_errors(form.kana.kana01) ? ' error'}}">
+                                    {{ form_widget(form.kana.kana01, { 'attr': { 'placeholder': 'セイ', 'class': 'e-form__input' }}) }}
                                     {{ form_errors(form.kana.kana01) }}
+                                </div>
+                            </div>
+                            <div class="e-form__field">
+                                <label class="e-form__label flex vcenter" for="first-name-kana">
+                                    <span class="e-form__text">{{ form_label(form.kana, 'お名前(名カナ)', { 'label_attr': { 'class': 'ec-label' }}) }}</span>
+                                </label>
+                                <div class="{{ has_errors(form.kana.kana02) ? ' error'}}">
+                                    {{ form_widget(form.kana.kana02, { 'attr': { 'placeholder': 'メイ', 'class': 'e-form__input' }}) }}
                                     {{ form_errors(form.kana.kana02) }}
                                 </div>
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>
-                                {{ form_label(form.address, '住所', { 'label_attr': { 'class': 'ec-label' }}) }}
-                                <p style="font-size:14px;color:#DE5D50;">〒は'-'を入れずに入力してくだい</p>
-                            </dt>
-                            <dd>
-                                <div class="ec-zipInput{{ has_errors(form.postal_code) ? ' error' }}"><span>{{ '〒'|trans }}</span>
-                                    {{ form_widget(form.postal_code) }}
-                                    <div class="ec-zipInputHelp">
-                                        <div class="ec-zipInputHelp__icon">
-                                            <div class="ec-icon"><img
-                                                        src="{{ asset('assets/icon/question-white.svg') }}" alt="">
-                                            </div>
-                                        </div><a href="https://www.post.japanpost.jp/zipcode/" target="_blank"><span>{{ '郵便番号検索'|trans }}</span></a>
-                                    </div>
-                                    {{ form_errors(form.postal_code) }}
-                                </div>
+                            </div>
+                        </div>
 
-                                <div class="ec-select{{ has_errors(form.address.pref) ? ' error' }}">
-                                    {{ form_widget(form.address.pref) }}
+                        <div class="e-form__row">
+                            <div class="e-form__field">
+                                <label class="e-form__label flex vcenter" for="zipcode">
+                                    <span class="e-form__text"> {{ form_label(form.address, '住所', { 'label_attr': { 'class': 'ec-label' }}) }}</span>
+                                    <span class="e-form__note sp">※〒は'-'を入れずに入力してくだい</span>
+                                </label>
+
+                                <div class="e-form__address-container flex vcenter">
+                                    <div class="e-form__address-box flex vcenter">
+                                        <div class="e-form__address-txt">{{ '〒'|trans }}</div>
+                                        <div class="e-form__address-box flex vcenter{{ has_errors(form.postal_code) ? ' error' }}">
+                                            {{ form_widget(form.postal_code, { 'attr': { 'class': 'e-form__input e-form__input--zipcode js-zip-in--hogeZip' }}) }}
+
+                                        </div>
+                                    </div>
+                                    <button type="button" class="e-form__button e-form__button--secondary js-zip" data-zip="hogeZip">住所を自動入力</button>
+                                    <p class="e-form__note pc">※〒は'-'を入れずに入力してくだい</p>
+                                </div>
+                                {{ form_errors(form.postal_code) }}
+                                <div class="e-form__address-box my-1 {{ has_errors(form.address.pref) ? ' error' }}">
+                                    {{ form_widget(form.address.pref, { 'attr': { 'class': 'e-form__input js-zip-out--pref js-zip-out--hogeZip' }}) }}
                                     {{ form_errors(form.address.pref) }}
                                 </div>
-                                <div class="ec-input{{ has_errors(form.address.addr01) ? ' error' }}">
-                                    {{ form_widget(form.address.addr01, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
+                                <div class="{{ has_errors(form.address.addr01) ? ' error' }}">
+                                    {{ form_widget(form.address.addr01, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)','class': 'e-form__input mb-1 js-zip-out--addr1 js-zip-out--hogeZip' }}) }}
                                     {{ form_errors(form.address.addr01) }}
                                 </div>
-                                <div class="ec-input{{ has_errors(form.address.addr02) ? ' error' }}">
-                                    {{ form_widget(form.address.addr02,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
+                                <div class="{{ has_errors(form.address.addr02) ? ' error' }}">
+                                    {{ form_widget(form.address.addr02,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)','class': 'e-form__input js-zip-out--addr2' }}) }}
                                     {{ form_errors(form.address.addr02) }}
                                 </div>
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>
-                                {{ form_label(form.phone_number, '電話番号', { 'label_attr': { 'class': 'ec-label' }}) }}
-                                <p style="font-size:14px;color:#DE5D50;">'-'を入れずに入力してくだい</p>
-                            </dt>
-                            <dd>
-                                <div class="ec-telInput{{ has_errors(form.phone_number) ? ' error' }}">
-                                    {{ form_widget(form.phone_number) }}
+                            </div>
+                        </div>
+
+                        <div class="e-form__row">
+                            <div class="e-form__field">
+                                <label class="e-form__label flex vcenter" for="tel">
+                                    <span class="e-form__text">{{ form_label(form.phone_number, '電話番号', { 'label_attr': { 'class': 'ec-label' }}) }}</span>
+                                    <span class="e-form__note">※'-'を入れずに入力してくだい</span>
+                                </label>
+                                <div class="{{ has_errors(form.phone_number) ? ' error' }}">
+                                    {{ form_widget(form.phone_number, { 'attr': { 'class': 'e-form__input' }}) }}
                                     {{ form_errors(form.phone_number) }}
                                 </div>
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>
-                                {{ form_label(form.email, 'メールアドレス', { 'label_attr': { 'class': 'ec-label' }}) }}
-                            </dt>
-                            <dd>
-                                <div class="ec-input{{ has_errors(form.email.first) ? ' error' }}">
-                                    {{ form_widget(form.email.first, { 'attr': { 'placeholder': '例：ec-cube@example.com' }}) }}
+                            </div>
+                        </div>
+
+                        <div class="e-form__row">
+                            <div class="e-form__field">
+                                <label class="e-form__label flex vcenter" for="email">
+                                    <span class="e-form__text">  {{ form_label(form.email, 'メールアドレス', { 'label_attr': { 'class': 'ec-label' }}) }}</span>
+                                </label>
+                                <div class="{{ has_errors(form.email.first) ? ' error' }}">
+                                    {{ form_widget(form.email.first, { 'attr': { 'placeholder': '例：ec-cube@example.com' ,'class': 'e-form__input mb-1' }}) }}
                                     {{ form_errors(form.email.first) }}
                                 </div>
-                                <div class="ec-input{{ has_errors(form.email.second) ? ' error' }}">
-                                    {{ form_widget(form.email.second, { 'attr': { 'placeholder': '確認のためもう一度入力してください' }}) }}
+                                <div class="{{ has_errors(form.email.second) ? ' error' }}">
+                                    {{ form_widget(form.email.second, { 'attr': { 'placeholder': '確認のためもう一度入力してください','class': 'e-form__input'  }}) }}
                                     {{ form_errors(form.email.second) }}
                                 </div>
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>
-                                {{ form_label(form.password, 'パスワード', { 'label_attr': {'class': 'ec-label' }}) }}
-                            </dt>
-                            <dd>
-                                <div class="ec-input{{ has_errors(form.password.first) ? ' error' }}">
-                                    {{ form_widget(form.password.first, {
-                                        'attr': { 'placeholder': '半角英数記号%min%〜%max%文字'|trans({ '%min%': eccube_config.eccube_password_min_len, '%max%': eccube_config.eccube_password_max_len }) },
+                            </div>
+                        </div>
+
+                        <div class="e-form__row">
+                            <div class="e-form__field">
+                                <label class="e-form__label flex vcenter" for="email">
+                                    <span class="e-form__text">{{ form_label(form.plain_password, 'パスワード', {'label_attr': { 'class': 'ec-label' } }) }}</span>
+                                </label>
+                                <div class="{{ has_errors(form.plain_password.first) ? ' error' }}">
+                                    {{ form_widget(form.plain_password.first, {
+                                        'attr': { 'placeholder': '半角英数記号%min%〜%max%文字'|trans({ '%min%': eccube_config.eccube_password_min_len, '%max%': eccube_config.eccube_password_max_len })
+                                            ,'class': 'e-form__input mb-1'
+                                        },
                                         'type': 'password'
                                     }) }}
-                                    {{ form_errors(form.password.first) }}
+                                    {{ form_errors(form.plain_password.first) }}
                                 </div>
-                                <div class="ec-input{{ has_errors(form.password.second) ? ' error' }}">
-                                    {{ form_widget(form.password.second, {
-                                        'attr': { 'placeholder': '確認のためもう一度入力してください'|trans },
+                                <div class="{{ has_errors(form.plain_password.second) ? ' error' }}">
+                                    {{ form_widget(form.plain_password.second, {
+                                        'attr': { 'placeholder': '確認のためもう一度入力してください'|trans ,'class': 'e-form__input mb-1'  },
                                         'type': 'password'
                                     }) }}
-                                    {{ form_errors(form.password.second) }}
+                                    {{ form_errors(form.plain_password.second) }}
                                 </div>
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>
-                                {{ form_label(form.birth, '生年月日', { 'label_attr': {'class': 'ec-label' }}) }}
-                            </dt>
-                            <dd>
-                                <div class="ec-birth{{ has_errors(form.birth) ? ' error' }}">
-                                    {{ form_widget(form.birth.year) }}<span>/</span>
-                                    {{ form_widget(form.birth.month) }}<span>/</span>
-                                    {{ form_widget(form.birth.day) }}
+                            </div>
+                        </div>
+
+                        <div class="e-form__row">
+                            <div class="e-form__field">
+                                <label class="e-form__label flex" for="birthdate-year"> {{ form_label(form.birth, '生年月日', { 'label_attr': {'class': 'ec-label' }}) }}</label>
+                                <div class="e-form__date-fields flex vcenter{{ has_errors(form.birth) ? ' error' }}">
+                                    {{ form_widget(form.birth.year, { 'attr': { 'class': 'e-form__select e-form__select--year' }}) }}<span>/</span>
+                                    {{ form_widget(form.birth.month, { 'attr': { 'class': 'e-form__select e-form__select--month' }}) }}<span>/</span>
+                                    {{ form_widget(form.birth.day, { 'attr': { 'class': 'e-form__select e-form__select--day' }}) }}
                                     {{ form_errors(form.birth) }}
                                 </div>
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>
-                                {{ form_label(form.sex, '性別', { 'label_attr': { 'class': 'ec-label' }}) }}
-                            </dt>
-                            <dd>
-                                <div class="ec-radio{{ has_errors(form.sex) ? ' error' }}">
+                            </div>
+                        </div>
+
+                        <div class="e-form__row e-form__row--last">
+                            <div class="e-form__field">
+                                <label class="e-form__label" for="gender">{{ form_label(form.sex, '性別', { 'label_attr': { 'class': 'ec-label' }}) }}</label>
+                                <div class="e-form__radio-group flex vcenter {{ has_errors(form.sex) ? ' error' }}">
+                                    {# {% form_theme form.sex 'Form/custom_spc_theme.twig' %} #}
                                     {{ form_widget(form.sex) }}
                                     {{ form_errors(form.sex) }}
                                 </div>
-                            </dd>
-                        </dl>
-                        {# エンティティ拡張の自動出力 #}
-                        {% for f in form if f.vars.eccube_form_options.auto_render %}
-                            {% if f.vars.eccube_form_options.form_theme %}
-                                {% form_theme f f.vars.eccube_form_options.form_theme %}
-                                {{ form_row(f) }}
-                            {% else %}
-                                <dl>
-                                    <dt>
-                                        {{ form_label(f) }}
-                                    </dt>
-                                    <dd>
-                                        <div class="{{ f.vars.eccube_form_options.style_class }}{{ has_errors(f) ? ' error' }}">
-                                            {{ form_widget(f) }}
-                                            {{ form_errors(f) }}
-                                        </div>
-                                    </dd>
-                                </dl>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                    {% if request.get('ReturnPath') =="adoption_mypage" %}
-                        <div style="border: solid 1px; padding: 1rem;"><b>
-                        当サイトからのメールは「info@animalline.jp」で届きます。
-                        保護団体登録に必要な情報を送らせて頂きますので、
-                        「info@animalline.jp」からのメールを受信できる様、
-                        ドメイン設定を解除して頂くか、
-                        又はドメイン『animalline.jp』を
-                        受信リストに加えていただきますよう、お願い申し上げます。
-                        </b></div>
-                    {% elseif request.get('ReturnPath') =="breeder_mypage" %}
-                        <div style="border: solid 1px; padding: 1rem;"><b>
-                        当サイトからのメールは「info@animalline.jp」で届きます。
-                        ブリーダー登録に必要な情報を送らせて頂きますので、
-                        「info@animalline.jp」からのメールを受信できる様、
-                        ドメイン設定を解除して頂くか、
-                        又はドメイン『animalline.jp』を
-                        受信リストに加えていただきますよう、お願い申し上げます。
-                        </b></div>
-                    {% elseif request.get('ReturnPath') =="adoption_top" %}
-                        <div style="border: solid 1px; padding: 1rem;"><b>
-                        当サイトからのメールは「info@animalline.jp」で届きます。
-                        本会員認証に必要な情報を送らせて頂きますので、
-                        「info@animalline.jp」からのメールを受信できる様、
-                        ドメイン設定を解除して頂くか、
-                        又はドメイン『animalline.jp』を
-                        受信リストに加えていただきますよう、お願い申し上げます。
-                        </b></div>
-                    {% else %}
-                        <div style="border: solid 1px; padding: 1rem;"><b>
-                        当サイトからのメールは「info@animalline.jp」で届きます。
-                        本会員認証に必要な情報を送らせて頂きますので、
-                        「info@animalline.jp」からのメールを受信できる様、
-                        ドメイン設定を解除して頂くか、
-                        又はドメイン『animalline.jp』を
-                        受信リストに加えていただきますよう、お願い申し上げます。
-                        </b></div>
-                    {% endif %}
-
-                    
-                    <div class="ec-registerRole__actions">
-                        <div class="ec-off4Grid">
-                            <div class="ec-off4Grid__cell">
-                                <div class="ec-checkbox{{ has_errors(form.user_policy_check) ? ' error' }}">
-                                    <label>
-                                        {{ form_widget(form.user_policy_check) }}
-                                        {% if request.get('ReturnPath') =="adoption_mypage" %}
-                                            {{ '<a class="ec-link" href="%url%" target="_blank">利用規約</a>に同意してお進みください'|trans({ '%url%': url('adoption_terms') })|raw }}
-                                        {% elseif request.get('ReturnPath') =="breeder_mypage" %}
-                                            {{ '<a class="ec-link" href="%url%" target="_blank">利用規約</a>に同意してお進みください'|trans({ '%url%': url('breeder_terms') })|raw }}
-                                        {% elseif request.get('ReturnPath') =="adoption_top" %}
-                                            {{ '<a class="ec-link" href="%url%" target="_blank">利用規約</a>に同意してお進みください'|trans({ '%url%': url('adoption_user_terms') })|raw }}
-                                        {% else %}
-                                            {{ '<a class="ec-link" href="%url%" target="_blank">利用規約</a>に同意してお進みください'|trans({ '%url%': url('breeder_user_terms') })|raw }}
-                                        {% endif %}
-                                        
-                                    </label>
-                                    {{ form_errors(form.user_policy_check) }}
-                                </div>
-                                <input type="hidden" name="ReturnPath" value="{{request.get('ReturnPath')}}" />
-                                <button class="ec-blockBtn--action" type="submit" name="mode" value="confirm">{{ '同意する'|trans }}</button>
-                                <a class="ec-blockBtn--cancel" href="{{ url('breeder_top') }}">{{ '同意しない'|trans }}</a>
                             </div>
                         </div>
-                    </div>
-                </form>
+
+                        {# エンティティ拡張の自動出力 #}
+                        {% for f in form %}
+                            {% if attribute(f.vars, 'eccube_form_options') is defined and attribute(f.vars.eccube_form_options, 'auto_render') %}
+                                {% if f.vars.eccube_form_options.form_theme %}
+                                    {% form_theme f f.vars.eccube_form_options.form_theme %}
+                                    {{ form_row(f) }}
+                                {% else %}
+                                    <dl>
+                                        <dt>
+                                            {{ form_label(f) }}
+                                        </dt>
+                                        <dd>
+                                            <div class="{{ f.vars.eccube_form_options.style_class }}{{ has_errors(f) ? ' error' }}">
+                                                {{ form_widget(f) }}
+                                                {{ form_errors(f) }}
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+
+                        <div class="e-form__message">
+                            当サイトからのメールは「info@animalline.jp」で届きます。<br>
+                            本会員認証に必要な情報を送らせて頂きますので、
+                            「info@animalline.jp」からのメールを受信できる様、
+                            ドメイン設定を解除して頂くか、
+                            又はドメイン『animalline.jp』を
+                            受信リストに加えていただきますよう、お願い申し上げます。
+                        </div>
+
+                        <div class="e-form__actions flex vert vcenter">
+                            <div class="ec-checkbox{{ has_errors(form.user_policy_check) ? ' error' }}">
+                                <label>
+                                    {{ form_widget(form.user_policy_check) }}
+                                    {{ '<a class="ec-link" href="%url%" target="_blank">利用規約</a>に同意してお進みください'|trans({ '%url%': url('breeder_user_terms') })|raw }}
+
+                                </label>
+                                {{ form_errors(form.user_policy_check) }}
+                            </div>
+
+                            <input type="hidden" name="ReturnPath" value="{{app.request.get('ReturnPath')}}" />
+                            <button class="e-form__button e-form__button--primary mb-1" type="submit" name="mode" value="confirm" style="background-color: #de5d50;">
+                                {{ '同意して登録する'|trans }}
+                            </button>
+                                {% if contact_save is defined and contact_save %}
+
+                                {% else %}
+                                    <a class="e-form__button e-form__button--primary text-center" href="{{ url('homepage') }}">{{ '同意しない'|trans }}</a>
+                                {% endif %}
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
+
+    {% else %}
+
+        <div class="ec-registerRole">
+            <div class="ec-pageHeader">
+                {% if contact_save is defined and contact_save %}
+                    <div style="margin: 0 20%">
+                        <p style="color:#F00">すでに会員登録済みの方は「会員ログイン」からログインしてください。<br />
+                            ログインをした際にお問い合わせメッセージが送信されます。</p>
+                        <button class="ec-blockBtn--action" onclick="location.href='{{ url('breeder_login') }}'">会員ログイン</button>
+                    </div>
+                {% endif %}
+                {% if app.request.get('ReturnPath') =="adoption_mypage" %}
+                    <h1>{{ '新規保護団体代表者様登録'|trans }}</h1>
+                {% elseif app.request.get('ReturnPath') =="breeder_mypage" %}
+                    <h1>{{ '新規ブリーダー様登録'|trans }}</h1>
+                {% else %}
+                    {% if contact_save is defined and contact_save %}
+                        <h1>{{ 'お客様情報入力'|trans }}</h1>
+                    {% else %}
+                        <h1>{{ '新規会員登録'|trans }}</h1>
+                    {% endif %}
+                {% endif %}
+            </div>
+            {% if app.request.get('ReturnPath') =="adoption_mypage" %}
+                <div style="border: solid 1px; padding: 1rem;"><b>代表者様の情報をご記入ください。団体情報のご記入 は本会員登録後にございます。</b></div>
+            {% endif %}
+            {% if app.request.get('ReturnPath') =="breeder_mypage" %}
+                <div style="border: solid 1px; padding: 1rem;"><b>代表者様の情報をご記入ください。団体情報のご記入 は本会員登録後にございます。</b></div>
+            {% else %}
+
+            {% endif %}
+
+            <div class="ec-off1Grid">
+                <div class="ec-off1Grid__cell">
+                    <form method="post" action="{{ url('aniline_entry') }}" novalidate class="h-adr">
+                        <span class="p-country-name" style="display:none;">Japan</span>
+                        {{ form_widget(form._token) }}
+                        <div class="ec-borderedDefs">
+                            <dl>
+                                <dt>
+                                    {{ form_label(form.name, 'お名前', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                </dt>
+                                <dd>
+                                    <div class="ec-halfInput{{ has_errors(form.name.name01, form.name.name02) ? ' error'}}">
+                                        {{ form_widget(form.name.name01, { 'attr': { 'placeholder': '姓' }}) }}
+                                        {{ form_widget(form.name.name02, { 'attr': { 'placeholder': '名' }}) }}
+                                        {{ form_errors(form.name.name01) }}
+                                        {{ form_errors(form.name.name02) }}
+                                    </div>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>
+                                    {{ form_label(form.kana, 'お名前(カナ)', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                </dt>
+                                <dd>
+                                    <div class="ec-halfInput{{ has_errors(form.kana.kana01, form.kana.kana02) ? ' error'}}">
+                                        {{ form_widget(form.kana.kana01, { 'attr': { 'placeholder': 'セイ' }}) }}
+                                        {{ form_widget(form.kana.kana02, { 'attr': { 'placeholder': 'メイ' }}) }}
+                                        {{ form_errors(form.kana.kana01) }}
+                                        {{ form_errors(form.kana.kana02) }}
+                                    </div>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>
+                                    {{ form_label(form.address, '住所', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                    <p style="font-size:14px;color:#DE5D50;">〒は'-'を入れずに入力してくだい</p>
+                                </dt>
+                                <dd>
+                                    <div class="ec-zipInput{{ has_errors(form.postal_code) ? ' error' }}"><span>{{ '〒'|trans }}</span>
+                                        {{ form_widget(form.postal_code) }}
+                                        <div class="ec-zipInputHelp">
+                                            <div class="ec-zipInputHelp__icon">
+                                                <div class="ec-icon"><img
+                                                            src="{{ asset('assets/icon/question-white.svg') }}" alt="">
+                                                </div>
+                                            </div><a href="https://www.post.japanpost.jp/zipcode/" target="_blank"><span>{{ '郵便番号検索'|trans }}</span></a>
+                                        </div>
+                                        {{ form_errors(form.postal_code) }}
+                                    </div>
+
+                                    <div class="ec-select{{ has_errors(form.address.pref) ? ' error' }}">
+                                        {{ form_widget(form.address.pref) }}
+                                        {{ form_errors(form.address.pref) }}
+                                    </div>
+                                    <div class="ec-input{{ has_errors(form.address.addr01) ? ' error' }}">
+                                        {{ form_widget(form.address.addr01, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
+                                        {{ form_errors(form.address.addr01) }}
+                                    </div>
+                                    <div class="ec-input{{ has_errors(form.address.addr02) ? ' error' }}">
+                                        {{ form_widget(form.address.addr02,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
+                                        {{ form_errors(form.address.addr02) }}
+                                    </div>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>
+                                    {{ form_label(form.phone_number, '電話番号', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                    <p style="font-size:14px;color:#DE5D50;">'-'を入れずに入力してくだい</p>
+                                </dt>
+                                <dd>
+                                    <div class="ec-telInput{{ has_errors(form.phone_number) ? ' error' }}">
+                                        {{ form_widget(form.phone_number) }}
+                                        {{ form_errors(form.phone_number) }}
+                                    </div>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>
+                                    {{ form_label(form.email, 'メールアドレス', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                </dt>
+                                <dd>
+                                    <div class="ec-input{{ has_errors(form.email.first) ? ' error' }}">
+                                        {{ form_widget(form.email.first, { 'attr': { 'placeholder': '例：ec-cube@example.com' }}) }}
+                                        {{ form_errors(form.email.first) }}
+                                    </div>
+                                    <div class="ec-input{{ has_errors(form.email.second) ? ' error' }}">
+                                        {{ form_widget(form.email.second, { 'attr': { 'placeholder': '確認のためもう一度入力してください' }}) }}
+                                        {{ form_errors(form.email.second) }}
+                                    </div>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>
+                                    {{ form_label(form.plain_password, 'パスワード', { 'label_attr': {'class': 'ec-label' }}) }}
+                                </dt>
+                                <dd>
+                                    <div class="ec-input{{ has_errors(form.plain_password.first) ? ' error' }}">
+                                        {{ form_widget(form.plain_password.first, {
+                                            'attr': { 'placeholder': '半角英数記号%min%〜%max%文字'|trans({ '%min%': eccube_config.eccube_password_min_len, '%max%': eccube_config.eccube_password_max_len }) },
+                                            'type': 'password'
+                                        }) }}
+                                        {{ form_errors(form.plain_password.first) }}
+                                    </div>
+                                    <div class="ec-input{{ has_errors(form.plain_password.second) ? ' error' }}">
+                                        {{ form_widget(form.plain_password.second, {
+                                            'attr': { 'placeholder': '確認のためもう一度入力してください'|trans },
+                                            'type': 'password'
+                                        }) }}
+                                        {{ form_errors(form.plain_password.second) }}
+                                    </div>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>
+                                    {{ form_label(form.birth, '生年月日', { 'label_attr': {'class': 'ec-label' }}) }}
+                                </dt>
+                                <dd>
+                                    <div class="ec-birth{{ has_errors(form.birth) ? ' error' }}">
+                                        {{ form_widget(form.birth.year) }}<span>/</span>
+                                        {{ form_widget(form.birth.month) }}<span>/</span>
+                                        {{ form_widget(form.birth.day) }}
+                                        {{ form_errors(form.birth) }}
+                                    </div>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>
+                                    {{ form_label(form.sex, '性別', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                </dt>
+                                <dd>
+                                    <div class="ec-radio{{ has_errors(form.sex) ? ' error' }}">
+                                        {{ form_widget(form.sex) }}
+                                        {{ form_errors(form.sex) }}
+                                    </div>
+                                </dd>
+                            </dl>
+                            {# エンティティ拡張の自動出力 #}
+                            {% for f in form %}
+                                {% if attribute(f.vars, 'eccube_form_options') is defined and attribute(f.vars.eccube_form_options, 'auto_render') %}
+                                    {% if f.vars.eccube_form_options.form_theme %}
+                                        {% form_theme f f.vars.eccube_form_options.form_theme %}
+                                        {{ form_row(f) }}
+                                    {% else %}
+                                        <dl>
+                                            <dt>
+                                                {{ form_label(f) }}
+                                            </dt>
+                                            <dd>
+                                                <div class="{{ f.vars.eccube_form_options.style_class }}{{ has_errors(f) ? ' error' }}">
+                                                    {{ form_widget(f) }}
+                                                    {{ form_errors(f) }}
+                                                </div>
+                                            </dd>
+                                        </dl>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        {% if app.request.get('ReturnPath') =="adoption_mypage" %}
+                            <div style="border: solid 1px; padding: 1rem;"><b>
+                                    当サイトからのメールは「info@animalline.jp」で届きます。
+                                    保護団体登録に必要な情報を送らせて頂きますので、
+                                    「info@animalline.jp」からのメールを受信できる様、
+                                    ドメイン設定を解除して頂くか、
+                                    又はドメイン『animalline.jp』を
+                                    受信リストに加えていただきますよう、お願い申し上げます。
+                                </b></div>
+                        {% elseif app.request.get('ReturnPath') =="breeder_mypage" %}
+                            <div style="border: solid 1px; padding: 1rem;"><b>
+                                    当サイトからのメールは「info@animalline.jp」で届きます。
+                                    ブリーダー登録に必要な情報を送らせて頂きますので、
+                                    「info@animalline.jp」からのメールを受信できる様、
+                                    ドメイン設定を解除して頂くか、
+                                    又はドメイン『animalline.jp』を
+                                    受信リストに加えていただきますよう、お願い申し上げます。
+                                </b></div>
+                        {% elseif app.request.get('ReturnPath') =="adoption_top" %}
+                            <div style="border: solid 1px; padding: 1rem;"><b>
+                                    当サイトからのメールは「info@animalline.jp」で届きます。
+                                    本会員認証に必要な情報を送らせて頂きますので、
+                                    「info@animalline.jp」からのメールを受信できる様、
+                                    ドメイン設定を解除して頂くか、
+                                    又はドメイン『animalline.jp』を
+                                    受信リストに加えていただきますよう、お願い申し上げます。
+                                </b></div>
+                        {% else %}
+                            <div style="border: solid 1px; padding: 1rem;"><b>
+                                    当サイトからのメールは「info@animalline.jp」で届きます。
+                                    本会員認証に必要な情報を送らせて頂きますので、
+                                    「info@animalline.jp」からのメールを受信できる様、
+                                    ドメイン設定を解除して頂くか、
+                                    又はドメイン『animalline.jp』を
+                                    受信リストに加えていただきますよう、お願い申し上げます。
+                                </b></div>
+                        {% endif %}
+
+                        <div class="ec-checkbox{{ has_errors(form.user_policy_check) ? ' error' }}">
+                            <label>
+                                {{ form_widget(form.user_policy_check) }}
+                                {% if app.request.get('ReturnPath') =="adoption_mypage" %}
+                                    {{ '<a class="ec-link" href="%url%" target="_blank">利用規約</a>に同意してお進みください'|trans({ '%url%': url('adoption_terms') })|raw }}
+                                {% elseif app.request.get('ReturnPath') =="breeder_mypage" %}
+                                    {{ '<a class="ec-link" href="%url%" target="_blank">利用規約</a>に同意してお進みください'|trans({ '%url%': url('breeder_terms') })|raw }}
+                                {% elseif app.request.get('ReturnPath') =="adoption_top" %}
+                                    {{ '<a class="ec-link" href="%url%" target="_blank">利用規約</a>に同意してお進みください'|trans({ '%url%': url('adoption_user_terms') })|raw }}
+                                {% else %}
+                                    {{ '<a class="ec-link" href="%url%" target="_blank">利用規約</a>に同意してお進みください'|trans({ '%url%': url('breeder_user_terms') })|raw }}
+                                {% endif %}
+
+                            </label>
+                            {{ form_errors(form.user_policy_check) }}
+                        </div>
+
+                        <div class="ec-registerRole__actions">
+                            <div class="ec-off4Grid">
+                                <div class="ec-off4Grid__cell">
+
+                                    <input type="hidden" name="ReturnPath" value="{{app.request.get('ReturnPath')}}" />
+                                    <button class="ec-blockBtn--action" type="submit" name="mode" value="confirm">{{ '同意する'|trans }}</button>
+                                    <a class="ec-blockBtn--cancel" href="{{ url('breeder_top') }}">{{ '同意しない'|trans }}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    {% endif %}
+
 {% endblock %}

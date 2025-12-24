@@ -101,12 +101,12 @@ class ProductClassTypeExtension extends AbstractTypeExtension
                 ]
             ]);
     }
-
+    
     /**
      * {@inheritdoc}
      */
-    public function getExtendedType()
+    public static function getExtendedTypes(): iterable
     {
-        return ProductClassType::class;
+        return [ProductClassType::class];
     }
 }

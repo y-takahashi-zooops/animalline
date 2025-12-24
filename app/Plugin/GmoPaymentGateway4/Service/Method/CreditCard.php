@@ -12,7 +12,6 @@ use Eccube\Repository\Master\OrderStatusRepository;
 use Eccube\Service\Payment\PaymentResult;
 use Eccube\Service\PurchaseFlow\PurchaseFlow;
 use Plugin\GmoPaymentGateway4\Entity\GmoPaymentInput;
-use Plugin\GmoPaymentGateway4\Service\FraudDetector;
 use Plugin\GmoPaymentGateway4\Service\PaymentHelperCredit;
 use Plugin\GmoPaymentGateway4\Service\PaymentHelperMember;
 use Plugin\GmoPaymentGateway4\Util\PaymentUtil;
@@ -41,18 +40,13 @@ class CreditCard extends GmoMethod
         OrderStatusRepository $orderStatusRepository,
         PurchaseFlow $shoppingPurchaseFlow,
         PaymentHelperCredit $paymentHelperCredit,
-        PaymentHelperMember $paymentHelperMember,
-        FraudDetector $fraudDetector
+        PaymentHelperMember $paymentHelperMember
     ) {
         $this->entityManager = $entityManager;
         $this->orderStatusRepository = $orderStatusRepository;
         $this->purchaseFlow = $shoppingPurchaseFlow;
         $this->paymentHelper = $paymentHelperCredit;
         $this->paymentHelperMember = $paymentHelperMember;
-        $this->fraudDetector = $fraudDetector;
-
-        // 不正検知機能の初期化
-        $this->fraudDetector->initPaymentMethodClass(CreditCard::class);
     }
 
     /**
@@ -63,36 +57,10 @@ class CreditCard extends GmoMethod
     protected function getGmoPaymentInputFromForm()
     {
         $GmoPaymentInput = new GmoPaymentInput();
-        $GmoPaymentInput->setFormData($this->form, ['security_code']);
+        $GmoPaymentInput->setFormData($this->form);
         $GmoPaymentInput = $this->setRegisterCardInfo($GmoPaymentInput);
 
         return $GmoPaymentInput;
-    }
-
-    /**
-     * [オーバーライド] 注文確認画面遷移時に呼び出される.
-     *
-     * 有効性チェックを行う.
-     *
-     * @return PaymentResult
-     *
-     * @throws \Eccube\Service\PurchaseFlow\PurchaseException
-     */
-    public function verify()
-    {
-        // 不正が検出された場合はメッセージを表示
-        if ($this->fraudDetector->isLock()) {
-            $result = new PaymentResult();
-            $result->setSuccess(false);
-            $result->setErrors([trans(
-                'gmo_payment_gateway.shopping.credit.fraud.detect.lock',
-                ['%ip%' => $this->fraudDetector->getRemoteAddr()]
-            )]);
-
-            return $result;
-        }
-
-        return parent::verify();
     }
 
     /**
@@ -109,9 +77,6 @@ class CreditCard extends GmoMethod
         if ($this->paymentHelper->is3dSecureResponse()) {
             // リダイレクトレスポンスを返却
             return $this->paymentHelper->redirectTo3dSecurePage();
-        } else if ($this->paymentHelper->is3dSecure2Response()) {
-            // リダイレクトレスポンスを返却
-            return $this->paymentHelper->redirectTo3dSecure2Page();
         }
 
         // カード登録処理

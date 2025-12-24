@@ -36,8 +36,7 @@ class PaymentUtil
      * @param mixed $msg
      * @param array $masks 配列キーを指定してマスク
      */
-    public static function logError
-        ($msg, $masks = ["Pass", "Token", "Email", "AddrLine"])
+    public static function logError($msg, $masks = ["Pass", "Token"])
     {
         $text = $msg;
         if (is_array($msg)) {
@@ -54,8 +53,7 @@ class PaymentUtil
      * @param mixed $msg
      * @param array $masks 配列キーを指定してマスク
      */
-    public static function logInfo
-        ($msg, $masks = ["Pass", "Token", "Email", "AddrLine"])
+    public static function logInfo($msg, $masks = ["Pass", "Token"])
     {
         $text = $msg;
         if (is_array($msg)) {
@@ -72,8 +70,7 @@ class PaymentUtil
      * @param mixed $msg
      * @param array $masks 配列キーを指定してマスク
      */
-    public static function logDebug
-        ($msg, $masks = ["Pass", "Token", "Email", "AddrLine"])
+    public static function logDebug($msg, $masks = ["Pass", "Token"])
     {
         $text = $msg;
         if (is_array($msg)) {
@@ -366,12 +363,12 @@ class PaymentUtil
     {
         $ret = '';
 
-        $value = mb_convert_encoding($value, "SJIS-win", "UTF-8");
+        $value = mb_convert_encoding($value, "SJIS", "UTF-8");
 
         for ($i = 1; $i <= mb_strlen($value); $i++) {
             $tmp = mb_substr($value, 0, $i);
             if (strlen($tmp) <= $len) {
-                $ret = mb_convert_encoding($tmp, "UTF-8", "SJIS-win");
+                $ret = mb_convert_encoding($tmp, "UTF-8", "SJIS");
             } else {
                 break;
             }

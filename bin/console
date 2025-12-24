@@ -5,12 +5,14 @@ use Eccube\Kernel;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Debug\Debug;
+use Symfony\Component\ErrorHandler\Debug;
 
 umask(0000);
 set_time_limit(0);
 
 require __DIR__.'/../vendor/autoload.php';
+
+require __DIR__.'/../config/bootstrap.php';
 
 if (!class_exists(Application::class)) {
     throw new \RuntimeException('You need to add "symfony/framework-bundle" as a Composer dependency.');
@@ -18,9 +20,9 @@ if (!class_exists(Application::class)) {
 
 if (!isset($_SERVER['APP_ENV'])) {
     if (file_exists(__DIR__.'/../.env')) {
-        (new Dotenv())->load(__DIR__.'/../.env');
+        (Dotenv::createUnsafeMutable(__DIR__.'/../'))->load();
     } else {
-        (new Dotenv())->load(__DIR__.'/../.env.install');
+        (Dotenv::createUnsafeMutable(__DIR__.'/../', '.env.install'))->load();
     }
 }
 

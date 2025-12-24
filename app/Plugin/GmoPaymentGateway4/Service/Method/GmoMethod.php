@@ -56,12 +56,6 @@ abstract class GmoMethod implements PaymentMethodInterface
     protected $paymentHelper;
 
     /**
-     * 不正検知サービス
-     * @var Plugin\GmoPaymentGateway4\Service\FraudDetector
-     */
-    protected $fraudDetector;
-
-    /**
      * 決済画面の入力値をフォームから取得して返す
      *
      * @return GmoPaymentInput
@@ -259,9 +253,5 @@ abstract class GmoMethod implements PaymentMethodInterface
 
         // 失敗時はpurchaseFlow::rollbackを呼び出す.
         $this->purchaseFlow->rollback($this->Order, new PurchaseContext());
-
-        $this->entityManager->persist($this->Order);
-        $this->entityManager->flush();
-        $this->entityManager->getConnection()->commit();
     }
 }

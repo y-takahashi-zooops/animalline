@@ -26,6 +26,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Customize\Repository\DnaCheckStatusHeaderRepository;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class BreederDnaCheck extends AbstractController
 {
@@ -95,6 +97,16 @@ class BreederDnaCheck extends AbstractController
     protected $dnaCheckStatusHeaderRepository;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
+     * @var FormFactoryInterface
+     */
+    protected $formFactory;
+
+    /**
      * BreederController constructor.
      *
      * @param BreederContactsRepository $breederContactsRepository
@@ -111,6 +123,7 @@ class BreederDnaCheck extends AbstractController
      * @param DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
      */
     public function __construct(
+        EntityManagerInterface $entityManager,
         BreederContactsRepository        $breederContactsRepository,
         BreederQueryService              $breederQueryService,
         PetsFavoriteRepository           $petsFavoriteRepository,
@@ -123,7 +136,8 @@ class BreederDnaCheck extends AbstractController
         BreederEvaluationsRepository     $breederEvaluationsRepository,
         DnaQueryService                  $dnaQueryService,
         DnaCheckStatusRepository         $dnaCheckStatusRepository,
-        DnaCheckStatusHeaderRepository   $dnaCheckStatusHeaderRepository
+        DnaCheckStatusHeaderRepository   $dnaCheckStatusHeaderRepository,
+        FormFactoryInterface $formFactory
     ) {
         $this->breederContactsRepository = $breederContactsRepository;
         $this->breederQueryService = $breederQueryService;
@@ -138,6 +152,8 @@ class BreederDnaCheck extends AbstractController
         $this->dnaQueryService = $dnaQueryService;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
         $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
+        $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
     }
 
     /**
@@ -250,7 +266,7 @@ class BreederDnaCheck extends AbstractController
                 return $this->render('animalline/breeder/member/kit_full.twig');
             }
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $kitUnit = $InputHeaderData->getKitUnit();
 
             //明細登録用カウンタ

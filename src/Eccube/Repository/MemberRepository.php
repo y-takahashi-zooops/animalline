@@ -13,10 +13,10 @@
 
 namespace Eccube\Repository;
 
+use Doctrine\Persistence\ManagerRegistry as RegistryInterface;
 use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Eccube\Entity\Member;
-use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
  * MemberRepository
@@ -117,6 +117,12 @@ class MemberRepository extends AbstractRepository
             ->execute();
 
         $em = $this->getEntityManager();
+
+        // ログインしたメンバーの外部参照制約を解除する
+        // https://github.com/EC-CUBE/ec-cube/issues/5119
+        $Member->setCreator(null);
+        $em->flush();
+
         $em->remove($Member);
         $em->flush($Member);
     }

@@ -8,97 +8,100 @@ http://www.ec-cube.co.jp/
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 #}
-{% extends 'normal_frame.twig' %}
+{% extends 'normal_type2_frame.twig' %}
 
-{% set body_class = 'mypage' %}
-
-{% block stylesheet %}
-    <link rel="stylesheet" href="{{ asset('assets/css/index.css?ver=211102_2') }}">
-{% endblock %}
+{% block stylesheet %}{% endblock %}
 
 {% block main %}
-    <main role="main" id="container">
-        <div id="contents">
-            <div class="edit-area keyvisual">
-                <div class="inner w1190">
-                    <div class="photo-box"><img src="{{ asset('assets/img/ec/top.png') }}" alt="アニマルライン"></div>
+<div class="page-wrap">
+    <div class="wrap sp-wrap w1200">
+
+        <div class="ec-layoutRole__main">
+
+            <main role="main" id="container">
+                <div id="contents">
+                    <div class="edit-area keyvisual">
+                        <div class="inner w1190">
+                            <div class="photo-box"><img src="{{ asset('assets/img/ec/top.png') }}" alt="アニマルライン"></div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <div class="ec-role">
+                <div class="ec-pageHeader">
+                    <h1>{{ 'ログイン'|trans }}</h1>
+                </div>
+                <div class="ec-off2Grid">
+                    <div class="ec-off2Grid__cell">
+                        <form name="login_mypage" id="login_mypage" method="post" action="{{ url('mypage_login') }}">
+                            {% if app.session.flashBag.has('eccube.login.target.path') %}
+                                {% for targetPath in app.session.flashBag.peek('eccube.login.target.path') %}
+                                    <input type="hidden" name="_target_path" value="{{ targetPath }}" />
+                                {% endfor %}
+                            {% endif %}
+                            <div class="ec-login">
+                                <div class="ec-login__icon">
+                                    <div class="ec-icon"><img src="{{ asset('assets/icon/user.svg') }}" alt=""></div>
+                                </div>
+                                <div class="ec-login__input">
+                                    <div class="ec-input">
+                                        {{ form_widget(form.login_email, {'attr': {'style' : 'ime-mode: disabled;', 'placeholder' : 'メールアドレス', 'autofocus': true}}) }}
+                                        {{ form_widget(form.login_pass,  {'attr': {'placeholder' : 'パスワード' }}) }}
+                                    </div>
+                                    {% if BaseInfo.option_remember_me %}
+                                        <div class="ec-checkbox">
+                                            <label>
+                                                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                                                    <input type="hidden" name="login_memory" value="1">
+                                                {% else %}
+                                                    {{ form_widget(form.login_memory, { 'label': '次回から自動的にログインする'|trans }) }}
+                                                {% endif %}
+                                            </label>
+                                        </div>
+                                    {% endif %}
+                                    {% for reset_complete in app.session.flashbag.get('password_reset_complete') %}
+                                        <p>{{ reset_complete|trans }}</p>
+                                    {% endfor %}
+                                    {% if error %}
+                                        <p class="ec-errorMessage">{{ error.messageKey|trans(error.messageData, 'validators')|nl2br }}</p>
+                                    {% endif %}
+                                </div>
+                                <div class="ec-grid2">
+                                    <div class="ec-grid2__cell">
+                                        <div class="ec-login__actions">
+                                            <button type="submit"
+                                                    class="ec-blockBtn--action">{{ 'ログイン'|trans }}</button>
+                                        </div>
+                                    </div>
+                                    <div class="ec-grid2__cell">
+                                        <div class="ec-login__link"><a class="ec-link"
+                                                                       href="{{ url('forgot') }}">{{ 'ログイン情報をお忘れですか？'|trans }}</a>
+                                        </div>
+                                        <div class="ec-login__link"><a class="ec-link"
+                                                                       href="{{ url('aniline_entry') }}">{{ '新規会員登録'|trans }}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="text-align: center; margin: 2rem auto 0 auto; padding:0.5rem 1rem 0.5rem 1rem; border: 1px solid; background: #008080; color: #FFFFFF">
+                                    会員登録のご案内
+                                </div>
+                                <div style="text-align: left; margin: 0.5rem auto 0.5rem auto; padding:0.5rem 1rem 0.5rem 1rem;">
+                                    Animallineの会員にご登録頂くことで、お得な会員様限定商品などの情報をご覧頂けます。<br />
+                                    ぜひ事前に会員登録の上、ログイン状態でお買い物をお楽しみください。<br />
+                                    <div style="text-align: center;margin 0 auto 0 auto">
+                                        <a href="{{ url('aniline_entry') }}" class="btn btn-danger btn-lg">新規会員登録</button></a>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </main>
-    <div class="ec-role">
-        <div class="ec-pageHeader">
-            <h1>{{ 'ログイン'|trans }}</h1>
-        </div>
-        <div class="ec-off2Grid">
-            <div class="ec-off2Grid__cell">
-                <form name="login_mypage" id="login_mypage" method="post" action="{{ url('mypage_login') }}">
-                    {% if app.session.flashBag.has('eccube.login.target.path') %}
-                        {% for targetPath in app.session.flashBag.peek('eccube.login.target.path') %}
-                            <input type="hidden" name="_target_path" value="{{ targetPath }}" />
-                        {% endfor %}
-                    {% endif %}
-                    <div class="ec-login">
-                        <div class="ec-login__icon">
-                            <div class="ec-icon"><img src="{{ asset('assets/icon/user.svg') }}" alt=""></div>
-                        </div>
-                        <div class="ec-login__input">
-                            <div class="ec-input">
-                                {{ form_widget(form.login_email, {'attr': {'style' : 'ime-mode: disabled;', 'placeholder' : 'メールアドレス', 'autofocus': true}}) }}
-                                {{ form_widget(form.login_pass,  {'attr': {'placeholder' : 'パスワード' }}) }}
-                            </div>
-                            {% if BaseInfo.option_remember_me %}
-                            <div class="ec-checkbox">
-                                <label>
-                                    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-                                        <input type="hidden" name="login_memory" value="1">
-                                    {% else %}
-                                        {{ form_widget(form.login_memory, { 'label': '次回から自動的にログインする'|trans }) }}
-                                    {% endif %}
-                                </label>
-                            </div>
-                            {% endif %}
-                            {% for reset_complete in app.session.flashbag.get('password_reset_complete') %}
-                                <p>{{ reset_complete|trans }}</p>
-                            {% endfor %}
-                            {% if error %}
-                                <p class="ec-errorMessage">{{ error.messageKey|trans(error.messageData, 'validators')|nl2br }}</p>
-                            {% endif %}
-                        </div>
-                        <div class="ec-grid2">
-                            <div class="ec-grid2__cell">
-                                <div class="ec-login__actions">
-                                    <button type="submit"
-                                            class="ec-blockBtn--action">{{ 'ログイン'|trans }}</button>
-                                </div>
-                            </div>
-                            <div class="ec-grid2__cell">
-                                <div class="ec-login__link"><a class="ec-link"
-                                                               href="{{ url('forgot') }}">{{ 'ログイン情報をお忘れですか？'|trans }}</a>
-                                </div>
-                                <div class="ec-login__link"><a class="ec-link"
-                                                               href="{{ url('entry') }}">{{ '新規会員登録'|trans }}</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div style="text-align: center; margin: 2rem auto 0 auto; padding:0.5rem 1rem 0.5rem 1rem; border: 1px solid; background: #008080; color: #FFFFFF">
-                            会員登録のご案内
-                        </div>
-                        <div style="text-align: left; margin: 0.5rem auto 0.5rem auto; padding:0.5rem 1rem 0.5rem 1rem;">
-                            Animallineの会員にご登録頂くことで、お得な会員様限定商品などの情報をご覧頂けます。<br />
-                            ぜひ事前に会員登録の上、ログイン状態でお買い物をお楽しみください。<br />
-                            <div style="text-align: center;margin 0 auto 0 auto">
-                                <a href="{{ url('entry') }}" class="btn btn-danger btn-lg">新規会員登録</button></a>
-                            </div>
-                        </div>
-                        
-                    </div>
-                    
-                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-                </form>
-
-                
-            </div>
-        </div>
     </div>
+</div>
 {% endblock %}

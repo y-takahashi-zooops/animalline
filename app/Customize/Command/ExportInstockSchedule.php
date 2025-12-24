@@ -15,6 +15,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Customize\Service\ProductStockService;
+use Psr\Log\LoggerInterface;
 
 class ExportInstockSchedule extends Command
 {
@@ -51,6 +52,11 @@ class ExportInstockSchedule extends Command
     protected $productStockService;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * ExportRelease constructor.
      *
      * @param EntityManagerInterface $entityManager
@@ -58,13 +64,15 @@ class ExportInstockSchedule extends Command
      * @param InstockScheduleHeaderRepository $instockScheduleHeaderRepository
      * @param InstockScheduleRepository $instockScheduleRepository
      * @param ProductStockService $productStockService
+     * @param LoggerInterface $logger
      */
     public function __construct(
         EntityManagerInterface          $entityManager,
         WmsSyncInfoRepository           $wmsSyncInfoRepository,
         InstockScheduleHeaderRepository $instockScheduleHeaderRepository,
         InstockScheduleRepository       $instockScheduleRepository,
-        ProductStockService       $productStockService
+        ProductStockService       $productStockService,
+        LoggerInterface $logger
     ) {
         parent::__construct();
         $this->entityManager = $entityManager;
@@ -72,6 +80,7 @@ class ExportInstockSchedule extends Command
         $this->instockScheduleHeaderRepository = $instockScheduleHeaderRepository;
         $this->instockScheduleRepository = $instockScheduleRepository;
         $this->productStockService = $productStockService;
+        $this->logger = $logger;
     }
 
     protected function configure()
@@ -131,7 +140,7 @@ class ExportInstockSchedule extends Command
         echo $qb->getQuery()->getSQL();
 
         if (!$records) {
-            log_info("No record instock export csv.\n");
+            $this->logger->info("No record instock export csv.\n");
             return;
         }
         $result = [];
@@ -182,7 +191,7 @@ class ExportInstockSchedule extends Command
         $em->persist($wms);
         $em->flush();
 
-        log_info("Export succeeded.\n");
+        $this->logger->info("Export succeeded.\n");
 
     }
 }

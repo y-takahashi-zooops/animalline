@@ -27,14 +27,14 @@ class CartController extends AbstractController
     protected $cartService;
 
     public function __construct(
-        CartService $cartService
+        CartService $cartService,
     ) {
         $this->cartService = $cartService;
     }
 
     /**
-     * @Route("/block/cart", name="block_cart")
-     * @Route("/block/cart_sp", name="block_cart_sp")
+     * @Route("/block/cart", name="block_cart", methods={"GET"})
+     * @Route("/block/cart_sp", name="block_cart_sp", methods={"GET"})
      */
     public function index(Request $request)
     {

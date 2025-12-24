@@ -13,12 +13,18 @@ use Plugin\GmoPaymentGateway4\Service\Method\Cvs;
 use Plugin\GmoPaymentGateway4\Util\PaymentUtil;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Eccube\Common\EccubeConfig;
 
 /**
  * コンビニ決済処理を行うクラス
  */
 class PaymentHelperCvs extends PaymentHelper
 {
+    public function __construct(
+        EccubeConfig $eccubeConfig
+    ) {
+        $this->eccubeConfig = $eccubeConfig;
+    }
     /**
      * GMO-PG 支払方法別のクラス名称を取得する
      *
@@ -243,7 +249,7 @@ class PaymentHelperCvs extends PaymentHelper
 
         if (isset($results['ConfNo']) && !is_null($results['ConfNo'])) {
             if ($cvscode == $const[$dprefix . 'familymart']) {
-                // ファミリーマート（第１番号(5桁)）
+                // ファミリーマート（企業コード）
                 $data['ConfNo']['name'] = trans($rprefix . 'confno2');
             } else if ($cvscode == $const[$dprefix . 'seicomart']) {
                 // セイコーマート（申込番号）
@@ -256,7 +262,7 @@ class PaymentHelperCvs extends PaymentHelper
         }
 
         if ($cvscode == $const[$dprefix . 'familymart']) {
-            // ファミリーマート（第２番号(12桁)）
+            // ファミリーマート（注文番号）
             if (isset($results['ReceiptNo']) &&
                 !is_null($results['ReceiptNo'])) {
                 $data['ReceiptNo']['name'] = trans($rprefix . 'receiptno3');

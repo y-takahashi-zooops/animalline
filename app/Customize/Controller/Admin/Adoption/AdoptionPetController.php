@@ -30,6 +30,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Doctrine\ORM\EntityManagerInterface;
 
 class AdoptionPetController extends AbstractController
 {
@@ -128,7 +129,7 @@ class AdoptionPetController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $conservationPet->setBreedsType($this->breedsRepository->find($request->get('breeds_type')));
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($conservationPet);
             $entityManager->flush();
 

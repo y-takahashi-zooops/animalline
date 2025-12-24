@@ -19,21 +19,40 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-if (!class_exists('\Eccube\Entity\ProductClass')) {
+if (!class_exists(ProductClass::class)) {
     /**
      * ProductClass
      *
      * @ORM\Table(name="dtb_product_class", indexes={@ORM\Index(name="dtb_product_class_price02_idx", columns={"price02"}), @ORM\Index(name="dtb_product_class_stock_stock_unlimited_idx", columns={"stock", "stock_unlimited"})})
+     * 
      * @ORM\InheritanceType("SINGLE_TABLE")
+     * 
      * @ORM\DiscriminatorColumn(name="discriminator_type", type="string", length=255)
+     * 
      * @ORM\HasLifecycleCallbacks()
+     * 
      * @ORM\Entity(repositoryClass="Eccube\Repository\ProductClassRepository")
      */
-    class ProductClass extends \Eccube\Entity\AbstractEntity
+    class ProductClass extends AbstractEntity
     {
-        private $price01_inc_tax = null;
-        private $price02_inc_tax = null;
+        private $price01_inc_tax;
+        private $price02_inc_tax;
         private $tax_rate = false;
+
+        /**
+         * @ORM\Column(name="jan_code", type="string", length=13, nullable=true)
+         */
+        private $jan_code;
+
+        /**
+         * @ORM\Column(name="stock_code", type="string", length=5, nullable=true)
+         */
+        private $stock_code;
+
+        /**
+         * @ORM\Column(name="incentive_ratio", type="decimal", precision=5, scale=2, nullable=true)
+         */
+        private $incentive_ratio;
 
         /**
          * 商品規格名を含めた商品名を返す.
@@ -143,7 +162,7 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         /**
          * Get tax_rate
          *
-         * @return boolean
+         * @return bool
          */
         public function getTaxRate()
         {
@@ -153,7 +172,7 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         /**
          * Has ClassCategory1
          *
-         * @return boolean
+         * @return bool
          */
         public function hasClassCategory1()
         {
@@ -163,7 +182,7 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         /**
          * Has ClassCategory1
          *
-         * @return boolean
+         * @return bool
          */
         public function hasClassCategory2()
         {
@@ -174,7 +193,9 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
          * @var int
          *
          * @ORM\Column(name="id", type="integer", options={"unsigned":true})
+         * 
          * @ORM\Id
+         * 
          * @ORM\GeneratedValue(strategy="IDENTITY")
          */
         private $id;
@@ -194,7 +215,7 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         private $stock;
 
         /**
-         * @var boolean
+         * @var bool
          *
          * @ORM\Column(name="stock_unlimited", type="boolean", options={"default":false})
          */
@@ -229,7 +250,7 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         private $delivery_fee;
 
         /**
-         * @var boolean
+         * @var bool
          *
          * @ORM\Column(name="visible", type="boolean", options={"default":true})
          */
@@ -264,74 +285,86 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         private $point_rate;
 
         /**
-         * @var \Eccube\Entity\ProductStock
+         * @var ProductStock
          *
          * @ORM\OneToOne(targetEntity="Eccube\Entity\ProductStock", mappedBy="ProductClass", cascade={"persist","remove"})
          */
         private $ProductStock;
 
         /**
-         * @var \Eccube\Entity\TaxRule
+         * @var TaxRule
          *
          * @ORM\OneToOne(targetEntity="Eccube\Entity\TaxRule", mappedBy="ProductClass", cascade={"persist","remove"})
          */
         private $TaxRule;
 
         /**
-         * @var \Eccube\Entity\Product
+         * @var Product
          *
          * @ORM\ManyToOne(targetEntity="Eccube\Entity\Product", inversedBy="ProductClasses")
+         * 
          * @ORM\JoinColumns({
-         *   @ORM\JoinColumn(name="product_id", referencedColumnName="id")
+         * 
+         * @ORM\JoinColumn(name="product_id", referencedColumnName="id")
          * })
          */
         private $Product;
 
         /**
-         * @var \Eccube\Entity\Master\SaleType
+         * @var Master\SaleType
          *
          * @ORM\ManyToOne(targetEntity="Eccube\Entity\Master\SaleType")
+         * 
          * @ORM\JoinColumns({
+         * 
          *   @ORM\JoinColumn(name="sale_type_id", referencedColumnName="id")
          * })
          */
         private $SaleType;
 
         /**
-         * @var \Eccube\Entity\ClassCategory
+         * @var ClassCategory
          *
          * @ORM\ManyToOne(targetEntity="Eccube\Entity\ClassCategory")
+         * 
          * @ORM\JoinColumns({
+         * 
          *   @ORM\JoinColumn(name="class_category_id1", referencedColumnName="id", nullable=true)
          * })
          */
         private $ClassCategory1;
 
         /**
-         * @var \Eccube\Entity\ClassCategory
+         * @var ClassCategory
          *
          * @ORM\ManyToOne(targetEntity="Eccube\Entity\ClassCategory")
+         * 
          * @ORM\JoinColumns({
+         * 
          *   @ORM\JoinColumn(name="class_category_id2", referencedColumnName="id", nullable=true)
          * })
          */
         private $ClassCategory2;
 
         /**
-         * @var \Eccube\Entity\DeliveryDuration
+         * @var DeliveryDuration
          *
          * @ORM\ManyToOne(targetEntity="Eccube\Entity\DeliveryDuration")
+         * 
          * @ORM\JoinColumns({
+         * 
          *   @ORM\JoinColumn(name="delivery_duration_id", referencedColumnName="id")
          * })
          */
         private $DeliveryDuration;
 
         /**
-         * @var \Eccube\Entity\Member
+         * @var Member
          *
          * @ORM\ManyToOne(targetEntity="Eccube\Entity\Member")
+         * 
          * @ORM\JoinColumns({
+         * 
          *   @ORM\JoinColumn(name="creator_id", referencedColumnName="id")
          * })
          */
@@ -346,6 +379,16 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
          * @ORM\OneToMany(targetEntity=ReturnSchedule::class, mappedBy="ProductClass")
          */
         private $ReturnSchedule;
+
+        /**
+         * @ORM\Column(name="supplier_code", type="string", nullable=true)
+         */
+        private $supplier_code;
+
+        /**
+         * @ORM\Column(name="item_cost", type="decimal", precision=12, scale=2, nullable=true)
+         */
+        private $item_cost;
 
         /**
          * Constructor
@@ -422,7 +465,7 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         /**
          * Set stockUnlimited.
          *
-         * @param boolean $stockUnlimited
+         * @param bool $stockUnlimited
          *
          * @return ProductClass
          */
@@ -436,7 +479,7 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         /**
          * Get stockUnlimited.
          *
-         * @return boolean
+         * @return bool
          */
         public function isStockUnlimited()
         {
@@ -540,7 +583,7 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         }
 
         /**
-         * @return boolean
+         * @return bool
          */
         public function isVisible()
         {
@@ -548,7 +591,7 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         }
 
         /**
-         * @param boolean $visible
+         * @param bool $visible
          *
          * @return ProductClass
          */
@@ -634,11 +677,11 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         /**
          * Set productStock.
          *
-         * @param \Eccube\Entity\ProductStock|null $productStock
+         * @param ProductStock|null $productStock
          *
          * @return ProductClass
          */
-        public function setProductStock(\Eccube\Entity\ProductStock $productStock = null)
+        public function setProductStock(?ProductStock $productStock = null)
         {
             $this->ProductStock = $productStock;
 
@@ -648,7 +691,7 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         /**
          * Get productStock.
          *
-         * @return \Eccube\Entity\ProductStock|null
+         * @return ProductStock|null
          */
         public function getProductStock()
         {
@@ -658,11 +701,11 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         /**
          * Set taxRule.
          *
-         * @param \Eccube\Entity\TaxRule|null $taxRule
+         * @param TaxRule|null $taxRule
          *
          * @return ProductClass
          */
-        public function setTaxRule(\Eccube\Entity\TaxRule $taxRule = null)
+        public function setTaxRule(?TaxRule $taxRule = null)
         {
             $this->TaxRule = $taxRule;
 
@@ -672,7 +715,7 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         /**
          * Get taxRule.
          *
-         * @return \Eccube\Entity\TaxRule|null
+         * @return TaxRule|null
          */
         public function getTaxRule()
         {
@@ -682,23 +725,22 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         /**
          * Set product.
          *
-         * @param \Eccube\Entity\Product|null $product
+         * @param Product|null $product
          *
          * @return ProductClass
          */
-        public function setProduct(\Eccube\Entity\Product $product = null)
+        public function setProduct(?Product $Product): self
         {
-            $this->Product = $product;
-
+            $this->Product = $Product;
             return $this;
         }
 
         /**
          * Get product.
          *
-         * @return \Eccube\Entity\Product|null
+         * @return Product|null
          */
-        public function getProduct()
+        public function getProduct(): ?Product
         {
             return $this->Product;
         }
@@ -706,11 +748,11 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         /**
          * Set saleType.
          *
-         * @param \Eccube\Entity\Master\SaleType|null $saleType
+         * @param Master\SaleType|null $saleType
          *
          * @return ProductClass
          */
-        public function setSaleType(\Eccube\Entity\Master\SaleType $saleType = null)
+        public function setSaleType(?Master\SaleType $saleType = null)
         {
             $this->SaleType = $saleType;
 
@@ -720,7 +762,7 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         /**
          * Get saleType.
          *
-         * @return \Eccube\Entity\Master\SaleType|null
+         * @return Master\SaleType|null
          */
         public function getSaleType()
         {
@@ -730,11 +772,11 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         /**
          * Set classCategory1.
          *
-         * @param \Eccube\Entity\ClassCategory|null $classCategory1
+         * @param ClassCategory|null $classCategory1
          *
          * @return ProductClass
          */
-        public function setClassCategory1(\Eccube\Entity\ClassCategory $classCategory1 = null)
+        public function setClassCategory1(?ClassCategory $classCategory1 = null)
         {
             $this->ClassCategory1 = $classCategory1;
 
@@ -744,7 +786,7 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         /**
          * Get classCategory1.
          *
-         * @return \Eccube\Entity\ClassCategory|null
+         * @return ClassCategory|null
          */
         public function getClassCategory1()
         {
@@ -754,11 +796,11 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         /**
          * Set classCategory2.
          *
-         * @param \Eccube\Entity\ClassCategory|null $classCategory2
+         * @param ClassCategory|null $classCategory2
          *
          * @return ProductClass
          */
-        public function setClassCategory2(\Eccube\Entity\ClassCategory $classCategory2 = null)
+        public function setClassCategory2(?ClassCategory $classCategory2 = null)
         {
             $this->ClassCategory2 = $classCategory2;
 
@@ -768,7 +810,7 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         /**
          * Get classCategory2.
          *
-         * @return \Eccube\Entity\ClassCategory|null
+         * @return ClassCategory|null
          */
         public function getClassCategory2()
         {
@@ -778,11 +820,11 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         /**
          * Set deliveryDuration.
          *
-         * @param \Eccube\Entity\DeliveryDuration|null $deliveryDuration
+         * @param DeliveryDuration|null $deliveryDuration
          *
          * @return ProductClass
          */
-        public function setDeliveryDuration(\Eccube\Entity\DeliveryDuration $deliveryDuration = null)
+        public function setDeliveryDuration(?DeliveryDuration $deliveryDuration = null)
         {
             $this->DeliveryDuration = $deliveryDuration;
 
@@ -792,7 +834,7 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         /**
          * Get deliveryDuration.
          *
-         * @return \Eccube\Entity\DeliveryDuration|null
+         * @return DeliveryDuration|null
          */
         public function getDeliveryDuration()
         {
@@ -802,11 +844,11 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         /**
          * Set creator.
          *
-         * @param \Eccube\Entity\Member|null $creator
+         * @param Member|null $creator
          *
          * @return ProductClass
          */
-        public function setCreator(\Eccube\Entity\Member $creator = null)
+        public function setCreator(?Member $creator = null)
         {
             $this->Creator = $creator;
 
@@ -816,7 +858,7 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         /**
          * Get creator.
          *
-         * @return \Eccube\Entity\Member|null
+         * @return Member|null
          */
         public function getCreator()
         {
@@ -855,34 +897,68 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
             return $this->ProductSet;
         }
 
-        public function addProductSet(ProductSet $productSet): self
-        {
-            if (!$this->ProductSet->contains($productSet)) {
-                $this->productSet[] = $productSet;
-                $productSet->setProduct($this);
-            }
-
-            return $this;
-        }
-
-        public function removeProductSet(ProductSet $productSet): self
-        {
-            if ($this->ProductSet->removeElement($productSet)) {
-                // set the owning side to null (unless already changed)
-                if ($productSet->getProduct() === $this) {
-                    $productSet->setProduct(null);
-                }
-            }
-
-            return $this;
-        }
-
         /**
          * @return Collection|ReturnSchedule[]
          */
         public function getReturnSchedule(): Collection
         {
             return $this->ReturnSchedule;
+        }
+
+        public function getSupplierCode(): ?string
+        {
+            return $this->supplier_code;
+        }
+
+        public function setSupplierCode(?string $supplier_code): self
+        {
+            $this->supplier_code = $supplier_code;
+            return $this;
+        }
+
+        public function getItemCost(): ?float
+        {
+            return $this->item_cost;
+        }
+
+        public function setItemCost(?int $itemCost): self
+        {
+            $this->item_cost = $itemCost;
+            return $this;
+        }
+
+
+        public function getJanCode(): ?string
+        {
+            return $this->jan_code;
+        }
+
+        public function setJanCode(?string $jan_code): self
+        {
+            $this->jan_code = $jan_code;
+            return $this;
+        }
+
+        public function getStockCode(): ?string
+        {
+            return $this->stock_code;
+        }
+
+        public function setStockCode(?string $stock_code): self
+        {
+            $this->stock_code = $stock_code;
+            return $this;
+        }
+
+        public function getIncentiveRatio(): ?float
+        {
+            return $this->incentive_ratio;
+        }
+
+        public function setIncentiveRatio(?float $incentive_ratio): self
+        {
+            $this->incentive_ratio = $incentive_ratio;
+            return $this;
         }
     }
 }

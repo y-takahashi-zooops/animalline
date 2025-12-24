@@ -200,7 +200,7 @@ file that was distributed with this source code.
                             {{ form_widget(searchForm.id) }}
                             {{ form_errors(searchForm.id) }}
                         </div>
-                        <div class="d-inline-block mb-3" data-toggle="collapse" href="#searchDetail"
+                        <div class="d-inline-block mb-3" data-bs-toggle="collapse" href="#searchDetail"
                              aria-expanded="false" aria-controls="searchDetail"><a><i
                                         class="fa fa-plus-square-o font-weight-bold mr-1"></i><span
                                         class="font-weight-bold">{{ 'admin.common.search_detail'|trans }}</span></a>
@@ -270,22 +270,24 @@ file that was distributed with this source code.
                     </div>
                 </div>
                 {# エンティティ拡張の自動出力 #}
-                {% for f in searchForm if f.vars.eccube_form_options.auto_render %}
-                    {# TODO 1項目1行になるのを改善 #}
-                    <div class="row mb-2">
-                        {% if f.vars.eccube_form_options.form_theme %}
-                            {% form_theme f f.vars.eccube_form_options.form_theme %}
-                            {{ form_row(f) }}
-                        {% else %}
-                            <div class="col">
-                                <div class="mb-3">
-                                    <label>{{ f.vars.label|trans }}</label>
-                                    {{ form_widget(f) }}
-                                    {{ form_errors(f) }}
+                {% for f in searchForm %}
+                    {% if f.vars.eccube_form_options is defined and f.vars.eccube_form_options.auto_render %}
+                        {# TODO 1項目1行になるのを改善 #}
+                        <div class="row mb-2">
+                            {% if f.vars.eccube_form_options.form_theme %}
+                                {% form_theme f f.vars.eccube_form_options.form_theme %}
+                                {{ form_row(f) }}
+                            {% else %}
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <label>{{ f.vars.label|trans }}</label>
+                                        {{ form_widget(f) }}
+                                        {{ form_errors(f) }}
+                                    </div>
                                 </div>
-                            </div>
-                        {% endif %}
-                    </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
                 {% endfor %}
             </div>
             <div class="c-outsideBlock__contents mb-5">
@@ -319,7 +321,7 @@ file that was distributed with this source code.
                                     <button {{ csrf_token_for_anchor() }} data-action="{{ url('admin_product_bulk_product_status', {id: constant('Eccube\\Entity\\Master\\ProductStatus::DISPLAY_ABOLISHED')}) }}" class="btn btn-ec-regular mr-2 action-submit">
                                         {{ 'admin.product.display_status__abolished'|trans }}
                                     </button>
-                                    <button type="button" data-toggle="modal" data-target="#bulkDeleteModal" class="btn btn-ec-delete">{{ 'admin.product.permanently_delete'|trans }}</button>
+                                    <button type="button" data-bs-toggle="modal" data-bs-target="#bulkDeleteModal" class="btn btn-ec-delete">{{ 'admin.product.permanently_delete'|trans }}</button>
                                 </div>
                             </div>
                             <div class="col-5 text-right">
@@ -413,10 +415,10 @@ file that was distributed with this source code.
                                                 {{ Product.status.name }}
                                             </td>
                                             <td class="align-middle">
-                                                {{ Product.create_date|date_min }}
+                                                {{ Product.create_date|date('Y-m-d H:i:s') }}
                                             </td>
                                             <td class="align-middle">
-                                                {{ Product.update_date|date_min }}
+                                                {{ Product.update_date|date('Y-m-d H:i:s') }}
                                             </td>
                                             <td class="align-middle pr-3" colspan="3">
                                                 <div class="text-right">
@@ -440,8 +442,8 @@ file that was distributed with this source code.
                                                          data-placement="top"
                                                          title="{{ 'admin.common.copy'|trans }}">
                                                         <a href="#" class="btn btn-ec-actionIcon"
-                                                           data-toggle="modal"
-                                                           data-target="#confirmModal-{{ Product.id }}">
+                                                           data-bs-toggle="modal"
+                                                           data-bs-target="#confirmModal-{{ Product.id }}">
                                                             <i class="fa fa-files-o fa-lg text-secondary"
                                                                aria-hidden="true"></i></a>
                                                         <div class="modal fade" id="confirmModal-{{ Product.id }}" tabindex="-1"
@@ -453,7 +455,7 @@ file that was distributed with this source code.
                                                                         <h5 class="modal-title font-weight-bold">
                                                                             {{ 'admin.product.copy__confirm_title'|trans }}</h5>
                                                                         <button class="close" type="button"
-                                                                                data-dismiss="modal"
+                                                                                data-bs-dismiss="modal"
                                                                                 aria-label="Close"><span
                                                                                     aria-hidden="true">×</span>
                                                                         </button>
@@ -464,7 +466,7 @@ file that was distributed with this source code.
                                                                     </div>
                                                                     <div class="modal-footer">
                                                                         <button class="btn btn-ec-sub" type="button"
-                                                                                data-dismiss="modal">{{ 'admin.common.cancel'|trans }}
+                                                                                data-bs-dismiss="modal">{{ 'admin.common.cancel'|trans }}
                                                                         </button>
                                                                         <a
                                                                                 href="{{ url('admin_product_product_copy', {'id' : Product.id}) }}"
@@ -518,7 +520,7 @@ file that was distributed with this source code.
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title font-weight-bold">{{ 'admin.product.permanently_delete__confirm_title'|trans }}</h5>
-                            <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                         </div>
                         <div class="modal-body text-left">
                             <p class="text-left">{{ 'admin.product.permanently_delete__confirm_message'|trans }}</p>
@@ -528,9 +530,9 @@ file that was distributed with this source code.
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-ec-sub" type="button" data-dismiss="modal">{{ 'admin.common.cancel'|trans }}</button>
+                            <button class="btn btn-ec-sub" type="button" data-bs-dismiss="modal">{{ 'admin.common.cancel'|trans }}</button>
                             <button class="btn btn-ec-delete" type="button" id="bulkDelete">{{ 'admin.product.permanently_delete' | trans }}</button>
-                            <button class="btn btn-ec-regular" id="bulkDeleteDone" style="display: none" type="button" data-dismiss="modal">{{ 'admin.product.permanently_delete__complete'|trans }}</button>
+                            <button class="btn btn-ec-regular" id="bulkDeleteDone" style="display: none" type="button" data-bs-dismiss="modal">{{ 'admin.product.permanently_delete__complete'|trans }}</button>
                         </div>
                     </div>
                 </div>
@@ -544,14 +546,14 @@ file that was distributed with this source code.
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title font-weight-bold">{# Title #}</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     {# Append data list #}
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-v-sub" type="button" data-dismiss="modal">
+                    <button class="btn btn-v-sub" type="button" data-bs-dismiss="modal">
                         {{ 'admin.common.cancel'|trans }}
                     </button>
                     <a class="btn btn-ec-conversion"

@@ -19,28 +19,38 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\LegacyPasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
+
 
 
     /**
      * Customer
      *
      * @ORM\Table(name="dtb_customer", uniqueConstraints={@ORM\UniqueConstraint(name="secret_key", columns={"secret_key"})}, indexes={@ORM\Index(name="dtb_customer_buy_times_idx", columns={"buy_times"}), @ORM\Index(name="dtb_customer_buy_total_idx", columns={"buy_total"}), @ORM\Index(name="dtb_customer_create_date_idx", columns={"create_date"}), @ORM\Index(name="dtb_customer_update_date_idx", columns={"update_date"}), @ORM\Index(name="dtb_customer_last_buy_date_idx", columns={"last_buy_date"}), @ORM\Index(name="dtb_customer_email_idx", columns={"email"})})
+     * 
      * @ORM\InheritanceType("SINGLE_TABLE")
+     * 
      * @ORM\DiscriminatorColumn(name="discriminator_type", type="string", length=255)
+     * 
      * @ORM\HasLifecycleCallbacks()
+     * 
      * @ORM\Entity(repositoryClass="Eccube\Repository\CustomerRepository")
      */
-    class Customer extends \Eccube\Entity\AbstractEntity implements UserInterface
+    class Customer extends AbstractEntity implements UserInterface, PasswordAuthenticatedUserInterface, LegacyPasswordAuthenticatedUserInterface, \Serializable
     {
     use \Customize\Entity\CustomerTrait, \Plugin\GmoPaymentGateway4\Entity\CustomerTrait;
 
-    /**
+        /**
          * @var int
          *
          * @ORM\Column(name="id", type="integer", options={"unsigned":true})
+         * 
          * @ORM\Id
+         * 
          * @ORM\GeneratedValue(strategy="IDENTITY")
          */
         private $id;
@@ -121,6 +131,13 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
          * @ORM\Column(name="birth", type="datetimetz", nullable=true)
          */
         private $birth;
+
+        /**
+         * @Assert\NotBlank()
+         *
+         * @Assert\Length(max=4096)
+         */
+        private $plain_password;
 
         /**
          * @var string|null
@@ -224,6 +241,7 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
          * @var \Doctrine\Common\Collections\Collection
          *
          * @ORM\OneToMany(targetEntity="Eccube\Entity\CustomerAddress", mappedBy="Customer", cascade={"remove"})
+         * 
          * @ORM\OrderBy({
          *     "id"="ASC"
          * })
@@ -238,50 +256,60 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
         private $Orders;
 
         /**
-         * @var \Eccube\Entity\Master\CustomerStatus
+         * @var Master\CustomerStatus
          *
          * @ORM\ManyToOne(targetEntity="Eccube\Entity\Master\CustomerStatus")
+         * 
          * @ORM\JoinColumns({
+         * 
          *   @ORM\JoinColumn(name="customer_status_id", referencedColumnName="id")
          * })
          */
         private $Status;
 
         /**
-         * @var \Eccube\Entity\Master\Sex
+         * @var Master\Sex
          *
          * @ORM\ManyToOne(targetEntity="Eccube\Entity\Master\Sex")
+         * 
          * @ORM\JoinColumns({
+         * 
          *   @ORM\JoinColumn(name="sex_id", referencedColumnName="id")
          * })
          */
         private $Sex;
 
         /**
-         * @var \Eccube\Entity\Master\Job
+         * @var Master\Job
          *
          * @ORM\ManyToOne(targetEntity="Eccube\Entity\Master\Job")
+         * 
          * @ORM\JoinColumns({
+         * 
          *   @ORM\JoinColumn(name="job_id", referencedColumnName="id")
          * })
          */
         private $Job;
 
         /**
-         * @var \Eccube\Entity\Master\Country
+         * @var Master\Country
          *
          * @ORM\ManyToOne(targetEntity="Eccube\Entity\Master\Country")
+         * 
          * @ORM\JoinColumns({
+         * 
          *   @ORM\JoinColumn(name="country_id", referencedColumnName="id")
          * })
          */
         private $Country;
 
         /**
-         * @var \Eccube\Entity\Master\Pref
+         * @var Master\Pref
          *
          * @ORM\ManyToOne(targetEntity="Eccube\Entity\Master\Pref")
+         * 
          * @ORM\JoinColumns({
+         * 
          *   @ORM\JoinColumn(name="pref_id", referencedColumnName="id")
          * })
          */
@@ -295,7 +323,27 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
         /**
          * @ORM\OneToMany(targetEntity=ConservationContactHeader::class, mappedBy="customer_id")
          */
-        private $ConservationContactHeader;
+        private $conservationContactHeader;
+
+        /**
+         * @ORM\Column(name="regist_type", type="string", nullable=true)
+         */
+        private $regist_type;
+
+        /**
+         * @ORM\Column(name="relation_id", type="string", nullable=true)
+         */
+        private $relation_id;
+
+        /**
+         * @ORM\Column(name="is_conservation", type="string", nullable=true)
+         */
+        private $is_conservation;
+
+        /**
+         * @ORM\Column(name="is_breeder", type="string", nullable=true)
+         */
+        private $is_breeder;
 
         /**
          * Constructor
@@ -317,38 +365,29 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
          */
         public function __toString()
         {
-            return (string) ($this->getName01().' '.$this->getName02());
+            return $this->getName01().' '.$this->getName02();
         }
 
-        //このメソッドはProxyに反映されません。再生成時には手動でProxyにコピーすること
         /**
          * {@inheritdoc}
          */
-        public function getRoles()
+        public function getRoles(): array
         {
-            $roles = ['ROLE_USER'];
-            if($this->is_breeder){
-                array_push($roles,"ROLE_BREEDER_USER");
-            }
-            if($this->is_conservation){
-                array_push($roles,"ROLE_CONSERVATION_USER");
-            }
-
-            return $roles;
-        }
+            return ['ROLE_USER'];
+    	}
 
         /**
          * {@inheritdoc}
          */
-        public function getUsername()
+        public function getUsername(): string
         {
-            return $this->email;
+            return $this->getUserIdentifier();
         }
 
         /**
          * {@inheritdoc}
          */
-        public function eraseCredentials()
+        public function eraseCredentials(): void
         {
         }
 
@@ -637,6 +676,26 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
         }
 
         /**
+         * @param string|null $password
+         *
+         * @return $this
+         */
+        public function setPlainPassword(?string $password): self
+        {
+            $this->plain_password = $password;
+
+            return $this;
+        }
+
+        /**
+         * @return string|null
+         */
+        public function getPlainPassword(): ?string
+        {
+            return $this->plain_password;
+        }
+
+        /**
          * Set password.
          *
          * @param string|null $password
@@ -655,7 +714,7 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
          *
          * @return string|null
          */
-        public function getPassword()
+        public function getPassword(): ?string
         {
             return $this->password;
         }
@@ -679,7 +738,7 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
          *
          * @return string|null
          */
-        public function getSalt()
+        public function getSalt(): ?string
         {
             return $this->salt;
         }
@@ -927,11 +986,11 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
         /**
          * Add customerFavoriteProduct.
          *
-         * @param \Eccube\Entity\CustomerFavoriteProduct $customerFavoriteProduct
+         * @param CustomerFavoriteProduct $customerFavoriteProduct
          *
          * @return Customer
          */
-        public function addCustomerFavoriteProduct(\Eccube\Entity\CustomerFavoriteProduct $customerFavoriteProduct)
+        public function addCustomerFavoriteProduct(CustomerFavoriteProduct $customerFavoriteProduct)
         {
             $this->CustomerFavoriteProducts[] = $customerFavoriteProduct;
 
@@ -941,11 +1000,11 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
         /**
          * Remove customerFavoriteProduct.
          *
-         * @param \Eccube\Entity\CustomerFavoriteProduct $customerFavoriteProduct
+         * @param CustomerFavoriteProduct $customerFavoriteProduct
          *
-         * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+         * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
          */
-        public function removeCustomerFavoriteProduct(\Eccube\Entity\CustomerFavoriteProduct $customerFavoriteProduct)
+        public function removeCustomerFavoriteProduct(CustomerFavoriteProduct $customerFavoriteProduct)
         {
             return $this->CustomerFavoriteProducts->removeElement($customerFavoriteProduct);
         }
@@ -963,11 +1022,11 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
         /**
          * Add customerAddress.
          *
-         * @param \Eccube\Entity\CustomerAddress $customerAddress
+         * @param CustomerAddress $customerAddress
          *
          * @return Customer
          */
-        public function addCustomerAddress(\Eccube\Entity\CustomerAddress $customerAddress)
+        public function addCustomerAddress(CustomerAddress $customerAddress)
         {
             $this->CustomerAddresses[] = $customerAddress;
 
@@ -977,11 +1036,11 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
         /**
          * Remove customerAddress.
          *
-         * @param \Eccube\Entity\CustomerAddress $customerAddress
+         * @param CustomerAddress $customerAddress
          *
-         * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+         * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
          */
-        public function removeCustomerAddress(\Eccube\Entity\CustomerAddress $customerAddress)
+        public function removeCustomerAddress(CustomerAddress $customerAddress)
         {
             return $this->CustomerAddresses->removeElement($customerAddress);
         }
@@ -999,11 +1058,11 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
         /**
          * Add order.
          *
-         * @param \Eccube\Entity\Order $order
+         * @param Order $order
          *
          * @return Customer
          */
-        public function addOrder(\Eccube\Entity\Order $order)
+        public function addOrder(Order $order)
         {
             $this->Orders[] = $order;
 
@@ -1013,11 +1072,11 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
         /**
          * Remove order.
          *
-         * @param \Eccube\Entity\Order $order
+         * @param Order $order
          *
-         * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+         * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
          */
-        public function removeOrder(\Eccube\Entity\Order $order)
+        public function removeOrder(Order $order)
         {
             return $this->Orders->removeElement($order);
         }
@@ -1035,11 +1094,11 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
         /**
          * Set status.
          *
-         * @param \Eccube\Entity\Master\CustomerStatus|null $status
+         * @param Master\CustomerStatus|null $status
          *
          * @return Customer
          */
-        public function setStatus(\Eccube\Entity\Master\CustomerStatus $status = null)
+        public function setStatus(?Master\CustomerStatus $status = null)
         {
             $this->Status = $status;
 
@@ -1049,7 +1108,7 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
         /**
          * Get status.
          *
-         * @return \Eccube\Entity\Master\CustomerStatus|null
+         * @return Master\CustomerStatus|null
          */
         public function getStatus()
         {
@@ -1059,11 +1118,11 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
         /**
          * Set sex.
          *
-         * @param \Eccube\Entity\Master\Sex|null $sex
+         * @param Master\Sex|null $sex
          *
          * @return Customer
          */
-        public function setSex(\Eccube\Entity\Master\Sex $sex = null)
+        public function setSex(?Master\Sex $sex = null)
         {
             $this->Sex = $sex;
 
@@ -1073,7 +1132,7 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
         /**
          * Get sex.
          *
-         * @return \Eccube\Entity\Master\Sex|null
+         * @return Master\Sex|null
          */
         public function getSex()
         {
@@ -1083,11 +1142,11 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
         /**
          * Set job.
          *
-         * @param \Eccube\Entity\Master\Job|null $job
+         * @param Master\Job|null $job
          *
          * @return Customer
          */
-        public function setJob(\Eccube\Entity\Master\Job $job = null)
+        public function setJob(?Master\Job $job = null)
         {
             $this->Job = $job;
 
@@ -1097,7 +1156,7 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
         /**
          * Get job.
          *
-         * @return \Eccube\Entity\Master\Job|null
+         * @return Master\Job|null
          */
         public function getJob()
         {
@@ -1107,11 +1166,11 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
         /**
          * Set country.
          *
-         * @param \Eccube\Entity\Master\Country|null $country
+         * @param Master\Country|null $country
          *
          * @return Customer
          */
-        public function setCountry(\Eccube\Entity\Master\Country $country = null)
+        public function setCountry(?Master\Country $country = null)
         {
             $this->Country = $country;
 
@@ -1121,7 +1180,7 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
         /**
          * Get country.
          *
-         * @return \Eccube\Entity\Master\Country|null
+         * @return Master\Country|null
          */
         public function getCountry()
         {
@@ -1131,11 +1190,11 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
         /**
          * Set pref.
          *
-         * @param \Eccube\Entity\Master\Pref|null $pref
+         * @param Master\Pref|null $pref
          *
          * @return Customer
          */
-        public function setPref(\Eccube\Entity\Master\Pref $pref = null)
+        public function setPref(?Master\Pref $pref = null)
         {
             $this->Pref = $pref;
 
@@ -1145,7 +1204,7 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
         /**
          * Get pref.
          *
-         * @return \Eccube\Entity\Master\Pref|null
+         * @return Master\Pref|null
          */
         public function getPref()
         {
@@ -1177,7 +1236,7 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
         }
 
         /**
-         * @return Collection|breederContactHeader[]
+         * @return Collection|BreederContactHeader[]
          */
         public function getBreederContactHeader(): Collection
         {
@@ -1188,7 +1247,7 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
         {
             if (!$this->breederContactHeader->contains($breederContactHeader)) {
                 $this->breederContactHeader[] = $breederContactHeader;
-                $breederContactHeader->setCustomerId($this);
+                $breederContactHeader->setCustomer($this);
             }
 
             return $this;
@@ -1198,8 +1257,8 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
         {
             if ($this->breederContactHeader->removeElement($breederContactHeader)) {
                 // set the owning side to null (unless already changed)
-                if ($breederContactHeader->getCustomerId() === $this) {
-                    $breederContactHeader->setCustomerId(null);
+                if ($breederContactHeader->getCustomer() === $this) {
+                    $breederContactHeader->setCustomer(null);
                 }
             }
 
@@ -1207,7 +1266,7 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
         }
 
         /**
-         * @return Collection|conservationContactHeader[]
+         * @return Collection|ConservationContactHeader[]
          */
         public function getConservationContactHeader(): Collection
         {
@@ -1218,7 +1277,7 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
         {
             if (!$this->conservationContactHeader->contains($conservationContactHeader)) {
                 $this->conservationContactHeader[] = $conservationContactHeader;
-                $conservationContactHeader->setCustomerId($this);
+                $conservationContactHeader->setCustomer($this);
             }
 
             return $this;
@@ -1228,11 +1287,105 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
         {
             if ($this->conservationContactHeader->removeElement($conservationContactHeader)) {
                 // set the owning side to null (unless already changed)
-                if ($conservationContactHeader->getCustomerId() === $this) {
-                    $conservationContactHeader->setCustomerId(null);
+                if ($conservationContactHeader->getCustomer() === $this) {
+                    $conservationContactHeader->setCustomer(null);
                 }
             }
 
             return $this;
         }
+
+        public function getRegistType(): ?string
+        {
+            return $this->regist_type;
+        }
+
+        public function setRegistType(?string $registType): self
+        {
+            $this->regist_type = $registType;
+            return $this;
+        }
+
+        public function getRelationId(): ?string
+        {
+            return $this->relation_id;
+        }
+
+        public function setRelationId(?int $relationId): self
+        {
+            $this->relation_id = $relationId;
+            return $this;
+        }
+
+        public function getIsConservation(): ?string
+        {
+            return $this->is_conservation;
+        }
+
+        public function setIsConservation(int $isConservation): self
+        {
+            $this->is_conservation = $isConservation;
+            return $this;
+        }
+
+        public function getIsBreeder(): ?string
+        {
+            return $this->is_breeder;
+        }
+
+        public function setIsBreeder(int $isBreeder): self
+        {
+            $this->is_breeder = $isBreeder;
+            return $this;
+        }
+
+        /**
+         * String representation of object
+         *
+         * @see http://php.net/manual/en/serializable.serialize.php
+         *
+         * @return string the string representation of the object or null
+         *
+         * @since 5.1.0
+         */
+        public function serialize()
+        {
+            // see https://symfony.com/doc/2.7/security/entity_provider.html#create-your-user-entity
+            // CustomerRepository::loadUserByUsername() で Status をチェックしているため、ここでは不要
+            return serialize([
+                $this->id,
+                $this->email,
+                $this->password,
+                $this->salt,
+            ]);
+        }
+
+        /**
+         * Constructs the object
+         *
+         * @see http://php.net/manual/en/serializable.unserialize.php
+         *
+         * @param string $serialized <p>
+         * The string representation of the object.
+         * </p>
+         *
+         * @return void
+         *
+         * @since 5.1.0
+         */
+        public function unserialize($serialized)
+        {
+            list(
+                $this->id,
+                $this->email,
+                $this->password,
+                $this->salt) = unserialize($serialized);
+        }
+
+        public function getUserIdentifier(): string
+        {
+            return $this->email;
+        }
+
+
     }

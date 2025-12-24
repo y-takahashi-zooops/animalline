@@ -19,15 +19,18 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
+use Eccube\Entity\Master\RoundingType;
 use Eccube\Entity\Master\TaxType;
 use Eccube\Service\Calculator\OrderItemCollection;
 use Eccube\Service\PurchaseFlow\ItemCollection;
+use Eccube\Service\TaxRuleService;
 
 
     /**
      * Order
      *
      * @ORM\Table(name="dtb_order", indexes={
+     * 
      *     @ORM\Index(name="dtb_order_email_idx", columns={"email"}),
      *     @ORM\Index(name="dtb_order_order_date_idx", columns={"order_date"}),
      *     @ORM\Index(name="dtb_order_payment_date_idx", columns={"payment_date"}),
@@ -35,27 +38,37 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
      *     @ORM\Index(name="dtb_order_order_no_idx", columns={"order_no"})
      *  },
      *  uniqueConstraints={
+     * 
      *     @ORM\UniqueConstraint(name="dtb_order_pre_order_id_idx", columns={"pre_order_id"})
      *  })
+     * 
      * @ORM\InheritanceType("SINGLE_TABLE")
+     * 
      * @ORM\DiscriminatorColumn(name="discriminator_type", type="string", length=255)
+     * 
      * @ORM\HasLifecycleCallbacks()
+     * 
      * @ORM\Entity(repositoryClass="Eccube\Repository\OrderRepository")
      */
-    class Order extends \Eccube\Entity\AbstractEntity implements PurchaseInterface, ItemHolderInterface
+    class Order extends AbstractEntity implements PurchaseInterface, ItemHolderInterface
     {
-    use NameTrait, PointTrait, \Customize\Entity\OrderTrait, \Plugin\GmoPaymentGateway4\Entity\OrderTrait;
+        use NameTrait, \Customize\Entity\OrderTrait, \Plugin\GmoPaymentGateway4\Entity\OrderTrait;
+        use PointTrait;
 
         /**
          * 課税対象の明細を返す.
          *
-         * @return array
+         * @return OrderItem[]
          */
         public function getTaxableItems()
         {
             $Items = [];
 
             foreach ($this->OrderItems as $Item) {
+                if (null === $Item->getTaxType()) {
+                    continue;
+                }
+
                 if ($Item->getTaxType()->getId() == TaxType::TAXATION) {
                     $Items[] = $Item;
                 }
@@ -89,16 +102,67 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
             $total = [];
 
             foreach ($this->getTaxableItems() as $Item) {
-                    $totalPrice = $Item->getTotalPrice();
-                    $taxRate = $Item->getTaxRate();
-                    $total[$taxRate] = isset($total[$taxRate])
-                        ? $total[$taxRate] + $totalPrice
-                        : $totalPrice;
+                $totalPrice = $Item->getTotalPrice();
+                $taxRate = $Item->getTaxRate();
+                $total[$taxRate] = isset($total[$taxRate])
+                    ? $total[$taxRate] + $totalPrice
+                    : $totalPrice;
             }
 
             krsort($total);
 
             return $total;
+        }
+
+        /**
+         * 明細の合計額を税率ごとに集計する.
+         *
+         * 不課税, 非課税の値引明細は税率ごとに按分する.
+         *
+         * @return int[]
+         */
+        public function getTotalByTaxRate()
+        {
+            $roundingTypes = $this->getRoundingTypeByTaxRate();
+            $total = [];
+            foreach ($this->getTaxableTotalByTaxRate() as $rate => $totalPrice) {
+                $total[$rate] = TaxRuleService::roundByRoundingType(
+                    $this->getTaxableTotal() ?
+                        $totalPrice - abs($this->getTaxFreeDiscount()) * $totalPrice / $this->getTaxableTotal() : 0,
+                    $roundingTypes[$rate]->getId()
+                );
+            }
+
+            ksort($total);
+
+            return $total;
+        }
+
+        /**
+         * 税額を税率ごとに集計する.
+         *
+         * 不課税, 非課税の値引明細は税率ごとに按分する.
+         *
+         * @return int[]
+         */
+        public function getTaxByTaxRate()
+        {
+            $roundingTypes = $this->getRoundingTypeByTaxRate();
+            $tax = [];
+            foreach ($this->getTaxableTotalByTaxRate() as $rate => $totalPrice) {
+                if (is_null($roundingTypes[$rate])) {
+                    continue;
+                }
+                $tax[$rate] = TaxRuleService::roundByRoundingType(
+                    $this->getTaxableTotal() ?
+                        ($totalPrice - abs($this->getTaxFreeDiscount()) * $totalPrice / $this->getTaxableTotal()) * ($rate / (100 + $rate)) : 0,
+                    $roundingTypes[$rate]->getId()
+                );
+            }
+
+            ksort($tax);
+
+            return $tax;
         }
 
         /**
@@ -108,7 +172,9 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
          */
         public function getTaxableDiscountItems()
         {
-            return array_filter($this->getTaxableItems(), function(OrderItem $Item) {
+            $items = (new ItemCollection($this->getTaxableItems()))->sort()->toArray();
+
+            return array_filter($items, function (OrderItem $Item) {
                 return $Item->isDiscount();
             });
         }
@@ -132,15 +198,44 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
          */
         public function getTaxFreeDiscountItems()
         {
-            return array_filter($this->OrderItems->toArray(), function(OrderItem $Item) {
+            $items = (new ItemCollection($this->getOrderItems()))->sort()->toArray();
+
+            return array_filter($items, function (OrderItem $Item) {
                 return $Item->isPoint() || ($Item->isDiscount() && $Item->getTaxType()->getId() != TaxType::TAXATION);
             });
         }
 
         /**
+         * 非課税・不課税の値引き額を返す.
+         *
+         * @return int|float
+         */
+        public function getTaxFreeDiscount()
+        {
+            return array_reduce($this->getTaxFreeDiscountItems(), function ($sum, OrderItem $Item) {
+                return $sum += $Item->getTotalPrice();
+            }, 0);
+        }
+
+        /**
+         * 税率ごとの丸め規則を取得する.
+         *
+         * @return array<string, RoundingType>
+         */
+        public function getRoundingTypeByTaxRate()
+        {
+            $roundingTypes = [];
+            foreach ($this->getTaxableItems() as $Item) {
+                $roundingTypes[$Item->getTaxRate()] = $Item->getRoundingType();
+            }
+
+            return $roundingTypes;
+        }
+
+        /**
          * 複数配送かどうかの判定を行う.
          *
-         * @return boolean
+         * @return bool
          */
         public function isMultiple()
         {
@@ -163,9 +258,9 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * 対象となるお届け先情報を取得
          *
-         * @param integer $shippingId
+         * @param int $shippingId
          *
-         * @return \Eccube\Entity\Shipping|null
+         * @return Shipping|null
          */
         public function findShipping($shippingId)
         {
@@ -181,13 +276,13 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * この注文の保持する販売種別を取得します.
          *
-         * @return \Eccube\Entity\Master\SaleType[] 一意な販売種別の配列
+         * @return Master\SaleType[] 一意な販売種別の配列
          */
         public function getSaleTypes()
         {
             $saleTypes = [];
             foreach ($this->getOrderItems() as $OrderItem) {
-                /* @var $ProductClass \Eccube\Entity\ProductClass */
+                /** @var ProductClass $ProductClass */
                 $ProductClass = $OrderItem->getProductClass();
                 if ($ProductClass) {
                     $saleTypes[] = $ProductClass->getSaleType();
@@ -241,10 +336,12 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         }
 
         /**
-         * @var integer
+         * @var int
          *
          * @ORM\Column(name="id", type="integer", options={"unsigned":true})
+         * 
          * @ORM\Id
+         * 
          * @ORM\GeneratedValue(strategy="IDENTITY")
          */
         private $id;
@@ -490,6 +587,7 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
          * @var \Doctrine\Common\Collections\Collection
          *
          * @ORM\OneToMany(targetEntity="Eccube\Entity\MailHistory", mappedBy="Order", cascade={"remove"})
+         * 
          * @ORM\OrderBy({
          *     "send_date"="DESC"
          * })
@@ -497,70 +595,84 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         private $MailHistories;
 
         /**
-         * @var \Eccube\Entity\Customer
+         * @var Customer
          *
          * @ORM\ManyToOne(targetEntity="Eccube\Entity\Customer", inversedBy="Orders")
+         * 
          * @ORM\JoinColumns({
+         * 
          *   @ORM\JoinColumn(name="customer_id", referencedColumnName="id")
          * })
          */
         private $Customer;
 
         /**
-         * @var \Eccube\Entity\Master\Country
+         * @var Master\Country
          *
          * @ORM\ManyToOne(targetEntity="Eccube\Entity\Master\Country")
+         * 
          * @ORM\JoinColumns({
+         * 
          *   @ORM\JoinColumn(name="country_id", referencedColumnName="id")
          * })
          */
         private $Country;
 
         /**
-         * @var \Eccube\Entity\Master\Pref
+         * @var Master\Pref
          *
          * @ORM\ManyToOne(targetEntity="Eccube\Entity\Master\Pref")
+         * 
          * @ORM\JoinColumns({
+         * 
          *   @ORM\JoinColumn(name="pref_id", referencedColumnName="id")
          * })
          */
         private $Pref;
 
         /**
-         * @var \Eccube\Entity\Master\Sex
+         * @var Master\Sex
          *
          * @ORM\ManyToOne(targetEntity="Eccube\Entity\Master\Sex")
+         * 
          * @ORM\JoinColumns({
+         * 
          *   @ORM\JoinColumn(name="sex_id", referencedColumnName="id")
          * })
          */
         private $Sex;
 
         /**
-         * @var \Eccube\Entity\Master\Job
+         * @var Master\Job
          *
          * @ORM\ManyToOne(targetEntity="Eccube\Entity\Master\Job")
+         * 
          * @ORM\JoinColumns({
+         * 
          *   @ORM\JoinColumn(name="job_id", referencedColumnName="id")
          * })
          */
         private $Job;
 
         /**
-         * @var \Eccube\Entity\Payment
+         * @var Payment
          *
          * @ORM\ManyToOne(targetEntity="Eccube\Entity\Payment")
+         * 
          * @ORM\JoinColumns({
+         * 
          *   @ORM\JoinColumn(name="payment_id", referencedColumnName="id")
          * })
          */
         private $Payment;
 
         /**
-         * @var \Eccube\Entity\Master\DeviceType
+         * @var Master\DeviceType
          *
          * @ORM\ManyToOne(targetEntity="Eccube\Entity\Master\DeviceType")
+         * 
          * @ORM\JoinColumns({
+         * 
          *   @ORM\JoinColumn(name="device_type_id", referencedColumnName="id")
          * })
          */
@@ -569,10 +681,12 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * OrderStatusより先にプロパティを定義しておかないとセットされなくなる
          *
-         * @var \Eccube\Entity\Master\CustomerOrderStatus
+         * @var Master\CustomerOrderStatus
          *
          * @ORM\ManyToOne(targetEntity="Eccube\Entity\Master\CustomerOrderStatus")
+         * 
          * @ORM\JoinColumns({
+         * 
          *   @ORM\JoinColumn(name="order_status_id", referencedColumnName="id")
          * })
          */
@@ -581,20 +695,24 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * OrderStatusより先にプロパティを定義しておかないとセットされなくなる
          *
-         * @var \Eccube\Entity\Master\OrderStatusColor
+         * @var Master\OrderStatusColor
          *
          * @ORM\ManyToOne(targetEntity="Eccube\Entity\Master\OrderStatusColor")
+         * 
          * @ORM\JoinColumns({
+         * 
          *   @ORM\JoinColumn(name="order_status_id", referencedColumnName="id")
          * })
          */
         private $OrderStatusColor;
 
         /**
-         * @var \Eccube\Entity\Master\OrderStatus
+         * @var Master\OrderStatus
          *
          * @ORM\ManyToOne(targetEntity="Eccube\Entity\Master\OrderStatus")
+         * 
          * @ORM\JoinColumns({
+         * 
          *   @ORM\JoinColumn(name="order_status_id", referencedColumnName="id")
          * })
          */
@@ -612,21 +730,21 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * Constructor
          */
-        public function __construct(\Eccube\Entity\Master\OrderStatus $orderStatus = null)
+        public function __construct(?Master\OrderStatus $orderStatus = null)
         {
             $this->setDiscount(0)
-            ->setSubtotal(0)
-            ->setTotal(0)
-            ->setPaymentTotal(0)
-            ->setCharge(0)
-            ->setTax(0)
-            ->setDeliveryFeeTotal(0)
-            ->setOrderStatus($orderStatus)
+                ->setSubtotal(0)
+                ->setTotal(0)
+                ->setPaymentTotal(0)
+                ->setCharge(0)
+                ->setTax(0)
+                ->setDeliveryFeeTotal(0)
+                ->setOrderStatus($orderStatus);
         ;
 
-            $this->OrderItems = new \Doctrine\Common\Collections\ArrayCollection();
-            $this->Shippings = new \Doctrine\Common\Collections\ArrayCollection();
-            $this->MailHistories = new \Doctrine\Common\Collections\ArrayCollection();
+            $this->OrderItems = new ArrayCollection();
+            $this->Shippings = new ArrayCollection();
+            $this->MailHistories = new ArrayCollection();
             $this->ShippingScheduleHeaders = new ArrayCollection();
             $this->ReturnScheduleHeader = new ArrayCollection();
         }
@@ -643,22 +761,22 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
             }
             $this->OrderItems = $OrderItems;
 
-//            // ShippingとOrderItemが循環参照するため, 手動でヒモ付を変更する.
-//            $Shippings = new ArrayCollection();
-//            foreach ($this->Shippings as $Shipping) {
-//                $CloneShipping = clone $Shipping;
-//                foreach ($OriginOrderItems as $OrderItem) {
-//                    //$CloneShipping->removeOrderItem($OrderItem);
-//                }
-//                foreach ($this->OrderItems as $OrderItem) {
-//                    if ($OrderItem->getShipping() && $OrderItem->getShipping()->getId() == $Shipping->getId()) {
-//                        $OrderItem->setShipping($CloneShipping);
-//                    }
-//                    $CloneShipping->addOrderItem($OrderItem);
-//                }
-//                $Shippings->add($CloneShipping);
-//            }
-//            $this->Shippings = $Shippings;
+            //            // ShippingとOrderItemが循環参照するため, 手動でヒモ付を変更する.
+            //            $Shippings = new ArrayCollection();
+            //            foreach ($this->Shippings as $Shipping) {
+            //                $CloneShipping = clone $Shipping;
+            //                foreach ($OriginOrderItems as $OrderItem) {
+            //                    //$CloneShipping->removeOrderItem($OrderItem);
+            //                }
+            //                foreach ($this->OrderItems as $OrderItem) {
+            //                    if ($OrderItem->getShipping() && $OrderItem->getShipping()->getId() == $Shipping->getId()) {
+            //                        $OrderItem->setShipping($CloneShipping);
+            //                    }
+            //                    $CloneShipping->addOrderItem($OrderItem);
+            //                }
+            //                $Shippings->add($CloneShipping);
+            //            }
+            //            $this->Shippings = $Shippings;
         }
 
         /**
@@ -1048,8 +1166,8 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * Get discount.
          *
-         * @deprecated 4.0.3 から値引きは課税値引きと 非課税・不課税の値引きの2種に分かれる. 課税値引きについてはgetTaxableDiscountを利用してください.
          * @return string
+         * @deprecated 4.0.3 から値引きは課税値引きと 非課税・不課税の値引きの2種に分かれる. 課税値引きについてはgetTaxableDiscountを利用してください.
          */
         public function getDiscount()
         {
@@ -1349,7 +1467,7 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         }
 
         /**
-         * @return null|string
+         * @return string|null
          */
         public function getCompleteMessage()
         {
@@ -1357,7 +1475,7 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         }
 
         /**
-         * @param null|string $complete_message
+         * @param string|null $complete_message
          *
          * @return $this
          */
@@ -1369,7 +1487,7 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         }
 
         /**
-         * @param null|string $complete_message
+         * @param string|null $complete_message
          *
          * @return $this
          */
@@ -1381,7 +1499,7 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         }
 
         /**
-         * @return null|string
+         * @return string|null
          */
         public function getCompleteMailMessage()
         {
@@ -1389,7 +1507,7 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         }
 
         /**
-         * @param null|string $complete_mail_message
+         * @param string|null $complete_mail_message
          *
          * @return
          */
@@ -1401,7 +1519,7 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         }
 
         /**
-         * @param null|string $complete_mail_message
+         * @param string|null $complete_mail_message
          *
          * @return
          */
@@ -1427,11 +1545,11 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * Add orderItem.
          *
-         * @param \Eccube\Entity\OrderItem $OrderItem
+         * @param OrderItem $OrderItem
          *
          * @return Order
          */
-        public function addOrderItem(\Eccube\Entity\OrderItem $OrderItem)
+        public function addOrderItem(OrderItem $OrderItem)
         {
             $this->OrderItems[] = $OrderItem;
 
@@ -1441,11 +1559,11 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * Remove orderItem.
          *
-         * @param \Eccube\Entity\OrderItem $OrderItem
+         * @param OrderItem $OrderItem
          *
-         * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+         * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
          */
-        public function removeOrderItem(\Eccube\Entity\OrderItem $OrderItem)
+        public function removeOrderItem(OrderItem $OrderItem)
         {
             return $this->OrderItems->removeElement($OrderItem);
         }
@@ -1473,11 +1591,11 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * Add shipping.
          *
-         * @param \Eccube\Entity\Shipping $Shipping
+         * @param Shipping $Shipping
          *
          * @return Order
          */
-        public function addShipping(\Eccube\Entity\Shipping $Shipping)
+        public function addShipping(Shipping $Shipping)
         {
             $this->Shippings[] = $Shipping;
 
@@ -1487,11 +1605,11 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * Remove shipping.
          *
-         * @param \Eccube\Entity\Shipping $Shipping
+         * @param Shipping $Shipping
          *
-         * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+         * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
          */
-        public function removeShipping(\Eccube\Entity\Shipping $Shipping)
+        public function removeShipping(Shipping $Shipping)
         {
             return $this->Shippings->removeElement($Shipping);
         }
@@ -1499,12 +1617,12 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * Get shippings.
          *
-         * @return \Doctrine\Common\Collections\Collection|\Eccube\Entity\Shipping[]
+         * @return \Doctrine\Common\Collections\Collection|Shipping[]
          */
         public function getShippings()
         {
             $criteria = Criteria::create()
-            ->orderBy(['name01' => Criteria::ASC, 'name02' => Criteria::ASC, 'id' => Criteria::ASC]);
+                ->orderBy(['name01' => Criteria::ASC, 'name02' => Criteria::ASC, 'id' => Criteria::ASC]);
 
             return $this->Shippings->matching($criteria);
         }
@@ -1512,11 +1630,11 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * Add mailHistory.
          *
-         * @param \Eccube\Entity\MailHistory $mailHistory
+         * @param MailHistory $mailHistory
          *
          * @return Order
          */
-        public function addMailHistory(\Eccube\Entity\MailHistory $mailHistory)
+        public function addMailHistory(MailHistory $mailHistory)
         {
             $this->MailHistories[] = $mailHistory;
 
@@ -1526,11 +1644,11 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * Remove mailHistory.
          *
-         * @param \Eccube\Entity\MailHistory $mailHistory
+         * @param MailHistory $mailHistory
          *
-         * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+         * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
          */
-        public function removeMailHistory(\Eccube\Entity\MailHistory $mailHistory)
+        public function removeMailHistory(MailHistory $mailHistory)
         {
             return $this->MailHistories->removeElement($mailHistory);
         }
@@ -1548,11 +1666,11 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * Set customer.
          *
-         * @param \Eccube\Entity\Customer|null $customer
+         * @param Customer|null $customer
          *
          * @return Order
          */
-        public function setCustomer(\Eccube\Entity\Customer $customer = null)
+        public function setCustomer(?Customer $customer = null)
         {
             $this->Customer = $customer;
 
@@ -1562,7 +1680,7 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * Get customer.
          *
-         * @return \Eccube\Entity\Customer|null
+         * @return Customer|null
          */
         public function getCustomer()
         {
@@ -1572,11 +1690,11 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * Set country.
          *
-         * @param \Eccube\Entity\Master\Country|null $country
+         * @param Master\Country|null $country
          *
          * @return Order
          */
-        public function setCountry(\Eccube\Entity\Master\Country $country = null)
+        public function setCountry(?Master\Country $country = null)
         {
             $this->Country = $country;
 
@@ -1586,7 +1704,7 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * Get country.
          *
-         * @return \Eccube\Entity\Master\Country|null
+         * @return Master\Country|null
          */
         public function getCountry()
         {
@@ -1596,11 +1714,11 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * Set pref.
          *
-         * @param \Eccube\Entity\Master\Pref|null $pref
+         * @param Master\Pref|null $pref
          *
          * @return Order
          */
-        public function setPref(\Eccube\Entity\Master\Pref $pref = null)
+        public function setPref(?Master\Pref $pref = null)
         {
             $this->Pref = $pref;
 
@@ -1610,7 +1728,7 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * Get pref.
          *
-         * @return \Eccube\Entity\Master\Pref|null
+         * @return Master\Pref|null
          */
         public function getPref()
         {
@@ -1620,11 +1738,11 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * Set sex.
          *
-         * @param \Eccube\Entity\Master\Sex|null $sex
+         * @param Master\Sex|null $sex
          *
          * @return Order
          */
-        public function setSex(\Eccube\Entity\Master\Sex $sex = null)
+        public function setSex(?Master\Sex $sex = null)
         {
             $this->Sex = $sex;
 
@@ -1634,7 +1752,7 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * Get sex.
          *
-         * @return \Eccube\Entity\Master\Sex|null
+         * @return Master\Sex|null
          */
         public function getSex()
         {
@@ -1644,11 +1762,11 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * Set job.
          *
-         * @param \Eccube\Entity\Master\Job|null $job
+         * @param Master\Job|null $job
          *
          * @return Order
          */
-        public function setJob(\Eccube\Entity\Master\Job $job = null)
+        public function setJob(?Master\Job $job = null)
         {
             $this->Job = $job;
 
@@ -1658,7 +1776,7 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * Get job.
          *
-         * @return \Eccube\Entity\Master\Job|null
+         * @return Master\Job|null
          */
         public function getJob()
         {
@@ -1668,11 +1786,11 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * Set payment.
          *
-         * @param \Eccube\Entity\Payment|null $payment
+         * @param Payment|null $payment
          *
          * @return Order
          */
-        public function setPayment(\Eccube\Entity\Payment $payment = null)
+        public function setPayment(?Payment $payment = null)
         {
             $this->Payment = $payment;
 
@@ -1682,7 +1800,7 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * Get payment.
          *
-         * @return \Eccube\Entity\Payment|null
+         * @return Payment|null
          */
         public function getPayment()
         {
@@ -1692,11 +1810,11 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * Set deviceType.
          *
-         * @param \Eccube\Entity\Master\DeviceType|null $deviceType
+         * @param Master\DeviceType|null $deviceType
          *
          * @return Order
          */
-        public function setDeviceType(\Eccube\Entity\Master\DeviceType $deviceType = null)
+        public function setDeviceType(?Master\DeviceType $deviceType = null)
         {
             $this->DeviceType = $deviceType;
 
@@ -1706,7 +1824,7 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * Get deviceType.
          *
-         * @return \Eccube\Entity\Master\DeviceType|null
+         * @return Master\DeviceType|null
          */
         public function getDeviceType()
         {
@@ -1716,11 +1834,11 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * Set customerOrderStatus.
          *
-         * @param \Eccube\Entity\Master\CustomerOrderStatus|null $customerOrderStatus
+         * @param Master\CustomerOrderStatus|null $customerOrderStatus
          *
          * @return Order
          */
-        public function setCustomerOrderStatus(\Eccube\Entity\Master\CustomerOrderStatus $customerOrderStatus = null)
+        public function setCustomerOrderStatus(?Master\CustomerOrderStatus $customerOrderStatus = null)
         {
             $this->CustomerOrderStatus = $customerOrderStatus;
 
@@ -1730,7 +1848,7 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * Get customerOrderStatus.
          *
-         * @return \Eccube\Entity\Master\CustomerOrderStatus|null
+         * @return Master\CustomerOrderStatus|null
          */
         public function getCustomerOrderStatus()
         {
@@ -1740,11 +1858,11 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * Set orderStatusColor.
          *
-         * @param \Eccube\Entity\Master\OrderStatusColor|null $orderStatusColor
+         * @param Master\OrderStatusColor|null $orderStatusColor
          *
          * @return Order
          */
-        public function setOrderStatusColor(\Eccube\Entity\Master\OrderStatusColor $orderStatusColor = null)
+        public function setOrderStatusColor(?Master\OrderStatusColor $orderStatusColor = null)
         {
             $this->OrderStatusColor = $orderStatusColor;
 
@@ -1754,7 +1872,7 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * Get orderStatusColor.
          *
-         * @return \Eccube\Entity\Master\OrderStatusColor|null
+         * @return Master\OrderStatusColor|null
          */
         public function getOrderStatusColor()
         {
@@ -1764,11 +1882,11 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * Set orderStatus.
          *
-         * @param \Eccube\Entity\Master\OrderStatus|null|object $orderStatus
+         * @param Master\OrderStatus|null|object $orderStatus
          *
          * @return Order
          */
-        public function setOrderStatus(\Eccube\Entity\Master\OrderStatus $orderStatus = null)
+        public function setOrderStatus(?Master\OrderStatus $orderStatus = null)
         {
             $this->OrderStatus = $orderStatus;
 
@@ -1778,7 +1896,7 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
         /**
          * Get orderStatus.
          *
-         * @return \Eccube\Entity\Master\OrderStatus|null
+         * @return Master\OrderStatus|null
          */
         public function getOrderStatus()
         {

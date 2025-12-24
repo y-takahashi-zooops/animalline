@@ -15,6 +15,7 @@ namespace Eccube\Twig;
 
 use Eccube\Event\TemplateEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Twig\Source;
 
 class Template extends \Twig\Template
 {
@@ -24,7 +25,7 @@ class Template extends \Twig\Template
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\SyntaxError
      */
-    public function display(array $context, array $blocks = [])
+    public function display(array $context, array $blocks = []): void
     {
         $globals = $this->env->getGlobals();
         if (isset($globals['event_dispatcher']) && strpos($this->getTemplateName(), '__string_template__') !== 0) {
@@ -32,7 +33,7 @@ class Template extends \Twig\Template
             $eventDispatcher = $globals['event_dispatcher'];
             $originCode = $this->env->getLoader()->getSourceContext($this->getTemplateName())->getCode();
             $event = new TemplateEvent($this->getTemplateName(), $originCode, $context);
-            $eventDispatcher->dispatch($this->getTemplateName(), $event);
+            $eventDispatcher->dispatch($event, $this->getTemplateName());
             if ($event->getSource() !== $originCode) {
                 $newTemplate = $this->env->createTemplate($event->getSource());
                 $newTemplate->display($event->getParameters(), $blocks);
@@ -44,7 +45,7 @@ class Template extends \Twig\Template
         }
     }
 
-    public function getTemplateName()
+    public function getTemplateName(): string
     {
         // Templateのキャッシュ作成時に動的に作成されるメソッド
         // デバッグツールバーでエラーが発生するため空文字を返しておく。
@@ -52,13 +53,21 @@ class Template extends \Twig\Template
         return '';
     }
 
-    public function getDebugInfo()
+    public function getDebugInfo(): array
     {
         // Templateのキャッシュ作成時に動的に作成されるメソッド
+        return [];
     }
 
-    protected function doDisplay(array $context, array $blocks = [])
+    protected function doDisplay(array $context, array $blocks = []): \Traversable|array
     {
         // Templateのキャッシュ作成時に動的に作成されるメソッド
+        return [];
+    }
+
+    public function getSourceContext(): \Twig\Source
+    {
+        // FIXME Twig\Loader\FilesystemLoader の実装を持ってきたが,これで問題ないか要確認
+        return new Source('', $this->getTemplateName(), '');
     }
 }

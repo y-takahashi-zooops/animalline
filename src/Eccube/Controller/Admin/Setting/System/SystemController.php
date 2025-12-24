@@ -14,52 +14,70 @@
 namespace Eccube\Controller\Admin\Setting\System;
 
 use Eccube\Common\Constant;
+use Eccube\Common\EccubeConfig;
 use Eccube\Service\SystemService;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SystemController
 {
+    /**
+     * @var EccubeConfig
+     */
+    protected $eccubeConfig;
+
     /**
      * @var SystemService
      */
     protected $systemService;
 
+    private TranslatorInterface $translator;
+
     /**
      * SystemController constructor.
-     *
+     * 
+     * @param EccubeConfig $eccubeConfig
      * @param SystemService $systemService
      */
-    public function __construct(SystemService $systemService)
+    public function __construct(
+        EccubeConfig $eccubeConfig,
+        SystemService $systemService,
+        TranslatorInterface $translator,
+    )
     {
+        $this->eccubeConfig = $eccubeConfig;
         $this->systemService = $systemService;
+        $this->translator = $translator;
     }
 
     /**
-     * @Route("/%eccube_admin_route%/setting/system/system", name="admin_setting_system_system")
+     * @Route("/%eccube_admin_route%/setting/system/system", name="admin_setting_system_system", methods={"GET"})
+     *
      * @Template("@admin/Setting/System/system.twig")
      */
     public function index(Request $request)
     {
         $info = [];
-        $info[] = ['title' => trans('admin.setting.system.system.eccube'), 'value' => Constant::VERSION];
-        $info[] = ['title' => trans('admin.setting.system.system.server_os'), 'value' => php_uname()];
-        $info[] = ['title' => trans('admin.setting.system.system.database_server'), 'value' => $this->systemService->getDbversion()];
-        $info[] = ['title' => trans('admin.setting.system.system.web_server'), 'value' => $request->server->get('SERVER_SOFTWARE')];
+        $info[] = ['title' => $this->translator->trans('admin.setting.system.system.eccube'), 'value' => Constant::VERSION];
+        $info[] = ['title' => $this->translator->trans('admin.setting.system.system.server_os'), 'value' => php_uname()];
+        $info[] = ['title' => $this->translator->trans('admin.setting.system.system.database_server'), 'value' => $this->systemService->getDbversion()];
+        $info[] = ['title' => $this->translator->trans('admin.setting.system.system.web_server'), 'value' => $request->server->get('SERVER_SOFTWARE')];
 
         $value = phpversion().' ('.implode(', ', get_loaded_extensions()).')';
-        $info[] = ['title' => trans('admin.setting.system.system.php'), 'value' => $value];
-        $info[] = ['title' => trans('admin.setting.system.system.user_agent'), 'value' => $request->headers->get('User-Agent')];
+        $info[] = ['title' => $this->translator->trans('admin.setting.system.system.php'), 'value' => $value];
+        $info[] = ['title' => $this->translator->trans('admin.setting.system.system.user_agent'), 'value' => $request->headers->get('User-Agent')];
 
         return [
             'info' => $info,
+            'phpinfo_enabled' => $this->eccubeConfig->get('eccube_phpinfo_enabled'),
         ];
     }
 
     /**
-     * @Route("/%eccube_admin_route%/setting/system/system/phpinfo", name="admin_setting_system_system_phpinfo")
+     * @Route("/%eccube_admin_route%/setting/system/system/phpinfo", name="admin_setting_system_system_phpinfo", methods={"GET"})
      */
     public function phpinfo(Request $request)
     {

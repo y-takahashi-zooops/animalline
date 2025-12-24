@@ -45,6 +45,14 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+
 
 class CustomerController extends AbstractController
 {
@@ -108,6 +116,12 @@ class CustomerController extends AbstractController
      */
     protected $customerQueryService;
 
+    /**
+     * @var LoggerInterface
+     * @param SessionInterface $session,
+     */
+    protected $logger;
+
     public function __construct(
         PageMaxRepository $pageMaxRepository,
         CustomerRepository $customerRepository,
@@ -120,7 +134,12 @@ class CustomerController extends AbstractController
         ConservationPetsRepository $conservationPetsRepository,
         BreederPetsRepository $breederPetsRepository,
         CustomerStatusRepository $customerStatusRepository,
-        CustomerQueryService $customerQueryService
+        CustomerQueryService $customerQueryService,
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher,
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager,
+        RequestStack $requestStack
     ) {
         $this->pageMaxRepository = $pageMaxRepository;
         $this->customerRepository = $customerRepository;
@@ -134,6 +153,11 @@ class CustomerController extends AbstractController
         $this->breederPetsRepository = $breederPetsRepository;
         $this->customerStatusRepository = $customerStatusRepository;
         $this->customerQueryService = $customerQueryService;
+        $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -141,7 +165,7 @@ class CustomerController extends AbstractController
      * @Route("/%eccube_admin_route%/customer/page/{page_no}", requirements={"page_no" = "\d+"}, name="admin_customer_page")
      * @Template("@admin/Customer/index.twig")
      */
-    public function index(Request $request, $page_no = null, Paginator $paginator)
+    public function index(Request $request, ?int $page_no = 1, PaginatorInterface $paginator)
     {
         $session = $this->session;
         $builder = $this->formFactory->createBuilder(SearchCustomerType::class);
@@ -152,7 +176,7 @@ class CustomerController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_CUSTOMER_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_CUSTOMER_INDEX_INITIALIZE);
 
         $searchForm = $builder->getForm();
 
@@ -214,7 +238,7 @@ class CustomerController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_CUSTOMER_INDEX_SEARCH, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_CUSTOMER_INDEX_SEARCH);
 
         $pagination = $paginator->paginate(
             $qb,
@@ -278,7 +302,7 @@ class CustomerController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_CUSTOMER_RESEND_COMPLETE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_CUSTOMER_RESEND_COMPLETE);
 
         $this->addSuccess('admin.common.send_complete', 'admin');
 
@@ -292,7 +316,7 @@ class CustomerController extends AbstractController
     {
         $this->isTokenValid();
 
-        log_info('会員削除開始', [$id]);
+        $this->logger->info('会員削除開始', [$id]);
 
         $page_no = intval($this->session->get('eccube.admin.customer.search.page_no'));
         $page_no = $page_no ? $page_no : Constant::ENABLED;
@@ -348,7 +372,7 @@ class CustomerController extends AbstractController
             $this->addError($message, 'admin');
         }
 
-        log_info('会員削除完了', [$id]);
+        $this->logger->info('会員削除完了', [$id]);
 
         $event = new EventArgs(
             [
@@ -356,7 +380,7 @@ class CustomerController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_CUSTOMER_DELETE_COMPLETE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_CUSTOMER_DELETE_COMPLETE);
 
         return $this->redirect($this->generateUrl(
             'admin_customer_page',
@@ -418,7 +442,7 @@ class CustomerController extends AbstractController
                         ],
                         $request
                     );
-                    $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_CUSTOMER_CSV_EXPORT, $event);
+                    $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_CUSTOMER_CSV_EXPORT);
 
                     $ExportCsvRow->pushData();
                 }
@@ -436,7 +460,7 @@ class CustomerController extends AbstractController
 
         $response->send();
 
-        log_info('会員CSVファイル名', [$filename]);
+        $this->logger->info('会員CSVファイル名', [$filename]);
 
         return $response;
     }

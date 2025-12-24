@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Doctrine\ORM\EntityManagerInterface;
 
 class BreederExamController extends AbstractController
 {
@@ -49,6 +50,11 @@ class BreederExamController extends AbstractController
     protected $dnaCheckStatusRepository;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
      * BreederController constructor.
      *
      * @param BreedersRepository $breedersRepository
@@ -58,6 +64,7 @@ class BreederExamController extends AbstractController
      * @param DnaCheckStatusRepository $dnaCheckStatusRepository
      */
     public function __construct(
+        EntityManagerInterface $entityManager,
         BreedersRepository               $breedersRepository,
         BreederHouseRepository           $breederHouseRepository,
         BreederExaminationInfoRepository $breederExaminationInfoRepository,
@@ -69,6 +76,7 @@ class BreederExamController extends AbstractController
         $this->breederExaminationInfoRepository = $breederExaminationInfoRepository;
         $this->dnaQueryService = $dnaQueryService;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -191,7 +199,7 @@ class BreederExamController extends AbstractController
 
             $breederExaminationInfo->setInputStatus(AnilineConf::ANILINE_INPUT_STATUS_INPUT_COMPLETE);
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($breederExaminationInfo);
             $entityManager->flush();
 
@@ -213,7 +221,7 @@ class BreederExamController extends AbstractController
      */
     public function examination_submit(Request $request)
     {
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->entityManager;
 
         // ブリーダーの審査ステータスを変更
         $breeder = $this->breedersRepository->find($this->getUser());

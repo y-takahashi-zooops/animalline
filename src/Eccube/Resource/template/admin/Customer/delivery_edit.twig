@@ -53,7 +53,8 @@ file that was distributed with this source code.
 
                             <div class="row mb-2">
                                 <div class="col-3">
-                                    {{ 'admin.common.name'|trans }}
+                                    <span>{{ 'admin.common.name'|trans }}</span>
+                                    <span class="badge bg-primary ms-1">{{ 'admin.common.required'|trans }}</span>
                                 </div>
                                 <div class="col">
                                     <div class="row mb-2">
@@ -71,7 +72,8 @@ file that was distributed with this source code.
 
                             <div class="row mb-2">
                                 <div class="col-3">
-                                    {{ 'admin.common.kana'|trans }}
+                                    <span>{{ 'admin.common.kana'|trans }}</span>
+                                    <span class="badge bg-primary ms-1">{{ 'admin.common.required'|trans }}</span>
                                 </div>
                                 <div class="col">
                                     <div class="row mb-2">
@@ -99,11 +101,12 @@ file that was distributed with this source code.
 
                             <div class="row mb-2">
                                 <div class="col-3">
-                                    {{ 'admin.common.address'|trans }}
+                                    <span>{{ 'admin.common.address'|trans }}</span>
+                                    <span class="badge bg-primary ms-1">{{ 'admin.common.required'|trans }}</span>
                                 </div>
                                 <div class="col">
                                     <div class="row mb-2">
-                                        <div class="col-auto pr-0 align-self-center"><span>{{ 'admin.common.postal_symbol'|trans }}</span></div>
+                                        <div class="col-auto pe-0 align-self-center"><span>{{ 'admin.common.postal_symbol'|trans }}</span></div>
                                         <div class="col-2">
                                             {{ form_widget(form.postal_code) }}
                                             {{ form_errors(form.postal_code) }}
@@ -116,8 +119,8 @@ file that was distributed with this source code.
                                 <div class="col-3">
                                     &nbsp;
                                 </div>
-                                <div class="col form-inline mb-2">
-                                    {{ form_widget(form.address.pref) }}
+                                <div class="col row mb-2">
+                                    <span class="col-auto">{{ form_widget(form.address.pref) }}</span>
                                     {{ form_errors(form.address.pref) }}
                                 </div>
                             </div>
@@ -144,7 +147,8 @@ file that was distributed with this source code.
 
                             <div class="row mb-2">
                                 <div class="col-3">
-                                    {{ 'admin.common.phone_number'|trans }}
+                                    <span>{{ 'admin.common.phone_number'|trans }}</span>
+                                    <span class="badge bg-primary ms-1">{{ 'admin.common.required'|trans }}</span>
                                 </div>
                                 <div class="col">
                                     {{ form_widget(form.phone_number) }}
@@ -153,7 +157,7 @@ file that was distributed with this source code.
                             </div>
 
                             {# エンティティ拡張の自動出力 #}
-                            {% for f in form if f.vars.eccube_form_options.auto_render %}
+                            {% for f in form|filter(f => f.vars.eccube_form_options.auto_render) %}
                                 {% if f.vars.eccube_form_options.form_theme %}
                                     {% form_theme f f.vars.eccube_form_options.form_theme %}
                                     {{ form_row(f) }}

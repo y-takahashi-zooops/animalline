@@ -14,10 +14,9 @@
 namespace Eccube\Repository;
 
 use Doctrine\ORM\NoResultException;
+use Doctrine\Persistence\ManagerRegistry as RegistryInterface;
 use Eccube\Common\EccubeConfig;
 use Eccube\Entity\Page;
-use Symfony\Bridge\Doctrine\RegistryInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * PageRepository
@@ -55,15 +54,19 @@ class PageRepository extends AbstractRepository
      *
      * @param RegistryInterface $registry
      * @param EccubeConfig $eccubeConfig
-     * @param ContainerInterface $container
      */
-    public function __construct(RegistryInterface $registry, EccubeConfig $eccubeConfig, ContainerInterface $container)
-    {
+    public function __construct(
+        RegistryInterface $registry,
+        EccubeConfig $eccubeConfig,
+        string $userDataRealDir,
+        string $templateRealDir,
+        string $templateDefaultRealDir
+    ) {
         parent::__construct($registry, Page::class);
         $this->eccubeConfig = $eccubeConfig;
-        $this->userDataRealDir = $container->getParameter('eccube_theme_user_data_dir');
-        $this->templateRealDir = $container->getParameter('eccube_theme_app_dir');
-        $this->templateDefaultRealDir = $container->getParameter('eccube_theme_src_dir');
+        $this->userDataRealDir = $userDataRealDir;
+        $this->templateRealDir = $templateRealDir;
+        $this->templateDefaultRealDir = $templateDefaultRealDir;
     }
 
     /**
@@ -118,7 +121,7 @@ class PageRepository extends AbstractRepository
      */
     public function newPage()
     {
-        $Page = new \Eccube\Entity\Page();
+        $Page = new Page();
         $Page->setEditType(Page::EDIT_TYPE_USER);
 
         return $Page;

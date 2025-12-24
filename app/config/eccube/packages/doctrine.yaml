@@ -1,31 +1,36 @@
-parameters:
+#parameters:
     # Adds a fallback DATABASE_URL if the env var is not set.
     # This allows you to run cache:warmup even if your
     # environment variables are not available yet.
     # You should not need to change this value.
-    env(DATABASE_URL): ''
-    env(DATABASE_SERVER_VERSION): ~
+    #env(DATABASE_URL): ''
+    #env(DATABASE_SERVER_VERSION): 5.7.44
 doctrine:
     dbal:
-        driver: 'pdo_sqlite'
+        driver: 'pdo_mysql'
+        url: "%env(DATABASE_URL)%"
         server_version: "%env(DATABASE_SERVER_VERSION)%"
-        charset: utf8
+        charset: utf8mb4
 
         # for mysql only
         default_table_options:
-          collate: 'utf8_general_ci'
+          collate: 'utf8mb4_general_ci'
+        default_connection: 'default'
 
-        # With Symfony 3.3, remove the `resolve:` prefix
-        url: '%env(DATABASE_URL)%'
-
-        # types
-#        types:
-#            datetime: 'Eccube\Doctrine\DBAL\Types\UTCDateTimeType'
-#            datetimetz: 'Eccube\Doctrine\DBAL\Types\UTCDateTimeTzType'
     orm:
         auto_generate_proxy_classes: '%kernel.debug%'
-        naming_strategy: doctrine.orm.naming_strategy.underscore
+        naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+        # naming_strategy: doctrine.orm.naming_strategy.underscore
         auto_mapping: true
+        metadata_cache_driver:
+            type: service
+            id: cache.app
+        query_cache_driver:
+            type: service
+            id: cache.app
+        result_cache_driver:
+            type: service
+            id: cache.app
         dql:
             string_functions:
                 NORMALIZE: Eccube\Doctrine\ORM\Query\Normalize
@@ -38,3 +43,11 @@ doctrine:
             incomplete_order_status_hidden:
                 class: Eccube\Doctrine\Filter\OrderStatusFilter
                 enabled: false
+
+framework:
+    cache:
+        pools:
+            doctrine.system_cache_pool:
+                adapter: cache.app
+            doctrine.result_cache_pool:
+                adapter: cache.app

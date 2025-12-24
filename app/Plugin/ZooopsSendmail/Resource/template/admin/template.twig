@@ -124,7 +124,7 @@ $('form[name=mail_template]').submit(function(){
 						id="ex-conversion-action" class="row align-items-center justify-content-end">
 						{# 削除ボタン：押下で削除モーダルを表示 #}
 						<div class="col-auto">
-							<button type="button" class="btn btn-danger px-5" id="delete" data-toggle="modal" data-target="#DeleteModal" disabled>{{ 'admin.common.delete'|trans }}</button>
+							<button type="button" class="btn btn-danger px-5" id="delete" data-bs-toggle="modal" data-bs-target="#DeleteModal" disabled>{{ 'admin.common.delete'|trans }}</button>
 						</div>
 						{# 登録ボタン #}
 						<div class="col-auto">
@@ -144,7 +144,7 @@ $('form[name=mail_template]').submit(function(){
 					<h5 class="modal-title font-weight-bold">
 						{{ 'common.delete_confirm'|trans }}
 					</h5>
-					<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+					<button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">×</span>
 					</button>
 				</div>
@@ -152,7 +152,7 @@ $('form[name=mail_template]').submit(function(){
 					<p class="text-left modal-message"></p>
 				</div> #}
 				<div class="modal-footer">
-					<button class="btn btn-ec-sub" type="button" data-dismiss="modal">
+					<button class="btn btn-ec-sub" type="button" data-bs-dismiss="modal">
 						{{ 'admin.common.cancel'|trans }}
 					</button>
 					{# 削除ボタン：削除を実行する #}

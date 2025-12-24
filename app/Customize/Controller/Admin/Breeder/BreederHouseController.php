@@ -21,6 +21,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Customize\Form\Type\Breeder\BreederHouseType;
 use Customize\Repository\BreederHouseRepository;
+use Doctrine\ORM\EntityManagerInterface;
 
 class BreederHouseController extends AbstractController
 {
@@ -30,14 +31,16 @@ class BreederHouseController extends AbstractController
     protected $breederHouseRepository;
 
     /**
-     * breederController constructor.
-     * @param BreederHouseRepository $breederHouseRepository
+     * @var EntityManagerInterface
      */
+    protected $entityManager;
+
     public function __construct(
-        BreederHouseRepository $breederHouseRepository
-    )
-    {
+        BreederHouseRepository $breederHouseRepository,
+        EntityManagerInterface $entityManager
+    ) {
         $this->breederHouseRepository = $breederHouseRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -69,7 +72,7 @@ class BreederHouseController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $house->setBreederHousePref($house->getBreederHousePrefId()['name'] ?? '');
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($house);
             $entityManager->flush();
 

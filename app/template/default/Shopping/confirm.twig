@@ -125,8 +125,10 @@ file that was distributed with this source code.
                             <div class="ec-select">
                                 <label>{{ '配送方法'|trans }}</label>
                                 {% set delivery_fee = 0 %}
-                                {% for item in shipping.order_items if item.isDeliveryFee %}
-                                    {% set delivery_fee = item.total_price %}
+                                {% for item in shipping.order_items %}
+                                    {% if item.isDeliveryFee %}
+                                        {% set delivery_fee = item.total_price %}
+                                    {% endif %}
                                 {% endfor %}
                                 {{ Order.Shippings[idx].Delivery }}({{ delivery_fee|price }})
                             </div>
@@ -148,8 +150,10 @@ file that was distributed with this source code.
                 </div>
                 <div class="ec-blockRadio">
                     {% set charge = 0 %}
-                    {% for item in Order.order_items if item.isCharge %}
-                        {% set charge = item.total_price %}
+                    {% for item in Order.order_items %}
+                        {% if item.isCharge %}
+                            {% set charge = item.total_price %}
+                        {% endif %}
                     {% endfor %}
                     {{ Order.Payment }}({{ charge|price }})
                 </div>

@@ -1,9 +1,26 @@
 controllers:
-    resource: ../../src/Eccube/Controller/
+    resource: ../../../src/Eccube/Controller
     type: annotation
+
 customize_controllers:
-    resource: ../../app/Customize/Controller/
+    resource: ../../../app/Customize/Controller
     type: annotation
+    prefix: /
+
+web_profiler:
+    resource: "../../config/eccube/routes/dev/web_profiler.yaml"
+
+admin:
+    resource: "../../../config/eccube/admin.yaml"
+    prefix: /
+    # prefix: /%eccube_admin_route%
+    # path: /%eccube_admin_route%
+    # controller: App\Controller\AniconfigController::index
+
+    #some_route:
+    #path: /example
+    #controller: App\Controller\ExampleController::index
+    #schemes: [https]
 
 #    prefix: /{_locale}
     # prefix: /
@@ -28,4 +45,18 @@ admin_logout:
     path: '/%eccube_admin_route%/logout'
 logout:
     path: /logout
-    
+
+# admin_product:
+#     path: /%eccube_admin_route%/product
+#     controller: Customize\Controller\Admin\Product\ProductController::index
+#     defaults:
+#         page_no: 1
+#     methods: [GET, POST]
+
+admin_product_custom:
+    resource: '../../Customize/Controller/Admin/Product/ProductController.php'
+    type: annotation
+
+# admin_product_product:
+#     resource: '../../Customize/Controller/Admin/Product/ProductController.php'
+#     type: annotation

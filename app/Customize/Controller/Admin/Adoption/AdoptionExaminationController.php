@@ -25,6 +25,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Doctrine\ORM\EntityManagerInterface;
 
 class AdoptionExaminationController extends AbstractController
 {
@@ -124,7 +125,7 @@ class AdoptionExaminationController extends AbstractController
                 $this->mailService->sendAdoptionExaminationMailReject($Customer, $data);
             }
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($Customer);
             $entityManager->flush();
 

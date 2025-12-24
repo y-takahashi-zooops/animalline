@@ -23,6 +23,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Customize\Repository\DnaCheckStatusHeaderRepository;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class AdoptionDnaCheck extends AbstractController
 {
@@ -82,6 +84,16 @@ class AdoptionDnaCheck extends AbstractController
     protected $dnaCheckStatusHeaderRepository;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
+     * @var FormFactoryInterface
+     */
+    protected $formFactory;
+
+    /**
      * AdoptionController constructor.
      *
      * @param ConservationContactsRepository $conservationContactsRepository
@@ -97,6 +109,7 @@ class AdoptionDnaCheck extends AbstractController
      * @param DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
      */
     public function __construct(
+        EntityManagerInterface $entityManager,
         ConservationContactsRepository $conservationContactsRepository,
         AdoptionQueryService $adoptionQueryService,
         PetsFavoriteRepository $petsFavoriteRepository,
@@ -107,7 +120,8 @@ class AdoptionDnaCheck extends AbstractController
         CustomerRepository $customerRepository,
         DnaQueryService $dnaQueryService,
         DnaCheckStatusRepository $dnaCheckStatusRepository,
-        DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
+        DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository,
+        FormFactoryInterface $formFactory
     )
     {
         $this->conservationContactsRepository = $conservationContactsRepository;
@@ -121,6 +135,8 @@ class AdoptionDnaCheck extends AbstractController
         $this->dnaQueryService = $dnaQueryService;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
         $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
+        $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
     }
 
     /**
@@ -187,7 +203,7 @@ class AdoptionDnaCheck extends AbstractController
                 ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_ADOPTION)
                 ->setShippingStatus(AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT)
                 ->setShippingPref($dnaCheckStatusHeader->getPrefShipping());
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($dnaCheckStatusHeader);
             $entityManager->flush();
 

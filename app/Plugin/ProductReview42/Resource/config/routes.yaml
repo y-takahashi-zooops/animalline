@@ -1,0 +1,3 @@
+product_review42_routes:
+    resource: '../../Controller'
+    type: attribute

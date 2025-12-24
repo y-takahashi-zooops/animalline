@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Doctrine\ORM\EntityManagerInterface;
 
 class AdoptionController extends AbstractController
 {
@@ -149,7 +150,7 @@ class AdoptionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $conservation->setPref($conservation->getPrefId());
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             if ($request->get('conservations')['is_active'] == AnilineConf::IS_ACTIVE_PRIVATE) {
                 $conservationPets = $this->conservationPetsRepository->findBy(['Conservation' => $conservation]);
                 foreach ($conservationPets as $conservationPet) {

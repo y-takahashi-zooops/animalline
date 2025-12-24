@@ -4,7 +4,7 @@ namespace Plugin\ZooopsSubscription\Repository;
 
 use Eccube\Repository\AbstractRepository;
 use Plugin\ZooopsSubscription\Entity\Config;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * ConfigRepository
@@ -17,9 +17,9 @@ class ConfigRepository extends AbstractRepository
     /**
      * ConfigRepository constructor.
      *
-     * @param RegistryInterface $registry
+     * @param ManagerRegistry $registry
      */
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Config::class);
     }

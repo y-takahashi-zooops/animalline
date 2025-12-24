@@ -40,12 +40,12 @@ class TaxRuleService
      * 設定情報に基づいて税金の金額を返す
      *
      * @param  int                                    $price        計算対象の金額
-     * @param  int|null|\Eccube\Entity\Product        $product      商品
-     * @param  int|null|\Eccube\Entity\ProductClass   $productClass 商品規格
-     * @param  int|null|\Eccube\Entity\Master\Pref    $pref         都道府県
-     * @param  int|null|\Eccube\Entity\Master\Country $country      国
+     * @param  int|\Eccube\Entity\Product|null        $product      商品
+     * @param  int|ProductClass|null   $productClass 商品規格
+     * @param  int|\Eccube\Entity\Master\Pref|null    $pref         都道府県
+     * @param  int|\Eccube\Entity\Master\Country|null $country      国
      *
-     * @return double                                 税金付与した金額
+     * @return float                                 税金付与した金額
      */
     public function getTax($price, $product = null, $productClass = null, $pref = null, $country = null)
     {
@@ -54,7 +54,7 @@ class TaxRuleService
          * 商品別税率が有効で商品別税率が設定されていない場合は基本税率
          * 商品別税率が無効の場合は基本税率
          */
-        /* @var $TaxRule \Eccube\Entity\TaxRule */
+        /* @var \Eccube\Entity\TaxRule $TaxRule */
         if ($this->BaseInfo->isOptionProductTaxRule() && $productClass) {
             if ($productClass instanceof ProductClass) {
                 $TaxRule = $productClass->getTaxRule() ?: $this->taxRuleRepository->getByRule(null, null, $pref, $country);
@@ -72,12 +72,12 @@ class TaxRuleService
      * calcIncTax
      *
      * @param  int                                    $price        計算対象の金額
-     * @param  int|null|\Eccube\Entity\Product        $product      商品
-     * @param  int|null|\Eccube\Entity\ProductClass   $productClass 商品規格
-     * @param  int|null|\Eccube\Entity\Master\Pref    $pref         都道府県
-     * @param  int|null|\Eccube\Entity\Master\Country $country      国
+     * @param  int|\Eccube\Entity\Product|null        $product      商品
+     * @param  int|ProductClass|null   $productClass 商品規格
+     * @param  int|\Eccube\Entity\Master\Pref|null    $pref         都道府県
+     * @param  int|\Eccube\Entity\Master\Country|null $country      国
      *
-     * @return double
+     * @return float
      */
     public function getPriceIncTax($price, $product = null, $productClass = null, $pref = null, $country = null)
     {
@@ -92,12 +92,12 @@ class TaxRuleService
      * @param  int    $RoundingType  端数処理
      * @param  int    $taxAdjust 調整額
      *
-     * @return double 税金額
+     * @return float 税金額
      */
     public function calcTax($price, $taxRate, $RoundingType, $taxAdjust = 0)
     {
         $tax = $price * $taxRate / 100;
-        $roundTax = $this->roundByRoundingType($tax, $RoundingType);
+        $roundTax = self::roundByRoundingType($tax, $RoundingType);
 
         return $roundTax + $taxAdjust;
     }
@@ -116,33 +116,33 @@ class TaxRuleService
     {
         $tax = ($price - $taxAdjust) * $taxRate / (100 + $taxRate);
 
-        return $this->roundByRoundingType($tax, $RoundingType);
+        return self::roundByRoundingType($tax, $RoundingType);
     }
 
     /**
      * 課税規則に応じて端数処理を行う
      *
-     * @param  integer $value    端数処理を行う数値
-     * @param integer $RoundingType
+     * @param  int $value    端数処理を行う数値
+     * @param int $RoundingType
      *
-     * @return double        端数処理後の数値
+     * @return float        端数処理後の数値
      */
-    public function roundByRoundingType($value, $RoundingType)
+    public static function roundByRoundingType($value, $RoundingType)
     {
         switch ($RoundingType) {
             // 四捨五入
             case \Eccube\Entity\Master\RoundingType::ROUND:
                 $ret = round($value);
                 break;
-            // 切り捨て
+                // 切り捨て
             case \Eccube\Entity\Master\RoundingType::FLOOR:
                 $ret = floor($value);
                 break;
-            // 切り上げ
+                // 切り上げ
             case \Eccube\Entity\Master\RoundingType::CEIL:
                 $ret = ceil($value);
                 break;
-            // デフォルト:切り上げ
+                // デフォルト:切り上げ
             default:
                 $ret = ceil($value);
                 break;

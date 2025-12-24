@@ -9,6 +9,7 @@ use Customize\Repository\ConservationsHousesRepository;
 use Eccube\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
 
 class AdoptionExamController extends AbstractController
 {
@@ -23,18 +24,25 @@ class AdoptionExamController extends AbstractController
     protected $conservationsHouseRepository;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
      * ConservationController constructor.
      *
      * @param ConservationsRepository $conservationsRepository
      * @param ConservationsHousesRepository $conservationsHouseRepository
      */
     public function __construct(
+        EntityManagerInterface $entityManager,
         ConservationsRepository             $conservationsRepository,
         ConservationsHousesRepository       $conservationsHouseRepository
     )
     {
         $this->conservationsRepository = $conservationsRepository;
         $this->conservationsHouseRepository = $conservationsHouseRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -171,7 +179,7 @@ class AdoptionExamController extends AbstractController
      */
     public function examination_submit(Request $request)
     {
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->entityManager;
 
         // 保護団体の審査ステータスを変更
         $conservation = $this->conservationsRepository->find($this->getUser());

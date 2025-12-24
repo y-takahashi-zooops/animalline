@@ -177,11 +177,6 @@ http://www.gmo-pg.com/
 
     // 注文するボタンクリック時
     $('#shopping-form > div > div.ec-orderRole__summary > div > div.ec-totalBox__btn > button').on('click', function (e) {
-      {% if FraudDetector.isLock %}
-        alert("{{ 'gmo_payment_gateway.shopping.credit.fraud.detect.lock'|trans({'%ip%': FraudDetector.getRemoteAddr}) }}");
-        return false;
-      {% endif %}
-
       if ($('#shopping_order_payment_type_0').prop('checked')) {
         // クレジットカード決済が選択されている場合はトークンを取得
         return getToken();
@@ -282,10 +277,6 @@ http://www.gmo-pg.com/
     <h2>{{ form_widget(form.payment_type[1]) }}</h2>
   </div>
   <div id="shopping_order_payment_type_1_body" style="display:none;">
-    {% if Order.getGmoMethodConfig.TdFlag == '2' %}
-    <p>{{ 'gmo_payment_gateway.shopping.credit.3dsecure2.note1'|trans|nl2br }}</p>
-    <br/>
-    {% endif %}
     <p>{{ 'gmo_payment_gateway.shopping.credit.regist.note'|trans }}</p>
     {{ form_widget(form.CardSeq) }}
     <div class="dl_table">
@@ -330,88 +321,82 @@ http://www.gmo-pg.com/
   <div class="ec-rectHeading">
     <h2>{{ form_widget(form.payment_type[0]) }}</h2>
   </div>
-  <div id="shopping_order_payment_type_0_body">
-    {% if Order.getGmoMethodConfig.TdFlag == '2' %}
-    <p>{{ 'gmo_payment_gateway.shopping.credit.3dsecure2.note1'|trans|nl2br }}</p>
-    <br/>
+  <div class="dl_table" id="shopping_order_payment_type_0_body">
+    <dl>
+      <dt>{{ 'gmo_payment_gateway.shopping.credit.col1'|trans }}</dt>
+      <dd>
+	<div class="ec-input">
+	  {{ form_widget(form.card_no, { 'type': 'tel', 'attr': { 'class': 'form-control' }}) }}
+	  {{ form_errors(form.card_no) }}
+	  {{ form_widget(form.token) }}
+	  {{ form_widget(form.mask_card_no) }}
+	</div>
+      </dd>
+    </dl>
+    <dl style="height:50px;">
+      <dt>{{ 'gmo_payment_gateway.shopping.credit.col2'|trans }}</dt>
+      <dd>
+	<div class="ec-select">
+	  {{ form_widget(form.expire_month, { 'attr': { 'class': 'form-control' }}) }}{{ 'gmo_payment_gateway.shopping.credit.col2.month'|trans }} /20 {{ form_widget(form.expire_year, { 'attr': { 'class': 'form-control' }}) }}{{ 'gmo_payment_gateway.shopping.credit.col2.year'|trans }}
+	  {{ form_errors(form.expire_month) }}
+	  {{ form_errors(form.expire_year) }}
+	</div>
+      </dd>
+    </dl>
+    <dl style="height:80px;">
+      <dt>{{ 'gmo_payment_gateway.shopping.credit.col3'|trans }}</dt>
+      <dd>
+	<div class="ec-input inline">
+	  {{ 'gmo_payment_gateway.shopping.credit.col3.first'|trans }}{{ form_widget(form.card_name1) }}
+	  {{ form_errors(form.card_name1) }}
+	</div>
+	<div class="ec-input inline">
+	  {{ 'gmo_payment_gateway.shopping.credit.col3.last'|trans }}{{ form_widget(form.card_name2) }}
+	  {{ form_errors(form.card_name2) }}
+	</div>
+	<div class="inline">{{ 'gmo_payment_gateway.shopping.credit.col3.ex'|trans }}</div>
+      </dd>
+    </dl>
+    {% if Order.getGmoMethodConfig.use_securitycd %}
+    <dl style="height:115px;">
+      <dt>{{ 'gmo_payment_gateway.shopping.credit.col4'|trans }}</dt>
+      <dd>
+	<div class="ec-input">
+	  {{ form_widget(form.security_code, { 'type': 'tel', 'attr': { 'class': 'form-control' }}) }}{{ 'gmo_payment_gateway.shopping.credit.col4.ex'|trans }}
+	  {{ form_errors(form.security_code) }}<br/>
+	  {{ 'gmo_payment_gateway.shopping.credit.col4.note1'|trans }}
+	</div>
+      </dd>
+    </dl>
     {% endif %}
-    <div class="dl_table">
-      <dl>
-	<dt>{{ 'gmo_payment_gateway.shopping.credit.col1'|trans }}</dt>
-	<dd>
-	  <div class="ec-input">
-	    {{ form_widget(form.card_no, { 'type': 'tel', 'attr': { 'class': 'form-control' }}) }}
-	    {{ form_errors(form.card_no) }}
-	    {{ form_widget(form.token) }}
-	    {{ form_widget(form.mask_card_no) }}
-	  </div>
-	</dd>
-      </dl>
-      <dl style="height:50px;">
-	<dt>{{ 'gmo_payment_gateway.shopping.credit.col2'|trans }}</dt>
-	<dd>
-	  <div class="ec-select">
-	    {{ form_widget(form.expire_month, { 'attr': { 'class': 'form-control' }}) }}{{ 'gmo_payment_gateway.shopping.credit.col2.month'|trans }} /20 {{ form_widget(form.expire_year, { 'attr': { 'class': 'form-control' }}) }}{{ 'gmo_payment_gateway.shopping.credit.col2.year'|trans }}
-	    {{ form_errors(form.expire_month) }}
-	    {{ form_errors(form.expire_year) }}
-	  </div>
-	</dd>
-      </dl>
-      <dl style="height:80px;">
-	<dt>{{ 'gmo_payment_gateway.shopping.credit.col3'|trans }}</dt>
-	<dd>
-	  <div class="ec-input inline">
-	    {{ 'gmo_payment_gateway.shopping.credit.col3.first'|trans }}{{ form_widget(form.card_name1) }}
-	    {{ form_errors(form.card_name1) }}
-	  </div>
-	  <div class="ec-input inline">
-	    {{ 'gmo_payment_gateway.shopping.credit.col3.last'|trans }}{{ form_widget(form.card_name2) }}
-	    {{ form_errors(form.card_name2) }}
-	  </div>
-	  <div class="inline">{{ 'gmo_payment_gateway.shopping.credit.col3.ex'|trans }}</div>
-	</dd>
-      </dl>
-      {% if Order.getGmoMethodConfig.use_securitycd %}
-      <dl style="height:115px;">
-	<dt>{{ 'gmo_payment_gateway.shopping.credit.col4'|trans }}</dt>
-	<dd>
-	  <div class="ec-input">
-	    {{ form_widget(form.security_code, { 'type': 'tel', 'attr': { 'class': 'form-control' }}) }}{{ 'gmo_payment_gateway.shopping.credit.col4.ex'|trans }}
-	    {{ form_errors(form.security_code) }}<br/>
-	    {{ 'gmo_payment_gateway.shopping.credit.col4.note1'|trans }}
-	  </div>
-	</dd>
-      </dl>
-      {% endif %}
-      <dl style="height:50px;">
-	<dt>{{ 'gmo_payment_gateway.shopping.credit.col5'|trans }}</dt>
-	<dd>
-	  <div class="ec-select">
-	    {{ form_widget(form.credit_pay_methods, { 'attr': { 'class': 'form-control' }}) }}
-	    {{ form_errors(form.credit_pay_methods) }}
-	  </div>
-	</dd>
-      </dl>
-      {% if Order.getGmoConfig.getCardRegistFlg and Order.getCustomer is not null %}
-      <dl style="height:50px;">
-	<dt>{{ 'gmo_payment_gateway.shopping.credit.col6'|trans }}</dt>
-	<dd>
-	  {% if Order.getCustomer.getGmoMember is not null and Order.getCustomer.getGmoMember.getCreditCards|length >= eccube_config.gmo_payment_gateway_regist_card_num %}
-	  {{ 'gmo_payment_gateway.shopping.credit.col6.note4'|trans({ '%count%': eccube_config.gmo_payment_gateway_regist_card_num }) }}<br/>
-	  {{ 'gmo_payment_gateway.shopping.credit.col6.note5'|trans }}<br/>
-	  {{ 'gmo_payment_gateway.shopping.credit.col6.note6'|trans }}
-	  {% else %}
-	  <div class="ec-checkbox">
-	    {{ form_widget(form.register_card) }}
-	    {{ form_errors(form.register_card) }}
-	  </div>
-	  {{ 'gmo_payment_gateway.shopping.credit.col6.note1'|trans }}<br/>
-	  {{ 'gmo_payment_gateway.shopping.credit.col6.note2'|trans }}<br/>
-	  {{ 'gmo_payment_gateway.shopping.credit.col6.note3'|trans }}
-	  {% endif %}
-	</dd>
-      </dl>
-      {% endif %}
-    </div>
+    <dl style="height:50px;">
+      <dt>{{ 'gmo_payment_gateway.shopping.credit.col5'|trans }}</dt>
+      <dd>
+	<div class="ec-select">
+	  {{ form_widget(form.credit_pay_methods, { 'attr': { 'class': 'form-control' }}) }}
+	  {{ form_errors(form.credit_pay_methods) }}
+	</div>
+      </dd>
+    </dl>
+    {% if Order.getGmoConfig.getCardRegistFlg and Order.getCustomer is not null %}
+    <dl style="height:50px;">
+      <dt>{{ 'gmo_payment_gateway.shopping.credit.col6'|trans }}</dt>
+      <dd>
+	{% if Order.getCustomer.getGmoMember is not null and Order.getCustomer.getGmoMember.getCreditCards|length >= eccube_config.gmo_payment_gateway_regist_card_num %}
+	{{ 'gmo_payment_gateway.shopping.credit.col6.note4'|trans({ '%count%': eccube_config.gmo_payment_gateway_regist_card_num }) }}<br/>
+	{{ 'gmo_payment_gateway.shopping.credit.col6.note5'|trans }}<br/>
+	{{ 'gmo_payment_gateway.shopping.credit.col6.note6'|trans }}
+	{% else %}
+	<div class="ec-checkbox">
+	  {{ form_widget(form.register_card) }}
+	  {{ form_errors(form.register_card) }}
+	</div>
+	{{ 'gmo_payment_gateway.shopping.credit.col6.note1'|trans }}<br/>
+	{{ 'gmo_payment_gateway.shopping.credit.col6.note2'|trans }}<br/>
+	{{ 'gmo_payment_gateway.shopping.credit.col6.note3'|trans }}
+	{% endif %}
+      </dd>
+    </dl>
+    {% endif %}
   </div>
 </div>

@@ -38,6 +38,8 @@ use Customize\Repository\DnaCheckStatusHeaderRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Customize\Repository\PetLikeRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class BreederPetController extends AbstractController
 {
@@ -164,6 +166,7 @@ class BreederPetController extends AbstractController
      * @param PetLikeRepository $petLikeRepository
      * @param DnaCheckStatusDetailRepository $dnaCheckStatusDetailRepository
      * @param DnaCheckKindsRepository $dnaCheckKindsRepository
+     * @param EntityManagerInterface $entityManager
      */
     public function __construct(
         BreederContactsRepository        $breederContactsRepository,
@@ -185,7 +188,9 @@ class BreederPetController extends AbstractController
         BreederPetinfoTemplateRepository $breederPetinfoTemplateRepository,
         PetLikeRepository $petLikeRepository,
         DnaCheckStatusDetailRepository $dnaCheckStatusDetailRepository,
-        DnaCheckKindsRepository $dnaCheckKindsRepository
+        DnaCheckKindsRepository $dnaCheckKindsRepository,
+        EntityManagerInterface $entityManager,
+        FormFactoryInterface $formFactory
     )
     {
         $this->breederContactsRepository = $breederContactsRepository;
@@ -208,6 +213,8 @@ class BreederPetController extends AbstractController
         $this->petLikeRepository = $petLikeRepository;
         $this->dnaCheckStatusDetailRepository = $dnaCheckStatusDetailRepository;
         $this->dnaCheckKindsRepository = $dnaCheckKindsRepository;
+        $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
     }
 
     /**
@@ -259,7 +266,7 @@ class BreederPetController extends AbstractController
      */
     public function movie_upload(Request $request,$pet_id)
     {
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->entityManager;
 
         $pet = $this->breederPetsRepository->find($pet_id);
         if (!$pet) {
@@ -526,7 +533,7 @@ class BreederPetController extends AbstractController
     {
         $sessid = session_id();
 
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->entityManager;
 
         $like =  $this->petLikeRepository->getLike($sessid, 1, $id);
         if(!$like){
@@ -548,8 +555,7 @@ class BreederPetController extends AbstractController
      */
     public function breeder_pets_new(Request $request, $kind = 0,$breeder_id = ""): Response
     {
-        // $barcode = "";
-        $barcode = $request->barcode;
+        $barcode = property_exists($request, 'barcode') ? $request->barcode : "";
 
         if($breeder_id != ""){
             //breeder_id指定がある場合はログインユーザーチェックを行い、許可ユーザーであれば指定のブリーダーをシミュレート
@@ -653,7 +659,7 @@ class BreederPetController extends AbstractController
                 $breederPet->setPedigreeCode('0');
             }
             */
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $breeder = $this->breedersRepository->find($breederId);
             $breederPet->setBreeder($breeder);
             $breederPet->setIsActive(1);
@@ -813,7 +819,10 @@ class BreederPetController extends AbstractController
             ['sort_order' => 'ASC']
         );
 
-        $request->request->set('thumbnail_path', $breederPet->getThumbnailPath() ? '/' . AnilineConf::ANILINE_IMAGE_URL_BASE . $breederPet->getThumbnailPath() : '');
+        // $request->request->set('thumbnail_path', $breederPet->getThumbnailPath() ? '/' . AnilineConf::ANILINE_IMAGE_URL_BASE . $breederPet->getThumbnailPath() : '');
+        $thumbnailPath = $breederPet->getThumbnailPath()
+            ? '/' . AnilineConf::ANILINE_IMAGE_URL_BASE . $breederPet->getThumbnailPath()
+            : '';
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             $request->request->set('thumbnail_path', $image0);
@@ -830,7 +839,7 @@ class BreederPetController extends AbstractController
                 $img2 = $this->setImageSrc($request->get('img2'), $petId);
                 $img3 = $this->setImageSrc($request->get('img3'), $petId);
                 $img4 = $this->setImageSrc($request->get('img4'), $petId);
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->entityManager;
                 $breederPet->setThumbnailPath($img0);
                 $entityManager->persist($breederPet);
                 foreach ($breederPetImages as $key => $image) {
@@ -874,7 +883,7 @@ class BreederPetController extends AbstractController
             'breeder_pet' => $breederPet,
             'breeder' => $breederPet->getBreeder(),
             'pet_mages' => $petImages,
-            'thumbnailPath' => $request->get('thumbnail_path'),
+            'thumbnailPath' => $thumbnailPath,
             'form' => $form->createView(),
             'petInfoTemplate' => $petInfoTemplate,
             'image0' => $image0,

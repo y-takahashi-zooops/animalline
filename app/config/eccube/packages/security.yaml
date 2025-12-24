@@ -1,11 +1,16 @@
 security:
-    encoders:
-        # Our user class and the algorithm we'll use to encode passwords
-        # https://symfony.com/doc/current/security.html#c-encoding-the-user-s-password
-        Eccube\Entity\Member:
-          id: Eccube\Security\Core\Encoder\PasswordEncoder
+    enable_authenticator_manager: true
+    password_hashers:
+        legacy:
+            id: 'Eccube\Security\PasswordHasher\PasswordHasher'
         Eccube\Entity\Customer:
-          id: Eccube\Security\Core\Encoder\PasswordEncoder
+            algorithm: 'auto'
+            migrate_from:
+                - legacy
+        Eccube\Entity\Member:
+            algorithm: 'auto'
+            migrate_from:
+                - legacy
     providers:
         # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
         # In this example, users are stored via Doctrine in the database
@@ -21,48 +26,58 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         admin:
-            pattern: '^/%eccube_admin_route%/'
-            anonymous: true
+            pattern: '^/%eccube_admin_route%'
+            # lazy: true
             provider: member_provider
             form_login:
-                check_path: admin_login
                 login_path: admin_login
-                csrf_token_generator: security.csrf.token_manager
-                default_target_path: admin_homepage
+                check_path: admin_login
+                enable_csrf: true
+                default_target_path: /%eccube_admin_route%/
                 username_parameter: 'login_id'
                 password_parameter: 'password'
                 use_forward: false
-                success_handler: eccube.security.success_handler
+                success_handler: app.eccube.security.success_handler
                 failure_handler: eccube.security.failure_handler
+            login_throttling:
+                max_attempts: '%eccube_login_throttling_max_attempts%'
+                interval: '%eccube_login_throttling_interval%'
             logout:
                 path: admin_logout
                 target: admin_login
         adoption:
             pattern: '^/adoption/'
-            anonymous: true
+            lazy: true
             provider: customer_provider
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 3600
                 name: eccube_remember_me
                 remember_me_parameter: 'login_memory'
+            # entry_point: App\Security\Authenticator\CustomFormLoginAuthenticator
+            # custom_authenticators:
+            #     - App\Security\Authenticator\CustomFormLoginAuthenticator
             form_login:
-                check_path: adoption_login
+                # check_path: adoption_login
                 login_path: adoption_login
-                csrf_token_generator: security.csrf.token_manager
+                check_path: /adoption/login
+                # login_path: /adoption/login
+                enable_csrf: true
                 default_target_path: adoption_mypage
                 username_parameter: 'login_email'
                 password_parameter: 'login_pass'
                 use_forward: false
-                success_handler: eccube.security.success_handler
+                success_handler: app.eccube.security.success_handler
                 failure_handler: eccube.security.failure_handler
+            login_throttling:
+                max_attempts: '%eccube_login_throttling_max_attempts%'
+                interval: '%eccube_login_throttling_interval%'
             logout:
                 path: logout
                 target: adoption_top
-                success_handler: eccube.security.logout_success_handler
         breeder:
             pattern: '^/breeder/'
-            anonymous: true
+            lazy: true
             provider: customer_provider
             remember_me:
                 secret: '%kernel.secret%'
@@ -72,20 +87,22 @@ security:
             form_login:
                 check_path: breeder_login
                 login_path: breeder_login
-                csrf_token_generator: security.csrf.token_manager
+                enable_csrf: true
                 default_target_path: breeder_mypage
                 username_parameter: 'login_email'
                 password_parameter: 'login_pass'
                 use_forward: false
-                success_handler: eccube.security.success_handler
+                success_handler: app.eccube.security.success_handler
                 failure_handler: eccube.security.failure_handler
+            login_throttling:
+                max_attempts: '%eccube_login_throttling_max_attempts%'
+                interval: '%eccube_login_throttling_interval%'
             logout:
                 path: logout
                 target: breeder_top
-                success_handler: eccube.security.logout_success_handler
         customer:
             pattern: '^/'
-            anonymous: true
+            lazy: true
             provider: customer_provider
             remember_me:
                 secret: '%kernel.secret%'
@@ -95,17 +112,19 @@ security:
             form_login:
                 check_path: mypage_login
                 login_path: mypage_login
-                csrf_token_generator: security.csrf.token_manager
+                enable_csrf: true
                 default_target_path: homepage
                 username_parameter: 'login_email'
                 password_parameter: 'login_pass'
                 use_forward: false
-                success_handler: eccube.security.success_handler
+                success_handler: app.eccube.security.success_handler
                 failure_handler: eccube.security.failure_handler
+            login_throttling:
+                max_attempts: '%eccube_login_throttling_max_attempts%'
+                interval: '%eccube_login_throttling_interval%'
             logout:
                 path: logout
                 target: homepage
-                success_handler: eccube.security.logout_success_handler
     access_decision_manager:
         strategy: unanimous
         allow_if_all_abstain: false

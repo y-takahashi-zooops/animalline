@@ -20,6 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TemplateType extends AbstractType
 {
@@ -27,10 +28,12 @@ class TemplateType extends AbstractType
      * @var EccubeConfig
      */
     protected $eccubeConfig;
+    private TranslatorInterface $translator;
 
-    public function __construct(EccubeConfig $eccubeConfig)
+    public function __construct(EccubeConfig $eccubeConfig, TranslatorInterface $translator)
     {
         $this->eccubeConfig = $eccubeConfig;
+        $this->translator = $translator;
     }
 
     /**
@@ -64,10 +67,10 @@ class TemplateType extends AbstractType
                 'mapped' => false,
                 'required' => true,
                 'constraints' => [
-                    new Assert\NotBlank(['message' => trans('admin.common.select')]),
+                    new Assert\NotBlank(['message' => $this->translator->trans('admin.common.select')]),
                     new Assert\File([
                         'mimeTypes' => ['application/zip', 'application/x-tar', 'application/x-gzip', 'application/gzip'],
-                        'mimeTypesMessage' => trans('admin.store.template.invalid_upload_file'),
+                        'mimeTypesMessage' => $this->translator->trans('admin.store.template.invalid_upload_file'),
                     ]),
                 ],
             ]);
@@ -79,7 +82,7 @@ class TemplateType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => 'Eccube\Entity\Template',
+            'data_class' => \Eccube\Entity\Template::class,
         ]);
     }
 

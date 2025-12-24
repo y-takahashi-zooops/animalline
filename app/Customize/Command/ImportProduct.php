@@ -28,6 +28,8 @@ use Eccube\Repository\ProductImageRepository;
 use Eccube\Repository\CategoryRepository;
 use Eccube\Util\StringUtil;
 
+use Psr\Log\LoggerInterface;
+
 class ImportProduct extends Command
 {
     protected static $defaultName = 'eccube:customize:import-item';
@@ -83,6 +85,11 @@ class ImportProduct extends Command
     protected $categoryRepository;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * ImportProduct constructor.
      *
      * @param EntityManagerInterface $entityManager
@@ -94,6 +101,7 @@ class ImportProduct extends Command
      * @param ProductStockRepository $productStockRepository
      * @param ProductImageRepository $productImageRepository
      * @param CategoryRepository $categoryRepository
+     * @param LoggerInterface $logger
      * 
      */
     public function __construct(
@@ -105,7 +113,8 @@ class ImportProduct extends Command
         SaleTypeRepository $saleTypeRepository,
         ProductStockRepository $productStockRepository,
         ProductImageRepository $productImageRepository,
-        CategoryRepository $categoryRepository
+        CategoryRepository $categoryRepository,
+        LoggerInterface $logger
     ) {
         parent::__construct();
         $this->entityManager = $entityManager;
@@ -117,6 +126,7 @@ class ImportProduct extends Command
         $this->productStockRepository = $productStockRepository;
         $this->productImageRepository = $productImageRepository;
         $this->categoryRepository = $categoryRepository;
+        $this->logger = $logger;
     }
 
     protected function configure()
@@ -149,7 +159,7 @@ class ImportProduct extends Command
                 throw new \Exception('Error: Failed to open file');
             }
 
-            log_info('商品CSV取込開始');
+            $this->logger->info('商品CSV取込開始');
 
             $ProductStatus = $this->productStatusRepository->find(ProductStatus::DISPLAY_SHOW);
             $SaleType = $this->saleTypeRepository->find(SaleType::SALE_TYPE_NORMAL);
@@ -277,7 +287,7 @@ class ImportProduct extends Command
             $em->flush();
         }
 
-        log_info('商品CSV取込完了');
+        $this->logger->info('商品CSV取込完了');
         fclose($fp);
     }
 }

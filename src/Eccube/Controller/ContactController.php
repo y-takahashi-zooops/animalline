@@ -17,6 +17,7 @@ use Eccube\Entity\Customer;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Eccube\Form\Type\Front\ContactType;
+use Eccube\Repository\PageRepository;
 use Eccube\Service\MailService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,20 +31,30 @@ class ContactController extends AbstractController
     protected $mailService;
 
     /**
+     * @var PageRepository
+     */
+    private $pageRepository;
+
+    /**
      * ContactController constructor.
      *
      * @param MailService $mailService
+     * @param PageRepository $pageRepository
      */
     public function __construct(
-        MailService $mailService)
+        MailService $mailService,
+        PageRepository $pageRepository)
     {
         $this->mailService = $mailService;
+        $this->pageRepository = $pageRepository;
     }
 
     /**
      * お問い合わせ画面.
      *
-     * @Route("/contact", name="contact")
+     * @Route("/contact", name="contact", methods={"GET", "POST"})
+     * @Route("/contact", name="contact_confirm", methods={"GET", "POST"})
+     *
      * @Template("Contact/index.twig")
      */
     public function index(Request $request)
@@ -76,7 +87,7 @@ class ContactController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_CONTACT_INDEX_INITIALIZE);
 
         $form = $builder->getForm();
         $form->handleRequest($request);
@@ -84,15 +95,12 @@ class ContactController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             switch ($request->get('mode')) {
                 case 'confirm':
-                    $form = $builder->getForm();
-                    $form->handleRequest($request);
-
                     return $this->render('Contact/confirm.twig', [
                         'form' => $form->createView(),
+                        'Page' => $this->pageRepository->getPageByRoute('contact_confirm'),
                     ]);
 
                 case 'complete':
-
                     $data = $form->getData();
 
                     $event = new EventArgs(
@@ -102,7 +110,7 @@ class ContactController extends AbstractController
                         ],
                         $request
                     );
-                    $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_COMPLETE, $event);
+                    $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_CONTACT_INDEX_COMPLETE);
 
                     $data = $event->getArgument('data');
 
@@ -121,7 +129,8 @@ class ContactController extends AbstractController
     /**
      * お問い合わせ完了画面.
      *
-     * @Route("/contact/complete", name="contact_complete")
+     * @Route("/contact/complete", name="contact_complete", methods={"GET"})
+     *
      * @Template("Contact/complete.twig")
      */
     public function complete()

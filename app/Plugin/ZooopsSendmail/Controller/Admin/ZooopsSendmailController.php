@@ -8,7 +8,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Eccube\Service\CsvExportService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Knp\Component\Pager\Paginator;
+use Knp\Component\Pager\PaginatorInterface;
 use Eccube\Util\FormUtil;
 use Plugin\ZooopsSendmail\Form\Type\Admin\MailTemplateType;
 use Plugin\ZooopsSendmail\Form\Type\Admin\SearchDistinationType;
@@ -17,6 +17,7 @@ use Eccube\Repository\CustomerRepository;
 use Eccube\Repository\Master\PageMaxRepository;
 use Plugin\ZooopsSendmail\Entity\MailTemplate;
 use Customize\Service\SendMailProcess;
+use Eccube\Common\EccubeConfig;
 
 class ZooopsSendmailController extends AbstractController
 {
@@ -50,7 +51,7 @@ class ZooopsSendmailController extends AbstractController
      *
      * @param MailTemplateRepository $templateRepository
      * @param PageMaxRepository $pageMaxRepository
-     * @param CustomerRepository $customerRepository    
+     * @param CustomerRepository $customerRepository
      * @param CsvExportService $csvExportService
      * @param SendMailProcess $SendMailProcess
      */
@@ -59,13 +60,15 @@ class ZooopsSendmailController extends AbstractController
         PageMaxRepository $pageMaxRepository,
         CustomerRepository $customerRepository,
         CsvExportService $csvExportService,
-        SendMailProcess $sendMailProcess
+        SendMailProcess $sendMailProcess,
+        EccubeConfig $eccubeConfig
     ) {
         $this->templateRepository = $templateRepository;
         $this->pageMaxRepository = $pageMaxRepository;
         $this->customerRepository = $customerRepository;
         $this->csvExportService = $csvExportService;
         $this->sendMailProcess = $sendMailProcess;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     /**
@@ -126,7 +129,7 @@ class ZooopsSendmailController extends AbstractController
      * @Route("/%eccube_admin_route%/zooops_sendmail/send/page/{page_no}", requirements={"page_no" = "\d+"}, name="admin_zooops_sendmail_send_page")
      * @Template("@ZooopsSendmail/admin/send.twig")
      */
-    public function index(Request $request, $page_no = null, Paginator $paginator)
+    public function index(Request $request, PaginatorInterface $paginator, ?int $page_no = null)
     {
         // DBデータの取得
         $pageMaxis = $this->pageMaxRepository->findAll();

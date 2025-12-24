@@ -13,17 +13,10 @@
 
 namespace Eccube\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Attribute\Route;
 
 class TopController extends AbstractController
 {
-    /**
-     * @Route("/", name="homepage")
-     * @Template("index.twig")
-     */
-    public function index()
-    {
-        return [];
-    }
+  // カスタムのトップページは Customize\Controller\CustomTopController に実装されています。
 }

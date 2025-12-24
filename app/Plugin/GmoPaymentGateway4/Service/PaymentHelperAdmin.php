@@ -9,22 +9,33 @@ namespace Plugin\GmoPaymentGateway4\Service;
 
 use Eccube\Entity\Order;
 use Plugin\GmoPaymentGateway4\Entity\GmoOrderPayment;
+use Plugin\GmoPaymentGateway4\Service\Method\CreditCard;
+use Plugin\GmoPaymentGateway4\Service\Method\Cvs;
+use Plugin\GmoPaymentGateway4\Service\Method\PayEasyAtm;
+use Plugin\GmoPaymentGateway4\Service\Method\PayEasyNet;
 use Plugin\GmoPaymentGateway4\Service\Method\CarAu;
 use Plugin\GmoPaymentGateway4\Service\Method\CarDocomo;
 use Plugin\GmoPaymentGateway4\Service\Method\CarSoftbank;
-use Plugin\GmoPaymentGateway4\Service\Method\CreditCard;
-use Plugin\GmoPaymentGateway4\Service\Method\Cvs;
-use Plugin\GmoPaymentGateway4\Service\Method\Ganb;
-use Plugin\GmoPaymentGateway4\Service\Method\PayEasyAtm;
-use Plugin\GmoPaymentGateway4\Service\Method\PayEasyNet;
 use Plugin\GmoPaymentGateway4\Service\Method\RakutenPay;
 use Plugin\GmoPaymentGateway4\Util\PaymentUtil;
+use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * 管理画面向け決済処理を行うクラス
  */
 class PaymentHelperAdmin extends PaymentHelper
 {
+    // protected $entityManager;
+    
+    // public function __construct(
+    //     EccubeConfig $eccubeConfig,
+    //     EntityManagerInterface $entityManager
+    // ) {
+    //     $this->eccubeConfig = $eccubeConfig;
+    //     $this->entityManager = $entityManager;
+    // }
+
     /**
      * GMO-PG 支払方法別のクラス名称を取得する
      *
@@ -61,25 +72,28 @@ class PaymentHelperAdmin extends PaymentHelper
             'commit' => [
                 'url' => 'AlterTran.idPass',
                 'addParams' => ['JobCd', 'Amount'],
+                'term_days' => '90',
                 'check' => null,
+                'check_term' => true,
             ],
             'cancel' =>  [
                 'url' => 'AlterTran.idPass',
                 'addParams' => ['JobCd'],
+                'term_days' => '180',
                 'check' => null,
                 'check_term' => true,
             ],
             'change' =>  [
                 'url' => 'ChangeTran.idPass',
                 'addParams' => ['JobCd', 'Amount'],
+                'term_days' => '180',
                 'check' => null,
+                'check_term' => true,
             ],
             'status' =>  [
                 'url' => 'SearchTrade.idPass',
                 'addParams' => [],
                 'addData' => null,
-                'convertData' => null,
-                'isStatus' => null,
             ],
         ],
         // auかんたん決済
@@ -87,55 +101,43 @@ class PaymentHelperAdmin extends PaymentHelper
             'commit' => [
                 'url' => 'AuSales.idPass',
                 'addParams' => ['OrderID', 'Amount'],
+                'term_days' => '90',
                 'check' => null,
+                'check_term' => true,
             ],
             'cancel' =>  [
                 'url' => 'AuCancelReturn.idPass',
                 'addParams' => ['OrderID', 'CancelAmount'],
+                'term_days' => '60',
                 'check' => 'checkCancelAu',
-                'check_term' => false,
-            ],
-            'partial' =>  [
-                'url' => 'AuCancelReturn.idPass',
-                'addParams' => ['OrderID', 'CancelAmount'],
-                'check' => 'checkCancelAu',
-                'check_term' => false,
-                'status' => 'getPartialStatusAu',
+                'check_term' => true,
             ],
             'status' =>  [
                 'url' => 'SearchTradeMulti.idPass',
                 'addParams' => ['PayType'],
                 'addData' => 'addStatusData',
-                'convertData' => null,
-                'isStatus' => null,
             ],
         ],
-        // d払い
+        // ドコモケータイ払い
         CarDocomo::class => [
             'commit' => [
                 'url' => 'DocomoSales.idPass',
                 'addParams' => ['OrderID', 'Amount'],
+                'term_days' => '90',
                 'check' => null,
+                'check_term' => true,
             ],
             'cancel' =>  [
                 'url' => 'DocomoCancelReturn.idPass',
                 'addParams' => ['OrderID', 'CancelAmount'],
-                'check' => null,
-                'check_term' => false,
-            ],
-            'partial' =>  [
-                'url' => 'DocomoCancelReturn.idPass',
-                'addParams' => ['OrderID', 'CancelAmount'],
-                'check' => null,
-                'check_term' => false,
-                'status' => 'getPartialStatusDocomo',
+                'term_days' => '180',
+                'check' => 'checkCancelDocomo',
+                'check_term' => true,
             ],
             'status' =>  [
                 'url' => 'SearchTradeMulti.idPass',
                 'addParams' => ['PayType'],
                 'addData' => 'addStatusData',
-                'convertData' => null,
-                'isStatus' => 'isSetStatusDocomo',
             ],
         ],
         // ソフトバンクまとめて支払い
@@ -143,20 +145,21 @@ class PaymentHelperAdmin extends PaymentHelper
             'commit' => [
                 'url' => 'SbSales.idPass',
                 'addParams' => ['OrderID', 'Amount'],
+                'term_days' => '60',
                 'check' => null,
+                'check_term' => true,
             ],
             'cancel' =>  [
                 'url' => 'SbCancel.idPass',
                 'addParams' => ['OrderID', 'CancelAmount'],
-                'check' => null,
-                'check_term' => false,
+                'term_days' => '60',
+                'check' => 'checkCancelSoftbank',
+                'check_term' => true,
             ],
             'status' =>  [
                 'url' => 'SearchTradeMulti.idPass',
                 'addParams' => ['PayType'],
                 'addData' => 'addStatusData',
-                'convertData' => null,
-                'isStatus' => null,
             ],
         ],
         // 楽天ペイ
@@ -164,35 +167,28 @@ class PaymentHelperAdmin extends PaymentHelper
             'commit' => [
                 'url' => 'RakutenIdSales.idPass',
                 'addParams' => ['OrderID'],
+                'term_days' => '',
                 'check' => 'checkCommitRakutenPay',
+                'check_term' => false,
             ],
             'cancel' =>  [
                 'url' => 'RakutenIdCancel.idPass',
                 'addParams' => ['OrderID'],
+                'term_days' => '',
                 'check' => 'checkCancelRakutenPay',
                 'check_term' => false,
             ],
             'change' =>  [
                 'url' => 'RakutenIdChange.idPass',
                 'addParams' => ['OrderID', 'Amount', 'Tax'],
+                'term_days' => '',
                 'check' => 'checkChangeRakutenPay',
+                'check_term' => false,
             ],
             'status' =>  [
                 'url' => 'SearchTradeMulti.idPass',
                 'addParams' => ['PayType'],
                 'addData' => 'addStatusData',
-                'convertData' => null,
-                'isStatus' => null,
-            ],
-        ],
-        // 銀行振込（バーチャル口座 あおぞら）
-        Ganb::class => [
-            'status' =>  [
-                'url' => 'SearchTradeMulti.idPass',
-                'addParams' => ['PayType'],
-                'addData' => 'addStatusData',
-                'convertData' => 'convertDataGanb',
-                'isStatus' => null,
             ],
         ],
     ];
@@ -207,6 +203,7 @@ class PaymentHelperAdmin extends PaymentHelper
     {
         PaymentUtil::logInfo('PaymentHelperAdmin::doCommitOrder start.');
 
+        $target_term_days = '';
         $prefix = "gmo_payment_gateway.";
         $action = trans($prefix . 'admin.order_edit.button.commit');
         $url = $this->GmoConfig->getServerUrl();
@@ -233,10 +230,11 @@ class PaymentHelperAdmin extends PaymentHelper
 
         $url .= $commit['url'];
         $paramNames = array_merge($paramNames, $commit['addParams']);
+        $target_term_days = $commit['term_days'];
 
         // チェック処理が定義されていれば実施
         if (!empty($func = $commit['check'])) {
-            if (!$this->$func($Order)) {
+            if (!$this->$func($Order, $target_term_days)) {
                 return false;
             }
         }
@@ -245,6 +243,31 @@ class PaymentHelperAdmin extends PaymentHelper
 
         $GmoOrderPayment = $Order->getGmoOrderPayment();
         $paymentLogData = $GmoOrderPayment->getPaymentLogData();
+
+        // 共通の期限に関するチェック処理
+        if ($commit['check_term']) {
+            if (empty($paymentLogData['TranDate'])) {
+                $msg = trans($prefix . 'admin.order_edit.action_error2');
+                PaymentUtil::logError($msg);
+                $this->setError($msg);
+                return false;
+            }
+
+            sscanf($paymentLogData['TranDate'],
+                   '%04d%02d%02d%02d%02d%02d',
+                   $year, $month, $day, $hour, $min, $sec);
+            $target_time = strtotime
+                ('+' . $target_term_days . ' days',
+                 mktime($hour, $min, $sec, $month, $day, $year));
+
+            if ($target_time < time()) {
+                $msg = trans($prefix . 'admin.order_edit.action_error3',
+                             ['%target_term_days%' => $target_term_days]);
+                PaymentUtil::logError($msg);
+                $this->setError($msg);
+                return false;
+            }
+        }
 
         if (array_search('JobCd', $paramNames) !== false) {
             $sendData['JobCd'] = 'SALES';
@@ -292,6 +315,7 @@ class PaymentHelperAdmin extends PaymentHelper
     {
         PaymentUtil::logInfo('PaymentHelperAdmin::doCancelOrder start.');
 
+        $target_term_days = '';
         $prefix = "gmo_payment_gateway.";
         $action = trans($prefix . 'admin.order_edit.button.cancel');
         $url = $this->GmoConfig->getServerUrl();
@@ -318,10 +342,11 @@ class PaymentHelperAdmin extends PaymentHelper
 
         $url .= $cancel['url'];
         $paramNames = array_merge($paramNames, $cancel['addParams']);
+        $target_term_days = $cancel['term_days'];
 
         // チェック処理が定義されていれば実施
         if (!empty($func = $cancel['check'])) {
-            if (!$this->$func($Order)) {
+            if (!$this->$func($Order, $target_term_days)) {
                 return false;
             }
         }
@@ -353,6 +378,18 @@ class PaymentHelperAdmin extends PaymentHelper
                     $sendData['JobCd'] = 'RETURN';
                 }
             } else {
+                $target_time = strtotime
+                    ('+' . $target_term_days . ' days',
+                     mktime($hour, $min, $sec, $month, $day, $year));
+
+                if ($target_time < time()) {
+                    $msg = trans($prefix . 'admin.order_edit.action_error3',
+                                 ['%target_term_days%' => $target_term_days]);
+                    PaymentUtil::logError($msg);
+                    $this->setError($msg);
+                    return false;
+                }
+
                 if (array_search('JobCd', $paramNames) !== false) {
                     $sendData['JobCd'] = 'RETURNX';
                     if (isset($paymentLogData['Status']) &&
@@ -414,104 +451,6 @@ class PaymentHelperAdmin extends PaymentHelper
     }
 
     /**
-     * 一部取消(一部返品)を実行します
-     *
-     * @param Order $Order 注文
-     * @return boolean 処理結果
-     */
-    public function doPartialOrder(Order $Order)
-    {
-        PaymentUtil::logInfo('PaymentHelperAdmin::doPartialOrder start.');
-
-        $prefix = "gmo_payment_gateway.";
-        $action = trans($prefix . 'admin.order_edit.button.partial');
-        $url = $this->GmoConfig->getServerUrl();
-
-        $paramNames = [
-            'ShopID',
-            'ShopPass',
-            'AccessID',
-            'AccessPass',
-        ];
-
-        // 処理方法が定義されているかを確認
-        $methodClass = $Order->getPayment()->getMethodClass();
-        if (!isset(self::arrFunction[$methodClass]) ||
-            !isset(self::arrFunction[$methodClass]['partial'])) {
-            $msg = trans($prefix . 'admin.order_edit.action_error1',
-                         ['%action%' => $action]);
-            PaymentUtil::logError($msg);
-            $this->setError($msg);
-            return false;
-        }
-
-        $partial = self::arrFunction[$methodClass]['partial'];
-
-        $url .= $partial['url'];
-        $paramNames = array_merge($paramNames, $partial['addParams']);
-
-        // チェック処理が定義されていれば実施
-        if (!empty($func = $partial['check'])) {
-            if (!$this->$func($Order)) {
-                return false;
-            }
-        }
-
-        $sendData = [];
-
-        $GmoOrderPayment = $Order->getGmoOrderPayment();
-        $paymentLogData = $GmoOrderPayment->getPaymentLogData();
-
-        if (array_search('OrderID', $paramNames) !== false) {
-            $sendData['OrderID'] = $paymentLogData['OrderID'];
-        }
-
-        // 一部取消（一部返品）額をセットする
-        if (!isset($paymentLogData['Amount'])) {
-            $msg = trans($prefix . 'admin.order_edit.action_error16');
-            PaymentUtil::logError($msg);
-            $this->setError($msg);
-            return false;
-        }
-        $sendData['CancelAmount'] =
-            $paymentLogData['Amount'] - $Order->getDecPaymentTotal();
-        if ($sendData['CancelAmount'] < 0) {
-            $sendData['CancelAmount'] = 0;
-        }
-
-        $data = $this->getIfSendData($paramNames, $sendData, $Order);
-
-        $ret = $this->sendRequest($url, $data);
-
-        $error = $this->getError();
-        if (!empty($error)) {
-            return false;
-        }
-
-        $const = $this->eccubeConfig;
-        $results = $this->getResults();
-
-        $action_status = $prefix . 'action_status.exec_success';
-        $results['action_status'] = $const[$action_status];
-
-        // ステータスを取得する
-        $func = $partial['status'];
-        if ($pay_status = $this->$func($results)) {
-            $results['pay_status'] = $const[$pay_status];
-        }
-
-        $GmoOrderPayment->setPaymentLogData($results, false, $Order);
-
-        $this->entityManager->persist($Order);
-        $this->entityManager->persist($GmoOrderPayment);
-        $this->entityManager->flush();
-
-        PaymentUtil::logInfo('PaymentHelperAdmin::doPartialOrder end.');
-
-        return true;
-    }
-
-    /**
      * 決済金額変更を実行します
      *
      * @param Order $Order 注文
@@ -521,6 +460,7 @@ class PaymentHelperAdmin extends PaymentHelper
     {
         PaymentUtil::logInfo('PaymentHelperAdmin::doChangeOrder start.');
 
+        $target_term_days = '';
         $prefix = "gmo_payment_gateway.";
         $action = trans($prefix . 'admin.order_edit.button.change');
         $url = $this->GmoConfig->getServerUrl();
@@ -547,10 +487,11 @@ class PaymentHelperAdmin extends PaymentHelper
 
         $url .= $change['url'];
         $paramNames = array_merge($paramNames, $change['addParams']);
+        $target_term_days = $change['term_days'];
 
         // チェック処理が定義されていれば実施
         if (!empty($func = $change['check'])) {
-            if (!$this->$func($Order)) {
+            if (!$this->$func($Order, $target_term_days)) {
                 return false;
             }
         }
@@ -559,6 +500,31 @@ class PaymentHelperAdmin extends PaymentHelper
 
         $GmoOrderPayment = $Order->getGmoOrderPayment();
         $paymentLogData = $GmoOrderPayment->getPaymentLogData();
+
+        // 共通の期限に関するチェック処理
+        if ($change['check_term']) {
+            if (empty($paymentLogData['TranDate'])) {
+                $msg = trans($prefix . 'admin.order_edit.action_error2');
+                PaymentUtil::logError($msg);
+                $this->setError($msg);
+                return false;
+            }
+
+            sscanf($paymentLogData['TranDate'],
+                   '%04d%02d%02d%02d%02d%02d',
+                   $year, $month, $day, $hour, $min, $sec);
+            $target_time = strtotime
+                ('+' . $target_term_days . ' days',
+                 mktime($hour, $min, $sec, $month, $day, $year));
+
+            if ($target_time < time()) {
+                $msg = trans($prefix . 'admin.order_edit.action_error3',
+                             ['%target_term_days%' => $target_term_days]);
+                PaymentUtil::logError($msg);
+                $this->setError($msg);
+                return false;
+            }
+        }
 
         $GmoPaymentMethod = $Order->getGmoPaymentMethod();
         $gmoPaymentMethodConfig = $GmoPaymentMethod->getPaymentMethodConfig();
@@ -771,18 +737,10 @@ class PaymentHelperAdmin extends PaymentHelper
 
         $pay_status = $prefix . 'pay_status.' . strtolower($results['Status']);
         if ($const->has($pay_status)) {
-            $func = $status['isStatus'];
-            if (empty($func) || $this->$func($results)) {
-                $results['pay_status'] = $const[$pay_status];
-            }
+            $results['pay_status'] = $const[$pay_status];
         } else if (!is_null($results['Status'])) {
             $pay_status = $prefix . 'pay_status.except';
             $results['pay_status'] = $const[$pay_status];
-        }
-
-        // 受信データ加工処理が定義されていれば実施
-        if (!empty($func = $status['convertData'])) {
-            $results = $this->$func($Order, $results);
         }
 
         $GmoOrderPayment->setPaymentLogData($results, false, $Order);
@@ -836,10 +794,6 @@ class PaymentHelperAdmin extends PaymentHelper
 
         case RakutenPay::class:
             $result = $const[$prefix . 'rakuten_pay'];
-            break;
-
-        case Ganb::class:
-            $result = $const[$prefix . 'ganb'];
             break;
 
         default:
@@ -946,9 +900,10 @@ class PaymentHelperAdmin extends PaymentHelper
      * 売上確定(実売上)前のデータ検証
      *
      * @param Order $Order 注文
+     * @param string $term_days 有効期日
      * @return boolean true:OK, false:NG
      */
-    protected function checkCommitRakutenPay(Order $Order)
+    protected function checkCommitRakutenPay(Order $Order, &$term_days)
     {
         PaymentUtil::logInfo('PaymentHelperAdmin::' .
                              'checkCommitRakutenPay start.');
@@ -965,9 +920,10 @@ class PaymentHelperAdmin extends PaymentHelper
      * 取消(返品)前のデータ検証
      *
      * @param Order $Order 注文
+     * @param string $term_days 有効期日
      * @return boolean true:OK, false:NG
      */
-    protected function checkCancelAu(Order $Order)
+    protected function checkCancelAu(Order $Order, &$term_days)
     {
         PaymentUtil::logInfo('PaymentHelperAdmin::checkCancelAu start.');
 
@@ -976,14 +932,31 @@ class PaymentHelperAdmin extends PaymentHelper
         $paymentLogData = $GmoOrderPayment->getPaymentLogData();
 
         // auかんたん決済(WebMoney)の場合はキャンセル不可
-        if ((isset($paymentLogData['PayMethod']) &&
-             $paymentLogData['PayMethod'] == '03') ||
-            (isset($paymentLogData['AuPayMethod']) &&
-             $paymentLogData['AuPayMethod'] == '03')) {
+        if ($paymentLogData['PayMethod'] == '03') {
             $msg = trans($prefix . 'admin.order_edit.action_error12');
             PaymentUtil::logError($msg);
             $this->setError($msg);
             return false;
+        }
+
+        if ($paymentLogData['Status'] == 'AUTH') {
+            // 仮売上後90日以内
+            $term_days = '90';
+        } else {
+            sscanf($paymentLogData['TranDate'],
+                   '%04d%02d%02d%02d%02d%02d',
+                   $year, $month, $day, $hour, $min, $sec);
+            $target = mktime($hour, $min, $sec, $month, $day, $year);
+            if (date('Ym') != date('Ym', $target)) {
+                // 翌々月末日 (３ヶ月先の１日未満）
+                $limit_time = mktime(0, 0, 0, $month + 3, 1, $year);
+                if ($limit_time < time()) {
+                    $msg = trans($prefix . 'admin.order_edit.action_error13');
+                    PaymentUtil::logError($msg);
+                    $this->setError($msg);
+                    return false;
+                }
+            }
         }
 
         PaymentUtil::logInfo('PaymentHelperAdmin::checkCancelAu end.');
@@ -992,44 +965,40 @@ class PaymentHelperAdmin extends PaymentHelper
     }
 
     /**
-     * 一部取消(一部返品)後のステータス取得
+     * 取消(返品)前のデータ検証
      *
-     * @param array $results 取消処理結果配列
-     * @return string|null ステータス
+     * @param Order $Order 注文
+     * @param string $term_days 有効期日
+     * @return boolean true:OK, false:NG
      */
-    protected function getPartialStatusAu(array $results)
+    protected function checkCancelDocomo(Order $Order, &$term_days)
     {
-        return 'gmo_payment_gateway.pay_status.return';
-    }
+        PaymentUtil::logInfo('PaymentHelperAdmin::checkCancelDocomo start.');
 
-    /**
-     * 一部取消(一部返品)後のステータス取得
-     *
-     * @param array $results 取消処理結果配列
-     * @return string|null ステータス
-     */
-    protected function getPartialStatusDocomo(array $results)
-    {
-        $status = null;
+        $prefix = "gmo_payment_gateway.";
+        $GmoOrderPayment = $Order->getGmoOrderPayment();
+        $paymentLogData = $GmoOrderPayment->getPaymentLogData();
 
-        if ($results['Amount'] == 0) {
-            $status = 'gmo_payment_gateway.pay_status.cancel';
-        }
-
-        return $status;
-    }
-
-    /**
-     * 決済状態取得後にステータスを反映するどうかを返す
-     *
-     * @param array $results 決済状態取得結果配列
-     * @return boolean true:set, false:not set
-     */
-    protected function isSetStatusDocomo(array $results)
-    {
-        if ($results['Status'] == 'CANCEL' && $results['Amount'] > 0) {
+        if (empty($paymentLogData['TranDate'])) {
+            $msg = trans($prefix . 'admin.order_edit.action_error2');
+            PaymentUtil::logError($msg);
+            $this->setError($msg);
             return false;
         }
+
+        sscanf($paymentLogData['TranDate'],
+               '%04d%02d%02d%02d%02d%02d',
+               $year, $month, $day, $hour, $min, $sec);
+        $cancel_limit = mktime(20, 0, 0, $month + 3, 0, $year);
+
+        if (time() > $cancel_limit) {
+            $msg = trans($prefix . 'admin.order_edit.action_error14');
+            PaymentUtil::logError($msg);
+            $this->setError($msg);
+            return false;
+        }
+
+        PaymentUtil::logInfo('PaymentHelperAdmin::checkCancelDocomo end.');
 
         return true;
     }
@@ -1038,9 +1007,53 @@ class PaymentHelperAdmin extends PaymentHelper
      * 取消(返品)前のデータ検証
      *
      * @param Order $Order 注文
+     * @param string $term_days 有効期日
      * @return boolean true:OK, false:NG
      */
-    protected function checkCancelRakutenPay(Order $Order)
+    protected function checkCancelSoftbank(Order $Order, &$term_days)
+    {
+        PaymentUtil::logInfo('PaymentHelperAdmin::checkCancelSoftbank start.');
+
+        $prefix = "gmo_payment_gateway.";
+        $GmoOrderPayment = $Order->getGmoOrderPayment();
+        $paymentLogData = $GmoOrderPayment->getPaymentLogData();
+
+        if ($paymentLogData['Status'] != 'SALES') {
+            return true;
+        }
+
+        sscanf($paymentLogData['TranDate'],
+               '%04d%02d%02d%02d%02d%02d',
+               $year, $month, $day, $hour, $min, $sec);
+
+        if ($day > 0 && $day <= 10) {
+            $target = mktime($hour, $min, $sec, $month, 13, $year);
+        } else if ($day > 10 && $day <= 20) {
+            $target = mktime($hour, $min, $sec, $month, 23, $year);
+        } else {
+            $target = mktime($hour, $min, $sec, $month + 1, 2, $year);
+        }
+
+        if ($target < time()) {
+            $msg = trans($prefix . 'admin.order_edit.action_error15');
+            PaymentUtil::logError($msg);
+            $this->setError($msg);
+            return false;
+        }
+
+        PaymentUtil::logInfo('PaymentHelperAdmin::checkCancelSoftbank end.');
+
+        return true;
+    }
+
+    /**
+     * 取消(返品)前のデータ検証
+     *
+     * @param Order $Order 注文
+     * @param string $term_days 有効期日
+     * @return boolean true:OK, false:NG
+     */
+    protected function checkCancelRakutenPay(Order $Order, &$term_days)
     {
         PaymentUtil::logInfo('PaymentHelperAdmin::' .
                              'checkCancelRakutenPay start.');
@@ -1057,9 +1070,10 @@ class PaymentHelperAdmin extends PaymentHelper
      * 決済金額変更前のデータ検証
      *
      * @param Order $Order 注文
+     * @param string $term_days 有効期日
      * @return boolean true:OK, false:NG
      */
-    protected function checkChangeRakutenPay(Order $Order)
+    protected function checkChangeRakutenPay(Order $Order, &$term_days)
     {
         PaymentUtil::logInfo('PaymentHelperAdmin::' .
                              'checkChangeRakutenPay start.');
@@ -1089,36 +1103,5 @@ class PaymentHelperAdmin extends PaymentHelper
         PaymentUtil::logInfo('PaymentHelperAdmin::addStatusData end.');
 
         return $sendData;
-    }
-
-    /**
-     * 決済状態確認・結果受取データの加工
-     *
-     * @param Order $Order 注文
-     * @param array $results 受信データ配列
-     * @return array 受信データ配列
-     */
-    protected function convertDataGanb(Order $Order, array $results)
-    {
-        PaymentUtil::logInfo('PaymentHelperAdmin::convertDataGanb start.');
-
-        // キーのプレフィックスがGanbで始まる場合、
-        // Ganbを削ったキーにも複写しておく
-        foreach ($results as $key => $value) {
-            if (!preg_match('/^Ganb.*$/', $key)) {
-                continue;
-            }
-
-            $key = preg_replace('/^Ganb/', '', $key);
-            if ($key == 'ExpireDate') {
-                // 取引有効期限はキー名が異なっているため特別処理
-                $key = 'AvailableDate';
-            }
-            $results[$key] = $value;
-        }
-
-        PaymentUtil::logInfo('PaymentHelperAdmin::convertDataGanb end.');
-
-        return $results;
     }
 }

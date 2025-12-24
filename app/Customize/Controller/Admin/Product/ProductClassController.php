@@ -32,6 +32,9 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\FormFactoryInterface;
+use Doctrine\ORM\EntityManagerInterface;
+
 
 class ProductClassController extends AbstractController
 {
@@ -60,6 +63,8 @@ class ProductClassController extends AbstractController
      */
     protected $taxRuleRepository;
 
+    protected $formFactory;
+
     /**
      * ProductClassController constructor.
      *
@@ -71,13 +76,17 @@ class ProductClassController extends AbstractController
         ProductClassRepository $productClassRepository,
         ClassCategoryRepository $classCategoryRepository,
         BaseInfoRepository $baseInfoRepository,
-        TaxRuleRepository $taxRuleRepository
+        TaxRuleRepository $taxRuleRepository,
+        FormFactoryInterface $formFactory,
+        EntityManagerInterface $entityManager
     ) {
         $this->productRepository = $productRepository;
         $this->productClassRepository = $productClassRepository;
         $this->classCategoryRepository = $classCategoryRepository;
         $this->baseInfoRepository = $baseInfoRepository;
         $this->taxRuleRepository = $taxRuleRepository;
+        $this->formFactory = $formFactory;
+        $this->entityManager = $entityManager;
     }
 
     /**

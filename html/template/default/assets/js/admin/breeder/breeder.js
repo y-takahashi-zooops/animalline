@@ -35,7 +35,7 @@ $("body").on("change", ".thumbnail_path", function (e) {
     var files = e.target.files;
     var done = function (url) {
         image.src = url;
-        bs_modal.modal('show');
+        bs_modal.show();
     };
 
     if (files && files.length > 0) {

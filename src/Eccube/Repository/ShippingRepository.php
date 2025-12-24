@@ -14,9 +14,9 @@
 namespace Eccube\Repository;
 
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\ManagerRegistry as RegistryInterface;
 use Eccube\Entity\Shipping;
 use Eccube\Util\StringUtil;
-use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
  * ShippingRepository
@@ -85,7 +85,6 @@ class ShippingRepository extends AbstractRepository
 
         // order status
         if (isset($searchData['order_status']) && count($searchData['order_status'])) {
-            $s = $searchData['order_status'];
             $qb
                 ->andWhere($qb->expr()->in('o.OrderStatus', ':order_status'))
                 ->setParameter('order_status', $searchData['order_status']);
@@ -127,7 +126,7 @@ class ShippingRepository extends AbstractRepository
 
         // tel
         if (isset($searchData['phone_number']) && StringUtil::isNotBlank($searchData['phone_number'])) {
-            $tel = preg_replace('/[^0-9]/ ', '', $searchData['phone_number']);
+            $tel = preg_replace('/[^0-9]/', '', $searchData['phone_number']);
             $qb
                 ->andWhere('s.phone_number LIKE :phone_number')
                 ->setParameter('phone_number', '%'.$tel.'%');
@@ -246,7 +245,7 @@ class ShippingRepository extends AbstractRepository
     public function findShippingsProduct($Order, $productClass)
     {
         $shippings = $this->createQueryBuilder('s')
-            ->innerJoin('Eccube\Entity\OrderItem', 'si', 'WITH', 'si.Shipping = s.id')
+            ->innerJoin(\Eccube\Entity\OrderItem::class, 'si', 'WITH', 'si.Shipping = s.id')
             ->where('si.Order = (:order)')
             ->andWhere('si.ProductClass = (:productClass)')
             ->setParameter('order', $Order)

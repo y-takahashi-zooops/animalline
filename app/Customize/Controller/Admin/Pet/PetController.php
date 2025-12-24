@@ -39,6 +39,7 @@ use DateTime;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Doctrine\ORM\EntityManagerInterface;
 
 class PetController extends AbstractController
 {
@@ -98,6 +99,11 @@ class PetController extends AbstractController
     protected $breederEvaluationsRepository;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
      * PetController constructor.
      * @param BreedsRepository $breedsRepository
      * @param BreederPetImageRepository $breederPetImageRepository
@@ -112,6 +118,7 @@ class PetController extends AbstractController
      * @param BreederEvaluationsRepository $breederEvaluationsRepository
      */
     public function __construct(
+        EntityManagerInterface $entityManager,
         BreedsRepository          $breedsRepository,
         BreederPetImageRepository $breederPetImageRepository,
         BreederQueryService       $breederQueryService,
@@ -135,6 +142,7 @@ class PetController extends AbstractController
         $this->breederContactsRepository = $breederContactsRepository;
         $this->conservationContactsRepository = $conservationContactsRepository;
         $this->breederEvaluationsRepository = $breederEvaluationsRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -380,7 +388,7 @@ class PetController extends AbstractController
             $result = (int)$request->get('examination_result');
             $Pet->setIsActive($result);
             if ($result === AnilineConf::IS_ACTIVE_PUBLIC) $Pet->setReleaseDate(new DateTime);
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($Pet);
             $entityManager->flush();
 

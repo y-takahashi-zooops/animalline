@@ -147,21 +147,15 @@ class GmoPaymentInput
      * フォームから値をセット
      *
      * @param FormInterface $form
-     * @param array $masks
      * @return GmoPaymentInput
      */
-    public function setFormData(FormInterface $form, array $masks = [])
+    public function setFormData(FormInterface $form)
     {
         foreach (GmoPaymentInput::COLS as $column) {
             $this->$column = "";
 
             if (isset($form[$column])) {
                 $this->$column = $form[$column]->getData();
-
-                // マスク処理
-                if (in_array($column, $masks)) {
-                    $this->$column = str_repeat('*', strlen($this->$column));
-                }
             }
         }
 

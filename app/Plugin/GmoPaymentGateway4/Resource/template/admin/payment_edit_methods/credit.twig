@@ -9,7 +9,7 @@ http://www.gmo-pg.com/
     <div class="col mb-2">
       {{ form_widget(form.JobCd) }}
       {{ form_errors(form.JobCd) }}
-      <p class="small" style="margin-top:10px;">{{ 'gmo_payment_gateway.admin.payment_edit.credit.jobcd.note1'|trans }}</p>
+      <p class="small" style="margin-top:10px;">{{ 'gmo_payment_gateway.admin.payment_edit.jobcd.note1'|trans }}</p>
       <p class="small">{{ 'gmo_payment_gateway.admin.payment_edit.jobcd.note2'|trans }}</p>
     </div>
   </div>
@@ -38,7 +38,6 @@ http://www.gmo-pg.com/
     <div class="col mb-2">
       {{ form_widget(form.use_securitycd_option) }}
       {{ form_errors(form.use_securitycd_option) }}
-      <p class="small" style="margin-top:10px;">{{ 'gmo_payment_gateway.admin.payment_edit.credit.use_securitycd_option.note1'|trans }}</p>
     </div>
   </div>
   <div class="row">
@@ -61,53 +60,6 @@ http://www.gmo-pg.com/
       <p class="small" style="margin-top:10px;">{{ 'gmo_payment_gateway.admin.payment_edit.credit.TdTenantName.note2'|trans }}</p>
       <p class="small" style="margin-top:10px;">{{ 'gmo_payment_gateway.admin.payment_edit.credit.TdTenantName.note3'|trans }}</p>
       <p class="small" style="margin-top:10px;">{{ 'gmo_payment_gateway.admin.payment_edit.credit.TdTenantName.note4'|trans }}</p>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-3"><span>{{ 'gmo_payment_gateway.admin.payment_edit.credit.col15'|trans }}</span>
-    </div>
-    <div class="col mb-2">
-      {{ form_widget(form.TdRequired) }}
-      {{ form_errors(form.TdRequired) }}
-      <p class="small" style="margin-top:10px;">{{ 'gmo_payment_gateway.admin.payment_edit.credit.TdRequired.note1'|trans }}</p>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-3"><span>{{ 'gmo_payment_gateway.admin.payment_edit.credit.col7'|trans }}</span>
-    </div>
-    <div class="col mb-2">
-      {{ form_widget(form.use_limit) }}
-      {{ form_errors(form.use_limit) }}
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-3"><span>{{ 'gmo_payment_gateway.admin.payment_edit.credit.col8'|trans }}</span>
-    </div>
-    <div class="col mb-2">
-      {{ form_widget(form.limit_min) }} {{ 'gmo_payment_gateway.admin.payment_edit.credit.col8.min'|trans }} <span class='caution'>{{ 'gmo_payment_gateway.admin.payment_edit.credit.limit_min.caution'|trans }}</span>
-      {{ form_errors(form.limit_min) }}
-      <p class="small" style="margin-top:10px;">{{ 'gmo_payment_gateway.admin.payment_edit.credit.limit_min.note1'|trans }}</p>
-      <p class="small" style="margin-top:10px;">{{ 'gmo_payment_gateway.admin.payment_edit.credit.limit_min.note2'|trans }}</p>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-3"><span>{{ 'gmo_payment_gateway.admin.payment_edit.credit.col9'|trans }}</span>
-    </div>
-    <div class="col mb-2">
-      {{ form_widget(form.limit_count) }} {{ 'gmo_payment_gateway.admin.payment_edit.credit.col9.cnt'|trans }} <span class='caution'>{{ 'gmo_payment_gateway.admin.payment_edit.credit.limit_count.caution'|trans }}</span>
-      {{ form_errors(form.limit_count) }}
-      <p class="small" style="margin-top:10px;">{{ 'gmo_payment_gateway.admin.payment_edit.credit.limit_count.note1'|trans }}</p>
-      <p class="small" style="margin-top:10px;">{{ 'gmo_payment_gateway.admin.payment_edit.credit.limit_count.note2'|trans }}</p>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-3"><span>{{ 'gmo_payment_gateway.admin.payment_edit.credit.col10'|trans }}</span>
-    </div>
-    <div class="col mb-2">
-      {{ form_widget(form.lock_min) }} {{ 'gmo_payment_gateway.admin.payment_edit.credit.col10.min'|trans }} <span class='caution'>{{ 'gmo_payment_gateway.admin.payment_edit.credit.lock_min.caution'|trans }}</span>
-      {{ form_errors(form.lock_min) }}
-      <p class="small" style="margin-top:10px;">{{ 'gmo_payment_gateway.admin.payment_edit.credit.lock_min.note1'|trans }}</p>
-      <p class="small" style="margin-top:10px;">{{ 'gmo_payment_gateway.admin.payment_edit.credit.lock_min.note2'|trans }}</p>
     </div>
   </div>
   <div class="row">

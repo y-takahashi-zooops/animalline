@@ -22,6 +22,7 @@ use Eccube\Service\MailService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CustomContactController extends ContactController
 {
@@ -36,9 +37,11 @@ class CustomContactController extends ContactController
      * @param MailService $mailService
      */
     public function __construct(
-        MailService $mailService)
-    {
+        MailService $mailService,
+        EventDispatcherInterface $eventDispatcher
+    ) {
         $this->mailService = $mailService;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -77,7 +80,7 @@ class CustomContactController extends ContactController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_CONTACT_INDEX_INITIALIZE);
 
         $form = $builder->getForm();
         $form->handleRequest($request);
@@ -103,7 +106,7 @@ class CustomContactController extends ContactController
                         ],
                         $request
                     );
-                    $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_COMPLETE, $event);
+                    $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_CONTACT_INDEX_COMPLETE);
 
                     $data = $event->getArgument('data');
 

@@ -218,7 +218,7 @@
                 </div>
                 {# プレビューボタン #}
                 <div class="col-auto">
-                    <button id="preview" class="btn btn-block btn-ec-regular previewDiaDisp" data-toggle="modal" data-target="#PreviewModal" disabled>
+                    <button id="preview" class="btn btn-block btn-ec-regular previewDiaDisp" data-bs-toggle="modal" data-bs-target="#PreviewModal" disabled>
                         {{ 'admin.setting.shop.mail.preview'|trans }}
                     </button>
                 </div>
@@ -365,7 +365,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title font-weight-bold"></h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true" class="previewDiaClose">×</span>
                     </button>
                 </div>
@@ -374,7 +374,7 @@
                     <ul id="bulkErrors"></ul>
                     <div id="bulk-options">
                         <div>
-                            <div class="d-inline-block" data-toggle="collapse" href="#viewEmail" aria-expanded="false" aria-controls="viewEmail">
+                            <div class="d-inline-block" data-bs-toggle="collapse" href="#viewEmail" aria-expanded="false" aria-controls="viewEmail">
                                 <a>
                                     <i class="fa fa-plus-square-o font-weight-bold mr-1"></i>
                                     <span class="font-weight-bold">
@@ -394,7 +394,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-ec-sub previewDiaClose" type="button" data-dismiss="modal">
+                    <button class="btn btn-ec-sub previewDiaClose" type="button" data-bs-dismiss="modal">
                         {{ 'admin.common.cancel'|trans }}
                     </button>
                     <button id="bulkChange" name="bulkChange" class="btn btn-ec-conversion" type="button"></button>
@@ -414,7 +414,7 @@
                     <h5 class="modal-title font-weight-bold">
                         {{ 'admin.content.layout_preview'|trans }}
                     </h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true" class="previewDiaClose">×</span>
                     </button>
                 </div>
@@ -426,7 +426,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-ec-sub previewDiaClose" data-dismiss="modal">
+                    <button class="btn btn-ec-sub previewDiaClose" data-bs-dismiss="modal">
                         {{ 'common.close'|trans }}
                     </button>
                 </div>

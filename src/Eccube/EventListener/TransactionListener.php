@@ -13,14 +13,15 @@
 
 namespace Eccube\EventListener;
 
-use Doctrine\Dbal\Connection;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\TransactionIsolationLevel;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -38,15 +39,18 @@ class TransactionListener implements EventSubscriberInterface
      */
     protected $isEnabled = true;
 
+    protected $logger;
+
     /**
      * TransactionListener constructor.
      *
      * @param EntityManager $em
      * @param bool $isEnabled
      */
-    public function __construct(EntityManagerInterface $em, $isEnabled = true)
+    public function __construct(EntityManagerInterface $em, LoggerInterface $logger, $isEnabled = true)
     {
-        $this->em = $em;
+	$this->em = $em;
+        $this->logger = $logger;
         $this->isEnabled = $isEnabled;
     }
 
@@ -61,17 +65,16 @@ class TransactionListener implements EventSubscriberInterface
     /**
      * Kernel request listener callback.
      *
-     * @param GetResponseEvent $event
+     * @param RequestEvent $event
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(RequestEvent $event)
     {
         if (!$this->isEnabled) {
             log_debug('Transaction Listener is disabled.');
-
             return;
         }
 
-        if (!$event->isMasterRequest()) {
+        if (!$event->isMainRequest()) {
             return;
         }
 
@@ -89,22 +92,23 @@ class TransactionListener implements EventSubscriberInterface
     /**
      * Kernel exception listener callback.
      *
-     * @param GetResponseForExceptionEvent $event
+     * @param ExceptionEvent $event
      */
-    public function onKernelException(GetResponseForExceptionEvent $event)
+    public function onKernelException(ExceptionEvent $event)
     {
         if (!$this->isEnabled) {
             log_debug('Transaction Listener is disabled.');
-
             return;
         }
 
-        if (!$event->isMasterRequest()) {
+        if (!$event->isMainRequest()) {
             return;
         }
 
-        if ($this->em->getConnection()->isTransactionActive()) {
-            $this->em->rollback();
+        if ($this->em->getConnection()->getNativeConnection()->inTransaction()) {
+            if ($this->em->getConnection()->isRollbackOnly()) {
+                $this->em->rollback();
+            }
             log_debug('Rollback executed.');
         } else {
             log_debug('Transaction is not active. Rollback skipped.');
@@ -114,16 +118,15 @@ class TransactionListener implements EventSubscriberInterface
     /**
      *  Kernel terminate listener callback.
      *
-     * @param PostResponseEvent $event
+     * @param TerminateEvent $event
      */
-    public function onKernelTerminate(PostResponseEvent $event)
+    public function onKernelTerminate(TerminateEvent $event)
     {
         if (!$this->isEnabled) {
             log_debug('Transaction Listener is disabled.');
-
             return;
         }
-        if ($this->em->getConnection()->isTransactionActive()) {
+        if ($this->em->getConnection()->getNativeConnection()->inTransaction()) {
             if ($this->em->getConnection()->isRollbackOnly()) {
                 $this->em->rollback();
                 log_debug('Rollback executed.');
@@ -132,8 +135,8 @@ class TransactionListener implements EventSubscriberInterface
                 log_debug('Commit executed.');
             }
         } else {
-            log_debug('Transaction is not active. Rollback skipped.');
-        }
+	    log_debug('Transaction is not active. Rollback skipped.');
+	}
     }
 
     /**
