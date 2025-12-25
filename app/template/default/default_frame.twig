@@ -322,6 +322,12 @@
                 <span class="serif">03-5969-9718</span>
             </div>
         </div>
+        {% if is_granted('ROLE_USER') == true %}
+            <a href="{{ url('logout') }}" class="headerBtn__link headerBtn__link--login flex vcenter hcenter">
+                <i class="icon icon-logout"></i>
+                ログアウトする
+            </a>
+        {% endif %}
     </nav>
 
     <div class="headerPad"></div>
@@ -338,8 +344,11 @@
                     ログイン<i class="icon icon-login"></i>
                 </a>
             {% else %}
-                <a href="{{ url('logout') }}" class="navbar__item navbar__item--login flex hcenter vert">
-                    ログアウト<i class="icon icon-login"></i>
+                <a href="{{ url('mypage') }}" class="navbar__item navbar__item--mypage flex hcenter vert">
+                    マイページ<i class="icon icon-mypage"></i>
+                </a>
+                <a href="{{ url('mypage_favorite') }}" class="navbar__item navbar__item--favorite flex hcenter vert">
+                    お気に入り<i class="icon icon-heart"></i>
                 </a>
             {% endif %}
             <a href="{{ url('cart') }}" class="navbar__item navbar__item--cart flex hcenter vert">
